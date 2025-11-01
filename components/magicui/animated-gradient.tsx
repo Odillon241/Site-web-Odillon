@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 interface AnimatedGradientProps {
-  children: React.ReactNode
+  children?: React.ReactNode
   className?: string
 }
 
@@ -18,6 +18,10 @@ export function AnimatedGradient({ children, className }: AnimatedGradientProps)
         duration: 8,
         ease: "linear",
         repeat: Infinity,
+      }}
+      style={{
+        background: "linear-gradient(90deg, rgba(26, 155, 142, 0.1), rgba(196, 216, 46, 0.1), rgba(26, 155, 142, 0.1))",
+        backgroundSize: "200% 200%",
       }}
     >
       {children}
