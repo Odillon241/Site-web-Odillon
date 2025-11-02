@@ -103,7 +103,7 @@ export function HeaderPro() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
-              src="/logo d'odillon corrigé.png"
+              src="/logo-odillon.png"
               alt="Odillon - Ingénierie d'Entreprises"
               width={350}
               height={100}

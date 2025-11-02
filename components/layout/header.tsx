@@ -43,7 +43,7 @@ export function Header() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-3">
               <Image
-                src="/logo d'odillon corrigé.png"
+                src="/logo-odillon.png"
                 alt="Odillon"
                 width={240}
                 height={70}

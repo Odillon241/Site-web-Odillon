@@ -11,7 +11,7 @@ export function Footer() {
           {/* Logo et Description */}
           <div className="space-y-3 md:space-y-4 sm:col-span-2 lg:col-span-1">
             <Image
-              src="/logo d'odillon corrigé.png"
+              src="/logo-odillon.png"
               alt="Odillon"
               width={200}
               height={60}
