@@ -1,0 +1,190 @@
+{
+  "tech_stack": [
+    "TypeScript 5.6.3",
+    "Next.js 16.0.0 (App Router)",
+    "React 19.0.0",
+    "Node.js",
+    "Supabase 2.78.0 (PostgreSQL, Auth, Storage)",
+    "Tailwind CSS 3.4.14",
+    "Framer Motion 11.11.11",
+    "shadcn/ui + Radix UI",
+    "Lucide React 0.460.0",
+    "date-fns 4.1.0",
+    "react-day-picker 9.11.1",
+    "react-fast-marquee 1.6.5",
+    "cobe 0.6.5 (3D globe)",
+    "PM2 (deployment)"
+  ],
+  "features": [
+    {
+      "name": "Multi-Domain Routing System",
+      "description": "Subdomain-based routing handling main site (odillon.fr) and admin panel (admin.odillon.fr) with automatic path redirection.",
+      "files": ["middleware.ts", "lib/supabase/middleware.ts"]
+    },
+    {
+      "name": "Authentication System",
+      "description": "Complete Supabase authentication with email/password login for admin access and session management.",
+      "files": ["app/admin/login/page.tsx", "app/auth/callback/route.ts", "lib/supabase/client.ts", "lib/supabase/server.ts"]
+    },
+    {
+      "name": "Photo Management System",
+      "description": "Full CRUD system for managing Hero background photos with monthly themes, awareness campaigns (Octobre Rose, Novembre Bleu), and Supabase Storage integration.",
+      "files": ["app/admin/photos/page.tsx", "app/api/photos/route.ts", "app/api/photos/[id]/route.ts", "app/api/upload/route.ts", "lib/photo-themes.ts"]
+    },
+    {
+      "name": "Dynamic Background Slideshow",
+      "description": "Animated photo carousel for Hero section with smooth fade transitions and automatic monthly theme filtering.",
+      "files": ["components/ui/background-slideshow.tsx", "components/sections/hero.tsx"]
+    },
+    {
+      "name": "Gabon Calendar & Events",
+      "description": "Interactive calendar displaying Gabon holidays, national events, and awareness campaigns with color coding.",
+      "files": ["lib/gabon-events.ts", "components/ui/calendar.tsx"]
+    },
+    {
+      "name": "Homepage",
+      "description": "Main landing page with Hero, Services, Expertise, About, Contact sections and animated components.",
+      "files": ["app/page.tsx", "app/layout.tsx", "components/sections/hero.tsx", "components/sections/services-home.tsx", "components/sections/expertise-home.tsx", "components/sections/about-home.tsx", "components/sections/contact-home.tsx", "components/sections/trusted-by-home.tsx"]
+    },
+    {
+      "name": "Services Page",
+      "description": "Dedicated page showcasing corporate engineering, governance, legal, financial, and HR services.",
+      "files": ["app/services/page.tsx", "components/sections/services.tsx"]
+    },
+    {
+      "name": "Expertise Page",
+      "description": "Page highlighting firm's expertise and specializations.",
+      "files": ["app/expertise/page.tsx", "components/sections/expertise.tsx"]
+    },
+    {
+      "name": "About Page",
+      "description": "Company information and history page with 3D globe visualization.",
+      "files": ["app/a-propos/page.tsx", "components/sections/about.tsx", "components/ui/globe.tsx"]
+    },
+    {
+      "name": "Contact Page",
+      "description": "Contact information and form page for client inquiries.",
+      "files": ["app/contact/page.tsx", "components/sections/contact.tsx"]
+    },
+    {
+      "name": "Admin Photos Dashboard",
+      "description": "Photo management interface with calendar view, filters by month/theme, upload, edit, and delete functionality.",
+      "files": ["app/admin/photos/page.tsx", "app/admin/layout.tsx"]
+    },
+    {
+      "name": "Professional Header",
+      "description": "Fixed navigation header with dropdown menus, mobile menu, contact info bar, and smooth scroll links.",
+      "files": ["components/layout/header-pro.tsx"]
+    },
+    {
+      "name": "Footer",
+      "description": "Site footer with company links, contact information, and social media.",
+      "files": ["components/layout/footer.tsx"]
+    },
+    {
+      "name": "Hero Section",
+      "description": "Main hero with animated background slideshow, glassmorphism cards, animated stats counter, and scroll velocity text.",
+      "files": ["components/sections/hero.tsx"]
+    },
+    {
+      "name": "Trusted By Section",
+      "description": "Marquee section displaying client logos and testimonials with continuous scroll animation.",
+      "files": ["components/sections/trusted-by-home.tsx", "components/ui/marquee.tsx"]
+    },
+    {
+      "name": "shadcn/ui Components",
+      "description": "Complete set of UI components: Button, Card, Input, Textarea, Badge, Dialog, Sheet, Tabs, Accordion, Navigation Menu, Toggle, Toggle Group, Separator, Hover Card.",
+      "files": ["components/ui/button.tsx", "components/ui/card.tsx", "components/ui/input.tsx", "components/ui/textarea.tsx", "components/ui/badge.tsx", "components/ui/dialog.tsx", "components/ui/sheet.tsx", "components/ui/tabs.tsx", "components/ui/accordion.tsx", "components/ui/navigation-menu.tsx", "components/ui/toggle.tsx", "components/ui/toggle-group.tsx", "components/ui/separator.tsx", "components/ui/hover-card.tsx"]
+    },
+    {
+      "name": "Background Effects",
+      "description": "Multiple animated background effects: Aurora, Retro Grid, Grid Pattern, Interactive Grid, Particles.",
+      "files": ["components/ui/aurora-background.tsx", "components/ui/retro-grid.tsx", "components/ui/grid-pattern.tsx", "components/ui/interactive-grid-pattern.tsx", "components/ui/particles-background.tsx"]
+    },
+    {
+      "name": "Map Visualizations",
+      "description": "Interactive world map with dotted style and 3D rotating globe focused on Gabon.",
+      "files": ["components/ui/dotted-map.tsx", "components/ui/globe.tsx"]
+    },
+    {
+      "name": "Icon Components",
+      "description": "Glassmorphism and 3D icon containers with hover effects.",
+      "files": ["components/ui/glassmorphism-icon.tsx", "components/ui/icon-3d.tsx"]
+    },
+    {
+      "name": "Number Animations",
+      "description": "Animated number counter and ticker for statistics display.",
+      "files": ["components/ui/counting-number.tsx", "components/ui/number-ticker.tsx"]
+    },
+    {
+      "name": "Text Effects",
+      "description": "Animated text effects: Gradient, Highlight, Shimmer.",
+      "files": ["components/ui/gradient-text.tsx", "components/ui/highlight-text.tsx", "components/ui/text-shimmer.tsx"]
+    },
+    {
+      "name": "Scroll Animations",
+      "description": "Scroll-based animations: Fade In, Blur Fade, Scroll Progress, Scroll to Top, Scroll Velocity, Orbiting Circles.",
+      "files": ["components/magicui/fade-in.tsx", "components/magicui/blur-fade.tsx", "components/magicui/scroll-progress.tsx", "components/magicui/scroll-to-top.tsx", "components/magicui/scroll-based-velocity.tsx", "components/ui/orbiting-circles.tsx"]
+    },
+    {
+      "name": "Particle Effects",
+      "description": "Interactive particle effects: animated gradient background and mouse-following particle trail.",
+      "files": ["components/magicui/animated-gradient.tsx", "components/magicui/particle-effect.tsx"]
+    },
+    {
+      "name": "Photos API - GET",
+      "description": "Fetch photos with optional filters (month, theme, active status) from Supabase database.",
+      "files": ["app/api/photos/route.ts"]
+    },
+    {
+      "name": "Photos API - POST",
+      "description": "Create new photo entry with theme, month, and display order (requires authentication).",
+      "files": ["app/api/photos/route.ts"]
+    },
+    {
+      "name": "Photo API - PATCH",
+      "description": "Update existing photo properties by ID (requires authentication).",
+      "files": ["app/api/photos/[id]/route.ts"]
+    },
+    {
+      "name": "Photo API - DELETE",
+      "description": "Delete photo from database and remove file from Supabase Storage (requires authentication).",
+      "files": ["app/api/photos/[id]/route.ts"]
+    },
+    {
+      "name": "Upload API",
+      "description": "Upload image file to Supabase Storage with validation (max 5MB, JPG/PNG/WebP formats only).",
+      "files": ["app/api/upload/route.ts"]
+    },
+    {
+      "name": "Auth Callback",
+      "description": "OAuth callback handler for Supabase authentication flow redirects.",
+      "files": ["app/auth/callback/route.ts"]
+    },
+    {
+      "name": "Photo Themes Library",
+      "description": "Photo theme definitions, default Unsplash fallback photos, monthly theme data, and helper functions for filtering photos by month and theme.",
+      "files": ["lib/photo-themes.ts"]
+    },
+    {
+      "name": "Gabon Events Library",
+      "description": "Comprehensive Gabon holidays and events data with utility functions (getEventsForMonth, getEventForDate, hasEvent, getUpcomingEvents).",
+      "files": ["lib/gabon-events.ts"]
+    },
+    {
+      "name": "Supabase Clients",
+      "description": "Three separate Supabase clients: browser client for client-side operations, server client for API routes and Server Components with async cookies, and middleware client for session management.",
+      "files": ["lib/supabase/client.ts", "lib/supabase/server.ts", "lib/supabase/middleware.ts"]
+    },
+    {
+      "name": "Utility Functions",
+      "description": "Helper utilities including cn() function for merging Tailwind CSS classes using clsx and tailwind-merge.",
+      "files": ["lib/utils.ts"]
+    },
+    {
+      "name": "Custom Baskvill Font",
+      "description": "Local Baskvill font configuration and loading for Next.js display typography.",
+      "files": ["app/fonts.ts", "public/fonts/BASKVILL.ttf"]
+    }
+  ]
+}

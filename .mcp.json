@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "TestSprite": {
+      "command": "npx",
+      "args": [
+        "@testsprite/testsprite-mcp@latest"
+      ],
+      "env": {
+        "API_KEY": "sk-user-E9LPJmZX7cpiY2717fDafN9LhcEEfZ32ffbW0G-YnzAgsB7DqCQiY3W_To0tbzZiu4rNORU3sRIod0tOiwcH63doSVM1Iwir8X65jiSC9WlUPU9j99mqfzb_fQqDmdyfK_U"
+      }
+    },
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=wicstfeflqkacazsompx"
+    },
+    "next-devtools": {
+      "command": "npx",
+      "args": ["-y", "next-devtools-mcp@latest"]
+    }
+  }
+}

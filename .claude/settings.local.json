@@ -5,9 +5,38 @@
       "Bash(git add:*)",
       "Bash(git commit -m \"$(cat <<''EOF''\nFeat: Intégration complète du système Supabase et améliorations UI\n\n## Nouvelles fonctionnalités\n- Système de gestion de photos dynamique avec Supabase\n- Panel d''administration pour la gestion des photos (/admin/photos)\n- Diaporama de photos en arrière-plan du Hero avec chargement dynamique\n- Nouvelle section \"TrustedByHome\" \n- Calendrier des événements du Gabon\n- Système d''authentification Supabase\n\n## Composants UI\n- BackgroundSlideshow pour affichage rotatif de photos\n- Calendar avec support des jours fériés gabonais\n- Toggle et ToggleGroup components\n- Corrections TypeScript : ParticleEffect et AnimatedGradient acceptent désormais des props\n\n## Backend & API\n- Routes API complètes (/api/photos, /api/upload)\n- Middleware d''authentification\n- Configuration Supabase (client, server, middleware)\n- Schema SQL et scripts de setup\n\n## Améliorations visuelles\n- Hero avec effet glassmorphism sur les cartes\n- Nouveau jeu de couleurs et overlay sombre pour meilleure lisibilité\n- Animations et transitions améliorées\n\n## Documentation\n- Fichiers MD complets pour l''intégration Supabase\n- Instructions de configuration et démarrage rapide\n- Documentation du système de photos et filtres\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git push:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(ren:*)",
+      "Bash(node --version:*)",
+      "Bash(npm --version:*)",
+      "Bash(npm install:*)",
+      "Bash(where:*)",
+      "Bash(npm root:*)",
+      "Bash(claude mcp add --transport stdio --scope project TestSprite --env API_KEY=sk-user-mJwXNDqo_YxMbZ4lrcdMao5QbLhWl_o2mppnrA_mvsMWGCC422hk6FBedD5UCowE0kY5CsF8ZFSUXvCU5zHtzKiO8v3KGeO6tq4iU0WXRn5HbA21YgK6W6DcRxFQ_7kt0fs -- node \"C:\\Users\\nexon\\AppData\\Roaming\\npm\\node_modules\\@testsprite\\testsprite-mcp\\build\\index.js\")",
+      "Bash(claude mcp:*)",
+      "Bash(set API_KEY=sk-user-mJwXNDqo_YxMbZ4lrcdMao5QbLhWl_o2mppnrA_mvsMWGCC422hk6FBedD5UCowE0kY5CsF8ZFSUXvCU5zHtzKiO8v3KGeO6tq4iU0WXRn5HbA21YgK6W6DcRxFQ_7kt0fs)",
+      "Bash(node:*)",
+      "Bash(dir:*)",
+      "mcp__TestSprite__testsprite_bootstrap_tests",
+      "Bash(npm run dev:*)",
+      "mcp__TestSprite__testsprite_generate_code_summary",
+      "mcp__TestSprite__testsprite_generate_frontend_test_plan",
+      "mcp__TestSprite__testsprite_generate_standardized_prd",
+      "Bash(netstat:*)",
+      "mcp__next-devtools__init",
+      "Bash(findstr:*)",
+      "mcp__next-devtools__nextjs_runtime",
+      "mcp__next-devtools__nextjs_docs",
+      "Bash(npx:*)",
+      "Bash(del \"C:\\Users\\nexon\\Odillon site web\\middleware.ts\")",
+      "Bash(git restore:*)",
+      "Bash(git branch:*)"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "TestSprite"
+  ]
 }

@@ -1,0 +1,453 @@
+{
+  "tech_stack": [
+    "TypeScript",
+    "Next.js 16 (App Router)",
+    "React 19",
+    "Tailwind CSS",
+    "Supabase (Auth, Database, Storage)",
+    "Framer Motion",
+    "shadcn/ui components",
+    "PostgreSQL (via Supabase)"
+  ],
+  "features": [
+    {
+      "name": "Homepage",
+      "description": "Main landing page with Hero section, Services showcase, Expertise areas, About section, and Contact form",
+      "files": [
+        "app/page.tsx",
+        "components/sections/hero.tsx",
+        "components/sections/services-home.tsx",
+        "components/sections/expertise-home.tsx",
+        "components/sections/about-home.tsx",
+        "components/sections/contact-home.tsx",
+        "components/sections/trusted-by-home.tsx"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": {
+          "title": "Homepage",
+          "description": "Main landing page with multiple sections",
+          "version": "1.0.0"
+        },
+        "paths": {
+          "/": {
+            "get": {
+              "summary": "Get homepage",
+              "description": "Returns the main landing page with Hero, Services, Expertise, About, and Contact sections",
+              "responses": {
+                "200": {
+                  "description": "Homepage rendered successfully"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Photo Management API",
+      "description": "CRUD operations for managing photos with filtering by month, theme, and active status",
+      "files": [
+        "app/api/photos/route.ts",
+        "app/api/photos/[id]/route.ts",
+        "lib/photo-themes.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": {
+          "title": "Photo Management API",
+          "description": "API for managing photos with monthly themes",
+          "version": "1.0.0"
+        },
+        "paths": {
+          "/api/photos": {
+            "get": {
+              "summary": "Get all photos",
+              "description": "Retrieve photos with optional filtering",
+              "parameters": [
+                {
+                  "name": "month",
+                  "in": "query",
+                  "schema": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 12
+                  },
+                  "description": "Filter by month (1-12)"
+                },
+                {
+                  "name": "theme",
+                  "in": "query",
+                  "schema": {
+                    "type": "string"
+                  },
+                  "description": "Filter by theme ID (e.g., 'novembre-bleu')"
+                },
+                {
+                  "name": "active",
+                  "in": "query",
+                  "schema": {
+                    "type": "boolean"
+                  },
+                  "description": "Filter by active status"
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "List of photos",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "photos": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "src": {
+                                  "type": "string"
+                                },
+                                "alt": {
+                                  "type": "string"
+                                },
+                                "theme_id": {
+                                  "type": "string"
+                                },
+                                "month": {
+                                  "type": "integer"
+                                },
+                                "year": {
+                                  "type": "integer"
+                                },
+                                "is_active": {
+                                  "type": "boolean"
+                                },
+                                "display_order": {
+                                  "type": "integer"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "500": {
+                  "description": "Server error"
+                }
+              }
+            },
+            "post": {
+              "summary": "Create new photo",
+              "description": "Create a new photo entry (requires authentication)",
+              "security": [
+                {
+                  "supabaseAuth": []
+                }
+              ],
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "src": {
+                          "type": "string"
+                        },
+                        "alt": {
+                          "type": "string"
+                        },
+                        "theme_id": {
+                          "type": "string"
+                        },
+                        "month": {
+                          "type": "integer"
+                        },
+                        "year": {
+                          "type": "integer"
+                        },
+                        "is_active": {
+                          "type": "boolean"
+                        },
+                        "display_order": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": ["src", "alt"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "201": {
+                  "description": "Photo created successfully"
+                },
+                "401": {
+                  "description": "Unauthorized"
+                },
+                "500": {
+                  "description": "Server error"
+                }
+              }
+            }
+          },
+          "/api/photos/{id}": {
+            "patch": {
+              "summary": "Update photo",
+              "description": "Update an existing photo (requires authentication)",
+              "security": [
+                {
+                  "supabaseAuth": []
+                }
+              ],
+              "parameters": [
+                {
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Photo updated successfully"
+                },
+                "401": {
+                  "description": "Unauthorized"
+                },
+                "500": {
+                  "description": "Server error"
+                }
+              }
+            },
+            "delete": {
+              "summary": "Delete photo",
+              "description": "Delete a photo (requires authentication)",
+              "security": [
+                {
+                  "supabaseAuth": []
+                }
+              ],
+              "parameters": [
+                {
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Photo deleted successfully"
+                },
+                "401": {
+                  "description": "Unauthorized"
+                },
+                "500": {
+                  "description": "Server error"
+                }
+              }
+            }
+          }
+        },
+        "components": {
+          "securitySchemes": {
+            "supabaseAuth": {
+              "type": "http",
+              "scheme": "bearer"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "File Upload API",
+      "description": "Upload photos to Supabase Storage bucket",
+      "files": [
+        "app/api/upload/route.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": {
+          "title": "File Upload API",
+          "description": "Upload photos to Supabase Storage",
+          "version": "1.0.0"
+        },
+        "paths": {
+          "/api/upload": {
+            "post": {
+              "summary": "Upload photo",
+              "description": "Upload a photo to Supabase Storage (requires authentication)",
+              "security": [
+                {
+                  "supabaseAuth": []
+                }
+              ],
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "multipart/form-data": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "file": {
+                          "type": "string",
+                          "format": "binary"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "File uploaded successfully",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "401": {
+                  "description": "Unauthorized"
+                },
+                "500": {
+                  "description": "Server error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Admin Authentication",
+      "description": "Admin panel with Supabase authentication for managing photos",
+      "files": [
+        "app/admin/login/page.tsx",
+        "app/admin/photos/page.tsx",
+        "app/admin/layout.tsx",
+        "middleware.ts",
+        "lib/supabase/middleware.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": {
+          "title": "Admin Panel",
+          "description": "Admin authentication and photo management dashboard",
+          "version": "1.0.0"
+        },
+        "paths": {
+          "/admin/login": {
+            "get": {
+              "summary": "Admin login page",
+              "description": "Returns the admin login page",
+              "responses": {
+                "200": {
+                  "description": "Login page rendered"
+                }
+              }
+            }
+          },
+          "/admin/photos": {
+            "get": {
+              "summary": "Photo management dashboard",
+              "description": "Admin interface for managing photos (requires authentication)",
+              "security": [
+                {
+                  "supabaseAuth": []
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Admin dashboard rendered"
+                },
+                "302": {
+                  "description": "Redirect to login if not authenticated"
+                }
+              }
+            }
+          },
+          "/auth/callback": {
+            "get": {
+              "summary": "OAuth callback",
+              "description": "Handles OAuth authentication callback",
+              "responses": {
+                "302": {
+                  "description": "Redirect after authentication"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Background Slideshow",
+      "description": "Dynamic photo slideshow in Hero section with smooth transitions",
+      "files": [
+        "components/ui/background-slideshow.tsx",
+        "components/sections/hero.tsx"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": {
+          "title": "Background Slideshow Feature",
+          "description": "Frontend feature for displaying rotating photos",
+          "version": "1.0.0"
+        }
+      }
+    },
+    {
+      "name": "Gabon Events Calendar",
+      "description": "Calendar component displaying Gabon public holidays and important dates",
+      "files": [
+        "components/ui/calendar.tsx",
+        "lib/gabon-events.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": {
+          "title": "Gabon Events Calendar",
+          "description": "Frontend calendar with Gabon holidays",
+          "version": "1.0.0"
+        }
+      }
+    },
+    {
+      "name": "Multi-Domain Routing",
+      "description": "Middleware handling subdomain routing between main site (odillon.fr) and admin panel (admin.odillon.fr)",
+      "files": [
+        "middleware.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": {
+          "title": "Multi-Domain Routing",
+          "description": "Middleware for subdomain-based routing",
+          "version": "1.0.0"
+        }
+      }
+    }
+  ]
+}
