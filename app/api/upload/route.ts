@@ -61,10 +61,11 @@ export async function POST(request: Request) {
       url: publicUrl
     }, { status: 201 })
 
-  } catch (error) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Erreur lors de l\'upload'
     console.error('Upload error:', error)
     return NextResponse.json(
-      { error: 'Erreur lors de l\'upload' },
+      { error: errorMessage },
       { status: 500 }
     )
   }

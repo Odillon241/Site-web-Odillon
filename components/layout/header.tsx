@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import { Logo } from "@/components/ui/logo"
 import { Menu, X, Phone, Mail } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -42,13 +42,12 @@ export function Header() {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-3">
-              <Image
-                src="/logo-odillon.png"
-                alt="Odillon"
+              <Logo
                 width={240}
                 height={70}
                 className="h-12 md:h-14 lg:h-16 w-auto"
                 priority
+                alt="Odillon"
               />
             </Link>
           </div>

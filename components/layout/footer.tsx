@@ -1,5 +1,5 @@
 import Link from "next/link"
-import Image from "next/image"
+import { Logo } from "@/components/ui/logo"
 import { Phone, Mail, MapPin } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 
@@ -10,12 +10,12 @@ export function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {/* Logo et Description */}
           <div className="space-y-3 md:space-y-4 sm:col-span-2 lg:col-span-1">
-            <Image
-              src="/logo-odillon.png"
-              alt="Odillon"
+            <Logo
               width={200}
               height={60}
               className="h-12 md:h-14 w-auto"
+              alt="Odillon"
+              priority={false}
             />
             <p className="text-xs md:text-sm text-gray-300 leading-relaxed max-w-xs">
               Cabinet de conseil en ingénierie d'entreprises, 

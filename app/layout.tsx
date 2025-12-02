@@ -15,9 +15,9 @@ export const metadata: Metadata = {
   creator: "Odillon",
   publisher: "Odillon",
   icons: {
-    icon: "/favicon-odillon.png",
-    shortcut: "/favicon-odillon.png",
-    apple: "/favicon-odillon.png",
+    icon: "/favicon-odillon.webp",
+    shortcut: "/favicon-odillon.webp",
+    apple: "/favicon-odillon.webp",
   },
   openGraph: {
     type: "website",
@@ -49,7 +49,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" className="scroll-smooth" suppressHydrationWarning>
-      <body className={cn(inter.className, baskvill.variable, "antialiased")}>{children}</body>
+      <body className={cn(inter.className, baskvill.variable, "antialiased")} suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   )
 }

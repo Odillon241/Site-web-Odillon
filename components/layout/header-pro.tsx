@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { Logo } from "@/components/ui/logo"
 import { Phone, Mail, ChevronDown, Home, Briefcase, Award, Users, Send, Menu, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -101,10 +101,8 @@ export function HeaderPro() {
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 md:h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <Image
-              src="/logo-odillon.png"
-              alt="Odillon - Ingénierie d'Entreprises"
+          <Link href="/" className="flex items-center min-w-0">
+            <Logo
               width={350}
               height={100}
               className="h-14 md:h-16 lg:h-20 w-auto"

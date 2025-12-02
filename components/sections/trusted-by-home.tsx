@@ -6,26 +6,32 @@ import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
 
-// Fonction pour obtenir le chemin du logo (essaie .png puis .jpg)
+// Fonction pour obtenir le chemin du logo (essaie .webp puis .png puis .jpg)
 function getLogoPath(basePath: string): string[] {
-  const base = basePath.replace(/\.(png|jpg|jpeg)$/i, '')
-  return [`${base}.png`, `${base}.jpg`, `${base}.jpeg`]
+  const base = basePath.replace(/\.(webp|png|jpg|jpeg)$/i, '')
+  return [`${base}.webp`, `${base}.png`, `${base}.jpg`, `${base}.jpeg`]
 }
 
 // Composant pour afficher un logo avec fallback
 function LogoItem({ company }: { company: { name: string; logo: string; fallback: string; color: string } }) {
   const [imageError, setImageError] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [imageLoaded, setImageLoaded] = useState(false)
   const logoPaths = getLogoPath(company.logo)
   
   const handleImageError = () => {
     if (currentImageIndex < logoPaths.length - 1) {
       // Essayer le format suivant
       setCurrentImageIndex(currentImageIndex + 1)
+      setImageLoaded(false)
     } else {
       // Tous les formats ont échoué, afficher le fallback
       setImageError(true)
     }
+  }
+  
+  const handleImageLoad = () => {
+    setImageLoaded(true)
   }
   
   return (
@@ -37,9 +43,13 @@ function LogoItem({ company }: { company: { name: string; logo: string; fallback
             alt={`${company.name} logo`}
             width={120}
             height={80}
-            className="object-contain max-w-full max-h-full"
+            className={`object-contain max-w-full max-h-full transition-opacity duration-300 ${
+              imageLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
             onError={handleImageError}
+            onLoad={handleImageLoad}
             unoptimized
+            priority={currentImageIndex === 0} // Priorité pour les WebP
           />
         </div>
       ) : (
@@ -64,44 +74,79 @@ const trustedCompanies = [
   { 
     name: "CDC", 
     fullName: "Caisse des Dépôts et Consignations",
-    logo: "/images/logos/cdc.png",
+    logo: "/images/logos/cdc.webp",
     fallback: "CDC",
     color: "#1A9B8E" 
   },
   { 
     name: "CAISTAB", 
     fullName: "Caisse de Stabilisation",
-    logo: "/images/logos/caistab.png",
+    logo: "/images/logos/caistab.webp",
     fallback: "CAISTAB",
     color: "#C4D82E" 
   },
   { 
     name: "SEEG", 
     fullName: "Société d'Énergie et d'Eau du Gabon",
-    logo: "/images/logos/seeg.png",
+    logo: "/images/logos/seeg.webp",
     fallback: "SEEG",
     color: "#1A9B8E" 
   },
   { 
     name: "UBA", 
     fullName: "United Bank for Africa",
-    logo: "/images/logos/uba.png",
+    logo: "/images/logos/uba.webp",
     fallback: "UBA",
     color: "#C4D82E" 
   },
   { 
     name: "SEM", 
     fullName: "Société d'Economie Mixte",
-    logo: "/images/logos/sem.png",
+    logo: "/images/logos/sem.webp",
     fallback: "SEM",
     color: "#1A9B8E" 
   },
   { 
     name: "EDG", 
     fullName: "Energie du Gabon",
-    logo: "/images/logos/edg.png",
+    logo: "/images/logos/edg.webp",
     fallback: "EDG",
     color: "#C4D82E" 
+  },
+  { 
+    name: "ANAC", 
+    fullName: "Agence Nationale de l'Aviation Civile",
+    logo: "/images/logos/anac.webp",
+    fallback: "ANAC",
+    color: "#1A9B8E" 
+  },
+  { 
+    name: "Gabon Télécom", 
+    fullName: "Gabon Télécom",
+    logo: "/images/logos/gabon-telecom.webp",
+    fallback: "GT",
+    color: "#C4D82E" 
+  },
+  { 
+    name: "HPG", 
+    fullName: "Hôpital Privé de Libreville",
+    logo: "/images/logos/hpg.webp",
+    fallback: "HPG",
+    color: "#1A9B8E" 
+  },
+  { 
+    name: "Trésor", 
+    fullName: "Direction Générale du Trésor",
+    logo: "/images/logos/tresor.webp",
+    fallback: "TRÉSOR",
+    color: "#C4D82E" 
+  },
+  { 
+    name: "SGS", 
+    fullName: "SGS Gabon",
+    logo: "/images/logos/sgs.webp",
+    fallback: "SGS",
+    color: "#1A9B8E" 
   }
 ]
 

@@ -23,42 +23,55 @@ Odillon is a professional consulting firm website built for a cabinet specializi
 npm install
 
 # Development server (runs on http://localhost:3000)
+# Uses Turbopack by default in Next.js 16 (no --turbopack flag needed)
 npm run dev
 
 # Production build
+# Uses Turbopack by default in Next.js 16
 npm run build
 
 # Start production server
 npm start
 
-# Lint code
+# Lint code (Note: next lint removed in Next.js 16, use ESLint directly)
 npm run lint
 ```
 
+**Note**: Next.js 16 uses Turbopack by default. If you need Webpack, use `npm run build --webpack` or configure scripts accordingly.
+
 ## Architecture
+
+### Multi-Domain Setup
+
+The site supports subdomain routing via Next.js 16 proxy:
+- **odillon.fr / www.odillon.fr** - Main public site
+- **admin.odillon.fr** - Admin panel (automatically redirects /admin/* paths from main domain)
+
+The proxy in `proxy.ts` handles domain-based routing and redirects using Next.js 16 conventions.
 
 ### Routing Structure
 
 - `/` - Homepage with Hero, Services, Expertise, About, Contact sections
 - `/admin/login` - Admin authentication page
 - `/admin/photos` - Photo management dashboard (protected route)
-- `/api/photos` - CRUD operations for photos
-- `/api/photos/[id]` - Individual photo operations
+- `/api/photos` - CRUD operations for photos (GET supports filtering: `?month=11&theme=novembre-bleu&active=true`)
+- `/api/photos/[id]` - Individual photo operations (PATCH, DELETE)
 - `/api/upload` - File upload to Supabase Storage
 - `/auth/callback` - OAuth callback handler
 
 ### Supabase Integration
 
-The project uses Supabase for backend services. There are three client configurations:
+The project uses Supabase for backend services. There are **three separate client configurations**:
 
 1. **Browser Client** (`lib/supabase/client.ts`) - For client-side operations
 2. **Server Client** (`lib/supabase/server.ts`) - For Server Components and API routes
-3. **Middleware Client** (`lib/supabase/middleware.ts`) - For authentication in middleware
+3. **Proxy Client** (`lib/supabase/middleware.ts`) - For authentication in proxy (formerly middleware)
 
-**Important**: Always use the appropriate client based on context:
+**CRITICAL**: Always use the appropriate client based on context:
 - Use `lib/supabase/server.ts` in Server Components, API routes, and server actions
 - Use `lib/supabase/client.ts` in Client Components
-- Never mix them up as they handle cookies differently
+- The proxy client is only used in `proxy.ts`
+- Never mix them up as they handle cookies differently (Next.js 16+ requires async cookie handling)
 
 ### Database Schema
 
@@ -134,19 +147,23 @@ Next.js Image component is configured to allow all remote hostnames (`next.confi
 
 1. User navigates to `/admin/login`
 2. Credentials are validated via Supabase Auth
-3. On success, middleware (`middleware.ts`) manages session cookies
+3. On success, proxy (`proxy.ts`) manages session cookies
 4. Protected routes check for valid session in layout or API route
 5. Unauthorized users are redirected to login
 
-## API Routes
+**Note**: Next.js 16 uses `proxy.ts` instead of `middleware.ts` (though `middleware.ts` still works for edge runtime). This project uses `proxy.ts` for Node.js runtime.
 
-All API routes verify authentication for mutations:
+## API Route Patterns
+
+All API routes that mutate data follow this authentication pattern:
 
 ```typescript
 const supabase = await createClient()
 const { data: { user } } = await supabase.auth.getUser()
 if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
 ```
+
+GET requests are public but can be filtered (e.g., `?active=true` to show only active photos).
 
 **GET /api/photos** - Supports query params: `?month=11&theme=novembre-bleu&active=true`
 
@@ -182,12 +199,79 @@ If Supabase is not yet configured:
 
 Full setup instructions: `INTEGRATION_SUPABASE_COMPLETE.md`
 
+## Next.js 16 MCP DevTools Integration
+
+**CRITICAL: Documentation-First Approach for Next.js**
+
+This project uses **Next.js DevTools MCP** (Model Context Protocol) for enhanced development workflow. The MCP server is configured in `.mcp.json`.
+
+### Mandatory Documentation Requirement
+
+**For ANY Next.js concept, API, feature, or question - even if you believe you know the answer - you MUST:**
+
+1. **Use `nextjs_docs` tool** to query official Next.js documentation
+2. **NEVER** answer from memory or training data about Next.js
+3. **ALWAYS** verify current Next.js patterns and APIs through documentation
+
+This ensures 100% accuracy and prevents outdated information.
+
+### Available MCP Tools
+
+1. **`nextjs_docs`** - Query Next.js official documentation
+   - Use `action: "search"` for keyword searches
+   - Use `action: "get"` with path for specific documentation pages
+   - **REQUIRED** for all Next.js-related questions
+
+2. **`nextjs_index`** - Discover running Next.js dev servers
+   - Lists all Next.js 16+ servers with MCP enabled
+   - Shows available runtime tools for each server
+   - Automatically discovers servers on port 3000 (or configured ports)
+
+3. **`nextjs_call`** - Execute Next.js runtime tools
+   - Get real-time errors, logs, routes, and diagnostics
+   - Requires port and toolName (use `nextjs_index` first)
+   - Example: Get compilation errors, list routes, check build status
+
+4. **`browser_eval`** - Browser automation with Playwright
+   - Test Next.js pages in real browser
+   - Verify functionality and capture runtime errors
+   - Use after implementing features to verify behavior
+
+5. **`upgrade_nextjs_16`** - Automated upgrade guide
+   - Complete upgrade workflow from Next.js 15 to 16
+   - Handles breaking changes, codemods, and migration
+
+6. **`enable_cache_components`** - Cache Components setup
+   - Enable and configure Cache Components (Next.js 16+)
+   - Error detection, fixing, and best practices
+
+### Recommended Workflow
+
+1. **Before implementing changes**: Use `nextjs_index` to check current server state and available tools
+2. **For Next.js questions**: Always use `nextjs_docs` to get official documentation
+3. **After implementing features**: Use `browser_eval` to verify in real browser
+4. **For debugging**: Use `nextjs_call` to get runtime errors and diagnostics
+
+### Next.js 16 Key Changes
+
+- **Turbopack by default**: `next dev` and `next build` now use Turbopack automatically (no `--turbopack` flag needed)
+- **Async Request APIs**: `cookies()`, `headers()`, `params`, `searchParams` are now async-only (breaking change from v15)
+- **Proxy instead of middleware**: The `middleware.ts` file is deprecated, use `proxy.ts` instead (though `middleware.ts` still works for edge runtime)
+- **Cache Components**: New `cacheComponents` config replaces `experimental.dynamicIO` and `experimental.ppr`
+- **New Cache APIs**: `cacheLife`, `cacheTag`, `updateTag`, `refresh` are now stable (no `unstable_` prefix)
+- **React 19.2**: Built-in support with View Transitions, `useEffectEvent`, Activity API
+- **Image optimization changes**: Default `minimumCacheTTL` changed from 60s to 4 hours, `imageSizes` no longer includes 16px, `qualities` defaults to `[75]` only
+- **Scroll behavior**: Next.js no longer overrides `scroll-behavior: smooth` during navigation by default (add `data-scroll-behavior="smooth"` to `<html>` if needed)
+- **Parallel routes**: All parallel route slots now require explicit `default.js` files
+- **ESLint Flat Config**: `@next/eslint-plugin-next` now defaults to ESLint Flat Config format
+
 ## Known Issues & Patterns
 
-- The middleware must run on every request except static files (see `middleware.ts` matcher config)
-- Server Components that use `cookies()` must be async in Next.js 16+
-- Photo themes in `lib/photo-themes.ts` include default Unsplash photos as fallbacks
-- Multiple backup/temp component files exist in `components/sections/` (suffixed with `-backup`, `-temp`, etc.) - these are not used in production
+- **Proxy/Edge Runtime**: The project uses `proxy.ts` for Next.js 16 (not `middleware.ts`). The proxy runs on every request except static files (see `proxy.ts` matcher config)
+- **Async APIs**: Server Components that use `cookies()`, `headers()`, `params`, or `searchParams` must be async in Next.js 16+
+- **Photo themes**: `lib/photo-themes.ts` includes default Unsplash photos as fallbacks
+- **Backup files**: Multiple backup/temp component files exist in `components/sections/` (suffixed with `-backup`, `-temp`, etc.) - these are not used in production
+- **Turbopack**: The project uses Turbopack by default (Next.js 16). If you need Webpack, use `--webpack` flag
 
 ## Development Notes
 

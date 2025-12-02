@@ -11,7 +11,7 @@
     },
     "supabase": {
       "type": "http",
-      "url": "https://mcp.supabase.com/mcp?project_ref=wicstfeflqkacazsompx"
+      "url": "http://localhost:54321/mcp"
     },
     "next-devtools": {
       "command": "npx",

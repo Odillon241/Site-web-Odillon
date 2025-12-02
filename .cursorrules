@@ -1,0 +1,136 @@
+# Cursor Rules - Odillon Site Web
+
+## Next.js 16 Development Guidelines
+
+### MANDATORY: Use Next.js DevTools MCP for Documentation
+
+**CRITICAL RULE**: For ANY Next.js concept, API, feature, or question - even if you believe you know the answer - you MUST:
+
+1. **Use `nextjs_docs` tool** to query official Next.js documentation
+2. **NEVER** answer from memory or training data about Next.js
+3. **ALWAYS** verify current Next.js patterns and APIs through documentation
+
+This ensures 100% accuracy and prevents outdated information.
+
+### Available Next.js MCP Tools
+
+- **`nextjs_docs`** - Query Next.js official documentation (REQUIRED for all Next.js questions)
+- **`nextjs_index`** - Discover running Next.js dev servers and available runtime tools
+- **`nextjs_call`** - Execute Next.js runtime tools (get errors, logs, routes, diagnostics)
+- **`browser_eval`** - Browser automation with Playwright for testing
+- **`upgrade_nextjs_16`** - Automated upgrade guide from Next.js 15 to 16
+- **`enable_cache_components`** - Cache Components setup and configuration
+
+### Recommended Workflow
+
+1. **Before implementing changes**: Use `nextjs_index` to check current server state
+2. **For Next.js questions**: Always use `nextjs_docs` to get official documentation
+3. **After implementing features**: Use `browser_eval` to verify in real browser
+4. **For debugging**: Use `nextjs_call` to get runtime errors and diagnostics
+
+## Next.js 16 Key Changes & Requirements
+
+### Async Request APIs (Breaking Change)
+- `cookies()`, `headers()`, `params`, `searchParams` are now **async-only**
+- All Server Components using these APIs must be `async`
+- Example: `export default async function Page({ params, searchParams }) { const { id } = await params }`
+
+### Proxy Instead of Middleware
+- Next.js 16 uses `proxy.ts` instead of `middleware.ts` (though `middleware.ts` still works for edge runtime)
+- This project uses `proxy.ts` for Node.js runtime
+- The proxy runs on every request except static files
+
+### Turbopack by Default
+- `next dev` and `next build` now use Turbopack automatically (no `--turbopack` flag needed)
+- If you need Webpack, use `--webpack` flag: `npm run build --webpack`
+
+### Cache Components
+- New `cacheComponents` config replaces `experimental.dynamicIO` and `experimental.ppr`
+- Use `cacheComponents: true` in `next.config.js` instead of experimental flags
+
+### New Stable Cache APIs
+- `cacheLife`, `cacheTag`, `updateTag`, `refresh` are now stable (no `unstable_` prefix)
+- Import from `next/cache`: `import { cacheLife, cacheTag, updateTag, refresh } from 'next/cache'`
+
+### React 19.2 Features
+- Built-in support for View Transitions, `useEffectEvent`, Activity API
+- No additional configuration needed
+
+## Project-Specific Rules
+
+### Supabase Client Usage
+**CRITICAL**: Always use the appropriate Supabase client based on context:
+- `lib/supabase/server.ts` - For Server Components, API routes, and server actions
+- `lib/supabase/client.ts` - For Client Components
+- `lib/supabase/middleware.ts` - Only for `proxy.ts` (authentication in proxy)
+
+**Never mix them up** - they handle cookies differently (Next.js 16+ requires async cookie handling).
+
+### API Route Authentication Pattern
+All API routes that mutate data must follow this pattern:
+
+```typescript
+const supabase = await createClient()
+const { data: { user } } = await supabase.auth.getUser()
+if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+```
+
+### Component Development
+- Always use shadcn/ui components via CLI: `npx shadcn@latest add [component-name]`
+- Import from `@/components/ui/[component-name]`
+- Follow shadcn/ui composition patterns with Radix UI primitives
+- Use Tailwind CSS for styling, maintain consistency with existing design tokens
+
+### Language & Localization
+- All content, metadata, and user-facing text must be in **French**
+- SEO metadata configured in `app/layout.tsx`
+
+### Image Handling
+- Next.js Image component configured to allow all remote hostnames
+- Supports Unsplash and Supabase Storage URLs
+- Default `minimumCacheTTL` is now 4 hours (changed from 60s in Next.js 16)
+
+## Development Best Practices
+
+### Before Making Changes
+1. Check current server state with `nextjs_index`
+2. Query Next.js documentation with `nextjs_docs` if unsure
+3. Review existing patterns in the codebase
+
+### After Making Changes
+1. Use `browser_eval` to test in real browser
+2. Use `nextjs_call` to check for compilation/runtime errors
+3. Verify no regressions in other parts of the project
+
+### Error Handling
+- Always check for errors after modifications
+- Use Next.js MCP tools to get real-time diagnostics
+- Never proceed to another task if an error is not fully resolved
+
+## File Conventions
+
+- **Pages**: `app/**/page.tsx` - Use async for Server Components with params/searchParams
+- **Layouts**: `app/**/layout.tsx` - Use async if accessing cookies/headers
+- **API Routes**: `app/api/**/route.ts` - Always verify authentication for mutations
+- **Proxy**: `proxy.ts` - Handles domain-based routing and authentication
+- **Components**: `components/**/*.tsx` - Use 'use client' directive for Client Components
+
+## Environment Variables
+
+Required in `.env.local`:
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `ADMIN_EMAIL`
+
+## Documentation
+
+- Main project documentation: `docs/CLAUDE.md`
+- Always refer to `docs/CLAUDE.md` for project-specific details
+- Use Next.js MCP tools for framework-specific questions
+
+## Git Workflow
+
+- Current branch: `master` (main branch for PRs)
+- Always verify changes work before committing
+- Use descriptive commit messages in French

@@ -81,9 +81,10 @@ export async function DELETE(
     }
 
     return NextResponse.json({ success: true, message: 'Photo supprimée avec succès' }, { status: 200 })
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Erreur interne'
     console.error('Erreur lors de la suppression:', error)
-    return NextResponse.json({ error: error.message || 'Erreur interne' }, { status: 500 })
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }
 

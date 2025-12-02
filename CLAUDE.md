@@ -203,7 +203,7 @@ Standard Next.js deployment works out of the box. Ensure environment variables a
 
 ## Known Issues & Patterns
 
-- **Middleware Matcher**: The middleware must run on every request except static files (see `middleware.ts:35-39` config)
+- **Proxy Matcher**: The proxy must run on every request except static files (see `proxy.ts:69-80` config)
 - **Async Cookies**: Server Components that use `cookies()` must be async in Next.js 16+ (see `lib/supabase/server.ts:5`)
 - **Photo Fallbacks**: `lib/photo-themes.ts` includes default Unsplash photos as fallbacks
 - **Backup Files**: Multiple backup/temp component files exist in `components/sections/` (suffixed with `-backup`, `-temp`, etc.) - these are not used in production

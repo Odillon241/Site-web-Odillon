@@ -8,7 +8,19 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Calendar as CalendarComponent } from "@/components/ui/calendar"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-import { Upload, Trash2, Eye, EyeOff, Plus, Calendar, Loader2, LogOut, CalendarDays, Search, Filter, X } from "lucide-react"
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command"
+import { Upload, Trash2, Eye, EyeOff, Plus, Calendar, Loader2, LogOut, CalendarDays, Search, Filter, X, Building2, ArrowUp, ArrowDown } from "lucide-react"
+import { HeroImagesDebugger } from "@/components/admin/hero-images-debugger"
 import { MONTHLY_THEMES } from "@/lib/photo-themes"
 import { createClient } from "@/lib/supabase/client"
 import { getEventForDate, hasEvent, getUpcomingEvents, getEventsForMonth, type GabonEvent } from "@/lib/gabon-events"
@@ -23,11 +35,24 @@ interface Photo {
   display_order: number
 }
 
+interface CompanyLogo {
+  id: string
+  name: string
+  full_name: string
+  logo_path: string
+  fallback: string
+  color: string
+  display_order: number
+  is_active: boolean
+}
+
 export default function AdminPhotosPage() {
   const router = useRouter()
   const [photos, setPhotos] = useState<Photo[]>([])
+  const [logos, setLogos] = useState<CompanyLogo[]>([])
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
+  const [loadingLogos, setLoadingLogos] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [checkingAuth, setCheckingAuth] = useState(true)
   
@@ -41,6 +66,10 @@ export default function AdminPhotosPage() {
   const [filterMonth, setFilterMonth] = useState<number | null>(null)
   const [filterTheme, setFilterTheme] = useState<string | null>(null)
   const [filterStatus, setFilterStatus] = useState<string>("all") // "all" | "active" | "inactive"
+  
+  // État pour la recherche command
+  const [commandSearch, setCommandSearch] = useState("")
+  const [commandOpen, setCommandOpen] = useState(false)
   
   // Noms des mois
   const months = [
@@ -57,6 +86,15 @@ export default function AdminPhotosPage() {
     description: "",
     month: null as number | null,
     theme_id: null as string | null
+  })
+
+  // Formulaire d'ajout de logo
+  const [newLogo, setNewLogo] = useState({
+    name: "",
+    full_name: "",
+    logo_path: "",
+    fallback: "",
+    color: "#1A9B8E"
   })
 
   // Vérifier l'authentification au montage
@@ -79,6 +117,7 @@ export default function AdminPhotosPage() {
   useEffect(() => {
     if (!checkingAuth) {
       loadPhotos()
+      loadLogos()
     }
   }, [selectedMonth, checkingAuth])
 
@@ -89,6 +128,32 @@ export default function AdminPhotosPage() {
       setSelectedEvent(event)
     }
   }, [selectedDate])
+
+  // Raccourcis clavier pour la command palette
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      // Cmd+K ou Ctrl+K pour ouvrir/fermer la command palette
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        setCommandOpen((open) => !open)
+        if (!commandOpen) {
+          // Focus sur l'input après un court délai
+          setTimeout(() => {
+            const input = document.querySelector('[cmdk-input]') as HTMLInputElement
+            if (input) input.focus()
+          }, 100)
+        }
+      }
+      // Échap pour fermer
+      if (e.key === "Escape" && commandOpen) {
+        setCommandOpen(false)
+        setCommandSearch("")
+      }
+    }
+
+    document.addEventListener("keydown", down)
+    return () => document.removeEventListener("keydown", down)
+  }, [commandOpen])
 
   // Navigation du calendrier
   const goToPreviousMonth = () => {
@@ -152,11 +217,29 @@ export default function AdminPhotosPage() {
       
       const data = await res.json()
       setPhotos(data.photos || [])
-    } catch (error) {
-      console.error("Erreur:", error)
-      alert("Impossible de charger les photos")
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Impossible de charger les photos"
+      console.error("Erreur lors du chargement des photos:", error)
+      alert(errorMessage)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const loadLogos = async () => {
+    try {
+      setLoadingLogos(true)
+      const res = await fetch('/api/logos')
+      if (!res.ok) throw new Error("Erreur lors du chargement")
+      
+      const data = await res.json()
+      setLogos(data.logos || [])
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Impossible de charger les logos"
+      console.error("Erreur lors du chargement des logos:", error)
+      alert(errorMessage)
+    } finally {
+      setLoadingLogos(false)
     }
   }
 
@@ -230,9 +313,10 @@ export default function AdminPhotosPage() {
       
       // Recharger les photos
       loadPhotos()
-    } catch (error) {
-      console.error("Erreur:", error)
-      alert("Erreur lors de l'ajout de la photo")
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Erreur lors de l'ajout de la photo"
+      console.error("Erreur lors de l'ajout de la photo:", error)
+      alert(errorMessage)
     } finally {
       setUploading(false)
     }
@@ -255,9 +339,10 @@ export default function AdminPhotosPage() {
       setPhotos(photos.map(p => 
         p.id === photoId ? { ...p, is_active: !p.is_active } : p
       ))
-    } catch (error) {
-      console.error("Erreur:", error)
-      alert("Erreur lors de la mise à jour")
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Erreur lors de la mise à jour"
+      console.error("Erreur lors de la mise à jour:", error)
+      alert(errorMessage)
     }
   }
 
@@ -277,9 +362,10 @@ export default function AdminPhotosPage() {
 
       alert(data.message || "Photo supprimée avec succès")
       loadPhotos()
-    } catch (error: any) {
-      console.error("Erreur:", error)
-      alert(error.message || "Erreur lors de la suppression")
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Erreur lors de la suppression"
+      console.error("Erreur lors de la suppression:", error)
+      alert(errorMessage)
     }
   }
 
@@ -288,9 +374,120 @@ export default function AdminPhotosPage() {
       const supabase = createClient()
       await supabase.auth.signOut()
       router.push('/admin/login')
-    } catch (error) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Erreur lors de la déconnexion"
       console.error("Erreur lors de la déconnexion:", error)
-      alert("Erreur lors de la déconnexion")
+      alert(errorMessage)
+    }
+  }
+
+  // Gestion des logos
+  const handleAddLogo = async () => {
+    if (!newLogo.name.trim() || !newLogo.full_name.trim() || !newLogo.logo_path.trim()) {
+      alert("Veuillez remplir tous les champs obligatoires")
+      return
+    }
+
+    try {
+      const res = await fetch('/api/logos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newLogo)
+      })
+
+      if (!res.ok) throw new Error("Erreur lors de l'ajout")
+
+      alert("Logo ajouté avec succès")
+      setNewLogo({
+        name: "",
+        full_name: "",
+        logo_path: "",
+        fallback: "",
+        color: "#1A9B8E"
+      })
+      loadLogos()
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Erreur lors de l'ajout du logo"
+      console.error("Erreur lors de l'ajout du logo:", error)
+      alert(errorMessage)
+    }
+  }
+
+  const toggleLogoActive = async (logoId: string) => {
+    try {
+      const logo = logos.find(l => l.id === logoId)
+      if (!logo) return
+
+      const res = await fetch(`/api/logos/${logoId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ is_active: !logo.is_active })
+      })
+
+      if (!res.ok) throw new Error("Erreur")
+
+      setLogos(logos.map(l => 
+        l.id === logoId ? { ...l, is_active: !l.is_active } : l
+      ))
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Erreur lors de la mise à jour"
+      console.error("Erreur lors de la mise à jour:", error)
+      alert(errorMessage)
+    }
+  }
+
+  const deleteLogo = async (logoId: string) => {
+    if (!confirm("Êtes-vous sûr de vouloir supprimer ce logo ?")) return
+
+    try {
+      const res = await fetch(`/api/logos/${logoId}`, {
+        method: 'DELETE'
+      })
+
+      if (!res.ok) throw new Error("Erreur lors de la suppression")
+
+      alert("Logo supprimé avec succès")
+      loadLogos()
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Erreur lors de la suppression"
+      console.error("Erreur lors de la suppression:", error)
+      alert(errorMessage)
+    }
+  }
+
+  const moveLogoOrder = async (logoId: string, direction: 'up' | 'down') => {
+    const logo = logos.find(l => l.id === logoId)
+    if (!logo) return
+
+    const currentIndex = logos.findIndex(l => l.id === logoId)
+    const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
+
+    if (newIndex < 0 || newIndex >= logos.length) return
+
+    const otherLogo = logos[newIndex]
+    const newOrder = otherLogo.display_order
+    const otherNewOrder = logo.display_order
+
+    try {
+      // Mettre à jour les deux logos
+      await Promise.all([
+        fetch(`/api/logos/${logoId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ display_order: newOrder })
+        }),
+        fetch(`/api/logos/${otherLogo.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ display_order: otherNewOrder })
+        })
+      ])
+
+      loadLogos()
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Erreur lors du déplacement"
+      console.error("Erreur lors du déplacement:", error)
+      alert(errorMessage)
     }
   }
 
@@ -311,6 +508,399 @@ export default function AdminPhotosPage() {
   return (
     <div className="min-h-screen bg-gray-50 pt-[88px] md:pt-[104px]">
       <div className="container mx-auto px-4 py-8">
+        {/* Command Component - Recherche Intelligente */}
+        <div className="mb-8">
+          <div className="relative">
+            <Command 
+              className="rounded-lg border shadow-md" 
+            filter={(value, search) => {
+              // Recherche intelligente : recherche dans tous les champs
+              const searchLower = search.toLowerCase()
+              const valueLower = value.toLowerCase()
+              
+              // Recherche exacte
+              if (valueLower.includes(searchLower)) return 1
+              
+              // Recherche par mots-clés (recherche partielle)
+              const searchWords = searchLower.split(' ').filter(w => w.length > 0)
+              const matchCount = searchWords.filter(word => valueLower.includes(word)).length
+              
+              // Score basé sur le nombre de mots correspondants
+              return matchCount > 0 ? matchCount / searchWords.length : 0
+            }}
+          >
+            <CommandInput 
+              placeholder="Recherchez des photos, logos, thèmes, mois, événements..." 
+              value={commandSearch}
+              onValueChange={setCommandSearch}
+            />
+            <CommandList>
+              <CommandEmpty>
+                {commandSearch ? (
+                  <div className="py-6 text-center text-sm">
+                    <p className="text-gray-500 mb-2">Aucun résultat pour "{commandSearch}"</p>
+                    <p className="text-xs text-gray-400">Essayez : nom de photo, mois, thème, ou nom de logo</p>
+                  </div>
+                ) : (
+                  "Commencez à taper pour rechercher..."
+                )}
+              </CommandEmpty>
+              
+              {/* Photos correspondantes */}
+              {photos.filter(photo => {
+                if (!commandSearch) return false
+                const search = commandSearch.toLowerCase()
+                return (
+                  photo.description.toLowerCase().includes(search) ||
+                  (photo.month && months[photo.month - 1]?.toLowerCase().includes(search)) ||
+                  (photo.theme_id && MONTHLY_THEMES.find(t => t.id === photo.theme_id)?.name.toLowerCase().includes(search))
+                )
+              }).length > 0 && (
+                <CommandGroup heading="Photos">
+                  {photos
+                    .filter(photo => {
+                      if (!commandSearch) return false
+                      const search = commandSearch.toLowerCase()
+                      return (
+                        photo.description.toLowerCase().includes(search) ||
+                        (photo.month && months[photo.month - 1]?.toLowerCase().includes(search)) ||
+                        (photo.theme_id && MONTHLY_THEMES.find(t => t.id === photo.theme_id)?.name.toLowerCase().includes(search))
+                      )
+                    })
+                    .slice(0, 5)
+                    .map((photo) => (
+                      <CommandItem
+                        key={photo.id}
+                        value={`photo-${photo.id}-${photo.description}-${photo.month ? months[photo.month - 1] : ''}-${photo.theme_id || ''}`}
+                        onSelect={() => {
+                          // Scroll vers la photo dans la liste
+                          const element = document.getElementById(`photo-${photo.id}`)
+                          if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                            element.classList.add('ring-2', 'ring-odillon-teal')
+                            setTimeout(() => {
+                              element.classList.remove('ring-2', 'ring-odillon-teal')
+                            }, 2000)
+                          }
+                          setCommandSearch("")
+                        }}
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        <div className="flex-1">
+                          <span className="font-medium">{photo.description}</span>
+                          <div className="flex items-center gap-2 mt-1">
+                            {photo.month && (
+                              <Badge variant="outline" className="text-xs">
+                                {months[photo.month - 1]}
+                              </Badge>
+                            )}
+                            {photo.theme_id && (
+                              <Badge 
+                                className="text-xs"
+                                style={{ 
+                                  backgroundColor: MONTHLY_THEMES.find(t => t.id === photo.theme_id)?.color 
+                                }}
+                              >
+                                {MONTHLY_THEMES.find(t => t.id === photo.theme_id)?.name}
+                              </Badge>
+                            )}
+                            <Badge variant={photo.is_active ? "default" : "secondary"} className="text-xs">
+                              {photo.is_active ? "Actif" : "Inactif"}
+                            </Badge>
+                          </div>
+                        </div>
+                      </CommandItem>
+                    ))}
+                </CommandGroup>
+              )}
+
+              {/* Logos correspondants */}
+              {logos.filter(logo => {
+                if (!commandSearch) return false
+                const search = commandSearch.toLowerCase()
+                return (
+                  logo.name.toLowerCase().includes(search) ||
+                  logo.full_name.toLowerCase().includes(search)
+                )
+              }).length > 0 && (
+                <CommandGroup heading="Logos">
+                  {logos
+                    .filter(logo => {
+                      if (!commandSearch) return false
+                      const search = commandSearch.toLowerCase()
+                      return (
+                        logo.name.toLowerCase().includes(search) ||
+                        logo.full_name.toLowerCase().includes(search)
+                      )
+                    })
+                    .slice(0, 5)
+                    .map((logo) => (
+                      <CommandItem
+                        key={logo.id}
+                        value={`logo-${logo.id}-${logo.name}-${logo.full_name}`}
+                        onSelect={() => {
+                          const element = document.getElementById(`logo-${logo.id}`)
+                          if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                            element.classList.add('ring-2', 'ring-blue-500')
+                            setTimeout(() => {
+                              element.classList.remove('ring-2', 'ring-blue-500')
+                            }, 2000)
+                          }
+                          setCommandSearch("")
+                        }}
+                      >
+                        <Building2 className="w-4 h-4 mr-2" />
+                        <div className="flex-1">
+                          <span className="font-medium">{logo.name}</span>
+                          <p className="text-xs text-gray-500">{logo.full_name}</p>
+                        </div>
+                        <Badge variant={logo.is_active ? "default" : "secondary"} className="text-xs">
+                          {logo.is_active ? "Actif" : "Inactif"}
+                        </Badge>
+                      </CommandItem>
+                    ))}
+                </CommandGroup>
+              )}
+
+              {/* Thèmes correspondants */}
+              {MONTHLY_THEMES.filter(theme => {
+                if (!commandSearch) return false
+                const search = commandSearch.toLowerCase()
+                return (
+                  theme.name.toLowerCase().includes(search) ||
+                  theme.description.toLowerCase().includes(search) ||
+                  (theme.month && months[theme.month - 1]?.toLowerCase().includes(search))
+                )
+              }).length > 0 && (
+                <CommandGroup heading="Thèmes">
+                  {MONTHLY_THEMES
+                    .filter(theme => {
+                      if (!commandSearch) return false
+                      const search = commandSearch.toLowerCase()
+                      return (
+                        theme.name.toLowerCase().includes(search) ||
+                        theme.description.toLowerCase().includes(search) ||
+                        (theme.month && months[theme.month - 1]?.toLowerCase().includes(search))
+                      )
+                    })
+                    .map((theme) => (
+                      <CommandItem
+                        key={theme.id}
+                        value={`theme-${theme.id}-${theme.name}-${theme.description}`}
+                        onSelect={() => {
+                          setFilterTheme(theme.id)
+                          setSelectedMonth(theme.month || null)
+                          setCommandSearch("")
+                          // Scroll vers la section des filtres
+                          const element = document.querySelector('[data-section="filters"]')
+                          if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                          }
+                        }}
+                      >
+                        <div 
+                          className="w-4 h-4 mr-2 rounded-full"
+                          style={{ backgroundColor: theme.color }}
+                        />
+                        <div className="flex-1">
+                          <span className="font-medium">{theme.name}</span>
+                          {theme.month && (
+                            <p className="text-xs text-gray-500">{months[theme.month - 1]}</p>
+                          )}
+                        </div>
+                        <CommandShortcut>Filtrer</CommandShortcut>
+                      </CommandItem>
+                    ))}
+                </CommandGroup>
+              )}
+
+              {/* Mois correspondants */}
+              {months.filter((month, index) => {
+                if (!commandSearch) return false
+                const search = commandSearch.toLowerCase()
+                return month.toLowerCase().includes(search) || 
+                       (index + 1).toString().includes(search)
+              }).length > 0 && (
+                <CommandGroup heading="Mois">
+                  {months
+                    .map((month, index) => {
+                      const search = commandSearch.toLowerCase()
+                      if (search && !month.toLowerCase().includes(search) && 
+                          !(index + 1).toString().includes(search)) {
+                        return null
+                      }
+                      return (
+                        <CommandItem
+                          key={index}
+                          value={`month-${index + 1}-${month}`}
+                          onSelect={() => {
+                            setFilterMonth(index + 1)
+                            setSelectedMonth(index + 1)
+                            setCommandSearch("")
+                            const element = document.querySelector('[data-section="filters"]')
+                            if (element) {
+                              element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                            }
+                          }}
+                        >
+                          <Calendar className="w-4 h-4 mr-2" />
+                          <span>{month}</span>
+                          {index + 1 === new Date().getMonth() + 1 && (
+                            <Badge variant="default" className="text-xs ml-2">Mois actuel</Badge>
+                          )}
+                          <CommandShortcut>Filtrer</CommandShortcut>
+                        </CommandItem>
+                      )
+                    })
+                    .filter(Boolean)}
+                </CommandGroup>
+              )}
+
+              {/* Événements correspondants */}
+              {getUpcomingEvents(20).filter(event => {
+                if (!commandSearch) return false
+                const search = commandSearch.toLowerCase()
+                return (
+                  event.title.toLowerCase().includes(search) ||
+                  event.description.toLowerCase().includes(search)
+                )
+              }).length > 0 && (
+                <CommandGroup heading="Événements">
+                  {getUpcomingEvents(20)
+                    .filter(event => {
+                      if (!commandSearch) return false
+                      const search = commandSearch.toLowerCase()
+                      return (
+                        event.title.toLowerCase().includes(search) ||
+                        event.description.toLowerCase().includes(search)
+                      )
+                    })
+                    .slice(0, 5)
+                    .map((event) => (
+                      <CommandItem
+                        key={event.id}
+                        value={`event-${event.id}-${event.title}`}
+                        onSelect={() => {
+                          setSelectedDate(new Date(event.date))
+                          setCurrentMonth(new Date(event.date))
+                          setCommandSearch("")
+                          const element = document.querySelector('[data-section="calendar"]')
+                          if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                          }
+                        }}
+                      >
+                        <CalendarDays className="w-4 h-4 mr-2" />
+                        <div className="flex-1">
+                          <span className="font-medium">{event.title}</span>
+                          <p className="text-xs text-gray-500">
+                            {new Date(event.date).toLocaleDateString('fr-FR', {
+                              month: 'long',
+                              day: 'numeric'
+                            })}
+                          </p>
+                        </div>
+                        <div 
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: event.color }}
+                        />
+                      </CommandItem>
+                    ))}
+                </CommandGroup>
+              )}
+
+              {/* Actions rapides */}
+              {!commandSearch && (
+                <>
+                  <CommandSeparator />
+                  <CommandGroup heading="Actions Rapides">
+                    <CommandItem
+                      value="add-photo"
+                      onSelect={() => {
+                        const element = document.querySelector('[data-section="add-photo"]')
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                        }
+                        setCommandSearch("")
+                      }}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      <span>Ajouter une photo</span>
+                      <CommandShortcut>⌘N</CommandShortcut>
+                    </CommandItem>
+                    <CommandItem
+                      value="add-logo"
+                      onSelect={() => {
+                        const element = document.querySelector('[data-section="add-logo"]')
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                        }
+                        setCommandSearch("")
+                      }}
+                    >
+                      <Building2 className="w-4 h-4 mr-2" />
+                      <span>Ajouter un logo</span>
+                    </CommandItem>
+                    <CommandItem
+                      value="calendar"
+                      onSelect={() => {
+                        const element = document.querySelector('[data-section="calendar"]')
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                        }
+                        setCommandSearch("")
+                      }}
+                    >
+                      <Calendar className="w-4 h-4 mr-2" />
+                      <span>Voir le calendrier</span>
+                      <CommandShortcut>⌘K</CommandShortcut>
+                    </CommandItem>
+                    <CommandItem
+                      value="filters"
+                      onSelect={() => {
+                        const element = document.querySelector('[data-section="filters"]')
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                        }
+                        setCommandSearch("")
+                      }}
+                    >
+                      <Filter className="w-4 h-4 mr-2" />
+                      <span>Ouvrir les filtres</span>
+                      <CommandShortcut>⌘F</CommandShortcut>
+                    </CommandItem>
+                    <CommandItem
+                      value="logout"
+                      onSelect={() => {
+                        handleLogout()
+                        setCommandSearch("")
+                      }}
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      <span>Déconnexion</span>
+                      <CommandShortcut>⌘⇧Q</CommandShortcut>
+                    </CommandItem>
+                  </CommandGroup>
+                </>
+              )}
+            </CommandList>
+          </Command>
+          {/* Indicateur de raccourci clavier */}
+          {!commandSearch && (
+            <div className="absolute right-3 top-3 flex items-center gap-1 text-xs text-gray-400 pointer-events-none">
+              <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300 font-mono">
+                ⌘
+              </kbd>
+              <span>+</span>
+              <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300 font-mono">
+                K
+              </kbd>
+            </div>
+          )}
+          </div>
+        </div>
+        
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-start justify-between mb-2">
@@ -346,7 +936,7 @@ export default function AdminPhotosPage() {
         </div>
 
         {/* Calendrier Gabonais */}
-        <Card className="mb-8">
+        <Card className="mb-8" data-section="calendar">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CalendarDays className="w-5 h-5" />
@@ -533,7 +1123,7 @@ export default function AdminPhotosPage() {
         </Card>
 
         {/* Ajouter une nouvelle photo */}
-        <Card className="mb-8 border-2 border-dashed border-odillon-teal">
+        <Card className="mb-8 border-2 border-dashed border-odillon-teal" data-section="add-photo">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Plus className="w-5 h-5" />
@@ -680,7 +1270,7 @@ export default function AdminPhotosPage() {
         </Card>
 
         {/* Recherche et Filtres */}
-        <Card className="mb-6">
+        <Card className="mb-6" data-section="filters">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Filter className="w-5 h-5" />
@@ -844,8 +1434,9 @@ export default function AdminPhotosPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredPhotos.map((photo) => (
                   <div
+                    id={`photo-${photo.id}`}
                     key={photo.id}
-                    className={`relative group rounded-lg overflow-hidden border-2 ${
+                    className={`relative group rounded-lg overflow-hidden border-2 transition-all ${
                       photo.is_active ? 'border-green-500' : 'border-gray-300'
                     }`}
                   >
@@ -915,6 +1506,271 @@ export default function AdminPhotosPage() {
                 ))}
               </div>
             )}
+          </CardContent>
+        </Card>
+
+        {/* Gestion des Logos du Marquee */}
+        <Card className="mt-8 border-2 border-blue-200">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Building2 className="w-5 h-5" />
+              Gestion des Logos du Marquee
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {/* Formulaire d'ajout */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300" data-section="add-logo">
+              <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <Plus className="w-4 h-4" />
+                Ajouter un nouveau logo
+              </h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nom court *
+                  </label>
+                  <Input
+                    placeholder="Ex: CDC"
+                    value={newLogo.name}
+                    onChange={(e) => setNewLogo({ ...newLogo, name: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nom complet *
+                  </label>
+                  <Input
+                    placeholder="Ex: Caisse des Dépôts et Consignations"
+                    value={newLogo.full_name}
+                    onChange={(e) => setNewLogo({ ...newLogo, full_name: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Chemin du logo *
+                  </label>
+                  <Input
+                    placeholder="/images/logos/nom-du-logo.webp"
+                    value={newLogo.logo_path}
+                    onChange={(e) => setNewLogo({ ...newLogo, logo_path: e.target.value })}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Format recommandé : WebP. Ex: /images/logos/cdc.webp
+                  </p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Texte de fallback *
+                  </label>
+                  <Input
+                    placeholder="Ex: CDC"
+                    value={newLogo.fallback}
+                    onChange={(e) => setNewLogo({ ...newLogo, fallback: e.target.value })}
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Couleur (hex)
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="color"
+                      value={newLogo.color}
+                      onChange={(e) => setNewLogo({ ...newLogo, color: e.target.value })}
+                      className="w-20 h-10"
+                    />
+                    <Input
+                      placeholder="#1A9B8E"
+                      value={newLogo.color}
+                      onChange={(e) => setNewLogo({ ...newLogo, color: e.target.value })}
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+                <div className="md:col-span-2">
+                  <Button
+                    onClick={handleAddLogo}
+                    className="bg-odillon-teal hover:bg-odillon-teal/90 w-full"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Ajouter le logo
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Liste des logos */}
+            <div>
+              <h3 className="font-semibold text-gray-900 mb-4">
+                Logos actuels ({logos.filter(l => l.is_active).length} actifs / {logos.length} total)
+                {loadingLogos && <Loader2 className="inline w-4 h-4 ml-2 animate-spin" />}
+              </h3>
+              {loadingLogos ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-odillon-teal" />
+                  <span className="ml-3 text-gray-600">Chargement des logos...</span>
+                </div>
+              ) : logos.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <Building2 className="w-12 h-12 mx-auto mb-4 opacity-20" />
+                  <p>Aucun logo pour le moment</p>
+                  <p className="text-sm mt-2">Ajoutez votre premier logo ci-dessus !</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {logos.map((logo, index) => (
+                    <div
+                      id={`logo-${logo.id}`}
+                      key={logo.id}
+                      className={`flex items-center gap-4 p-4 rounded-lg border-2 transition-all ${
+                        logo.is_active ? 'border-green-500 bg-green-50/50' : 'border-gray-300 bg-gray-50'
+                      }`}
+                    >
+                      {/* Ordre */}
+                      <div className="flex flex-col gap-1">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => moveLogoOrder(logo.id, 'up')}
+                          disabled={index === 0}
+                          className="h-6 w-6 p-0"
+                        >
+                          <ArrowUp className="w-3 h-3" />
+                        </Button>
+                        <span className="text-xs text-center font-medium text-gray-600">
+                          {logo.display_order}
+                        </span>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => moveLogoOrder(logo.id, 'down')}
+                          disabled={index === logos.length - 1}
+                          className="h-6 w-6 p-0"
+                        >
+                          <ArrowDown className="w-3 h-3" />
+                        </Button>
+                      </div>
+
+                      {/* Aperçu du logo */}
+                      <div className="flex-shrink-0 w-24 h-16 bg-white border border-gray-200 rounded flex items-center justify-center overflow-hidden">
+                        <img
+                          src={logo.logo_path}
+                          alt={logo.name}
+                          className="max-w-full max-h-full object-contain"
+                          onError={(e) => {
+                            // Afficher le fallback si l'image ne charge pas
+                            const target = e.currentTarget
+                            target.style.display = 'none'
+                            const parent = target.parentElement
+                            if (parent) {
+                              const fallback = parent.querySelector('.logo-fallback') as HTMLElement
+                              if (fallback) fallback.style.display = 'flex'
+                            }
+                          }}
+                        />
+                        <div
+                          className="logo-fallback hidden flex-col items-center justify-center w-full h-full"
+                          style={{ color: logo.color }}
+                        >
+                          <span className="text-lg font-bold">{logo.fallback}</span>
+                        </div>
+                      </div>
+
+                      {/* Informations */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-semibold text-gray-900 truncate">{logo.name}</h4>
+                          <Badge
+                            variant={logo.is_active ? "default" : "secondary"}
+                            className="text-xs"
+                          >
+                            {logo.is_active ? "Actif" : "Inactif"}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-gray-600 truncate">{logo.full_name}</p>
+                        <p className="text-xs text-gray-500 mt-1 truncate">
+                          {logo.logo_path}
+                        </p>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => toggleLogoActive(logo.id)}
+                          title={logo.is_active ? "Désactiver" : "Activer"}
+                        >
+                          {logo.is_active ? (
+                            <EyeOff className="w-4 h-4" />
+                          ) : (
+                            <Eye className="w-4 h-4" />
+                          )}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => deleteLogo(logo.id)}
+                          title="Supprimer"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Images actuellement affichées dans le Hero */}
+        <Card className="mt-8 bg-gradient-to-br from-odillon-teal/10 to-odillon-lime/10 border-odillon-teal">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Eye className="w-5 h-5" />
+              Images Actuellement Affichées dans le Hero
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="bg-white/80 rounded-lg p-4 border border-odillon-teal/20">
+                <h4 className="font-semibold text-gray-900 mb-3">📍 Où sont stockées les images ?</h4>
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 rounded-full bg-odillon-teal mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="font-medium text-gray-900">1. Images téléversées (prioritaires)</p>
+                      <p className="text-gray-600 mt-1">
+                        Stockées dans <strong>Supabase Storage</strong> (bucket: <code className="bg-gray-100 px-1 rounded">hero-photos</code>)
+                        <br />
+                        Référencées dans la table <code className="bg-gray-100 px-1 rounded">photos</code> de la base de données
+                        <br />
+                        <span className="text-odillon-teal font-medium">✓ Ces images remplacent les images par défaut si elles existent</span>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 rounded-full bg-odillon-lime mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="font-medium text-gray-900">2. Images par défaut (fallback)</p>
+                      <p className="text-gray-600 mt-1">
+                        Stockées dans le <strong>code source</strong> du composant Hero
+                        <br />
+                        URLs Unsplash : <code className="bg-gray-100 px-1 rounded text-xs">images.unsplash.com</code>
+                        <br />
+                        <span className="text-amber-600 font-medium">⚠️ Utilisées uniquement si aucune photo téléversée n'est active</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white/80 rounded-lg p-4 border border-odillon-teal/20">
+                <h4 className="font-semibold text-gray-900 mb-3">🔍 Images actuellement chargées</h4>
+                <HeroImagesDebugger />
+              </div>
+            </div>
           </CardContent>
         </Card>
 

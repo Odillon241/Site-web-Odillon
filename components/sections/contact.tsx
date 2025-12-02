@@ -164,7 +164,7 @@ export function Contact() {
                 {/* Center Logo/Icon */}
                 <div className="absolute z-10 flex items-center justify-center">
                   <Icon3D
-                    src="/icons/3d/mail.png" 
+                    src="/icons/3d/mail.webp" 
                     alt="Email"
                     width={60}
                     height={60}
@@ -176,7 +176,7 @@ export function Contact() {
                 {/* Inner Circle Mobile - Services principaux */}
                 <OrbitingCircles radius={70} duration={20} iconSize={40} className="md:hidden">
                   <Icon3D
-                    src="/icons/3d/calendar.png" 
+                    src="/icons/3d/calendar.webp" 
                     alt="Calendrier"
                     width={40}
                     height={40}
@@ -184,7 +184,7 @@ export function Contact() {
                     className="drop-shadow-lg text-odillon-teal"
                   />
                   <Icon3D
-                    src="/icons/3d/folder.png" 
+                    src="/icons/3d/folder.webp" 
                     alt="Stockage"
                     width={40}
                     height={40}
@@ -192,7 +192,7 @@ export function Contact() {
                     className="drop-shadow-lg text-odillon-lime"
                   />
                   <Icon3D
-                    src="/icons/3d/chat.png" 
+                    src="/icons/3d/chat.webp" 
                     alt="Messages"
                     width={40}
                     height={40}
@@ -204,7 +204,7 @@ export function Contact() {
                 {/* Inner Circle Desktop - Services principaux */}
                 <OrbitingCircles radius={100} duration={20} iconSize={60} className="hidden md:flex">
                   <Icon3D
-                    src="/icons/3d/calendar.png" 
+                    src="/icons/3d/calendar.webp" 
                     alt="Calendrier"
                     width={60}
                     height={60}
@@ -212,7 +212,7 @@ export function Contact() {
                     className="drop-shadow-lg text-odillon-teal"
                   />
                   <Icon3D
-                    src="/icons/3d/folder.png" 
+                    src="/icons/3d/folder.webp" 
                     alt="Stockage"
                     width={60}
                     height={60}
@@ -220,7 +220,7 @@ export function Contact() {
                     className="drop-shadow-lg text-odillon-lime"
                   />
                   <Icon3D
-                    src="/icons/3d/chat.png" 
+                    src="/icons/3d/chat.webp" 
                     alt="Messages"
                     width={60}
                     height={60}
@@ -232,7 +232,7 @@ export function Contact() {
                 {/* Outer Circle Mobile - Services additionnels */}
                 <OrbitingCircles radius={120} duration={25} reverse iconSize={40} className="md:hidden">
                   <Icon3D
-                    src="/icons/3d/shield.png" 
+                    src="/icons/3d/shield.webp" 
                     alt="Sécurité"
                     width={40}
                     height={40}
@@ -240,7 +240,7 @@ export function Contact() {
                     className="drop-shadow-lg text-odillon-lime"
                   />
                   <Icon3D
-                    src="/icons/3d/users.png" 
+                    src="/icons/3d/users.webp" 
                     alt="Collaboration"
                     width={40}
                     height={40}
@@ -252,7 +252,7 @@ export function Contact() {
                 {/* Outer Circle Desktop - Services additionnels */}
                 <OrbitingCircles radius={180} duration={25} reverse iconSize={60} className="hidden md:flex">
                   <Icon3D
-                    src="/icons/3d/shield.png" 
+                    src="/icons/3d/shield.webp" 
                     alt="Sécurité"
                     width={60}
                     height={60}
@@ -260,7 +260,7 @@ export function Contact() {
                     className="drop-shadow-lg text-odillon-lime"
                   />
                   <Icon3D
-                    src="/icons/3d/document.png" 
+                    src="/icons/3d/document.webp" 
                     alt="Documents"
                     width={60}
                     height={60}
@@ -268,7 +268,7 @@ export function Contact() {
                     className="drop-shadow-lg text-odillon-teal"
                   />
                   <Icon3D
-                    src="/icons/3d/users.png" 
+                    src="/icons/3d/users.webp" 
                     alt="Collaboration"
                     width={60}
                     height={60}
@@ -276,7 +276,7 @@ export function Contact() {
                     className="drop-shadow-lg text-odillon-lime"
                   />
                   <Icon3D
-                    src="/icons/3d/checkmark.png" 
+                    src="/icons/3d/checkmark.webp" 
                     alt="Vérification"
                     width={60}
                     height={60}

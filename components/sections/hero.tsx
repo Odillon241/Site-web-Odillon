@@ -18,45 +18,73 @@ import {
 import { DottedMap } from "@/components/ui/dotted-map"
 import { BackgroundSlideshow } from "@/components/ui/background-slideshow"
 
-// Images par défaut au cas où l'API échoue ou n'a pas encore de photos
-const DEFAULT_IMAGES = [
-  { src: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1920&q=85", alt: "Équipe professionnelle africaine en réunion" },
-  { src: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=85", alt: "Professionnels africains collaborant" },
-  { src: "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?w=1920&q=85", alt: "Homme d'affaires africain confiant" },
-  { src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1920&q=85", alt: "Équipe diverse en réunion stratégique" },
-  { src: "https://images.unsplash.com/photo-1600878459550-1cf6f36c5f66?w=1920&q=85", alt: "Femme d'affaires africaine leader" },
-  { src: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=1920&q=85", alt: "Équipe professionnelle au bureau moderne" },
-  { src: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1920&q=85", alt: "Professionnelle africaine au travail" },
-  { src: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=85", alt: "Équipe collaborative au bureau" }
-]
-
 export function Hero() {
-  const [heroImages, setHeroImages] = useState<Array<{ src: string; alt: string }>>(DEFAULT_IMAGES)
+  // Plus d'images par défaut - seules les images téléversées via l'admin s'affichent
+  const [heroImages, setHeroImages] = useState<Array<{ src: string; alt: string }>>([])
 
   useEffect(() => {
     // Charger les photos depuis l'API
     const loadPhotos = async () => {
       try {
         const currentMonth = new Date().getMonth() + 1
-        const res = await fetch(`/api/photos?month=${currentMonth}&active=true`, {
-          cache: 'no-store' // Toujours récupérer les dernières données
+        
+        // Récupérer toutes les photos actives, puis filtrer côté client
+        // car l'API ne supporte pas de filtrer par month IS NULL
+        const res = await fetch(`/api/photos?active=true`, {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache' }
         })
+        
+        let allPhotos: any[] = []
         
         if (res.ok) {
           const data = await res.json()
-          
-          if (data.photos && data.photos.length > 0) {
-            // Transformer les photos de l'API au format attendu
-            const images = data.photos.map((photo: any) => ({
-              src: photo.url,
-              alt: photo.description
-            }))
-            setHeroImages(images)
+          if (data.photos && Array.isArray(data.photos)) {
+            // Filtrer : photos du mois en cours OU photos sans mois spécifique (month = null)
+            allPhotos = data.photos.filter((p: any) => 
+              p.month === currentMonth || p.month === null || p.month === undefined
+            )
           }
         }
+        
+        // Supprimer les doublons par ID
+        const uniquePhotos = Array.from(
+          new Map(allPhotos.map((p: any) => [p.id, p])).values()
+        )
+        
+        if (uniquePhotos.length > 0) {
+          // Transformer les photos au format attendu
+          const images = uniquePhotos
+            .filter((photo: any) => {
+              // Filtrer les photos qui ont une URL valide
+              const photoUrl = photo.url || photo.src
+              return photoUrl && typeof photoUrl === 'string' && photoUrl.length > 0
+            })
+            .sort((a: any, b: any) => {
+              // Trier par display_order
+              const orderA = a.display_order || 999
+              const orderB = b.display_order || 999
+              return orderA - orderB
+            })
+            .map((photo: any) => ({
+              src: photo.url || photo.src, // Support des deux formats
+              alt: photo.description || photo.alt || 'Photo Odillon'
+            }))
+          
+          if (images.length > 0) {
+            console.log(`✅ ${images.length} photo(s) chargée(s) pour le Hero (mois ${currentMonth} + photos annuelles)`)
+            setHeroImages(images)
+            return
+          }
+        }
+        
+        // Si aucune photo trouvée, ne rien afficher (plus d'images par défaut)
+        console.log(`ℹ️ Aucune photo active trouvée - Hero sans image d'arrière-plan`)
+        setHeroImages([])
       } catch (error) {
-        console.error("Erreur lors du chargement des photos:", error)
-        // Garder les images par défaut en cas d'erreur
+        console.error("❌ Erreur lors du chargement des photos:", error)
+        // En cas d'erreur, ne rien afficher (plus d'images par défaut)
+        setHeroImages([])
       }
     }
 
@@ -70,19 +98,26 @@ export function Hero() {
     return () => clearInterval(interval)
   }, [])
   return (
-    <section id="accueil" className="relative min-h-[90vh] md:min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-gray-50 to-white">
-      {/* Photo Background Slideshow */}
-      <div className="absolute inset-0 z-0">
-        <BackgroundSlideshow
-          images={heroImages}
-          interval={5000}
-        />
-        {/* Overlay sombre pour lisibilité */}
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/85 via-gray-900/80 to-gray-900/85 z-[1]" />
-      </div>
+    <section id="accueil" className="relative min-h-[85vh] sm:min-h-[90vh] md:min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-gray-50 to-white">
+      {/* Photo Background Slideshow - Uniquement si des images sont disponibles */}
+      {heroImages.length > 0 && (
+        <div className="absolute inset-0 z-0">
+          <BackgroundSlideshow
+            images={heroImages}
+            interval={5000}
+          />
+          {/* Overlay sombre pour lisibilité - Responsive */}
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-900/90 via-gray-900/85 to-gray-900/90 md:from-gray-900/85 md:via-gray-900/80 md:to-gray-900/85 z-[1]" />
+        </div>
+      )}
+      
+      {/* Fond de secours si aucune image n'est disponible */}
+      {heroImages.length === 0 && (
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900" />
+      )}
 
       {/* Dotted Map Background - Gabon (par-dessus les photos) */}
-      <div className="absolute inset-0 opacity-20 md:opacity-30 pointer-events-none z-[1]">
+      <div className="absolute inset-0 opacity-10 sm:opacity-15 md:opacity-20 lg:opacity-30 pointer-events-none z-[1]">
         <DottedMap
           width={1200}
           height={900}
@@ -118,13 +153,13 @@ export function Hero() {
           [3, 6],
           [18, 4],
         ]}
-        className="absolute inset-0 h-full w-full opacity-30 z-[2]"
+        className="absolute inset-0 h-full w-full opacity-15 sm:opacity-20 md:opacity-25 lg:opacity-30 z-[2]"
       />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20 text-white">
-        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16 lg:py-20 text-white">
+        <div className="grid md:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-center">
           {/* Left Content */}
-          <div className="space-y-6 md:space-y-8">
+          <div className="space-y-4 sm:space-y-6 md:space-y-8">
             <FadeIn delay={0.1}>
               <div className="inline-block">
                 <span className="inline-flex items-center rounded-full bg-white/10 border border-white/20 px-3 md:px-4 py-1 md:py-1.5 text-xs md:text-sm font-medium text-white backdrop-blur-sm">
@@ -148,18 +183,18 @@ export function Hero() {
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <p className="text-base md:text-lg text-gray-100 leading-relaxed max-w-2xl">
+              <p className="text-sm sm:text-base md:text-lg text-gray-100 leading-relaxed max-w-2xl">
                 Cabinet de conseil en ingénierie d'entreprises spécialisé dans la structuration, 
                 la gestion administrative, les relations publiques et le management des risques.
               </p>
             </FadeIn>
 
             <FadeIn delay={0.4}>
-              <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Button
                   asChild
                   size="lg"
-                  className="bg-odillon-teal hover:bg-odillon-teal/90 text-white text-base md:text-lg px-6 md:px-8 py-5 md:py-6 group"
+                  className="bg-odillon-teal hover:bg-odillon-teal/90 text-white text-sm sm:text-base md:text-lg px-5 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 w-full sm:w-auto group"
                 >
                   <Link href="#contact">
                     Démarrer un projet
@@ -170,7 +205,7 @@ export function Hero() {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="border-2 border-odillon-teal text-odillon-teal hover:bg-odillon-teal hover:text-white text-base md:text-lg px-6 md:px-8 py-5 md:py-6"
+                  className="border-2 border-odillon-teal text-odillon-teal hover:bg-odillon-teal hover:text-white text-sm sm:text-base md:text-lg px-5 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 w-full sm:w-auto"
                 >
                   <Link href="#services">Nos services</Link>
                 </Button>
@@ -179,24 +214,24 @@ export function Hero() {
 
             {/* Stats */}
             <FadeIn delay={0.5}>
-              <div className="grid grid-cols-3 gap-3 md:gap-6 pt-6 md:pt-8 border-t border-white/20" id="gouvernance">
-                <div>
-                  <div className="text-2xl md:text-3xl font-bold text-odillon-teal">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-6 pt-4 sm:pt-6 md:pt-8 border-t border-white/20" id="gouvernance">
+                <div className="text-center sm:text-left">
+                  <div className="text-xl sm:text-2xl md:text-3xl font-bold text-odillon-teal">
                     <CountingNumber value={15} suffix="+" duration={2} />
                   </div>
-                  <div className="text-xs md:text-sm text-gray-200 mt-1">Années d'expérience</div>
+                  <div className="text-[10px] sm:text-xs md:text-sm text-gray-200 mt-0.5 sm:mt-1 leading-tight">Années d'expérience</div>
                 </div>
-                <div>
-                  <div className="text-2xl md:text-3xl font-bold text-odillon-lime">
+                <div className="text-center sm:text-left">
+                  <div className="text-xl sm:text-2xl md:text-3xl font-bold text-odillon-lime">
                     <CountingNumber value={100} suffix="+" duration={2.5} />
                   </div>
-                  <div className="text-xs md:text-sm text-gray-200 mt-1">Projets réalisés</div>
+                  <div className="text-[10px] sm:text-xs md:text-sm text-gray-200 mt-0.5 sm:mt-1 leading-tight">Projets réalisés</div>
                 </div>
-                <div>
-                  <div className="text-2xl md:text-3xl font-bold text-odillon-teal">
+                <div className="text-center sm:text-left">
+                  <div className="text-xl sm:text-2xl md:text-3xl font-bold text-odillon-teal">
                     <CountingNumber value={50} suffix="+" duration={2.3} />
                   </div>
-                  <div className="text-xs md:text-sm text-gray-200 mt-1">Clients satisfaits</div>
+                  <div className="text-[10px] sm:text-xs md:text-sm text-gray-200 mt-0.5 sm:mt-1 leading-tight">Clients satisfaits</div>
                 </div>
               </div>
             </FadeIn>
@@ -249,7 +284,7 @@ export function Hero() {
               <BlurFade delay={0.3}>
                 <motion.div
                   whileHover={{ scale: 1.02, y: -3 }}
-                  className="relative overflow-hidden p-4 md:p-6 rounded-xl group mt-4 md:mt-8"
+                  className="relative overflow-hidden p-4 md:p-6 rounded-xl group sm:mt-4 md:mt-8"
                   id="conseil"
                   style={{
                     background: 'rgba(255, 255, 255, 0.15)',
@@ -333,7 +368,7 @@ export function Hero() {
               <BlurFade delay={0.5}>
                 <motion.div
                   whileHover={{ scale: 1.02, y: -3 }}
-                  className="relative overflow-hidden p-4 md:p-6 rounded-xl group mt-4 md:mt-8"
+                  className="relative overflow-hidden p-4 md:p-6 rounded-xl group sm:mt-4 md:mt-8"
                   style={{
                     background: 'rgba(255, 255, 255, 0.15)',
                     backdropFilter: 'blur(20px) saturate(180%)',
@@ -376,8 +411,8 @@ export function Hero() {
 
         {/* Scroll Velocity Section */}
         <FadeIn delay={0.6}>
-          <div className="mt-12 md:mt-16 lg:mt-20 relative">
-            <ScrollVelocityContainer className="text-2xl md:text-3xl lg:text-5xl font-bold tracking-[-0.02em] md:leading-[4rem]">
+          <div className="mt-8 sm:mt-12 md:mt-16 lg:mt-20 relative">
+            <ScrollVelocityContainer className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-5xl font-bold tracking-[-0.02em] leading-[1.5] sm:leading-[2rem] md:leading-[3rem] lg:leading-[4rem]">
               <ScrollVelocityRow baseVelocity={5} direction={1} className="text-white/70">
                 Gouvernance • Finances • Ressources Humaines • Juridique
               </ScrollVelocityRow>
@@ -385,8 +420,8 @@ export function Hero() {
                 Excellence • Innovation • Expertise • Performance
               </ScrollVelocityRow>
             </ScrollVelocityContainer>
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-gray-900/85 to-transparent"></div>
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-gray-900/85 to-transparent"></div>
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 sm:w-1/3 bg-gradient-to-r from-gray-900/85 to-transparent"></div>
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 sm:w-1/3 bg-gradient-to-l from-gray-900/85 to-transparent"></div>
           </div>
         </FadeIn>
       </div>

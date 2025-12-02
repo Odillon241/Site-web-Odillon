@@ -1,0 +1,56 @@
+=== Conversion des logos en WebP ===
+Dossier: C:\Users\nexon\Odillon site web\public\images\logos
+
+🔄 Conversion: anac logo.jpeg → anac.webp
+✓ Créé: anac.webp
+  Taille: 10464 bytes
+
+🔄 Conversion: caistab.png → caistab.webp
+✓ Créé: caistab.webp
+  Taille: 19766 bytes
+
+🔄 Conversion: cdc.png → cdc.webp
+✓ Créé: cdc.webp
+  Taille: 20366 bytes
+
+🔄 Conversion: edg.jpg → edg.webp
+✓ Créé: edg.webp
+  Taille: 10564 bytes
+
+🔄 Conversion: Logo Gabon télécom.png → gabon-telecom.webp
+✓ Créé: gabon-telecom.webp
+  Taille: 4184 bytes
+
+🔄 Conversion: LOGO_HPG.ai-221-x-61-mm-1.svg → hpg.webp
+  → Conversion SVG en PNG...
+  → Conversion PNG en WebP...
+✓ Créé: hpg.webp
+  Taille: 7054 bytes
+
+🔄 Conversion: LOGO-TRÉSOR-PNG.webp → tresor.webp
+✓ Copié: tresor.webp
+  Taille: 14622 bytes
+
+🔄 Conversion: seeg.jpg → seeg.webp
+✓ Créé: seeg.webp
+  Taille: 12060 bytes
+
+🔄 Conversion: sem.png → sem.webp
+✓ Créé: sem.webp
+  Taille: 122560 bytes
+
+🔄 Conversion: sgs-logo.png → sgs.webp
+✓ Créé: sgs.webp
+  Taille: 19616 bytes
+
+🔄 Conversion: uba.jpg → uba.webp
+✓ Créé: uba.webp
+  Taille: 24594 bytes
+
+
+=== Résumé ===
+✓ Convertis: 11
+⏭ Ignorés: 0
+✗ Erreurs: 0
+
+Conversion terminée!

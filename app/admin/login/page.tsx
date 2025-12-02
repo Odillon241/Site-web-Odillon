@@ -2,12 +2,13 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import Image from "next/image"
+import Link from "next/link"
+import { Logo } from "@/components/ui/logo"
 import { createClient } from "@/lib/supabase/client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Mail, Lock, AlertCircle, ArrowRight } from "lucide-react"
+import { Mail, Lock, AlertCircle, ArrowRight, Home } from "lucide-react"
 import { GridPattern } from "@/components/ui/grid-pattern"
 
 export default function LoginPage() {
@@ -56,9 +57,7 @@ export default function LoginPage() {
         {/* Logo et Header */}
         <div className="text-center mb-8">
           <div className="inline-block mb-6">
-            <Image
-              src="/logo-odillon.png"
-              alt="Odillon - Ingénierie d'Entreprises"
+            <Logo
               width={400}
               height={120}
               className="h-24 md:h-28 w-auto"
@@ -143,6 +142,15 @@ export default function LoginPage() {
                   </span>
                 )}
               </Button>
+
+              <div className="text-center pt-2">
+                <Link
+                  href="/admin/reset-password"
+                  className="text-sm text-odillon-teal hover:text-odillon-teal/80 transition-colors duration-200 font-medium"
+                >
+                  Mot de passe oublié ?
+                </Link>
+              </div>
             </form>
           </CardContent>
         </Card>
@@ -151,6 +159,17 @@ export default function LoginPage() {
           <Lock className="w-3.5 h-3.5 inline-block mr-1.5 -mt-0.5" />
           Accès réservé aux administrateurs autorisés
         </p>
+
+        {/* Lien de retour vers la page d'accueil */}
+        <div className="text-center mt-4">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm text-odillon-teal hover:text-odillon-teal/80 transition-colors duration-200 font-medium"
+          >
+            <Home className="w-4 h-4" />
+            Retour à la page d'accueil
+          </Link>
+        </div>
       </div>
     </div>
   )
