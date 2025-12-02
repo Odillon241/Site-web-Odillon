@@ -854,7 +854,7 @@ export default function AdminPhotosPage() {
                     >
                       <Calendar className="w-4 h-4 mr-2" />
                       <span>Voir le calendrier</span>
-                      <CommandShortcut>⌘K</CommandShortcut>
+                      <CommandShortcut>⌘C</CommandShortcut>
                     </CommandItem>
                     <CommandItem
                       value="filters"

@@ -34,3 +34,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# sensitive files
+.env.production
+.mcp.json
+.claude/settings.local.json
+.cursor/debug.log
+
