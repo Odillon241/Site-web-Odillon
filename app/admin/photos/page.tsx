@@ -707,7 +707,7 @@ export default function AdminPhotosPage() {
               .filter(s => s.display_order >= displayOrder)
               .sort((a, b) => a.display_order - b.display_order)
             
-            await Promise.all(
+            const updateResponses = await Promise.all(
               sectionsToUpdate.map(section =>
                 fetch(`/api/photo-sections/${section.id}`, {
                   method: 'PATCH',
@@ -716,6 +716,13 @@ export default function AdminPhotosPage() {
                 })
               )
             )
+            
+            // Vérifier que toutes les réponses sont réussies
+            const failedUpdates = updateResponses.filter(res => !res.ok)
+            if (failedUpdates.length > 0) {
+              const errorData = await failedUpdates[0].json().catch(() => ({ error: "Erreur lors de la mise à jour" }))
+              throw new Error(errorData.error || "Erreur lors de la mise à jour de l'ordre des sections")
+            }
           } else if (newPhotoSection.position_type === "after") {
             // Placer après : prendre le display_order + 1
             displayOrder = referenceSection.display_order + 1
@@ -724,7 +731,7 @@ export default function AdminPhotosPage() {
               .filter(s => s.display_order >= displayOrder)
               .sort((a, b) => a.display_order - b.display_order)
             
-            await Promise.all(
+            const updateResponses = await Promise.all(
               sectionsToUpdate.map(section =>
                 fetch(`/api/photo-sections/${section.id}`, {
                   method: 'PATCH',
@@ -733,6 +740,13 @@ export default function AdminPhotosPage() {
                 })
               )
             )
+            
+            // Vérifier que toutes les réponses sont réussies
+            const failedUpdates = updateResponses.filter(res => !res.ok)
+            if (failedUpdates.length > 0) {
+              const errorData = await failedUpdates[0].json().catch(() => ({ error: "Erreur lors de la mise à jour" }))
+              throw new Error(errorData.error || "Erreur lors de la mise à jour de l'ordre des sections")
+            }
           }
         } else {
           // Si la section référencée n'existe plus, placer à la fin
@@ -843,7 +857,7 @@ export default function AdminPhotosPage() {
 
     try {
       // Mettre à jour les deux logos
-      await Promise.all([
+      const [logoResponse, otherLogoResponse] = await Promise.all([
         fetch(`/api/logos/${logoId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
@@ -855,6 +869,13 @@ export default function AdminPhotosPage() {
           body: JSON.stringify({ display_order: otherNewOrder })
         })
       ])
+
+      // Vérifier que toutes les réponses sont réussies
+      if (!logoResponse.ok || !otherLogoResponse.ok) {
+        const failedResponse = !logoResponse.ok ? logoResponse : otherLogoResponse
+        const errorData = await failedResponse.json().catch(() => ({ error: "Erreur lors de la mise à jour" }))
+        throw new Error(errorData.error || "Erreur lors de la mise à jour de l'ordre des logos")
+      }
 
       loadLogos()
     } catch (error: unknown) {
