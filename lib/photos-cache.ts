@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache"
+import { createClient } from "@supabase/supabase-js"
 
 export interface Photo {
   id: string
@@ -17,18 +18,23 @@ export interface Photo {
 export const getActivePhotos = unstable_cache(
   async (): Promise<Photo[]> => {
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
-      const res = await fetch(`${baseUrl}/api/photos?active=true&section=hero`, {
-        next: { revalidate: 300 }, // Revalidate every 5 minutes
-      })
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      const supabase = createClient(supabaseUrl, supabaseKey)
 
-      if (!res.ok) {
-        console.error(`❌ Failed to fetch photos: ${res.status}`)
+      const { data, error } = await supabase
+        .from('photos')
+        .select('*')
+        .eq('is_active', true)
+        .eq('section_id', 'a2aca9ff-af21-4e5c-8f5a-89d00c5a671b') // Hero section ID
+        .order('display_order', { ascending: true })
+
+      if (error) {
+        console.error(`❌ Failed to fetch photos: ${error.message}`)
         return []
       }
 
-      const data = await res.json()
-      return data.photos || []
+      return data || []
     } catch (error) {
       console.error("❌ Error fetching photos:", error)
       return []
