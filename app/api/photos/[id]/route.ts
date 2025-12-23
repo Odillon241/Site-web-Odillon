@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { revalidateTag } from 'next/cache'
 
 // PATCH - Mettre à jour une photo
 export async function PATCH(
@@ -27,6 +28,11 @@ export async function PATCH(
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
+
+  // @ts-ignore
+  revalidateTag('photos')
+  // @ts-ignore
+  revalidateTag('active-photos')
 
   return NextResponse.json({ photo: data })
 }
@@ -79,6 +85,11 @@ export async function DELETE(
     if (deleteError) {
       return NextResponse.json({ error: deleteError.message }, { status: 500 })
     }
+
+    // @ts-ignore
+    revalidateTag('photos')
+    // @ts-ignore
+    revalidateTag('active-photos')
 
     return NextResponse.json({ success: true, message: 'Photo supprimée avec succès' }, { status: 200 })
   } catch (error: unknown) {

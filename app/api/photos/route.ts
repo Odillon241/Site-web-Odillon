@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { revalidateTag } from 'next/cache'
 
 // GET - Récupérer toutes les photos
 export async function GET(request: Request) {
@@ -10,7 +11,7 @@ export async function GET(request: Request) {
   const section = searchParams.get('section')
 
   const supabase = await createClient()
-  
+
   let query = supabase
     .from('photos')
     .select('*')
@@ -33,7 +34,13 @@ export async function GET(request: Request) {
 
   // Filtrer par section
   if (section) {
-    query = query.eq('section_id', section)
+    if (section === 'hero') {
+      query = query.eq('section_id', 'a2aca9ff-af21-4e5c-8f5a-89d00c5a671b')
+    } else if (section === 'phototheque') {
+      query = query.eq('section_id', 'e6032db2-f94e-4a09-9de4-aab229687219')
+    } else {
+      query = query.eq('section_id', section)
+    }
   }
 
   const { data, error } = await query
@@ -56,7 +63,11 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json()
-  
+
+  // Map section slugs to UUIDs
+  if (body.section_id === 'hero') body.section_id = 'a2aca9ff-af21-4e5c-8f5a-89d00c5a671b'
+  if (body.section_id === 'phototheque') body.section_id = 'e6032db2-f94e-4a09-9de4-aab229687219'
+
   const { data, error } = await supabase
     .from('photos')
     .insert([body])
@@ -66,6 +77,11 @@ export async function POST(request: Request) {
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
+
+  // @ts-ignore
+  revalidateTag('photos')
+  // @ts-ignore
+  revalidateTag('active-photos')
 
   return NextResponse.json({ photo: data }, { status: 201 })
 }

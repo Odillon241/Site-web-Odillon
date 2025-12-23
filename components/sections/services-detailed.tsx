@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,10 +10,12 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button"
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee"
 import { CtaBanner } from "@/components/sections/cta-banner"
-import { 
-  Shield, 
-  Scale, 
-  TrendingUp, 
+import { VideoSection } from "@/components/sections/video-section"
+import { Video } from "@/types/admin"
+import {
+  Shield,
+  Scale,
+  TrendingUp,
   Users,
   ArrowRight,
   Target,
@@ -529,6 +531,23 @@ const servicesData = [
 export function ServicesDetailed() {
   const [activeTab, setActiveTab] = useState("gouvernance")
   const activeService = servicesData.find(s => s.id === activeTab)
+  const [video, setVideo] = useState<Video | null>(null)
+
+  useEffect(() => {
+    const fetchVideo = async () => {
+      try {
+        const res = await fetch('/api/videos?active=true')
+        if (res.ok) {
+          const data = await res.json()
+          const found = (data.videos || []).find((v: Video) => v.page === 'Services' && v.section === 'Contenu')
+          if (found) setVideo(found)
+        }
+      } catch (e) {
+        console.error("Failed to fetch video", e)
+      }
+    }
+    fetchVideo()
+  }, [])
 
   return (
     <section className="relative py-12 md:py-16 lg:py-20 overflow-hidden bg-white">
@@ -620,6 +639,8 @@ export function ServicesDetailed() {
         </div>
       </div>
 
+      <VideoSection video={video} />
+
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Tabs Navigation */}
@@ -635,20 +656,20 @@ export function ServicesDetailed() {
                     className="relative group data-[state=active]:bg-white data-[state=active]:shadow-lg border border-gray-200 data-[state=active]:border-gray-300 rounded-lg md:rounded-xl p-3 md:p-4 h-auto transition-all duration-300 hover:scale-105"
                   >
                     <div className="flex flex-col items-center gap-1.5 md:gap-2 text-center">
-                      <div 
+                      <div
                         className="w-9 h-9 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center transition-all duration-300 group-data-[state=active]:scale-110"
-                        style={{ 
+                        style={{
                           backgroundColor: `${service.color}15`,
-                          color: service.color 
+                          color: service.color
                         }}
                       >
                         <Icon className="w-5 h-5 md:w-6 md:h-6" />
                       </div>
                       <div className="font-semibold text-xs md:text-sm leading-tight">{service.title}</div>
                     </div>
-                    
+
                     {/* Active indicator */}
-                    <div 
+                    <div
                       className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 rounded-full transition-all duration-300 group-data-[state=active]:w-3/4"
                       style={{ backgroundColor: service.color }}
                     />
@@ -662,7 +683,7 @@ export function ServicesDetailed() {
                 {/* Service Header */}
                 <FadeIn>
                   <Card className="border-2 relative overflow-hidden" style={{ borderColor: `${service.color}30` }}>
-                    <div 
+                    <div
                       className={`absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l ${service.gradient} pointer-events-none`}
                     />
                     <CardHeader className="relative px-4 md:px-6 py-4 md:py-6">
@@ -675,17 +696,17 @@ export function ServicesDetailed() {
                       <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4 md:mb-6">
                         {service.description}
                       </p>
-                      
+
                       {/* Key Benefits */}
                       <div className="grid sm:grid-cols-3 gap-3 md:gap-4">
                         {service.keyBenefits.map((benefit, idx) => {
                           const BenefitIcon = benefit.icon
                           return (
-                            <div 
+                            <div
                               key={idx}
                               className="flex items-start gap-2 md:gap-3 p-2.5 md:p-3 rounded-lg border border-gray-200 bg-white/50 backdrop-blur-sm"
                             >
-                              <div 
+                              <div
                                 className="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                                 style={{ backgroundColor: `${service.color}15`, color: service.color }}
                               >
@@ -712,7 +733,7 @@ export function ServicesDetailed() {
                       </h3>
                       <p className="text-sm md:text-base text-gray-600">Un processus éprouvé en 4 étapes</p>
                     </div>
-                    
+
                     <Marquee className="py-4">
                       <MarqueeFade side="left" />
                       <MarqueeFade side="right" />
@@ -723,9 +744,9 @@ export function ServicesDetailed() {
                             <MarqueeItem key={idx} className="w-80">
                               <Card className="border-2 border-gray-200 hover:border-gray-300 transition-all duration-300 hover:shadow-lg">
                                 <CardContent className="p-6 text-center">
-                                  <div 
+                                  <div
                                     className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold relative z-10 bg-white shadow-lg"
-                                    style={{ 
+                                    style={{
                                       color: service.color,
                                       border: `3px solid ${service.color}30`
                                     }}
@@ -762,7 +783,7 @@ export function ServicesDetailed() {
                           <Card key={idx} className="border-2 border-gray-200 hover:border-gray-300 transition-all duration-300 group">
                             <CardHeader className="px-4 md:px-6 py-4 md:py-6">
                               <div className="flex items-start gap-2 md:gap-3 mb-2">
-                                <div 
+                                <div
                                   className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
                                   style={{ backgroundColor: `${service.color}15`, color: service.color }}
                                 >
@@ -782,8 +803,8 @@ export function ServicesDetailed() {
                             <CardContent className="px-4 md:px-6 pb-4 md:pb-6">
                               <Accordion type="multiple" className="w-full">
                                 {subService.details.map((detail, detailIdx) => (
-                                  <AccordionItem 
-                                    key={detailIdx} 
+                                  <AccordionItem
+                                    key={detailIdx}
                                     value={`item-${detailIdx}`}
                                     className="border-b border-gray-200 last:border-0"
                                   >

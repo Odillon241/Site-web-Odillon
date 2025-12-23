@@ -6,7 +6,8 @@ import { BlurFade } from "@/components/magicui/blur-fade"
 import { AboutHeroBackground } from "@/components/ui/about-hero-background"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { AnimatedStatCard } from "@/components/ui/animated-stat-card"
+import { StatCardClean } from "@/components/ui/stat-card-clean"
+import { TeamCard } from "@/components/ui/team-card"
 import { Separator } from "@/components/ui/separator"
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee"
 import {
@@ -25,13 +26,16 @@ import {
   CheckCircle2
 } from "lucide-react"
 import Link from "next/link"
+import { TeamGrid } from "@/components/sections/team-grid"
+import { VideoPlayer } from "@/components/ui/video-player"
+import { Video } from "@/types/admin"
 
 const stats = [
   {
     icon: Clock,
     value: 48,
     suffix: "h",
-    label: "Temps de réponse moyen",
+    label: "Temps de réponse",
     description: "Réactivité garantie",
     color: "#39837a"
   },
@@ -39,8 +43,8 @@ const stats = [
     icon: Star,
     value: 98,
     suffix: "%",
-    label: "Satisfaction client",
-    description: "Taux de satisfaction moyen",
+    label: "Satisfaction",
+    description: "Clients satisfaits",
     color: "#C4D82E"
   },
   {
@@ -48,7 +52,7 @@ const stats = [
     value: 50,
     suffix: "+",
     label: "Projets réalisés",
-    description: "Missions menées à bien",
+    description: "Missions réussies",
     color: "#39837a"
   },
   {
@@ -56,7 +60,7 @@ const stats = [
     value: 10,
     suffix: "+",
     label: "Clients accompagnés",
-    description: "Entreprises satisfaites",
+    description: "Partenaires de confiance",
     color: "#C4D82E"
   }
 ]
@@ -65,441 +69,374 @@ const timeline = [
   {
     year: "2017",
     title: "Fondation",
-    description: "Création d'Odillon avec la vision de transformer le paysage entrepreneurial en Afrique Centrale",
+    description: "Création d'Odillon avec une vision claire : transformer le paysage entrepreneurial local.",
     color: "#39837a",
     icon: Sparkles
   },
   {
     year: "2019",
     title: "Expansion",
-    description: "Extension de nos services et développement d'une équipe pluridisciplinaire d'experts",
+    description: "Développement de nos services et constitution d'une équipe d'experts multidisciplinaires.",
     color: "#C4D82E",
     icon: TrendingUp
   },
   {
     year: "2022",
     title: "Reconnaissance",
-    description: "Obtention de certifications internationales et reconnaissance comme leader régional",
+    description: "Certification internationale et positionnement comme leader régional en conseil.",
     color: "#39837a",
     icon: Award
   },
   {
     year: "2024",
     title: "Innovation",
-    description: "Lancement de nouvelles solutions digitales et renforcement de notre présence régionale",
+    description: "Lancement de solutions digitales inédites pour accélérer la croissance de nos clients.",
     color: "#C4D82E",
     icon: Lightbulb
   }
 ]
 
-const valeurs = [
+const initialValues = [
   {
     icon: Award,
     title: "Excellence",
     value: "Standards élevés",
-    description: "Nous visons l'excellence dans chaque mission avec une approche rigoureuse et des méthodologies éprouvées.",
+    description: "Une rigueur absolue dans chaque mission pour dépasser vos attentes.",
     gradient: "from-[#39837a]/20 to-[#39837a]/5"
   },
   {
     icon: Shield,
     title: "Intégrité",
     value: "Éthique totale",
-    description: "Transparence absolue, principes éthiques stricts et confidentialité garantie dans tous nos engagements.",
+    description: "Transparence et confidentialité sont les piliers de notre relation client.",
     gradient: "from-[#C4D82E]/20 to-[#C4D82E]/5"
   },
   {
     icon: Lightbulb,
     title: "Innovation",
-    value: "Approches créatives",
-    description: "Combinaison des meilleures pratiques internationales avec adaptation au contexte local unique.",
+    value: "Créativité utile",
+    description: "Des solutions modernes et adaptées à votre contexte spécifique.",
     gradient: "from-[#39837a]/20 to-[#39837a]/5"
   },
   {
     icon: Heart,
     title: "Partenariat",
-    value: "Collaboration étroite",
-    description: "Relations durables basées sur la confiance mutuelle et le transfert effectif de compétences.",
+    value: "Confiance durable",
+    description: "Nous ne sommes pas juste des consultants, mais vos partenaires de croissance.",
     gradient: "from-[#C4D82E]/20 to-[#C4D82E]/5"
   }
 ]
 
-const approche = [
-  {
-    number: "01",
-    title: "Écoute Active",
-    description: "Compréhension approfondie de vos enjeux, contraintes et objectifs avant toute intervention",
-    icon: Target
-  },
-  {
-    number: "02",
-    title: "Solutions Sur-Mesure",
-    description: "Conception de stratégies personnalisées adaptées à votre contexte organisationnel unique",
-    icon: Lightbulb
-  },
-  {
-    number: "03",
-    title: "Collaboration",
-    description: "Travail main dans la main avec vos équipes pour garantir appropriation et pérennité",
-    icon: Users
-  },
-  {
-    number: "04",
-    title: "Résultats Mesurables",
-    description: "Engagement sur des livrables concrets avec indicateurs de performance clairs et transparents",
-    icon: CheckCircle
-  }
-]
+import { useEffect, useState } from "react"
+
+const ICON_MAP: Record<string, any> = {
+  Award, Shield, Lightbulb, Heart, Target, Sparkles
+}
 
 export function AboutDetailed() {
+  const [missionTitle, setMissionTitle] = useState("Notre Mission")
+  const [missionDescription, setMissionDescription] = useState("Fondée sur la conviction que chaque entreprise possède un potentiel inexploité, Odillon s'est donné pour mission de révéler cette valeur cachée.")
+  const [values, setValues] = useState<any[]>(initialValues)
+  const [video, setVideo] = useState<Video | null>(null)
+  const [heroVideo, setHeroVideo] = useState<Video | null>(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch Settings
+        const settingsRes = await fetch('/api/settings')
+        if (settingsRes.ok) {
+          const data = await settingsRes.json()
+          const s = data.settings || {}
+          if (s.about_mission_title) setMissionTitle(s.about_mission_title)
+          if (s.about_mission_description) setMissionDescription(s.about_mission_description)
+          if (s.about_values_json && Array.isArray(s.about_values_json) && s.about_values_json.length > 0) {
+            const mappedValues = s.about_values_json.map((v: any, idx: number) => ({
+              ...v,
+              icon: ICON_MAP[v.icon] || Award,
+              gradient: idx % 2 === 0 ? "from-[#39837a]/20 to-[#39837a]/5" : "from-[#C4D82E]/20 to-[#C4D82E]/5"
+            }))
+            setValues(mappedValues)
+          }
+        }
+
+        // Fetch Videos
+        const videosRes = await fetch('/api/videos')
+        if (videosRes.ok) {
+          const data = await videosRes.json()
+          const allVideos = data.videos || [] as Video[];
+
+          // Filter for 'A Propos' page videos
+          const aboutVideos = allVideos.filter((v: Video) =>
+            v.is_active && (v.page === 'A Propos')
+          )
+
+          // Content Video
+          const contentVid = aboutVideos.find((v: Video) => v.section === 'Contenu' || v.section === 'Main')
+          if (contentVid) setVideo(contentVid)
+
+          // Hero Video
+          const heroVid = aboutVideos.find((v: Video) => v.section === 'Hero')
+          if (heroVid) setHeroVideo(heroVid)
+        }
+
+      } catch (err) {
+        console.error("Failed to load data", err)
+      }
+    }
+    fetchData()
+  }, [])
+
   return (
-    <section className="relative py-12 md:py-16 lg:py-20 overflow-hidden bg-white">
-      {/* Simple Hero Header */}
-      <div className="relative py-12 md:py-16 lg:py-20 mb-16">
-        {/* Background Pattern */}
-        <AboutHeroBackground />
+    <section className="relative overflow-hidden bg-gradient-to-b from-gray-50 via-white to-gray-50">
+      {/* Hero Section Simplified */}
+      <div className="relative pt-8 pb-16 md:pt-16 md:pb-24 lg:pt-24 lg:pb-32">
+        {/* Background Pattern - Keeping it subtle */}
+        <div className="absolute inset-0 z-0 opacity-80">
+          <AboutHeroBackground />
+        </div>
 
-        {/* Content */}
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto">
-            <FadeIn delay={0.1}>
-              <Badge variant="odillon" className="mb-4 md:mb-6">
-                À Propos de Nous
-              </Badge>
-            </FadeIn>
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+          <FadeIn delay={0.1}>
+            <Badge variant="outline" className="mb-6 px-4 py-1.5 text-sm font-medium border-odillon-teal/30 text-odillon-teal bg-odillon-teal/5">
+              À Propos de Nous
+            </Badge>
+          </FadeIn>
 
-            <FadeIn delay={0.2}>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">
-                Votre partenaire de confiance en{" "}
-                <span className="bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
-                  ingénierie d'entreprises
-                </span>
-              </h1>
-            </FadeIn>
+          <FadeIn delay={0.2}>
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-gray-900 mb-6 max-w-4xl mx-auto leading-tight">
+              L'excellence opérationnelle au service de votre{" "}
+              <span className="text-odillon-teal relative whitespace-nowrap">
+                croissance
+                {/* Underline decorative */}
+                <svg className="absolute -bottom-2 left-0 w-full h-3 text-odillon-lime/60 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
+                  <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="3" fill="none" />
+                </svg>
+              </span>
+            </h1>
+          </FadeIn>
 
-            <FadeIn delay={0.3}>
-              <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed">
-                Découvrez qui nous sommes, nos valeurs et notre engagement envers l'excellence
-                et la réussite de nos clients.
-              </p>
+          <FadeIn delay={0.3}>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed mb-8">
+              Odillon est votre partenaire stratégique pour transformer vos défis en opportunités.
+              Une approche humaine, experte et orientée résultats.
+            </p>
+          </FadeIn>
+
+          {heroVideo && (
+            <FadeIn delay={0.4}>
+              <div className="mx-auto max-w-4xl rounded-2xl overflow-hidden shadow-2xl border-4 border-white mt-8">
+                <VideoPlayer
+                  url={heroVideo.url}
+                  type={heroVideo.type}
+                  thumbnail={heroVideo.thumbnail || undefined}
+                  title={heroVideo.title}
+                  className="w-full aspect-video"
+                  autoplay={true}
+                  muted={true}
+                  loop={true}
+                />
+              </div>
             </FadeIn>
-          </div>
+          )}
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Stats Section */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 space-y-24 md:space-y-32 pb-24">
+
+        {/* Stats Section - New Design */}
         <BlurFade delay={0.4}>
-          <div className="mb-16 md:mb-20 lg:mb-24">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-              {stats.map((stat, idx) => (
-                <AnimatedStatCard
-                  key={stat.label}
-                  icon={stat.icon}
-                  value={stat.value}
-                  suffix={stat.suffix}
-                  label={stat.label}
-                  description={stat.description}
-                  color={stat.color}
-                  delay={idx * 0.1}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {stats.map((stat, idx) => (
+              <StatCardClean
+                key={stat.label}
+                icon={stat.icon}
+                value={stat.value}
+                suffix={stat.suffix}
+                label={stat.label}
+                description={stat.description}
+                color={stat.color}
+                delay={idx * 0.1}
+              />
+            ))}
+          </div>
+        </BlurFade>
+
+        {/* Mission / Vision - Clean Typography */}
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <FadeIn delay={0.2} className="relative order-2 lg:order-1">
+            {/* Decorative image placeholder or gradient blob */}
+            <div className="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 relative">
+              <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-20"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Target className="w-32 h-32 text-odillon-teal/20" />
+              </div>
+              <div className="absolute bottom-8 left-8 right-8 bg-white/90 backdrop-blur-md p-6 rounded-xl border border-white/40 shadow-lg">
+                <p className="font-medium text-gray-800 italic">
+                  "Notre obsession est la réussite tangible de nos clients. Pas de jargon, que des résultats."
+                </p>
+              </div>
+            </div>
+          </FadeIn>
+          <div className="order-1 lg:order-2">
+            <FadeIn delay={0.3}>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">{missionTitle}</h2>
+              <div className="space-y-6 text-lg text-gray-600 leading-relaxed whitespace-pre-wrap">
+                {missionDescription}
+              </div>
+              <div className="mt-8">
+                <ul className="space-y-3">
+                  {[
+                    "Expertise locale, standards internationaux",
+                    "Accompagnement sur-mesure",
+                    "Engagement de résultats"
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3">
+                      <div className="w-5 h-5 rounded-full bg-odillon-lime/20 flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-3.5 h-3.5 text-odillon-teal" />
+                      </div>
+                      <span className="text-base font-medium text-gray-800">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+            </FadeIn>
+
+            {video && (
+              <FadeIn delay={0.4} className="mt-12 md:mt-16 mx-auto max-w-5xl rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
+                <VideoPlayer
+                  url={video.url}
+                  type={video.type}
+                  thumbnail={video.thumbnail || undefined}
+                  title={video.title}
+                  className="w-full aspect-video"
                 />
+              </FadeIn>
+            )}
+          </div>
+        </div>
+
+
+        {/* Values Section - Cleaner Cards */}
+        <div>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Nos Valeurs</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">Les principes directeurs qui guident chacune de nos interventions.</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+            {values.map((valeur, idx) => {
+              const colors = idx % 2 === 0
+                ? { bg: "bg-odillon-teal/5", border: "border-odillon-teal/10", icon: "text-odillon-teal", hover: "group-hover:border-odillon-teal/30" }
+                : { bg: "bg-odillon-lime/10", border: "border-odillon-lime/20", icon: "text-[#8a9920]", hover: "group-hover:border-odillon-lime/40" } // Darker lime for text
+
+              const ValeurIcon = valeur.icon
+
+              return (
+                <FadeIn key={valeur.title} delay={0.1 * (idx + 1)}>
+                  <Card className={`h-full border transition-all duration-300 ${colors.hover} hover:shadow-md bg-white`}>
+                    <CardContent className="p-8">
+                      <div className="flex items-start gap-4">
+                        <div className={`p-3 rounded-xl ${colors.bg}`}>
+                          <ValeurIcon className={`w-6 h-6 ${colors.icon}`} />
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-gray-900 mb-2">{valeur.title}</h3>
+                          <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">{valeur.value}</p>
+                          <p className="text-gray-600 leading-relaxed">
+                            {valeur.description}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </FadeIn>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Team Section (Trombinoscope) */}
+        <div className="py-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Notre Équipe de Direction</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">Des experts passionnés dédiés à votre réussite.</p>
+          </div>
+
+          <TeamGrid />
+        </div>
+
+        {/* Timeline - Elegant Vertical Line */}
+        <div>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Notre Histoire</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">Une croissance constante au service de nos clients.</p>
+          </div>
+
+          <div className="relative max-w-3xl mx-auto">
+            {/* Central Line */}
+            <div className="absolute left-[19px] md:left-1/2 top-0 bottom-0 w-0.5 bg-gray-100 md:-translate-x-1/2"></div>
+
+            <div className="space-y-12">
+              {timeline.map((event, idx) => (
+                <div key={event.year} className={`relative flex items-center md:justify-between ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+
+                  {/* Dot */}
+                  <div className="absolute left-0 md:left-1/2 w-10 h-10 rounded-full border-4 border-white bg-white shadow-md flex items-center justify-center z-10 md:-translate-x-1/2">
+                    <div className="w-4 h-4 rounded-full" style={{ backgroundColor: event.color }}></div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="pl-16 md:pl-0 w-full md:w-[calc(50%-40px)]">
+                    <FadeIn delay={idx * 0.1}>
+                      <div className={`p-6 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow ${idx % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
+                        <span className="inline-block px-3 py-1 rounded-full text-xs font-bold mb-3" style={{ backgroundColor: `${event.color}15`, color: event.color }}>
+                          {event.year}
+                        </span>
+                        <h3 className="text-lg font-bold text-gray-900 mb-2">{event.title}</h3>
+                        <p className="text-sm text-gray-600 leading-relaxed">{event.description}</p>
+                      </div>
+                    </FadeIn>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
-        </BlurFade>
+        </div>
 
-        {/* Timeline Verticale Interactive */}
-        <BlurFade delay={0.5}>
-          <div className="mb-12 md:mb-16 lg:mb-20">
-            <div className="text-center mb-8 md:mb-12 px-4">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4">Notre Parcours</h2>
-              <p className="text-sm md:text-base text-gray-600 max-w-2xl mx-auto">
-                Une évolution constante au service de l'excellence et de l'innovation
-              </p>
-            </div>
 
-            <div className="max-w-4xl mx-auto">
-              {timeline.map((event, idx) => {
-                const EventIcon = event.icon
-                const isLeft = idx % 2 === 0
-                
-                return (
-                  <FadeIn key={event.year} delay={0.1 * (idx + 1)}>
-                    <div className="relative">
-                      {/* Timeline Line */}
-                      {idx < timeline.length - 1 && (
-                        <div 
-                          className="absolute left-1/2 top-16 md:top-20 -translate-x-1/2 w-1 h-full hidden md:block"
-                          style={{ 
-                            background: `linear-gradient(to bottom, ${event.color}, transparent)`,
-                            opacity: 0.3
-                          }}
-                        />
-                      )}
+        {/* Final CTA */}
+        <div className="relative rounded-xl overflow-hidden bg-odillon-dark text-white p-8 md:p-16 text-center">
+          {/* Background Effects */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-odillon-teal/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-odillon-lime/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
 
-                      <div className={`flex items-center gap-4 md:gap-8 mb-8 md:mb-12 ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-                        {/* Content Card */}
-                        <div className="flex-1">
-                          <Card className="border-2 hover:shadow-xl transition-all duration-300 group" style={{ borderColor: `${event.color}30` }}>
-                            <CardHeader className="px-4 md:px-6 py-4 md:py-6">
-                              <div className="flex items-center gap-2 md:gap-3 mb-2">
-                                <div 
-                                  className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform"
-                                  style={{ backgroundColor: `${event.color}20`, color: event.color }}
-                                >
-                                  <EventIcon className="w-5 h-5 md:w-6 md:h-6" />
-                                </div>
-                                <div className="min-w-0">
-                                  <div className="text-xs md:text-sm font-semibold text-gray-500">{event.year}</div>
-                                  <CardTitle className="text-base md:text-xl">{event.title}</CardTitle>
-                                </div>
-                              </div>
-                            </CardHeader>
-                            <CardContent className="px-4 md:px-6 pb-4 md:pb-6">
-                              <p className="text-sm md:text-base text-gray-600 leading-relaxed">{event.description}</p>
-                            </CardContent>
-                          </Card>
-                        </div>
+          <div className="relative z-10 max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Prêt à écrire le prochain chapitre ?</h2>
+            <p className="text-lg text-gray-300 mb-10 leading-relaxed">
+              Rencontrons-nous pour une consultation initiale sans engagement. Discutons de vos ambitions et voyons comment nous pouvons vous aider à les réaliser.
+            </p>
 
-                        {/* Central Icon */}
-                        <div className="hidden md:block flex-shrink-0">
-                          <div 
-                            className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center relative z-10 bg-white shadow-lg border-4"
-                            style={{ borderColor: event.color }}
-                          >
-                            <div className="text-lg md:text-xl font-bold" style={{ color: event.color }}>
-                              {event.year.slice(2)}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Spacer for alternating layout */}
-                        <div className="flex-1 hidden md:block" />
-                      </div>
-                    </div>
-                  </FadeIn>
-                )
-              })}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/contact"
+                className="w-full sm:w-auto px-8 py-4 bg-odillon-teal hover:bg-odillon-teal/90 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-odillon-teal/25 flex items-center justify-center gap-2"
+              >
+                Commencer maintenant
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link
+                href="/services"
+                className="w-full sm:w-auto px-8 py-4 bg-transparent border border-white/20 hover:bg-white/5 text-white font-semibold rounded-xl transition-all flex items-center justify-center"
+              >
+                Découvrir nos services
+              </Link>
             </div>
           </div>
-        </BlurFade>
+        </div>
 
-        <Separator className="my-20" />
-
-        {/* Valeurs - Different Layout */}
-        <BlurFade delay={0.6}>
-          <div className="mb-12 md:mb-16 lg:mb-20">
-            <div className="text-center mb-8 md:mb-12 px-4">
-              <Badge variant="odillon" className="mb-3 md:mb-4">
-                Nos Valeurs Fondamentales
-              </Badge>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4">
-                Ce qui nous définit
-              </h2>
-              <p className="text-sm md:text-base text-gray-600 max-w-2xl mx-auto">
-                Des principes qui guident chaque action et façonnent notre engagement envers l'excellence
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
-              {valeurs.map((valeur, idx) => {
-                const ValeurIcon = valeur.icon
-                const color = idx % 2 === 0 ? '#39837a' : '#C4D82E'
-                const bgGradient = `linear-gradient(135deg, ${color}20, ${color}10)`
-                return (
-                  <FadeIn key={valeur.title} delay={0.1 * (idx + 1)}>
-                    <Card className="border-2 border-gray-200 hover:border-gray-400 transition-all duration-500 hover:shadow-2xl group relative overflow-hidden h-full">
-                      {/* Animated gradient background on hover */}
-                      <div 
-                        className={`absolute inset-0 bg-gradient-to-br ${valeur.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
-                      />
-                      
-                      <CardContent className="p-5 md:p-8 relative">
-                        <div className="flex items-start gap-3 md:gap-4 mb-3 md:mb-4">
-                          <div 
-                            className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-6 transition-all duration-300"
-                            style={{ 
-                              background: bgGradient
-                            }}
-                          >
-                            <ValeurIcon className="w-6 h-6 md:w-8 md:h-8" style={{ color }} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-lg md:text-2xl font-bold text-gray-900 mb-1 group-hover:text-[#39837a] transition-colors">
-                              {valeur.title}
-                            </h3>
-                            <div className="text-xs md:text-sm font-semibold mb-2 md:mb-3" style={{ color }}>
-                              {valeur.value}
-                            </div>
-                          </div>
-                        </div>
-                        <p className="text-sm md:text-base text-gray-700 leading-relaxed">
-                          {valeur.description}
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </FadeIn>
-                )
-              })}
-            </div>
-          </div>
-        </BlurFade>
-
-        {/* Notre Approche - Horizontal Flow */}
-        <BlurFade delay={0.7}>
-          <div className="mb-12 md:mb-16 lg:mb-20">
-            <div className="text-center mb-8 md:mb-12 px-4">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4">Notre Approche</h2>
-              <p className="text-sm md:text-base text-gray-600 max-w-2xl mx-auto">
-                Une méthodologie en 4 étapes pour garantir des résultats concrets et durables
-              </p>
-            </div>
-
-            {/* Horizontal Flow with Arrows */}
-            <div className="hidden lg:flex items-start justify-between gap-4 mb-12 relative">
-              {/* Connection Line Background */}
-              <div className="absolute top-12 left-0 right-0 h-0.5 bg-gray-200 opacity-30 -translate-y-1/2" />
-              
-              {/* Animated Progress Line */}
-              <div 
-                className="absolute top-12 left-0 h-0.5 bg-gradient-to-r from-[#39837a] via-[#C4D82E] to-[#39837a] -translate-y-1/2"
-                style={{ 
-                  width: '0%',
-                  animation: 'progressLine 5s ease-in-out 0.5s infinite'
-                }}
-              />
-              
-              {/* Animated Progress Indicator */}
-              <div 
-                className="absolute top-12 h-2 w-2 rounded-full bg-gradient-to-r from-[#39837a] to-[#C4D82E] -translate-y-1/2 -translate-x-1/2 shadow-lg"
-                style={{ 
-                  left: '0%',
-                  animation: 'progressIndicator 5s ease-in-out 0.5s infinite'
-                }}
-              />
-              
-              {approche.map((etape, idx) => {
-                const EtapeIcon = etape.icon
-                return (
-                  <FadeIn key={etape.number} delay={0.1 * (idx + 1)}>
-                    <div className="flex-1 relative flex flex-col items-center">
-                      <div className="text-center w-full">
-                        <div 
-                          className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center relative z-10 bg-white shadow-lg border-4 hover:scale-110 transition-transform duration-300"
-                          style={{ borderColor: idx % 2 === 0 ? '#39837a' : '#C4D82E' }}
-                        >
-                          <EtapeIcon className="w-10 h-10" style={{ color: idx % 2 === 0 ? '#39837a' : '#C4D82E' }} />
-                        </div>
-                        <div className="text-sm font-bold text-gray-400 mb-2">{etape.number}</div>
-                        <h3 className="text-lg font-bold text-gray-900">{etape.title}</h3>
-                      </div>
-                    </div>
-                  </FadeIn>
-                )
-              })}
-            </div>
-
-            {/* Descriptions Below */}
-            <Marquee className="py-4">
-              <MarqueeFade side="left" />
-              <MarqueeFade side="right" />
-              <MarqueeContent speed={40} pauseOnHover={true}>
-                {approche.map((etape, idx) => (
-                  <MarqueeItem key={`desc-${etape.number}`} className="w-80">
-                    <Card className="border border-gray-200 hover:border-gray-300 transition-all h-full">
-                      <CardContent className="p-6">
-                        <div className="lg:hidden text-4xl font-bold mb-2 opacity-10" style={{ color: idx % 2 === 0 ? '#39837a' : '#C4D82E' }}>
-                          {etape.number}
-                        </div>
-                        <h3 className="lg:hidden text-lg font-bold text-gray-900 mb-2">{etape.title}</h3>
-                        <p className="text-sm text-gray-600 leading-relaxed">{etape.description}</p>
-                      </CardContent>
-                    </Card>
-                  </MarqueeItem>
-                ))}
-              </MarqueeContent>
-            </Marquee>
-          </div>
-        </BlurFade>
-
-        {/* Mission Statement - Centered Hero */}
-        <BlurFade delay={0.8}>
-          <Card className="border-2 bg-gradient-to-br from-white to-gray-50 relative overflow-hidden mb-12 md:mb-16 lg:mb-20" style={{ borderColor: '#39837a30' }}>
-            <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#39837a]/10 to-transparent" />
-            <CardContent className="p-6 md:p-10 lg:p-12 text-center relative">
-              <Target className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 md:mb-6 text-[#39837a]" />
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4">Notre Mission</h2>
-              <p className="text-base md:text-lg lg:text-xl text-gray-700 leading-relaxed max-w-3xl mx-auto mb-6 md:mb-8">
-                Accompagner les entreprises dans leur transformation et leur croissance en apportant 
-                des solutions innovantes, personnalisées et adaptées aux réalités locales tout en 
-                maintenant les plus hauts standards d'éthique professionnelle.
-              </p>
-              
-              <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 text-xs md:text-sm">
-                {['Innovation', 'Excellence', 'Résultats', 'Partenariat'].map((mot, i) => {
-                  const badgeColor = i % 2 === 0 ? '#39837a' : '#C4D82E'
-                  return (
-                    <Badge 
-                      key={mot}
-                      className="px-3 md:px-4 py-1.5 md:py-2"
-                      style={{ 
-                        backgroundColor: `${badgeColor}15`,
-                        color: badgeColor,
-                        border: `1px solid ${badgeColor}30`
-                      }}
-                    >
-                      {mot}
-                    </Badge>
-                  )
-                })}
-              </div>
-            </CardContent>
-          </Card>
-        </BlurFade>
-
-        {/* CTA Final */}
-        <BlurFade delay={0.9}>
-          <Card className="border-2 border-gray-300 bg-gradient-to-r from-gray-50 via-white to-gray-50">
-            <CardContent className="p-6 md:p-10 lg:p-12 text-center">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 md:mb-4 px-4">
-                Prêt à transformer votre entreprise ?
-              </h2>
-              <p className="text-base md:text-lg text-gray-600 mb-6 md:mb-8 max-w-2xl mx-auto px-4">
-                Rencontrons-nous pour discuter de vos enjeux et découvrir comment nous pouvons 
-                vous accompagner vers l'excellence
-              </p>
-              <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 md:gap-4">
-                <Link 
-                  href="/contact"
-                  className="relative inline-flex items-center justify-center gap-2 h-10 md:h-12 px-6 md:px-8 rounded-md text-sm md:text-base font-medium shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group w-full sm:w-auto"
-                  style={{ 
-                    backgroundColor: '#39837a',
-                    color: '#ffffff'
-                  }}
-                >
-                  <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-15 transition-opacity duration-300"></span>
-                  <span className="relative" style={{ color: '#ffffff' }}>Contactez-nous</span>
-                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5 relative" style={{ color: '#ffffff' }} />
-                </Link>
-                <Link 
-                  href="/services"
-                  className="relative inline-flex items-center justify-center gap-2 h-10 md:h-12 px-6 md:px-8 rounded-md text-sm md:text-base font-medium border-2 transition-all duration-300 overflow-hidden group w-full sm:w-auto"
-                  style={{ 
-                    borderColor: '#39837a',
-                    color: '#39837a'
-                  }}
-                >
-                  <span 
-                    className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
-                    style={{ backgroundColor: '#39837a' }}
-                  ></span>
-                  <span className="relative" style={{ color: '#39837a' }}>Nos services</span>
-                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5 relative" style={{ color: '#39837a' }} />
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        </BlurFade>
       </div>
-    </section>
+    </section >
   )
 }

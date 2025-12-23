@@ -1,4 +1,4 @@
-import { use } from "react"
+
 import dynamic from "next/dynamic"
 import { HeaderPro } from "@/components/layout/header-pro"
 import { Footer } from "@/components/layout/footer"
@@ -7,6 +7,8 @@ import { TrustedByHome } from "@/components/sections/trusted-by-home"
 import { ServicesHome } from "@/components/sections/services-home"
 import { ExpertiseHome } from "@/components/sections/expertise-home"
 import { CtaBanner } from "@/components/sections/cta-banner"
+import { VideoSection } from "@/components/sections/video-section"
+import { createClient } from "@/lib/supabase/server"
 
 // Lazy load components below the fold (not visible initially)
 const AboutHome = dynamic(() => import("@/components/sections/about-home").then(mod => ({ default: mod.AboutHome })), {
@@ -20,17 +22,43 @@ const ContactHome = dynamic(() => import("@/components/sections/contact-home").t
 const ScrollProgress = dynamic(() => import("@/components/magicui/scroll-progress").then(mod => ({ default: mod.ScrollProgress })))
 const ScrollToTop = dynamic(() => import("@/components/magicui/scroll-to-top").then(mod => ({ default: mod.ScrollToTop })))
 
-export default function Home({
+export default async function Home({
   params,
   searchParams,
 }: {
   params: Promise<Record<string, string>>
   searchParams: Promise<Record<string, string | string[]>>
 }) {
-  // Unwrap the promises to prevent DevTools enumeration warnings
-  // Even though we don't use these values, we need to handle them properly
-  use(params)
-  use(searchParams)
+  // Await the promises
+  await params
+  await searchParams
+
+  // Fetch trusted companies
+  const supabase = await createClient()
+  const { data: logos } = await supabase
+    .from('company_logos')
+    .select('*')
+    .eq('is_active', true)
+    .order('display_order', { ascending: true })
+
+    .order('display_order', { ascending: true })
+
+  // Fetch Homepage Video
+  const { data: videosData } = await supabase
+    .from('videos')
+    .select('*')
+    .eq('is_active', true)
+
+  const homeVideo = videosData?.find(v => v.page === 'Accueil' && (v.section === 'Contenu' || v.section === 'Hero')) || null
+
+  // Fetch site settings for CTA
+  const { data: requestSettings } = await supabase
+    .from('site_settings')
+    .select('*')
+    .single()
+
+  const settings = requestSettings || {}
+
   return (
     <>
       <ScrollProgress />
@@ -38,15 +66,17 @@ export default function Home({
       <HeaderPro />
       <main className="min-h-screen pt-[88px] md:pt-[104px]">
         <Hero />
-        <TrustedByHome />
+        <TrustedByHome logos={logos || []} />
         <ServicesHome />
         <ExpertiseHome />
+        <VideoSection video={homeVideo} />
         <CtaBanner
-          title="Découvrez notre expertise approfondie et nos méthodologies éprouvées"
-          description=""
-          buttonText="En savoir plus sur notre expertise"
-          buttonHref="/expertise"
-          badgeText="Expertise"
+          title={settings.expertise_cta_title || "Découvrez notre expertise approfondie et nos méthodologies éprouvées"}
+          description={settings.expertise_cta_description || ""}
+          buttonText={settings.expertise_cta_button_text || "En savoir plus sur notre expertise"}
+          buttonHref={settings.expertise_cta_button_link || "/expertise"}
+          badgeText={settings.expertise_cta_badge_text || "Expertise"}
+          imageUrl={settings.services_cta_image_url} // Reusing this field as per admin implementation
         />
         <AboutHome />
         <ContactHome />

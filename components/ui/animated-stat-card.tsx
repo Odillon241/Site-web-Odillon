@@ -46,18 +46,18 @@ export function AnimatedStatCard({
   const [count, setCount] = useState(0)
   const ref = React.useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: "-50px" })
-  
+
   // Unique ID for gradient
   const gradientId = useMemo(() => `stat-grad-${Math.random().toString(36).slice(2, 8)}`, [])
 
   // Animated counter
   useEffect(() => {
     if (!isInView) return
-    
+
     const duration = 2000
     const startTime = Date.now()
     const startDelay = delay * 1000
-    
+
     const timer = setTimeout(() => {
       const animate = () => {
         const elapsed = Date.now() - startTime - startDelay
@@ -65,7 +65,7 @@ export function AnimatedStatCard({
         // Easing function for smooth animation
         const easeOutExpo = 1 - Math.pow(2, -10 * progress)
         setCount(Math.floor(easeOutExpo * value))
-        
+
         if (progress < 1) {
           requestAnimationFrame(animate)
         } else {
@@ -74,7 +74,7 @@ export function AnimatedStatCard({
       }
       animate()
     }, startDelay)
-    
+
     return () => clearTimeout(timer)
   }, [isInView, value, delay])
 
@@ -88,14 +88,14 @@ export function AnimatedStatCard({
     >
       {/* Outer container with animated border */}
       <div
-        className="relative w-full h-full rounded-2xl p-[2px] overflow-hidden"
+        className="relative w-full h-full rounded-xl p-[2px] overflow-hidden"
         style={{
           background: `linear-gradient(135deg, ${hexToRgba(color, 0.3)}, transparent 50%, ${hexToRgba(color, 0.2)})`,
         }}
       >
         {/* Animated rotating border gradient */}
         <m.div
-          className="absolute inset-0 rounded-2xl"
+          className="absolute inset-0 rounded-xl"
           style={{
             background: `conic-gradient(from 0deg, ${color}, transparent 30%, transparent 70%, ${color})`,
           }}
@@ -115,14 +115,14 @@ export function AnimatedStatCard({
         />
 
         {/* Inner card */}
-        <div 
-          className="relative w-full h-full rounded-2xl backdrop-blur-xl overflow-hidden"
+        <div
+          className="relative w-full h-full rounded-xl backdrop-blur-xl overflow-hidden"
           style={{
             background: `linear-gradient(145deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85))`,
           }}
         >
           {/* Background glow effect */}
-          <div 
+          <div
             className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
             style={{
               background: `radial-gradient(ellipse at 50% 0%, ${hexToRgba(color, 0.15)} 0%, transparent 70%)`,
@@ -161,7 +161,7 @@ export function AnimatedStatCard({
             >
               {/* Icon glow */}
               <m.div
-                className="absolute inset-0 rounded-2xl blur-xl"
+                className="absolute inset-0 rounded-xl blur-xl"
                 style={{ background: hexToRgba(color, 0.4) }}
                 animate={{
                   scale: [1, 1.2, 1],
@@ -169,18 +169,18 @@ export function AnimatedStatCard({
                 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               />
-              
+
               {/* Icon background */}
-              <div 
-                className="relative w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center"
+              <div
+                className="relative w-14 h-14 md:w-16 md:h-16 rounded-xl flex items-center justify-center"
                 style={{
                   background: `linear-gradient(135deg, ${hexToRgba(color, 0.2)}, ${hexToRgba(color, 0.1)})`,
                   border: `2px solid ${hexToRgba(color, 0.4)}`,
                   boxShadow: `0 4px 20px ${hexToRgba(color, 0.2)}, inset 0 1px 0 rgba(255,255,255,0.5)`,
                 }}
               >
-                <Icon 
-                  className="w-7 h-7 md:w-8 md:h-8" 
+                <Icon
+                  className="w-7 h-7 md:w-8 md:h-8"
                   style={{ color: color }}
                 />
               </div>
@@ -250,11 +250,11 @@ export function AnimatedStatCard({
           </div>
 
           {/* Corner accents */}
-          <div 
+          <div
             className="absolute top-0 left-0 w-8 h-8 border-l-2 border-t-2 rounded-tl-2xl opacity-30 group-hover:opacity-60 transition-opacity duration-500"
             style={{ borderColor: color }}
           />
-          <div 
+          <div
             className="absolute bottom-0 right-0 w-8 h-8 border-r-2 border-b-2 rounded-br-2xl opacity-30 group-hover:opacity-60 transition-opacity duration-500"
             style={{ borderColor: color }}
           />

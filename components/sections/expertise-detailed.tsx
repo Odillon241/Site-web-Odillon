@@ -10,12 +10,15 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { Separator } from "@/components/ui/separator"
 import { TextShimmer } from "@/components/ui/text-shimmer"
 import { CountingNumber } from "@/components/ui/counting-number"
-import { AnimatedStatCard } from "@/components/ui/animated-stat-card"
+import { StatCardClean } from "@/components/ui/stat-card-clean"
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee"
+
 import { VideosSection } from "@/components/sections/videos-section"
+import { VideoSection } from "@/components/sections/video-section"
 import type { VideoItem } from "@/components/sections/videos-section"
-import { 
-  Target, 
+import { Video } from "@/types/admin"
+import {
+  Target,
   Briefcase,
   Globe2,
   TrendingUp,
@@ -209,6 +212,7 @@ const coreValues = [
 export function ExpertiseDetailed() {
   const [presentationVideos, setPresentationVideos] = useState<VideoItem[]>([])
   const [testimonialVideos, setTestimonialVideos] = useState<VideoItem[]>([])
+  const [video, setVideo] = useState<Video | null>(null)
   const [testimonials, setTestimonials] = useState<Array<{
     quote: string
     name: string
@@ -221,6 +225,14 @@ export function ExpertiseDetailed() {
   useEffect(() => {
     const loadVideos = async () => {
       try {
+        // Fetch Main Video for Expertise Page
+        const videosRes = await fetch('/api/videos?active=true')
+        if (videosRes.ok) {
+          const allVideosData = await videosRes.json()
+          const mainVideo = (allVideosData.videos || []).find((v: Video) => v.page === 'Expertise' && v.section === 'Contenu')
+          if (mainVideo) setVideo(mainVideo)
+        }
+
         // Charger les vidéos de présentation
         const presentationRes = await fetch('/api/videos?category=presentation&active=true')
         if (presentationRes.ok) {
@@ -234,7 +246,7 @@ export function ExpertiseDetailed() {
               } else if (v.url.includes("vimeo.com")) {
                 videoType = "vimeo"
               }
-              
+
               return {
                 id: v.id,
                 title: v.title,
@@ -260,7 +272,7 @@ export function ExpertiseDetailed() {
               } else if (v.url.includes("vimeo.com")) {
                 videoType = "vimeo"
               }
-              
+
               return {
                 id: v.id,
                 title: v.title,
@@ -336,7 +348,7 @@ export function ExpertiseDetailed() {
     if (selectedDomain && domain.id !== selectedDomain) {
       return false
     }
-    
+
     // Filtre par recherche textuelle
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
@@ -347,7 +359,7 @@ export function ExpertiseDetailed() {
         domain.highlights.some(h => h.toLowerCase().includes(query))
       )
     }
-    
+
     return true
   })
 
@@ -392,57 +404,10 @@ export function ExpertiseDetailed() {
       {/* Hero Section with Background */}
       <div className="relative py-8 md:py-12 lg:py-16 overflow-hidden bg-white">
         {/* Background Pattern */}
+        {/* Background Pattern - Simplified for Professional Look */}
         <div className="absolute inset-0 overflow-hidden z-0">
-          {/* Soft gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-odillon-teal/5 via-white to-odillon-lime/5" />
-
-          {/* Large circle patterns */}
-          <div className="absolute -top-24 -right-24 w-96 h-96 border border-odillon-teal/10 rounded-full" />
-          <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] border border-odillon-lime/10 rounded-full" />
-
-          {/* Smaller decorative circles */}
-          <div className="absolute top-1/4 right-1/3 w-32 h-32 border border-odillon-teal/20 rounded-full animate-pulse" style={{ animationDuration: '4s' }} />
-          <div className="absolute bottom-1/3 left-1/4 w-24 h-24 border border-odillon-lime/20 rounded-full animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
-
-          {/* Simple grid overlay */}
-          <div className="absolute inset-0 opacity-[0.15]">
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="expertise-grid" width="50" height="50" patternUnits="userSpaceOnUse">
-                  <path
-                    d="M 50 0 L 0 0 0 50"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="0.5"
-                    className="text-odillon-teal"
-                  />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#expertise-grid)" />
-            </svg>
-          </div>
-
-          {/* Subtle dots pattern */}
-          <div className="absolute inset-0 opacity-[0.08]">
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="expertise-dots" width="30" height="30" patternUnits="userSpaceOnUse">
-                  <circle cx="2" cy="2" r="1.5" fill="currentColor" className="text-odillon-lime" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#expertise-dots)" />
-            </svg>
-          </div>
-
-          {/* Floating squares */}
-          <div className="absolute top-1/3 left-1/4 w-20 h-20 border-2 border-odillon-teal/15 transform rotate-12 animate-pulse" style={{ animationDuration: '6s' }} />
-          <div className="absolute bottom-1/4 right-1/4 w-16 h-16 border-2 border-odillon-lime/15 transform -rotate-12 animate-pulse" style={{ animationDuration: '7s', animationDelay: '2s' }} />
-
-          {/* Subtle light beams effect */}
-          <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-odillon-teal/10 to-transparent" />
-          <div className="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-transparent via-odillon-lime/10 to-transparent" />
-
-          {/* Radial fade overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-50/50" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
           <div className="absolute inset-0 bg-gradient-radial from-transparent via-white/30 to-white/80 p-0" />
         </div>
 
@@ -454,7 +419,7 @@ export function ExpertiseDetailed() {
                 Domaines d'Expertise
               </Badge>
             </BlurFade>
-            
+
             <BlurFade delay={0.2}>
               <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl text-gray-900">
                 Expertise reconnue pour{" "}
@@ -463,17 +428,17 @@ export function ExpertiseDetailed() {
                 </span>
               </h1>
             </BlurFade>
-            
+
             <BlurFade delay={0.3}>
               <p className="mx-auto mb-10 max-w-xl text-lg text-gray-600">
-                Depuis notre création, nous accompagnons les entreprises dans leur transformation 
+                Depuis notre création, nous accompagnons les entreprises dans leur transformation
                 avec des solutions sur mesure, une méthodologie éprouvée et des résultats mesurables.
               </p>
             </BlurFade>
 
             {/* Barre de recherche */}
             <BlurFade delay={0.4}>
-              <form 
+              <form
                 className="mx-auto mb-6 max-w-2xl"
                 onSubmit={handleSearch}
               >
@@ -502,11 +467,10 @@ export function ExpertiseDetailed() {
                 <Button
                   variant={selectedDomain === null ? "default" : "outline"}
                   onClick={() => handleFilterChange(null)}
-                  className={`h-8 rounded-full ${
-                    selectedDomain === null 
-                      ? "bg-odillon-teal text-white hover:bg-odillon-teal/90" 
-                      : "border-gray-200 hover:bg-gray-50"
-                  }`}
+                  className={`h-8 rounded-full ${selectedDomain === null
+                    ? "bg-odillon-teal text-white hover:bg-odillon-teal/90"
+                    : "border-gray-200 hover:bg-gray-50"
+                    }`}
                 >
                   Tous
                 </Button>
@@ -517,11 +481,10 @@ export function ExpertiseDetailed() {
                       key={domain.id}
                       variant={selectedDomain === domain.id ? "default" : "outline"}
                       onClick={() => handleFilterChange(domain.id)}
-                      className={`h-8 rounded-full gap-1.5 ${
-                        selectedDomain === domain.id
-                          ? "bg-odillon-teal text-white hover:bg-odillon-teal/90"
-                          : "border-gray-200 hover:bg-gray-50"
-                      }`}
+                      className={`h-8 rounded-full gap-1.5 ${selectedDomain === domain.id
+                        ? "bg-odillon-teal text-white hover:bg-odillon-teal/90"
+                        : "border-gray-200 hover:bg-gray-50"
+                        }`}
                     >
                       <DomainIcon className="h-3 w-3" style={{ color: selectedDomain === domain.id ? "white" : domain.color }} />
                       {domain.title.split(" ")[0]}
@@ -565,55 +528,8 @@ export function ExpertiseDetailed() {
           <BlurFade delay={0.5}>
             <div className="relative mt-8 md:mt-12 lg:mt-16">
               {/* Animated Zigzag Curve Background */}
-              <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1, height: '100%' }}>
-                <svg 
-                  className="w-full" 
-                  viewBox="0 0 1200 300" 
-                  preserveAspectRatio="xMidYMid meet"
-                  style={{ position: 'absolute', top: '50%', left: 0, transform: 'translateY(-50%)', width: '100%', height: '300px' }}
-                >
-                  {/* Main zigzag curve that tapers - goes from left to right */}
-                  <m.path
-                    d="M 0 150 L 80 130 L 160 170 L 240 110 L 320 190 L 400 90 L 480 210 L 560 70 L 640 230 L 720 50 L 800 250 L 880 30 L 960 270 L 1040 10 L 1120 290 L 1200 -10"
-                    fill="none"
-                    stroke="#39837a"
-                    strokeLinecap="round"
-                    initial={{ pathLength: 0, strokeWidth: 3, opacity: 0 }}
-                    animate={{ 
-                      pathLength: 1,
-                      strokeWidth: [3, 0.8, 3],
-                      opacity: [0.4, 0.6, 0.4],
-                    }}
-                    transition={{ 
-                      pathLength: { duration: 5, ease: "easeInOut", repeat: Infinity },
-                      strokeWidth: { duration: 3, ease: "easeInOut", repeat: Infinity },
-                      opacity: { duration: 2, ease: "easeInOut", repeat: Infinity }
-                    }}
-                  />
-                  {/* Secondary zigzag with different pattern and tapering */}
-                  <m.path
-                    d="M 0 150 L 100 170 L 200 130 L 300 190 L 400 110 L 500 210 L 600 90 L 700 230 L 800 70 L 900 250 L 1000 50 L 1100 270 L 1200 30"
-                    fill="none"
-                    stroke="#C4D82E"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeDasharray="8,4"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ 
-                      pathLength: 1,
-                      opacity: [0.3, 0.5, 0.3],
-                      strokeWidth: [2, 0.5, 2],
-                    }}
-                    transition={{ 
-                      pathLength: { duration: 6, ease: "easeInOut", repeat: Infinity },
-                      opacity: { duration: 2.5, ease: "easeInOut", repeat: Infinity },
-                      strokeWidth: { duration: 4, ease: "easeInOut", repeat: Infinity },
-                      delay: 0.8
-                    }}
-                  />
-                </svg>
-              </div>
-              
+
+
               <div className="relative z-10">
                 {/* Desktop: Horizontal layout with animated stat cards */}
                 <div className="hidden lg:grid grid-cols-4 gap-6 max-w-6xl mx-auto">
@@ -623,7 +539,7 @@ export function ExpertiseDetailed() {
                     { icon: Star, value: 95, suffix: "%", label: "Satisfaction client", description: "Taux de satisfaction moyen", color: "#39837a" },
                     { icon: Target, value: 4, suffix: "", label: "Domaines d'expertise", description: "Spécialisations clés", color: "#C4D82E" }
                   ].map((stat, idx) => (
-                    <AnimatedStatCard
+                    <StatCardClean
                       key={stat.label}
                       icon={stat.icon}
                       value={stat.value}
@@ -631,7 +547,6 @@ export function ExpertiseDetailed() {
                       label={stat.label}
                       description={stat.description}
                       color={stat.color}
-                      delay={idx}
                     />
                   ))}
                 </div>
@@ -644,7 +559,7 @@ export function ExpertiseDetailed() {
                     { icon: Star, value: 95, suffix: "%", label: "Satisfaction client", description: "Taux de satisfaction moyen", color: "#39837a" },
                     { icon: Target, value: 4, suffix: "", label: "Domaines d'expertise", description: "Spécialisations clés", color: "#C4D82E" }
                   ].map((stat, idx) => (
-                    <AnimatedStatCard
+                    <StatCardClean
                       key={stat.label}
                       icon={stat.icon}
                       value={stat.value}
@@ -652,7 +567,6 @@ export function ExpertiseDetailed() {
                       label={stat.label}
                       description={stat.description}
                       color={stat.color}
-                      delay={idx}
                     />
                   ))}
                 </div>
@@ -663,6 +577,9 @@ export function ExpertiseDetailed() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+
+        {/* Section Vidéo Principale */}
+        <VideoSection video={video} className="mb-12" />
 
         {/* Section Vidéos de Présentation */}
         <VideosSection
@@ -684,8 +601,8 @@ export function ExpertiseDetailed() {
                 )}
               </h2>
               <p className="text-sm md:text-base text-gray-600">
-                {searchQuery || selectedDomain 
-                  ? "Résultats de votre recherche" 
+                {searchQuery || selectedDomain
+                  ? "Résultats de votre recherche"
                   : "Passez votre souris sur chaque domaine pour en savoir plus"}
               </p>
             </div>
@@ -694,132 +611,132 @@ export function ExpertiseDetailed() {
           {filteredDomains.length > 0 ? (
             <div className="grid md:grid-cols-2 gap-4 md:gap-6">
               {filteredDomains.map((domain, idx) => {
-              const DomainIcon = domain.icon
-              return (
-                <BlurFade key={domain.id} delay={0.1 * (idx + 1)}>
-                  <HoverCard openDelay={200}>
-                    <HoverCardTrigger asChild>
-                      <Card 
-                        className="border-2 hover:border-gray-400 transition-all duration-500 cursor-pointer group h-full"
-                        style={{ borderColor: `${domain.color}30` }}
-                      >
-                        <CardHeader className="px-4 md:px-6 py-4 md:py-6">
-                          <div className="flex items-start justify-between mb-2 md:mb-3">
-                            <div 
-                              className="w-12 h-12 md:w-14 md:h-14 rounded-lg md:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
-                              style={{ backgroundColor: `${domain.color}20`, color: domain.color }}
-                            >
-                              <DomainIcon className="w-6 h-6 md:w-7 md:h-7" />
-                            </div>
-                            <Badge 
-                              className="text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1"
-                              style={{ backgroundColor: `${domain.color}15`, color: domain.color, border: `1px solid ${domain.color}30` }}
-                            >
-                              Expertise clé
-                            </Badge>
-                          </div>
-                          <CardTitle className="text-lg md:text-2xl mb-1 md:mb-2 group-hover:text-[#39837a] transition-colors">
-                            {domain.title}
-                          </CardTitle>
-                          <CardDescription className="text-xs md:text-sm font-medium" style={{ color: domain.color }}>
-                            {domain.shortDesc}
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-3 md:space-y-4 px-4 md:px-6 pb-4 md:pb-6">
-                          <p className="text-xs md:text-sm text-gray-600 leading-relaxed">
-                            {domain.description}
-                          </p>
-
-                          {/* Stats Badge */}
-                          <div 
-                            className="inline-flex items-baseline gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-lg"
-                            style={{ backgroundColor: `${domain.color}10` }}
-                          >
-                            <span className="text-2xl md:text-3xl font-bold" style={{ color: domain.color }}>
-                              {domain.stats.value}{domain.stats.suffix}
-                            </span>
-                            <span className="text-[10px] md:text-xs text-gray-600">{domain.stats.label}</span>
-                          </div>
-
-                          {/* Highlights */}
-                          <div className="grid grid-cols-2 gap-1.5 md:gap-2 pt-2">
-                            {domain.highlights.map((highlight, i) => (
-                              <div key={i} className="flex items-start gap-1.5 md:gap-2">
-                                <CheckCircle className="w-3 h-3 md:w-4 md:h-4 mt-0.5 flex-shrink-0" style={{ color: domain.color }} />
-                                <span className="text-[10px] md:text-xs text-gray-700 leading-tight">{highlight}</span>
-                              </div>
-                            ))}
-                          </div>
-
-                          <div className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm font-medium pt-2" style={{ color: domain.color }}>
-                            <span className="hidden sm:inline">Survolez pour en savoir plus</span>
-                            <span className="sm:hidden">Touchez pour plus</span>
-                            <ArrowRight className="w-3 h-3 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </HoverCardTrigger>
-                    
-                    <HoverCardContent className="w-[500px] p-6" align="center">
-                      <div className="space-y-4">
-                        <div>
-                          <div className="flex items-center gap-2 mb-3">
-                            <DomainIcon className="w-5 h-5" style={{ color: domain.color }} />
-                            <h4 className="font-bold text-lg">{domain.title}</h4>
-                          </div>
-                          <Separator className="mb-4" />
-                        </div>
-
-                        <div>
-                          <div className="flex items-start gap-2 mb-2">
-                            <Badge variant="outline" className="text-xs">Défi</Badge>
-                          </div>
-                          <p className="text-sm text-gray-700 leading-relaxed mb-4">
-                            {domain.details.challenge}
-                          </p>
-                        </div>
-
-                        <div>
-                          <div className="flex items-start gap-2 mb-2">
-                            <Badge className="text-xs" style={{ backgroundColor: `${domain.color}20`, color: domain.color }}>
-                              Notre Solution
-                            </Badge>
-                          </div>
-                          <p className="text-sm text-gray-700 leading-relaxed mb-4">
-                            {domain.details.solution}
-                          </p>
-                        </div>
-
-                        <div>
-                          <div className="text-xs font-semibold text-gray-500 uppercase mb-3">Résultats Mesurables</div>
-                          <div className="grid gap-2">
-                            {domain.details.results.map((result, i) => (
-                              <div key={i} className="flex items-center gap-3 p-2 bg-gray-50 border-l-2" style={{ borderColor: domain.color }}>
-                                <div className="font-bold text-lg" style={{ color: domain.color }}>{result.metric}</div>
-                                <div className="text-xs text-gray-700">{result.description}</div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        <Link 
-                          href="/contact"
-                          className="relative inline-flex items-center justify-center gap-2 w-full h-10 px-6 rounded-md text-sm font-medium shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group mt-4"
-                          style={{ 
-                            backgroundColor: domain.color,
-                            color: '#ffffff'
-                          }}
+                const DomainIcon = domain.icon
+                return (
+                  <BlurFade key={domain.id} delay={0.1 * (idx + 1)}>
+                    <HoverCard openDelay={200}>
+                      <HoverCardTrigger asChild>
+                        <Card
+                          className="border-2 hover:border-gray-400 transition-all duration-500 cursor-pointer group h-full"
+                          style={{ borderColor: `${domain.color}30` }}
                         >
-                          <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-15 transition-opacity duration-300"></span>
-                          <span className="relative" style={{ color: '#ffffff' }}>Discutons de votre projet</span>
-                          <ArrowRight className="w-4 h-4 relative" style={{ color: '#ffffff' }} />
-                        </Link>
-                      </div>
-                    </HoverCardContent>
-                  </HoverCard>
-                </BlurFade>
-              )
-            })}
+                          <CardHeader className="px-4 md:px-6 py-4 md:py-6">
+                            <div className="flex items-start justify-between mb-2 md:mb-3">
+                              <div
+                                className="w-12 h-12 md:w-14 md:h-14 rounded-lg md:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                                style={{ backgroundColor: `${domain.color}20`, color: domain.color }}
+                              >
+                                <DomainIcon className="w-6 h-6 md:w-7 md:h-7" />
+                              </div>
+                              <Badge
+                                className="text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1"
+                                style={{ backgroundColor: `${domain.color}15`, color: domain.color, border: `1px solid ${domain.color}30` }}
+                              >
+                                Expertise clé
+                              </Badge>
+                            </div>
+                            <CardTitle className="text-lg md:text-2xl mb-1 md:mb-2 group-hover:text-[#39837a] transition-colors">
+                              {domain.title}
+                            </CardTitle>
+                            <CardDescription className="text-xs md:text-sm font-medium" style={{ color: domain.color }}>
+                              {domain.shortDesc}
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent className="space-y-3 md:space-y-4 px-4 md:px-6 pb-4 md:pb-6">
+                            <p className="text-xs md:text-sm text-gray-600 leading-relaxed">
+                              {domain.description}
+                            </p>
+
+                            {/* Stats Badge */}
+                            <div
+                              className="inline-flex items-baseline gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-lg"
+                              style={{ backgroundColor: `${domain.color}10` }}
+                            >
+                              <span className="text-2xl md:text-3xl font-bold" style={{ color: domain.color }}>
+                                {domain.stats.value}{domain.stats.suffix}
+                              </span>
+                              <span className="text-[10px] md:text-xs text-gray-600">{domain.stats.label}</span>
+                            </div>
+
+                            {/* Highlights */}
+                            <div className="grid grid-cols-2 gap-1.5 md:gap-2 pt-2">
+                              {domain.highlights.map((highlight, i) => (
+                                <div key={i} className="flex items-start gap-1.5 md:gap-2">
+                                  <CheckCircle className="w-3 h-3 md:w-4 md:h-4 mt-0.5 flex-shrink-0" style={{ color: domain.color }} />
+                                  <span className="text-[10px] md:text-xs text-gray-700 leading-tight">{highlight}</span>
+                                </div>
+                              ))}
+                            </div>
+
+                            <div className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm font-medium pt-2" style={{ color: domain.color }}>
+                              <span className="hidden sm:inline">Survolez pour en savoir plus</span>
+                              <span className="sm:hidden">Touchez pour plus</span>
+                              <ArrowRight className="w-3 h-3 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </HoverCardTrigger>
+
+                      <HoverCardContent className="w-[500px] p-6" align="center">
+                        <div className="space-y-4">
+                          <div>
+                            <div className="flex items-center gap-2 mb-3">
+                              <DomainIcon className="w-5 h-5" style={{ color: domain.color }} />
+                              <h4 className="font-bold text-lg">{domain.title}</h4>
+                            </div>
+                            <Separator className="mb-4" />
+                          </div>
+
+                          <div>
+                            <div className="flex items-start gap-2 mb-2">
+                              <Badge variant="outline" className="text-xs">Défi</Badge>
+                            </div>
+                            <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                              {domain.details.challenge}
+                            </p>
+                          </div>
+
+                          <div>
+                            <div className="flex items-start gap-2 mb-2">
+                              <Badge className="text-xs" style={{ backgroundColor: `${domain.color}20`, color: domain.color }}>
+                                Notre Solution
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                              {domain.details.solution}
+                            </p>
+                          </div>
+
+                          <div>
+                            <div className="text-xs font-semibold text-gray-500 uppercase mb-3">Résultats Mesurables</div>
+                            <div className="grid gap-2">
+                              {domain.details.results.map((result, i) => (
+                                <div key={i} className="flex items-center gap-3 p-2 bg-gray-50 border-l-2" style={{ borderColor: domain.color }}>
+                                  <div className="font-bold text-lg" style={{ color: domain.color }}>{result.metric}</div>
+                                  <div className="text-xs text-gray-700">{result.description}</div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          <Link
+                            href="/contact"
+                            className="relative inline-flex items-center justify-center gap-2 w-full h-10 px-6 rounded-md text-sm font-medium shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group mt-4"
+                            style={{
+                              backgroundColor: domain.color,
+                              color: '#ffffff'
+                            }}
+                          >
+                            <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-15 transition-opacity duration-300"></span>
+                            <span className="relative" style={{ color: '#ffffff' }}>Discutons de votre projet</span>
+                            <ArrowRight className="w-4 h-4 relative" style={{ color: '#ffffff' }} />
+                          </Link>
+                        </div>
+                      </HoverCardContent>
+                    </HoverCard>
+                  </BlurFade>
+                )
+              })}
             </div>
           ) : (
             <div className="text-center py-12 md:py-16">
@@ -829,7 +746,7 @@ export function ExpertiseDetailed() {
                   Aucun résultat trouvé
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  {searchQuery 
+                  {searchQuery
                     ? `Aucun domaine ne correspond à "${searchQuery}"`
                     : "Aucun domaine ne correspond à votre filtre"}
                 </p>
@@ -884,7 +801,7 @@ export function ExpertiseDetailed() {
                         <div className="text-center px-2">
                           <h3 className="text-base md:text-lg font-bold text-gray-900 mb-1.5 md:mb-2">{step.title}</h3>
                           <p className="text-xs md:text-sm text-gray-600 mb-3 md:mb-4 leading-relaxed">{step.description}</p>
-                          
+
                           {/* Deliverables */}
                           <div className="space-y-0.5 md:space-y-1">
                             {step.deliverables.map((deliverable, i) => (
@@ -970,11 +887,10 @@ export function ExpertiseDetailed() {
                             <button
                               key={idx}
                               onClick={() => setCurrentTestimonial(idx)}
-                              className={`h-2 w-2 rounded-full border transition-colors ${
-                                idx === currentTestimonial
-                                  ? "bg-primary border-primary"
-                                  : "bg-background border-border"
-                              }`}
+                              className={`h-2 w-2 rounded-full border transition-colors ${idx === currentTestimonial
+                                ? "bg-primary border-primary"
+                                : "bg-background border-border"
+                                }`}
                               aria-label={`Aller au témoignage ${idx + 1}`}
                             />
                           ))}
@@ -1006,14 +922,14 @@ export function ExpertiseDetailed() {
                   Prêt à faire passer votre organisation au niveau supérieur ?
                 </h2>
                 <p className="text-base md:text-lg text-gray-600 mb-6 md:mb-8 leading-relaxed px-4">
-                  Rencontrons-nous pour discuter de vos enjeux et découvrir comment notre expertise 
+                  Rencontrons-nous pour discuter de vos enjeux et découvrir comment notre expertise
                   peut accélérer votre transformation et maximiser votre performance.
                 </p>
                 <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 md:gap-4">
-                  <Link 
+                  <Link
                     href="/contact"
                     className="relative inline-flex items-center justify-center gap-2 h-10 md:h-12 px-6 md:px-8 rounded-md text-sm md:text-base font-medium shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group w-full sm:w-auto"
-                    style={{ 
+                    style={{
                       backgroundColor: '#39837a',
                       color: '#ffffff'
                     }}
@@ -1022,15 +938,15 @@ export function ExpertiseDetailed() {
                     <span className="relative" style={{ color: '#ffffff' }}>Contactez nos experts</span>
                     <ArrowRight className="w-4 h-4 md:w-5 md:h-5 relative" style={{ color: '#ffffff' }} />
                   </Link>
-                  <Link 
+                  <Link
                     href="/services"
                     className="relative inline-flex items-center justify-center gap-2 h-10 md:h-12 px-6 md:px-8 rounded-md text-sm md:text-base font-medium border-2 transition-all duration-300 overflow-hidden group w-full sm:w-auto"
-                    style={{ 
+                    style={{
                       borderColor: '#39837a',
                       color: '#39837a'
                     }}
                   >
-                    <span 
+                    <span
                       className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
                       style={{ backgroundColor: '#39837a' }}
                     ></span>

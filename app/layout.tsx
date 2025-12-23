@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import { cn } from "@/lib/utils"
-import { petrovSans } from "./fonts"
+import { airFont } from "./fonts"
 import { MotionProvider } from "@/components/providers/motion-provider"
+import { Toaster } from "@/components/ui/sonner"
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.odillon.fr'),
@@ -47,9 +48,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" className="scroll-smooth" suppressHydrationWarning>
-      <body className={cn(petrovSans.className, petrovSans.variable, "antialiased")} suppressHydrationWarning>
+      <body className={cn(airFont.className, airFont.variable, "antialiased")} suppressHydrationWarning>
         <MotionProvider>
           {children}
+          <Toaster />
         </MotionProvider>
       </body>
     </html>

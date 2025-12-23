@@ -36,25 +36,25 @@ function getYouTubeId(url: string): string | null {
   if (youtuBeMatch && youtuBeMatch[1]) {
     return youtuBeMatch[1]
   }
-  
+
   // Gérer les URLs youtube.com/watch?v=ID
   const watchMatch = url.match(/(?:watch\?v=)([^#&?\s]+)/)
   if (watchMatch && watchMatch[1]) {
     return watchMatch[1]
   }
-  
+
   // Gérer les URLs youtube.com/embed/ID
   const embedMatch = url.match(/(?:embed\/)([^#&?\s]+)/)
   if (embedMatch && embedMatch[1]) {
     return embedMatch[1]
   }
-  
+
   // Gérer les URLs youtube.com/v/ID
   const vMatch = url.match(/(?:youtube\.com\/v\/)([^#&?\s]+)/)
   if (vMatch && vMatch[1]) {
     return vMatch[1]
   }
-  
+
   return null
 }
 
@@ -81,9 +81,9 @@ export function VideoPlayer({
   muted = false,
   loop = false,
 }: VideoPlayerProps) {
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [isLoaded, setIsLoaded] = useState(false)
-  
+  const [isPlaying, setIsPlaying] = useState(autoplay)
+  const [isLoaded, setIsLoaded] = useState(autoplay)
+
   // Détecter automatiquement le type même si un type est fourni (pour corriger les erreurs)
   const detectedType = detectVideoType(url)
   const videoType = type && type !== "direct" ? type : detectedType
@@ -113,7 +113,7 @@ export function VideoPlayer({
     : null
 
   return (
-    <div className={cn("relative w-full overflow-hidden rounded-lg bg-gray-900", className)}>
+    <div className={cn("relative w-full overflow-hidden rounded-xl bg-gray-900", className)}>
       {/* Thumbnail avec bouton play (avant la lecture) */}
       {!isPlaying && (
         <div
@@ -140,10 +140,10 @@ export function VideoPlayer({
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-[#39837a] to-[#0A1F2C]" />
           )}
-          
+
           {/* Overlay sombre */}
           <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors" />
-          
+
           {/* Bouton play centré */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="relative">
@@ -153,7 +153,7 @@ export function VideoPlayer({
               </div>
             </div>
           </div>
-          
+
           {/* Titre optionnel en bas */}
           {title && (
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
@@ -176,7 +176,7 @@ export function VideoPlayer({
               loading="lazy"
             />
           )}
-          
+
           {videoType === "vimeo" && vimeoEmbedUrl && (
             <iframe
               src={vimeoEmbedUrl}
@@ -187,7 +187,7 @@ export function VideoPlayer({
               loading="lazy"
             />
           )}
-          
+
           {videoType === "direct" && (
             <video
               src={url}

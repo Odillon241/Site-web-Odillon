@@ -30,16 +30,16 @@ function hexToRgba(hexColor: string, alpha: number): string {
   return hexColor
 }
 
-export function GlassmorphismIcon({ 
-  icon: Icon, 
-  className, 
+export function GlassmorphismIcon({
+  icon: Icon,
+  className,
   size = 64,
   color = "#39837a",
   variant = "default"
 }: GlassmorphismIconProps) {
   // Unique ID for SVG filters
   const filterId = useMemo(() => `glow-${Math.random().toString(36).slice(2, 8)}`, [])
-  
+
   return (
     <div className={cn("relative", className)} style={{ width: size, height: size }}>
       {/* SVG Filter definitions */}
@@ -60,7 +60,7 @@ export function GlassmorphismIcon({
 
       {/* Outer glow layer */}
       <m.div
-        className="absolute inset-0 rounded-2xl"
+        className="absolute inset-0 rounded-xl"
         style={{
           background: `radial-gradient(circle at 50% 50%, ${hexToRgba(color, 0.4)}, transparent 70%)`,
           filter: "blur(12px)",
@@ -77,8 +77,8 @@ export function GlassmorphismIcon({
       />
 
       {/* Main container */}
-      <m.div 
-        className="relative w-full h-full rounded-2xl overflow-hidden group cursor-pointer"
+      <m.div
+        className="relative w-full h-full rounded-xl overflow-hidden group cursor-pointer"
         style={{
           background: `linear-gradient(135deg, ${hexToRgba(color, 0.15)} 0%, ${hexToRgba(color, 0.05)} 100%)`,
           backdropFilter: "blur(16px)",
@@ -90,7 +90,7 @@ export function GlassmorphismIcon({
             inset 0 -1px 0 ${hexToRgba('#000000', 0.1)}
           `,
         }}
-        whileHover={{ 
+        whileHover={{
           scale: 1.05,
           boxShadow: `
             0 0 0 2px ${color},
@@ -105,7 +105,7 @@ export function GlassmorphismIcon({
       >
         {/* Animated border gradient */}
         <m.div
-          className="absolute inset-0 rounded-2xl"
+          className="absolute inset-0 rounded-xl"
           style={{
             background: `conic-gradient(from 0deg, transparent, ${color}, transparent, ${color}, transparent)`,
             padding: "1px",
@@ -169,7 +169,7 @@ export function GlassmorphismIcon({
         {variant === "electric" && (
           <>
             <m.div
-              className="absolute inset-0 rounded-2xl"
+              className="absolute inset-0 rounded-xl"
               style={{
                 border: `2px solid ${color}`,
               }}
@@ -184,7 +184,7 @@ export function GlassmorphismIcon({
               }}
             />
             <m.div
-              className="absolute inset-0 rounded-2xl"
+              className="absolute inset-0 rounded-xl"
               style={{
                 border: `1px solid ${color}`,
               }}
@@ -222,7 +222,7 @@ export function GlassmorphismIcon({
         )}
 
         {/* Icon with glow */}
-        <m.div 
+        <m.div
           className="absolute inset-0 flex items-center justify-center"
           whileHover={{ scale: 1.15 }}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
@@ -241,11 +241,11 @@ export function GlassmorphismIcon({
               ease: "easeInOut",
             }}
           >
-            <Icon 
-              size={size * 0.45} 
+            <Icon
+              size={size * 0.45}
               strokeWidth={2}
               className="relative z-10"
-              style={{ 
+              style={{
                 color: 'white',
                 filter: `url(#${filterId})`,
               }}

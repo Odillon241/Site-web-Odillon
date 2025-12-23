@@ -18,7 +18,7 @@ export const getActivePhotos = unstable_cache(
   async (): Promise<Photo[]> => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
-      const res = await fetch(`${baseUrl}/api/photos?active=true`, {
+      const res = await fetch(`${baseUrl}/api/photos?active=true&section=hero`, {
         next: { revalidate: 300 }, // Revalidate every 5 minutes
       })
 

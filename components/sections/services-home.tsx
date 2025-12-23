@@ -6,10 +6,10 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee"
-import { 
-  Shield, 
-  Scale, 
-  TrendingUp, 
+import {
+  Shield,
+  Scale,
+  TrendingUp,
   Users,
   ArrowRight,
   Sparkles,
@@ -22,35 +22,31 @@ import { NumberTicker } from "@/components/ui/number-ticker"
 const mainServices = [
   {
     icon: Shield,
-    title: "Gouvernance d'Entreprise",
+    title: "Gouvernance",
     tagline: "Structurez votre organisation",
     color: "#39837a",
-    gradient: "from-[#39837a]/20 to-[#39837a]/5",
-    highlights: ["Conseil d'administration", "Politique de gouvernance", "Contrôle interne"]
+    highlights: ["Conseil d'admin.", "Politique interne", "Contrôle"]
   },
   {
     icon: Scale,
-    title: "Services Juridiques",
+    title: "Juridique",
     tagline: "Sécurisez vos opérations",
     color: "#C4D82E",
-    gradient: "from-[#C4D82E]/20 to-[#C4D82E]/5",
-    highlights: ["Contrats", "Conformité", "Audit juridique"]
+    highlights: ["Contrats", "Conformité", "Audit"]
   },
   {
     icon: TrendingUp,
-    title: "Conseil Financier",
+    title: "Finance",
     tagline: "Optimisez votre croissance",
     color: "#39837a",
-    gradient: "from-[#39837a]/20 to-[#39837a]/5",
-    highlights: ["Business plan", "Levée de fonds", "Tableaux de bord"]
+    highlights: ["Business plan", "Levée de fonds", "Reporting"]
   },
   {
     icon: Users,
     title: "Ressources Humaines",
     tagline: "Développez vos talents",
     color: "#C4D82E",
-    gradient: "from-[#C4D82E]/20 to-[#C4D82E]/5",
-    highlights: ["Gestion des talents", "Performance", "Carrières"]
+    highlights: ["Recrutement", "Formation", "Carrières"]
   }
 ]
 
@@ -62,154 +58,108 @@ const benefits = [
 
 export function ServicesHome() {
   return (
-    <section id="services" className="relative py-12 md:py-16 lg:py-24 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-odillon-teal/5 via-transparent to-transparent pointer-events-none" />
-      
+    <section id="services" className="relative py-24 lg:py-32 bg-gray-50/50 overflow-hidden">
+      {/* Background Decor */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-odillon-teal/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-blue-500/5 rounded-full blur-[100px]" />
+      </div>
+
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10 md:mb-16">
-          <BlurFade delay={0.1}>
-            <Badge variant="odillon" className="mb-4 md:mb-6">
-              <Sparkles className="w-3 h-3 md:w-4 md:h-4 mr-1.5 md:mr-2" />
-              Nos Services
-            </Badge>
-          </BlurFade>
-          
-          <BlurFade delay={0.2}>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight px-4">
-              Solutions complètes pour{" "}
-              <span className="bg-gradient-to-r from-[#39837a] via-[#C4D82E] to-[#39837a] bg-clip-text text-transparent animate-gradient-x">
-                votre réussite
-              </span>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+          <BlurFade delay={0.2} className="max-w-2xl">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-petrov-sans tracking-tight">
+              Solutions complètes pour <br />
+              <span className="text-odillon-teal">votre réussite</span>.
             </h2>
-          </BlurFade>
-          
-          <BlurFade delay={0.3}>
-            <p className="text-base md:text-lg text-gray-600 px-4">
-              Quatre piliers d'expertise pour transformer et structurer votre organisation
+            <p className="text-lg text-gray-600 leading-relaxed">
+              Quatre piliers d'expertise pour transformer et structurer votre organisation de manière pérenne.
             </p>
+          </BlurFade>
+
+          <BlurFade delay={0.3}>
+            <Button
+              asChild
+              variant="outline"
+              className="group border-odillon-teal/20 hover:border-odillon-teal/50 hover:bg-odillon-teal/5 text-odillon-teal font-medium rounded-md px-6 h-12"
+            >
+              <Link href="/services">
+                Voir tous nos services
+                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
           </BlurFade>
         </div>
 
-        {/* Bento Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-12">
+        {/* Clean Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24">
           {mainServices.map((service, idx) => {
             const ServiceIcon = service.icon
             return (
               <BlurFade key={service.title} delay={0.1 * (idx + 1)}>
-                <Card className={`relative overflow-hidden border-2 border-gray-200 hover:border-gray-400 transition-all duration-500 group hover:shadow-2xl ${idx === 0 ? 'md:col-span-2' : ''}`}>
-                  {/* Gradient background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                  
-                  <CardContent className="relative p-5 md:p-6">
-                    <div className="flex flex-col gap-4 md:gap-6 items-start">
-                      <div 
-                        className="w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300"
-                        style={{ 
-                          background: `linear-gradient(135deg, ${service.color}30, ${service.color}15)`,
-                          border: `2px solid ${service.color}40`
-                        }}
+                <Link href="/services" className="block h-full group">
+                  <Card className="h-full border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-white relative overflow-hidden group-hover:border-odillon-teal/30 rounded-lg">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-odillon-teal/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                    <CardContent className="p-8 flex flex-col h-full">
+                      <div
+                        className="w-14 h-14 rounded-md flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110"
+                        style={{ backgroundColor: `${service.color}10` }}
                       >
-                        <ServiceIcon className="w-7 h-7 md:w-8 md:h-8" style={{ color: service.color }} />
+                        <ServiceIcon className="w-7 h-7" style={{ color: service.color }} />
                       </div>
-                      
-                      <div className="flex-1">
-                        <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 md:mb-2 group-hover:text-odillon-teal transition-colors">
-                          {service.title}
-                        </h3>
-                        <p className="text-sm md:text-base font-medium mb-3 md:mb-4" style={{ color: service.color }}>
-                          {service.tagline}
-                        </p>
-                        
-                        <div className="flex flex-wrap gap-2">
-                          {service.highlights.map((highlight, i) => (
-                            <Badge 
-                              key={i}
-                              variant="outline" 
-                              className="text-xs border-gray-300 text-gray-700 hover:border-odillon-teal hover:text-odillon-teal transition-colors"
-                            >
-                              {highlight}
-                            </Badge>
-                          ))}
-                        </div>
+
+                      <h3 className="text-xl font-bold text-gray-900 mb-3 font-petrov-sans group-hover:text-odillon-teal transition-colors">
+                        {service.title}
+                      </h3>
+                      <p className="text-sm text-gray-500 mb-8 flex-grow leading-relaxed">
+                        {service.tagline}
+                      </p>
+
+                      <ul className="space-y-3 mb-8">
+                        {service.highlights.map((highlight, i) => (
+                          <li key={i} className="text-xs font-medium text-gray-500 flex items-center">
+                            <div className="w-1.5 h-1.5 rounded-full bg-odillon-teal/40 mr-3 group-hover:bg-odillon-teal transition-colors" />
+                            {highlight}
+                          </li>
+                        ))}
+                      </ul>
+
+                      <div className="pt-6 border-t border-gray-50 flex items-center justify-between text-sm font-medium text-gray-400 group-hover:text-odillon-teal transition-colors">
+                        <span>En savoir plus</span>
+                        <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
               </BlurFade>
             )
           })}
         </div>
 
-        {/* Marquee Benefits */}
+        {/* Minimalist Stats/Benefits */}
         <BlurFade delay={0.5}>
-          <Marquee className="py-4 mb-8 md:mb-12">
-            <MarqueeFade side="left" />
-            <MarqueeFade side="right" />
-            <MarqueeContent speed={30} pauseOnHover={true}>
+          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-8 md:p-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
               {benefits.map((benefit, idx) => {
                 const BenefitIcon = benefit.icon
                 return (
-                  <MarqueeItem key={idx} className="w-72 md:w-80">
-                    <Card className="border-2 border-gray-200 hover:border-odillon-teal transition-all duration-300">
-                      <CardContent className="p-5 md:p-6 flex items-center gap-4">
-                        <div 
-                          className="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center flex-shrink-0"
-                          style={{ 
-                            background: `linear-gradient(135deg, ${idx % 2 === 0 ? '#39837a' : '#C4D82E'}20, ${idx % 2 === 0 ? '#39837a' : '#C4D82E'}10)`
-                          }}
-                        >
-                          <BenefitIcon className="w-6 h-6 md:w-7 md:h-7" style={{ color: idx % 2 === 0 ? '#39837a' : '#C4D82E' }} />
-                        </div>
-                        <div className="flex-1">
-                          <div className="text-2xl md:text-3xl font-bold mb-1" style={{ color: idx % 2 === 0 ? '#39837a' : '#C4D82E' }}>
-                            <NumberTicker value={parseInt(benefit.metric)} delay={0.5 + idx * 0.2} />
-                            {benefit.metric.replace(/\d+/g, '')}
-                          </div>
-                          <div className="text-xs md:text-sm text-gray-600">{benefit.text}</div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </MarqueeItem>
+                  <div key={idx} className="flex items-center gap-5">
+                    <div className="bg-odillon-teal/5 p-4 rounded-md">
+                      <BenefitIcon className="w-8 h-8 text-odillon-teal" />
+                    </div>
+                    <div>
+                      <div className="text-3xl font-bold text-gray-900 font-petrov-sans">
+                        <NumberTicker value={parseInt(benefit.metric)} />
+                        {benefit.metric.replace(/\d+/g, '')}
+                      </div>
+                      <div className="text-sm font-medium text-gray-500 uppercase tracking-wide mt-1">{benefit.text}</div>
+                    </div>
+                  </div>
                 )
               })}
-            </MarqueeContent>
-          </Marquee>
-        </BlurFade>
-
-        {/* CTA */}
-        <BlurFade delay={0.6}>
-          <div className="text-center">
-            <Card className="border-2 border-gray-200 bg-gradient-to-br from-white to-gray-50 inline-block">
-              <CardContent className="p-6 md:p-8">
-                <p className="text-sm md:text-base text-gray-600 mb-4 md:mb-6">
-                  Découvrez nos services en détail
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
-                  <Button
-                    asChild
-                    size="lg"
-                    className="bg-odillon-teal hover:bg-odillon-teal/90 text-white text-sm md:text-base px-6 md:px-8 py-4 md:py-5 group w-full sm:w-auto"
-                  >
-                    <Link href="/services">
-                      Voir tous nos services
-                      <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    size="lg"
-                    variant="outline"
-                    className="border-2 border-odillon-teal text-odillon-teal hover:bg-odillon-teal hover:text-white text-sm md:text-base px-6 md:px-8 py-4 md:py-5 w-full sm:w-auto"
-                  >
-                    <Link href="/contact">
-                      Nous contacter
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            </div>
           </div>
         </BlurFade>
       </div>
