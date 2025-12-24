@@ -26,8 +26,8 @@ export async function proxy(request: NextRequest) {
     if (host === 'admin.odillon.fr' || host.startsWith('admin.odillon.')) {
       // Rediriger la racine vers /admin/login
       if (pathname === '/') {
-        const loginUrl = new URL('/admin/login', request.url)
-        return NextResponse.redirect(loginUrl)
+        const photosUrl = new URL('/admin/photos', request.url)
+        return NextResponse.redirect(photosUrl)
       }
 
       // Bloquer l'accès aux pages publiques depuis admin.odillon.fr
