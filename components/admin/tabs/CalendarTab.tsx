@@ -29,7 +29,7 @@ export function CalendarTab() {
             <CardHeader className="bg-gradient-to-r from-pink-50 to-pink-100/50 border-b">
                 <CardTitle className="flex items-center gap-2 text-pink-900">
                     <CalendarDays className="w-5 h-5" />
-                    Calendrier des Événements du Gabon
+                    Calendrier des Événements du Gabon 2025
                 </CardTitle>
             </CardHeader>
             <CardContent className="pt-6">

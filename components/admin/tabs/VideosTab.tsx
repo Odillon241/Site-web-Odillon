@@ -96,6 +96,18 @@ function SortableVideoCard({ video, onEdit, onDelete }: SortableVideoCardProps) 
                     <div className="md:w-48 aspect-video bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden shrink-0 relative group/thumb">
                         {video.thumbnail ? (
                             <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" />
+                        ) : video.type === 'direct' ? (
+                            <video
+                                src={video.url}
+                                className="w-full h-full object-cover"
+                                muted
+                                playsInline
+                                onMouseOver={(e) => e.currentTarget.play()}
+                                onMouseOut={(e) => {
+                                    e.currentTarget.pause()
+                                    e.currentTarget.currentTime = 0
+                                }}
+                            />
                         ) : (
                             <div className="flex flex-col items-center justify-center text-gray-400">
                                 <VideoIcon className="w-8 h-8 mb-2" />

@@ -14,6 +14,9 @@ import { createClient } from "@/lib/supabase/server"
 const AboutHome = dynamic(() => import("@/components/sections/about-home").then(mod => ({ default: mod.AboutHome })), {
   loading: () => <div className="min-h-[400px] bg-gray-50" />,
 })
+const TestimonialsSection = dynamic(() => import("@/components/sections/testimonials-section").then(mod => ({ default: mod.TestimonialsSection })), {
+  loading: () => null,
+})
 const ContactHome = dynamic(() => import("@/components/sections/contact-home").then(mod => ({ default: mod.ContactHome })), {
   loading: () => <div className="min-h-[600px] bg-white" />,
 })
@@ -79,6 +82,7 @@ export default async function Home({
           imageUrl={settings.services_cta_image_url} // Reusing this field as per admin implementation
         />
         <AboutHome />
+        <TestimonialsSection page="Accueil" limit={3} />
         <ContactHome />
       </main>
       <Footer />

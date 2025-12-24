@@ -2,16 +2,13 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
   Loader2,
-  LogOut,
   CalendarDays,
   Search,
-  X,
   Building2,
   Video,
   Settings as SettingsIcon,
@@ -19,8 +16,24 @@ import {
   Quote,
   Sparkles,
   Users,
-  Target
+  Target,
+  LayoutDashboard
 } from "lucide-react"
+import { AdminSidebar } from "@/components/admin/admin-sidebar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbLink
+} from "@/components/ui/breadcrumb"
+import { Separator } from "@/components/ui/separator"
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
 
 import { AdminGuide } from "@/components/admin/admin-guide"
 import { createClient } from "@/lib/supabase/client"
@@ -39,8 +52,38 @@ import { AboutTab } from "@/components/admin/tabs/AboutTab"
 export default function AdminPhotosPage() {
   const router = useRouter()
   const [checkingAuth, setCheckingAuth] = useState(true)
-  const [activeTab, setActiveTab] = useState("photos")
+  const [activeTab, setActiveTab] = useState("dashboard")
   const [commandSearch, setCommandSearch] = useState("")
+
+  const [dashboardStats, setDashboardStats] = useState({
+    photos: 0,
+    team: 0,
+    testimonials: 0,
+    logos: 0
+  })
+
+  // Fetch Dashboard Stats
+  useEffect(() => {
+    const fetchStats = async () => {
+      const supabase = createClient()
+
+      const { count: photosCount } = await supabase.from('photos').select('*', { count: 'exact', head: true })
+      const { count: teamCount } = await supabase.from('team_members').select('*', { count: 'exact', head: true })
+      const { count: testimonialsCount } = await supabase.from('testimonials').select('*', { count: 'exact', head: true })
+      const { count: logosCount } = await supabase.from('company_logos').select('*', { count: 'exact', head: true })
+
+      setDashboardStats({
+        photos: photosCount || 0,
+        team: teamCount || 0,
+        testimonials: testimonialsCount || 0,
+        logos: logosCount || 0
+      })
+    }
+
+    if (!checkingAuth) {
+      fetchStats()
+    }
+  }, [checkingAuth])
 
   // Authentication Check
   useEffect(() => {
@@ -58,17 +101,6 @@ export default function AdminPhotosPage() {
     checkAuth()
   }, [router])
 
-  const handleLogout = async () => {
-    try {
-      const supabase = createClient()
-      await supabase.auth.signOut()
-      router.push('/admin/login')
-    } catch (error: unknown) {
-      console.error("Erreur lors de la déconnexion:", error)
-      alert(error instanceof Error ? error.message : "Erreur lors de la déconnexion")
-    }
-  }
-
   if (checkingAuth) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -80,173 +112,123 @@ export default function AdminPhotosPage() {
     )
   }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-teal-50/30 py-8 px-4">
-      <div className="max-w-7xl mx-auto">
-
-        {/* HEADER */}
-        <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-odillon-teal to-odillon-lime flex items-center justify-center">
-                <SettingsIcon className="w-6 h-6 text-white" />
-              </div>
-              Panneau d'Administration
-            </h1>
-            <p className="text-gray-600">
-              Gérez le contenu de votre site web Odillon
-            </p>
-          </div>
-          <Button onClick={handleLogout} variant="outline" className="shadow-sm">
-            <LogOut className="w-4 h-4 mr-2" />
-            Déconnexion
-          </Button>
-        </div>
-
-        {/* GUIDE */}
-        <AdminGuide />
-
-        {/* GLOBAL SEARCH */}
-        <Card className="mb-6 shadow-md border-blue-100">
-          <CardContent className="pt-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <Input
-                placeholder="Rechercher dans toutes les sections..."
-                value={commandSearch}
-                onChange={(e) => setCommandSearch(e.target.value)}
-                className="pl-10 bg-white"
-              />
-              {commandSearch && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setCommandSearch("")}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* TABS NAVIGATION */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-auto p-1 bg-white shadow-md">
-            <TabsTrigger
-              value="photos"
-              className="flex flex-col sm:flex-row items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-600 data-[state=active]:text-white"
-            >
-              <ImageIcon className="w-4 h-4" />
-              <span className="text-xs sm:text-sm font-medium">Photos</span>
-            </TabsTrigger>
-
-            <TabsTrigger
-              value="team"
-              className="flex flex-col sm:flex-row items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-teal-600 data-[state=active]:text-white"
-            >
-              <Users className="w-4 h-4" />
-              <span className="text-xs sm:text-sm font-medium">Équipe</span>
-            </TabsTrigger>
-
-            <TabsTrigger
-              value="about"
-              className="flex flex-col sm:flex-row items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white"
-            >
-              <Target className="w-4 h-4" />
-              <span className="text-xs sm:text-sm font-medium">A Propos</span>
-            </TabsTrigger>
-
-            <TabsTrigger
-              value="logos"
-              className="flex flex-col sm:flex-row items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-green-600 data-[state=active]:text-white"
-            >
-              <Building2 className="w-4 h-4" />
-              <span className="text-xs sm:text-sm font-medium">Logos</span>
-            </TabsTrigger>
-
-            <TabsTrigger
-              value="videos"
-              className="flex flex-col sm:flex-row items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-purple-600 data-[state=active]:text-white"
-            >
-              <Video className="w-4 h-4" />
-              <span className="text-xs sm:text-sm font-medium">Vidéos</span>
-            </TabsTrigger>
-
-            <TabsTrigger
-              value="testimonials"
-              className="flex flex-col sm:flex-row items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-orange-600 data-[state=active]:text-white"
-            >
-              <Quote className="w-4 h-4" />
-              <span className="text-xs sm:text-sm font-medium">Témoignages</span>
-            </TabsTrigger>
-
-            <TabsTrigger
-              value="calendar"
-              className="flex flex-col sm:flex-row items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:to-pink-600 data-[state=active]:text-white"
-            >
-              <CalendarDays className="w-4 h-4" />
-              <span className="text-xs sm:text-sm font-medium">Calendrier</span>
-            </TabsTrigger>
-
-            <TabsTrigger
-              value="expertise-cta"
-              className="flex flex-col sm:flex-row items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white"
-            >
-              <Sparkles className="w-4 h-4" />
-              <span className="text-xs sm:text-sm font-medium">Expertise</span>
-            </TabsTrigger>
-
-            <TabsTrigger
-              value="settings"
-              className="flex flex-col sm:flex-row items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-gray-600 data-[state=active]:to-gray-700 data-[state=active]:text-white"
-            >
-              <SettingsIcon className="w-4 h-4" />
-              <span className="text-xs sm:text-sm font-medium">Paramètres</span>
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="photos">
-            <PhotosTab />
-          </TabsContent>
-
-          <TabsContent value="logos">
-            <LogosTab />
-          </TabsContent>
-
-          <TabsContent value="videos">
-            <VideosTab />
-          </TabsContent>
-
-          <TabsContent value="testimonials">
-            <TestimonialsTab />
-          </TabsContent>
-
-          <TabsContent value="calendar">
-            <CalendarTab />
-          </TabsContent>
-
-          <TabsContent value="expertise-cta">
-            <ExpertiseCtasTab />
-          </TabsContent>
-
-          <TabsContent value="settings">
-            <SettingsTab />
-          </TabsContent>
-
-          <TabsContent value="team">
-            <TeamTab />
-          </TabsContent>
-
-
-
-          <TabsContent value="about">
-            <AboutTab />
-          </TabsContent>
-
-        </Tabs>
+  const StatCard = ({ title, value, icon: Icon, color }: { title: string, value: number, icon: any, color: string }) => (
+    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
+      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color}`}>
+        <Icon className="w-6 h-6 text-white" />
+      </div>
+      <div>
+        <h3 className="text-sm font-medium text-gray-500">{title}</h3>
+        <p className="text-2xl font-bold text-gray-900">{value}</p>
       </div>
     </div>
+  )
+
+  const getTabLabel = (val: string) => {
+    const labels: Record<string, string> = {
+      dashboard: "Tableau de Bord",
+      photos: "Photos",
+      team: "Équipe",
+      about: "A Propos",
+      logos: "Logos",
+      videos: "Vidéos",
+      testimonials: "Témoignages",
+      calendar: "Calendrier",
+      "expertise-cta": "Expertise CTA",
+      settings: "Paramètres"
+    }
+    return labels[val] || val
+  }
+
+  return (
+    <SidebarProvider>
+      <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 border-b bg-white px-4 sticky top-0 z-10">
+          <div className="flex items-center gap-2">
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="#">Admin</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{getTabLabel(activeTab)}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+
+          <div className="ml-auto w-full max-w-sm flex items-center gap-2">
+            <div className="relative flex-1 hidden md:block">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Rechercher..."
+                className="w-full bg-gray-50/50 pl-8 md:w-[200px] lg:w-[300px] border-none focus-visible:ring-1"
+                value={commandSearch}
+                onChange={(e) => setCommandSearch(e.target.value)}
+              />
+            </div>
+          </div>
+        </header>
+
+        <div className="flex flex-1 flex-col gap-4 p-4 md:p-8 bg-gray-50/50 min-h-full">
+          {activeTab === 'dashboard' && (
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Tableau de Bord</h2>
+                <p className="text-gray-500">Aperçu rapide de l'activité du site.</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <StatCard title="Photos en ligne" value={dashboardStats.photos} icon={ImageIcon} color="bg-blue-500" />
+                <StatCard title="Membres de l'équipe" value={dashboardStats.team} icon={Users} color="bg-teal-500" />
+                <StatCard title="Témoignages" value={dashboardStats.testimonials} icon={Quote} color="bg-orange-500" />
+                <StatCard title="Logos Partenaires" value={dashboardStats.logos} icon={Building2} color="bg-indigo-500" />
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <Card className="border-none shadow-sm">
+                  <CardContent className="p-6">
+                    <h3 className="font-semibold text-gray-900 mb-4">Guide Rapide</h3>
+                    <AdminGuide />
+                  </CardContent>
+                </Card>
+
+                <Card className="border-none shadow-sm bg-gradient-to-br from-odillon-teal to-teal-700 text-white overflow-hidden relative">
+                  <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                  <div className="absolute bottom-0 left-0 -ml-8 -mb-8 w-24 h-24 bg-black/10 rounded-full blur-xl"></div>
+                  <CardContent className="p-8 flex flex-col items-start justify-center h-full relative z-10">
+                    <Sparkles className="w-10 h-10 mb-4 opacity-90" />
+                    <h3 className="text-2xl font-bold mb-2">Besoin d'aide ?</h3>
+                    <p className="text-teal-100 mb-6 max-w-md text-sm leading-relaxed">
+                      Consultez la documentation ou contactez le support technique pour toute assistance sur la gestion de votre site.
+                    </p>
+                    <Button className="bg-white text-teal-700 hover:bg-teal-50 border-none shadow-lg font-medium">
+                      Contacter le support
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+
+          <div className={activeTab === 'dashboard' ? 'hidden' : 'block animate-in fade-in slide-in-from-bottom-4 duration-500'}>
+            {activeTab === 'photos' && <PhotosTab />}
+            {activeTab === 'logos' && <LogosTab />}
+            {activeTab === 'videos' && <VideosTab />}
+            {activeTab === 'testimonials' && <TestimonialsTab />}
+            {activeTab === 'calendar' && <CalendarTab />}
+            {activeTab === 'expertise-cta' && <ExpertiseCtasTab />}
+            {activeTab === 'settings' && <SettingsTab />}
+            {activeTab === 'team' && <TeamTab />}
+            {activeTab === 'about' && <AboutTab />}
+          </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }

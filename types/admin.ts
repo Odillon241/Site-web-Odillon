@@ -57,6 +57,8 @@ export interface Testimonial {
     avatar_url: string
     display_order: number
     is_active: boolean
+    page?: string | null
+    section?: string | null
     created_at: string
     updated_at: string
 }

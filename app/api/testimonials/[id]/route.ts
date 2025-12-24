@@ -1,60 +1,71 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
-// PATCH - Mettre à jour un témoignage
+// PATCH - Update a testimonial
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const supabase = await createClient()
+  try {
+    const { id } = await params
+    const supabase = await createClient()
 
-  // Vérifier l'authentification
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+    // Check auth
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const body = await request.json()
+
+    // Remove id from body if present to prevent error
+    const { id: _, ...updateData } = body
+
+    const { data, error } = await supabase
+      .from('testimonials')
+      .update(updateData)
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json({ testimonial: data })
+  } catch (error) {
+    console.error('Error updating testimonial:', error)
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
-
-  const body = await request.json()
-  const { id } = await params
-  
-  const { data, error } = await supabase
-    .from('testimonials')
-    .update(body)
-    .eq('id', id)
-    .select()
-    .single()
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
-
-  return NextResponse.json({ testimonial: data })
 }
 
-// DELETE - Supprimer un témoignage
+// DELETE - Delete a testimonial
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const supabase = await createClient()
+  try {
+    const { id } = await params
+    const supabase = await createClient()
 
-  // Vérifier l'authentification
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+    // Check auth
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { error } = await supabase
+      .from('testimonials')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Error deleting testimonial:', error)
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
-
-  const { id } = await params
-
-  const { error } = await supabase
-    .from('testimonials')
-    .delete()
-    .eq('id', id)
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
-
-  return NextResponse.json({ success: true })
 }
-

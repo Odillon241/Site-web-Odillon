@@ -29,12 +29,15 @@ import {
 } from "@/components/ui/alert-dialog"
 import { StackedCardsInteraction } from "@/components/ui/stacked-cards-interaction"
 import { BlurFade } from "@/components/magicui/blur-fade"
-import { Loader2, Plus, Search, Trash2, Eye, EyeOff, Camera, Filter, ImageIcon, CalendarDays, RefreshCw, UploadCloud, X, ArrowLeft, Edit, FolderEdit, Save } from "lucide-react"
+
+import { Loader2, Plus, Search, Trash2, Eye, EyeOff, Camera, Filter, ImageIcon, CalendarDays, RefreshCw, UploadCloud, X, ArrowLeft, Edit, FolderEdit, Save, Crop } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Photo } from "@/types/admin"
 import { MONTHLY_THEMES } from "@/lib/photo-themes"
 import { toast } from "sonner"
+import { ImageCropper } from "../ImageCropper"
+import getCroppedImg from "@/lib/image"
 
 export function PhotosTab() {
     // ─────────────────────────────────────────────────────────────────────────
@@ -65,6 +68,8 @@ export function PhotosTab() {
 
     // New Photo Form
     const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+    const [cropImageSrc, setCropImageSrc] = useState<string | null>(null)
+    const [croppingFileIndex, setCroppingFileIndex] = useState<number | null>(null)
     const [newPhoto, setNewPhoto] = useState({
         description: "",
         details: "" as string,
@@ -158,6 +163,37 @@ export function PhotosTab() {
 
     const removeFile = (index: number) => {
         setSelectedFiles(prev => prev.filter((_, i) => i !== index))
+    }
+
+    const startCropping = (file: File, index: number) => {
+        const reader = new FileReader()
+        reader.addEventListener("load", () => {
+            setCropImageSrc(reader.result?.toString() || null)
+            setCroppingFileIndex(index)
+        })
+        reader.readAsDataURL(file)
+    }
+
+    const onCropComplete = (croppedImageBlob: Blob) => {
+        if (croppingFileIndex !== null) {
+            const originalFile = selectedFiles[croppingFileIndex]
+            const croppedFile = new File([croppedImageBlob], originalFile.name, {
+                type: "image/jpeg",
+            })
+
+            setSelectedFiles(prev => {
+                const newFiles = [...prev]
+                newFiles[croppingFileIndex] = croppedFile
+                return newFiles
+            })
+            onCropClose()
+            toast.success("Image recadrée avec succès")
+        }
+    }
+
+    const onCropClose = () => {
+        setCropImageSrc(null)
+        setCroppingFileIndex(null)
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -537,14 +573,25 @@ export function PhotosTab() {
                                             {selectedFiles.map((file, idx) => (
                                                 <div key={idx} className="flex items-center justify-between bg-gray-50 p-2 rounded-md border border-gray-100 text-sm">
                                                     <span className="truncate max-w-[200px] text-gray-700">{file.name}</span>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="ghost"
-                                                        className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
-                                                        onClick={() => removeFile(idx)}
-                                                    >
-                                                        <X className="w-4 h-4" />
-                                                    </Button>
+                                                    <div className="flex items-center gap-1">
+                                                        <Button
+                                                            size="sm"
+                                                            variant="ghost"
+                                                            className="h-6 w-6 p-0 text-gray-400 hover:text-odillon-teal"
+                                                            onClick={() => startCropping(file, idx)}
+                                                            title="Recadrer"
+                                                        >
+                                                            <Crop className="w-3 h-3" />
+                                                        </Button>
+                                                        <Button
+                                                            size="sm"
+                                                            variant="ghost"
+                                                            className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+                                                            onClick={() => removeFile(idx)}
+                                                        >
+                                                            <X className="w-4 h-4" />
+                                                        </Button>
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>
@@ -957,6 +1004,21 @@ export function PhotosTab() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* IMAGE CROPPER DIALOG */}
+            {cropImageSrc && (
+                <Dialog open={!!cropImageSrc} onOpenChange={(open) => !open && onCropClose()}>
+                    <DialogContent className="max-w-3xl w-full p-0 overflow-hidden bg-black border-zinc-800">
+                        <div className="relative w-full h-[80vh]">
+                            <ImageCropper
+                                imageSrc={cropImageSrc}
+                                onCropComplete={onCropComplete}
+                                onClose={onCropClose}
+                            />
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            )}
 
             {/* RENAME ALBUM DIALOG */}
             <Dialog open={isRenameAlbumDialogOpen} onOpenChange={setIsRenameAlbumDialogOpen}>

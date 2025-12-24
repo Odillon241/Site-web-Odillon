@@ -27,8 +27,10 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Loader2, Plus, Trash2, Eye, EyeOff, Users, Upload, Linkedin, Mail, Pencil } from "lucide-react"
+import { Loader2, Plus, Trash2, Eye, EyeOff, Users, Upload, Linkedin, Mail, Pencil, Crop, X } from "lucide-react"
 import { toast } from "sonner"
+import { ImageCropper } from "../ImageCropper"
+import getCroppedImg from "@/lib/image"
 
 interface TeamMember {
     id: string
@@ -169,6 +171,8 @@ export function TeamTab() {
     const [loading, setLoading] = useState(false)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [editingMember, setEditingMember] = useState<TeamMember | null>(null)
+    const [cropImageSrc, setCropImageSrc] = useState<string | null>(null)
+    const [isUploading, setIsUploading] = useState(false)
 
     const [newMember, setNewMember] = useState({
         name: "",
@@ -220,6 +224,49 @@ export function TeamTab() {
             email: ""
         })
         setEditingMember(null)
+        setCropImageSrc(null)
+    }
+
+    const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0]
+            const reader = new FileReader()
+            reader.addEventListener("load", () => {
+                setCropImageSrc(reader.result?.toString() || null)
+            })
+            reader.readAsDataURL(file)
+            // Reset input
+            e.target.value = ''
+        }
+    }
+
+    const onCropComplete = async (croppedBlob: Blob) => {
+        try {
+            setIsUploading(true)
+            const formData = new FormData()
+            formData.append('file', croppedBlob, 'profile-photo.jpg')
+
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            })
+
+            if (!res.ok) throw new Error("Upload failed")
+
+            const data = await res.json()
+            setNewMember(prev => ({ ...prev, photo_url: data.url }))
+            setCropImageSrc(null)
+            toast.success("Photo téléchargée avec succès")
+        } catch (error) {
+            console.error("Upload error:", error)
+            toast.error("Erreur lors de l'upload de la photo")
+        } finally {
+            setIsUploading(false)
+        }
+    }
+
+    const onCropClose = () => {
+        setCropImageSrc(null)
     }
 
     const handleSaveMember = async () => {
@@ -402,51 +449,53 @@ export function TeamTab() {
 
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">Photo</label>
-                                <div className="flex gap-2">
-                                    <Input
-                                        placeholder="URL de la photo (https://...)"
-                                        value={newMember.photo_url}
-                                        onChange={(e) => setNewMember({ ...newMember, photo_url: e.target.value })}
-                                        className="flex-1"
-                                    />
-                                    <div className="relative">
+                                <div className="space-y-3">
+                                    {/* PREVIEW */}
+                                    {newMember.photo_url && (
+                                        <div className="relative w-32 h-40 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 group">
+                                            <img
+                                                src={newMember.photo_url}
+                                                alt="Preview"
+                                                className="w-full h-full object-cover"
+                                            />
+                                            <button
+                                                onClick={() => setNewMember(prev => ({ ...prev, photo_url: "" }))}
+                                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                title="Supprimer la photo"
+                                            >
+                                                <X className="w-3 h-3" />
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    <div className="flex gap-2">
                                         <Input
-                                            type="file"
-                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                            onChange={async (e) => {
-                                                const file = e.target.files?.[0]
-                                                if (!file) return
-
-                                                try {
-                                                    const formData = new FormData()
-                                                    formData.append('file', file)
-                                                    formData.append('bucket', 'photos') // Using generic bucket
-
-                                                    toast.promise(
-                                                        fetch('/api/upload', {
-                                                            method: 'POST',
-                                                            body: formData
-                                                        }).then(async (res) => {
-                                                            if (!res.ok) throw new Error("Upload failed")
-                                                            const data = await res.json()
-                                                            setNewMember(prev => ({ ...prev, photo_url: data.url }))
-                                                            return data
-                                                        }),
-                                                        {
-                                                            loading: 'Téléchargement...',
-                                                            success: 'Photo téléchargée',
-                                                            error: 'Erreur de téléchargement'
-                                                        }
-                                                    )
-                                                } catch (error) {
-                                                    console.error("Upload error:", error)
-                                                }
-                                            }}
-                                            accept="image/png,image/jpeg,image/webp"
+                                            placeholder="URL de la photo (https://...)"
+                                            value={newMember.photo_url}
+                                            onChange={(e) => setNewMember({ ...newMember, photo_url: e.target.value })}
+                                            className="flex-1"
                                         />
-                                        <Button variant="outline" size="icon" className="shrink-0 pointer-events-none">
-                                            <Upload className="w-4 h-4" />
-                                        </Button>
+                                        <div className="relative">
+                                            <Input
+                                                type="file"
+                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                                onChange={onFileSelect}
+                                                accept="image/png,image/jpeg,image/webp"
+                                                disabled={isUploading}
+                                            />
+                                            <Button
+                                                variant="outline"
+                                                size="icon"
+                                                className="shrink-0 pointer-events-none"
+                                                disabled={isUploading}
+                                            >
+                                                {isUploading ? (
+                                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                                ) : (
+                                                    <Upload className="w-4 h-4" />
+                                                )}
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -486,6 +535,16 @@ export function TeamTab() {
                     </DialogContent>
                 </Dialog>
             </CardHeader>
+
+            {/* CROPPER DIALOG */}
+            {cropImageSrc && (
+                <ImageCropper
+                    imageSrc={cropImageSrc}
+                    aspect={4 / 5}
+                    onCropComplete={onCropComplete}
+                    onClose={onCropClose}
+                />
+            )}
 
             <CardContent className="p-6 bg-gray-50/30 min-h-[400px]">
                 {loading ? (
