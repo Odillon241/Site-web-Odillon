@@ -1,0 +1,18 @@
+# Configuration Apache pour le routage Next.js
+# Transmettre le header Host original pour la gestion des sous-domaines
+
+<IfModule mod_headers.c>
+    RequestHeader set X-Forwarded-Host "%{HTTP_HOST}s"
+</IfModule>
+
+# Proxy vers l'application Node.js
+<IfModule mod_proxy.c>
+    ProxyPreserveHost On
+</IfModule>
+
+# Rediriger toutes les requêtes vers Node.js
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
+

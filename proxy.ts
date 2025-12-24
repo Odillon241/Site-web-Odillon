@@ -13,30 +13,44 @@ import { updateSession } from '@/lib/supabase/middleware'
  */
 export async function proxy(request: NextRequest) {
   try {
-    const hostname = request.headers.get('host') || ''
+    // Récupérer le hostname depuis plusieurs sources (pour compatibilité reverse proxy)
+    const forwardedHost = request.headers.get('x-forwarded-host')
+    const hostname = forwardedHost || request.headers.get('host') || ''
     const { pathname } = request.nextUrl
 
     // Normaliser le hostname (enlever le port si présent)
     const host = hostname.split(':')[0].toLowerCase()
 
+    // Log pour débogage en production (visible dans les logs serveur)
+    if (process.env.NODE_ENV === 'production') {
+      console.log(`[Proxy] Host: ${host}, Path: ${pathname}, Forwarded-Host: ${forwardedHost || 'none'}`)
+    }
+
     // En développement local (localhost, 127.0.0.1), autoriser l'accès direct aux routes /admin
     const isLocalDev = host === 'localhost' || host === '127.0.0.1'
 
     // Gestion du sous-domaine admin.odillon.fr
-    if (host === 'admin.odillon.fr' || host.startsWith('admin.odillon.')) {
-      // Rediriger la racine vers /admin/login
+    if (host === 'admin.odillon.fr' || host.startsWith('admin.odillon.') || host === 'admin') {
+      // Rediriger la racine vers /admin/photos
       if (pathname === '/') {
         const photosUrl = new URL('/admin/photos', request.url)
+        // Préserver le protocole HTTPS en production
+        if (process.env.NODE_ENV === 'production') {
+          photosUrl.protocol = 'https:'
+        }
         return NextResponse.redirect(photosUrl)
       }
 
       // Bloquer l'accès aux pages publiques depuis admin.odillon.fr
       // Seules les routes /admin, /api et /auth sont autorisées
-      const allowedPaths = ['/admin', '/api', '/auth', '/_next', '/favicon']
+      const allowedPaths = ['/admin', '/api', '/auth', '/_next', '/favicon', '/fonts']
       const isAllowedPath = allowedPaths.some((path) => pathname.startsWith(path))
 
       if (!isAllowedPath) {
         const loginUrl = new URL('/admin/login', request.url)
+        if (process.env.NODE_ENV === 'production') {
+          loginUrl.protocol = 'https:'
+        }
         return NextResponse.redirect(loginUrl)
       }
     }
@@ -46,8 +60,8 @@ export async function proxy(request: NextRequest) {
     if (!isLocalDev && (host === 'odillon.fr' || host === 'www.odillon.fr')) {
       // Rediriger les accès /admin vers admin.odillon.fr
       if (pathname.startsWith('/admin')) {
-        const adminUrl = new URL(request.url)
-        adminUrl.hostname = 'admin.odillon.fr'
+        const adminUrl = new URL(pathname, 'https://admin.odillon.fr')
+        adminUrl.search = request.nextUrl.search
         return NextResponse.redirect(adminUrl)
       }
     }
