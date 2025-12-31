@@ -36,7 +36,7 @@ export function HeroWithAurora() {
 
               <FadeIn delay={0.3}>
                 <p className="text-lg text-gray-600 leading-relaxed max-w-2xl">
-                  Cabinet de conseil en ingénierie d'entreprises spécialisé dans la structuration, 
+                  Cabinet de conseil en ingénierie d'entreprises spécialisé dans la structuration,
                   la gestion administrative, les relations publiques et le management des risques.
                 </p>
               </FadeIn>
@@ -89,7 +89,7 @@ export function HeroWithAurora() {
                 <BlurFade delay={0.2}>
                   <m.div
                     whileHover={{ scale: 1.02, y: -3 }}
-                    className="bg-white/80 backdrop-blur-sm p-6 rounded border border-gray-200"
+                    className="bg-transparent backdrop-blur-sm p-6 rounded border border-gray-200"
                   >
                     <div className="w-12 h-12 bg-odillon-teal/10 rounded flex items-center justify-center mb-4">
                       <Shield className="w-6 h-6 text-odillon-teal" />
@@ -104,7 +104,7 @@ export function HeroWithAurora() {
                 <BlurFade delay={0.3}>
                   <m.div
                     whileHover={{ scale: 1.02, y: -3 }}
-                    className="bg-white/80 backdrop-blur-sm p-6 rounded border border-gray-200 mt-8"
+                    className="bg-transparent backdrop-blur-sm p-6 rounded border border-gray-200 mt-8"
                     id="conseil"
                   >
                     <div className="w-12 h-12 bg-odillon-lime/10 rounded flex items-center justify-center mb-4">
@@ -120,7 +120,7 @@ export function HeroWithAurora() {
                 <BlurFade delay={0.4}>
                   <m.div
                     whileHover={{ scale: 1.02, y: -3 }}
-                    className="bg-white/80 backdrop-blur-sm p-6 rounded border border-gray-200"
+                    className="bg-transparent backdrop-blur-sm p-6 rounded border border-gray-200"
                     id="administration"
                   >
                     <div className="w-12 h-12 bg-odillon-teal/10 rounded flex items-center justify-center mb-4">
@@ -136,7 +136,7 @@ export function HeroWithAurora() {
                 <BlurFade delay={0.5}>
                   <m.div
                     whileHover={{ scale: 1.02, y: -3 }}
-                    className="bg-white/80 backdrop-blur-sm p-6 rounded border border-gray-200 mt-8"
+                    className="bg-transparent backdrop-blur-sm p-6 rounded border border-gray-200 mt-8"
                   >
                     <div className="w-12 h-12 bg-odillon-lime/10 rounded flex items-center justify-center mb-4">
                       <Award className="w-6 h-6 text-odillon-lime" />

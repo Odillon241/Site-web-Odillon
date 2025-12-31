@@ -74,7 +74,7 @@ export function AboutHome() {
   }, [])
 
   return (
-    <section id="apropos" className="relative py-20 lg:py-32 bg-white overflow-hidden">
+    <section id="apropos" className="relative py-20 lg:py-32 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         {/* Header Section - Redesigned */}
         <div className="grid md:grid-cols-2 gap-16 items-center mb-24">

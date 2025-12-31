@@ -10,17 +10,17 @@ interface LogoProps {
   alt?: string
 }
 
-export function Logo({ 
-  width = 350, 
-  height = 100, 
+export function Logo({
+  width = 350,
+  height = 104,
   className = "h-14 md:h-16 lg:h-20 w-auto",
   priority = true,
   alt = "Odillon - Ingénierie d'Entreprises"
 }: LogoProps) {
-  // Utiliser le logo Chronodil pour fond clair
+  // Utiliser le nouveau logo SVG
   return (
     <Image
-      src="/Logo plein format logo de chronodil pour fond clair.webp"
+      src="/images/logos/odillon-logo-new.svg"
       alt={alt}
       width={width}
       height={height}

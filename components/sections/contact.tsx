@@ -160,8 +160,28 @@ export function Contact() {
       </div>
 
       {/* Contact Section */}
-      <div className="relative py-12 md:py-16 lg:py-20 bg-white">
+      <div className="relative py-12 md:py-16 lg:py-20 bg-transparent">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Large Map */}
+          <BlurFade delay={0.2} className="mb-16 md:mb-20">
+            <div className="w-full h-[350px] md:h-[450px] rounded-2xl md:rounded-3xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all duration-500 relative group bg-gray-100">
+              <iframe
+                width="100%"
+                height="100%"
+                id="gmap_canvas"
+                src="https://maps.google.com/maps?q=Hotel+Re-Ndama+Libreville&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                frameBorder="0"
+                scrolling="no"
+                marginHeight={0}
+                marginWidth={0}
+                className="w-full h-full filter grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700"
+              />
+              <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl text-sm font-medium text-gray-800 shadow-sm pointer-events-none flex items-center gap-2 border border-white/50">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span>Quartier Glass, Libreville</span>
+              </div>
+            </div>
+          </BlurFade>
           {/* Section Title */}
           <BlurFade delay={0.3}>
             <div className="text-center mb-10 md:mb-16">
@@ -183,11 +203,11 @@ export function Contact() {
                   {contactInfo.map((info, idx) => {
                     const InfoIcon = info.icon
                     const isClickable = info.link || info.items.some(item => item.link)
-                    
+
                     return (
                       <FadeIn key={info.title} delay={0.1 * (idx + 1)}>
-                        <div 
-                          className={`group relative overflow-hidden rounded border border-gray-200 hover:border-odillon-teal transition-all duration-300 p-4 md:p-6 ${isClickable ? 'cursor-pointer hover:shadow-lg' : ''}`}
+                        <div
+                          className={`group relative overflow-hidden rounded border border-gray-200 hover:border-odillon-teal transition-all duration-300 p-4 md:p-6 bg-white ${isClickable ? 'cursor-pointer hover:shadow-lg' : ''}`}
                           onClick={() => {
                             if (info.link) {
                               window.open(info.link, '_blank')
@@ -195,21 +215,21 @@ export function Contact() {
                           }}
                         >
                           {/* Gradient overlay */}
-                          <div 
+                          <div
                             className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300"
                             style={{ background: `linear-gradient(135deg, ${info.color} 0%, transparent 100%)` }}
                           />
-                          
+
                           <div className="flex items-start gap-4 md:gap-6 relative">
-                            <div 
+                            <div
                               className="w-10 h-10 md:w-12 md:h-12 rounded-sm flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-all duration-300"
-                              style={{ 
+                              style={{
                                 background: `linear-gradient(135deg, ${info.color}30, ${info.color}15)`
                               }}
                             >
                               <InfoIcon className="w-5 h-5 md:w-6 md:h-6" style={{ color: info.color }} />
                             </div>
-                            
+
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center justify-between mb-2">
                                 <h3 className="text-sm md:text-base font-semibold text-gray-900">
@@ -258,12 +278,14 @@ export function Contact() {
                     </p>
                   </div>
                 </FadeIn>
+
+
               </div>
             </BlurFade>
 
             {/* Right - Contact Form */}
             <BlurFade delay={0.6}>
-              <Card className="border border-gray-200">
+              <Card className="border border-gray-200 bg-white">
                 <CardContent className="p-4 md:p-6">
                   <div className="mb-4 md:mb-6">
                     <div className="w-8 h-8 md:w-9 md:h-9 bg-odillon-teal/10 rounded-sm flex items-center justify-center mb-2 md:mb-3">
@@ -281,11 +303,10 @@ export function Contact() {
                     {/* Messages de statut */}
                     {submitStatus.type && (
                       <div
-                        className={`p-3 md:p-4 rounded-lg border ${
-                          submitStatus.type === 'success'
-                            ? 'bg-green-50 border-green-200 text-green-800'
-                            : 'bg-red-50 border-red-200 text-red-800'
-                        }`}
+                        className={`p-3 md:p-4 rounded-lg border ${submitStatus.type === 'success'
+                          ? 'bg-green-50 border-green-200 text-green-800'
+                          : 'bg-red-50 border-red-200 text-red-800'
+                          }`}
                       >
                         <div className="flex items-start gap-2">
                           {submitStatus.type === 'success' ? (
@@ -312,7 +333,7 @@ export function Contact() {
                           placeholder="Votre nom"
                         />
                       </div>
-                      
+
                       <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                           Email *
@@ -340,7 +361,7 @@ export function Contact() {
                           placeholder="+241 XX XX XX XX"
                         />
                       </div>
-                      
+
                       <div>
                         <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">
                           Entreprise

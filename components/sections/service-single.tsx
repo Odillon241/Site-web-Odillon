@@ -6,7 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee"
-import { 
+import {
+  ArrowLeft,
   ArrowRight,
   Target,
   FileText,
@@ -49,16 +50,26 @@ export function ServiceSingle({ service }: ServiceSingleProps) {
   if (!service) {
     return null
   }
-  
+
   // Récupérer les composants d'icônes depuis les strings
   const ServiceIcon = iconMap[service.icon] || Shield
-  
+
   return (
     <section className="relative py-12 md:py-16 lg:py-20 bg-gradient-to-b from-white via-gray-50/30 to-white overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-grid-gray-100 [mask-image:linear-gradient(to_bottom,white,transparent,white)] pointer-events-none opacity-5" />
-      
+
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
+        {/* Back Button */}
+        <Link
+          href="/services"
+          className="inline-flex items-center gap-2 text-sm font-medium transition-colors mb-8 opacity-70 hover:opacity-100"
+          style={{ color: service.color }}
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Retour aux services
+        </Link>
+
         {/* Header */}
         <div className="text-center max-w-4xl mx-auto mb-10 md:mb-16">
           <BlurFade delay={0.1}>
@@ -66,13 +77,13 @@ export function ServiceSingle({ service }: ServiceSingleProps) {
               Excellence · Expertise · Innovation
             </Badge>
           </BlurFade>
-          
+
           <BlurFade delay={0.2}>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight px-4">
               {service.title}
             </h1>
           </BlurFade>
-          
+
           <BlurFade delay={0.3}>
             <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed px-4">
               {service.description}
@@ -83,7 +94,7 @@ export function ServiceSingle({ service }: ServiceSingleProps) {
         {/* Service Header */}
         <FadeIn>
           <Card className="border-2 relative overflow-hidden mb-8 md:mb-12" style={{ borderColor: `${service.color}30` }}>
-            <div 
+            <div
               className={`absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l ${service.gradient} pointer-events-none`}
             />
             <CardHeader className="relative px-4 md:px-6 py-4 md:py-6">
@@ -96,17 +107,17 @@ export function ServiceSingle({ service }: ServiceSingleProps) {
               <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4 md:mb-6">
                 {service.description}
               </p>
-              
+
               {/* Key Benefits */}
               <div className="grid sm:grid-cols-3 gap-3 md:gap-4">
                 {service.keyBenefits.map((benefit, idx) => {
                   const BenefitIcon = iconMap[benefit.icon] || Shield
                   return (
-                    <div 
+                    <div
                       key={idx}
                       className="flex items-start gap-2 md:gap-3 p-2.5 md:p-3 rounded-lg border border-gray-200 bg-white/50 backdrop-blur-sm"
                     >
-                      <div 
+                      <div
                         className="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                         style={{ backgroundColor: `${service.color}15`, color: service.color }}
                       >
@@ -133,7 +144,7 @@ export function ServiceSingle({ service }: ServiceSingleProps) {
               </h3>
               <p className="text-sm md:text-base text-gray-600">Un processus éprouvé en 4 étapes</p>
             </div>
-            
+
             <Marquee className="py-4">
               <MarqueeFade side="left" />
               <MarqueeFade side="right" />
@@ -144,9 +155,9 @@ export function ServiceSingle({ service }: ServiceSingleProps) {
                     <MarqueeItem key={idx} className="w-80">
                       <Card className="border-2 border-gray-200 hover:border-gray-300 transition-all duration-300 hover:shadow-lg">
                         <CardContent className="p-6 text-center">
-                          <div 
+                          <div
                             className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold relative z-10 bg-white shadow-lg"
-                            style={{ 
+                            style={{
                               color: service.color,
                               border: `3px solid ${service.color}30`
                             }}
@@ -183,7 +194,7 @@ export function ServiceSingle({ service }: ServiceSingleProps) {
                   <Card key={idx} className="border-2 border-gray-200 hover:border-gray-300 transition-all duration-300 group">
                     <CardHeader className="px-4 md:px-6 py-4 md:py-6">
                       <div className="flex items-start gap-2 md:gap-3 mb-2">
-                        <div 
+                        <div
                           className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
                           style={{ backgroundColor: `${service.color}15`, color: service.color }}
                         >
@@ -203,8 +214,8 @@ export function ServiceSingle({ service }: ServiceSingleProps) {
                     <CardContent className="px-4 md:px-6 pb-4 md:pb-6">
                       <Accordion type="multiple" className="w-full">
                         {subService.details.map((detail, detailIdx) => (
-                          <AccordionItem 
-                            key={detailIdx} 
+                          <AccordionItem
+                            key={detailIdx}
                             value={`item-${detailIdx}`}
                             className="border-b border-gray-200 last:border-0"
                           >
@@ -246,35 +257,35 @@ export function ServiceSingle({ service }: ServiceSingleProps) {
                 Discutons de vos enjeux et découvrez comment nos solutions peuvent propulser votre organisation vers l'excellence.
               </p>
               <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 md:gap-4">
-                <Link 
+                <Link
                   href="/contact"
                   className="relative inline-flex items-center justify-center gap-2 h-10 md:h-11 px-6 md:px-8 rounded-md text-xs md:text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group w-full sm:w-auto"
-                  style={{ 
+                  style={{
                     backgroundColor: service.color,
                     color: '#ffffff'
                   }}
                 >
                   <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-15 transition-opacity duration-300"></span>
-                  <span 
-                    className="relative" 
+                  <span
+                    className="relative"
                     style={{ color: '#ffffff' }}
                   >
                     Discutons de votre projet
                   </span>
-                  <ArrowRight 
-                    className="w-4 h-4 md:w-5 md:h-5 relative" 
+                  <ArrowRight
+                    className="w-4 h-4 md:w-5 md:h-5 relative"
                     style={{ color: '#ffffff' }}
                   />
                 </Link>
-                <Link 
+                <Link
                   href="/#apropos"
                   className="relative inline-flex items-center justify-center gap-2 h-10 md:h-11 px-6 md:px-8 rounded-md text-xs md:text-sm font-medium border-2 transition-all duration-300 overflow-hidden group w-full sm:w-auto"
-                  style={{ 
+                  style={{
                     borderColor: service.color,
                     color: service.color
                   }}
                 >
-                  <span 
+                  <span
                     className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
                     style={{ backgroundColor: service.color }}
                   ></span>

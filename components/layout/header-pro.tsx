@@ -72,12 +72,12 @@ export function HeaderPro() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isScrolled
-          ? "bg-white/70 backdrop-blur-xl border-b border-gray-200/30"
-          : "bg-white/80 backdrop-blur-lg border-b border-white/10"
+          ? "bg-background/60 backdrop-blur-2xl border-b border-gray-200/30"
+          : "bg-background/70 backdrop-blur-xl border-b border-white/10"
       )}
       style={{
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
+        backdropFilter: 'blur(40px)',
+        WebkitBackdropFilter: 'blur(40px)',
       }}
     >
       {/* Top Bar */}
@@ -108,7 +108,7 @@ export function HeaderPro() {
           {/* Logo */}
           <Link href="/" className="flex items-center min-w-0">
             <Image
-              src="/Logo plein format logo de chronodil pour fond clair.webp"
+              src="/images/logos/odillon-logo-new.svg"
               alt="Odillon - Ingénierie d'Entreprises"
               width={200}
               height={60}
@@ -121,7 +121,7 @@ export function HeaderPro() {
           <div className="hidden lg:flex lg:items-center lg:space-x-1">
             {navigation.map((item) => {
               const getIcon = (iconName: string) => {
-                switch(iconName) {
+                switch (iconName) {
                   case 'Home': return Home
                   case 'Briefcase': return Briefcase
                   case 'Award': return Award
@@ -132,7 +132,7 @@ export function HeaderPro() {
               }
               const Icon = item.icon ? getIcon(item.icon) : null
               const isActive = pathname === item.href || (item.submenu && pathname.startsWith(item.href))
-              
+
               return (
                 <div
                   key={item.name}
@@ -144,8 +144,8 @@ export function HeaderPro() {
                     href={item.href}
                     className={cn(
                       "px-4 py-2 text-sm font-medium transition-all relative group flex items-center gap-2 rounded border",
-                      isActive 
-                        ? "text-odillon-teal bg-odillon-teal/5 border-odillon-teal" 
+                      isActive
+                        ? "text-odillon-teal bg-odillon-teal/5 border-odillon-teal"
                         : "text-gray-700 hover:text-odillon-teal border-transparent hover:border-gray-200",
                       activeSubmenu === item.name && "text-odillon-teal"
                     )}
@@ -226,12 +226,12 @@ export function HeaderPro() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden bg-white/95 backdrop-blur-xl border-b border-gray-200"
+            className="lg:hidden bg-background/95 backdrop-blur-xl border-b border-gray-200"
           >
             <div className="mx-auto max-w-7xl px-4 sm:px-6 py-4 space-y-2 max-h-[calc(100vh-180px)] overflow-y-auto">
               {navigation.map((item) => {
                 const getIcon = (iconName: string) => {
-                  switch(iconName) {
+                  switch (iconName) {
                     case 'Home': return Home
                     case 'Briefcase': return Briefcase
                     case 'Award': return Award
@@ -250,8 +250,8 @@ export function HeaderPro() {
                       onClick={() => !item.submenu && setMobileMenuOpen(false)}
                       className={cn(
                         "flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors",
-                        isActive 
-                          ? "bg-odillon-teal/10 text-odillon-teal" 
+                        isActive
+                          ? "bg-odillon-teal/10 text-odillon-teal"
                           : "text-gray-700 hover:bg-gray-100 hover:text-odillon-teal"
                       )}
                     >
@@ -259,7 +259,7 @@ export function HeaderPro() {
                       {item.name}
                       {item.submenu && <ChevronDown className="ml-auto w-4 h-4" />}
                     </Link>
-                    
+
                     {/* Mobile Submenu */}
                     {item.submenu && (
                       <div className="pl-12 space-y-1">
@@ -278,15 +278,15 @@ export function HeaderPro() {
                   </div>
                 )
               })}
-              
+
               {/* Mobile CTA */}
               <div className="pt-4 border-t border-gray-200">
                 <Button
                   asChild
                   className="w-full bg-odillon-teal hover:bg-odillon-teal/90 text-white"
                 >
-                  <Link 
-                    href="/contact" 
+                  <Link
+                    href="/contact"
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center justify-center gap-2"
                   >

@@ -10,7 +10,7 @@ import { RetroGrid } from "@/components/ui/retro-grid"
 
 export function HeroWithRetroGrid() {
   return (
-    <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-gray-50 via-white to-gray-50">
+    <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-transparent">
       {/* Retro Grid Background */}
       <RetroGrid />
 
@@ -37,7 +37,7 @@ export function HeroWithRetroGrid() {
 
             <FadeIn delay={0.3}>
               <p className="text-lg text-gray-600 leading-relaxed max-w-2xl">
-                Cabinet de conseil en ingénierie d'entreprises spécialisé dans la structuration, 
+                Cabinet de conseil en ingénierie d'entreprises spécialisé dans la structuration,
                 la gestion administrative, les relations publiques et le management des risques.
               </p>
             </FadeIn>
@@ -90,7 +90,7 @@ export function HeroWithRetroGrid() {
               <BlurFade delay={0.2}>
                 <m.div
                   whileHover={{ scale: 1.02, y: -3 }}
-                  className="bg-white p-6 rounded border border-gray-200 shadow-lg"
+                  className="bg-transparent p-6 rounded border border-gray-200 shadow-lg"
                 >
                   <div className="w-12 h-12 bg-odillon-teal/10 rounded flex items-center justify-center mb-4">
                     <Shield className="w-6 h-6 text-odillon-teal" />
@@ -105,7 +105,7 @@ export function HeroWithRetroGrid() {
               <BlurFade delay={0.3}>
                 <m.div
                   whileHover={{ scale: 1.02, y: -3 }}
-                  className="bg-white p-6 rounded border border-gray-200 mt-8 shadow-lg"
+                  className="bg-transparent p-6 rounded border border-gray-200 mt-8 shadow-lg"
                   id="conseil"
                 >
                   <div className="w-12 h-12 bg-odillon-lime/10 rounded flex items-center justify-center mb-4">
@@ -121,7 +121,7 @@ export function HeroWithRetroGrid() {
               <BlurFade delay={0.4}>
                 <m.div
                   whileHover={{ scale: 1.02, y: -3 }}
-                  className="bg-white p-6 rounded border border-gray-200 shadow-lg"
+                  className="bg-transparent p-6 rounded border border-gray-200 shadow-lg"
                   id="administration"
                 >
                   <div className="w-12 h-12 bg-odillon-teal/10 rounded flex items-center justify-center mb-4">
@@ -137,7 +137,7 @@ export function HeroWithRetroGrid() {
               <BlurFade delay={0.5}>
                 <m.div
                   whileHover={{ scale: 1.02, y: -3 }}
-                  className="bg-white p-6 rounded border border-gray-200 mt-8 shadow-lg"
+                  className="bg-transparent p-6 rounded border border-gray-200 mt-8 shadow-lg"
                 >
                   <div className="w-12 h-12 bg-odillon-lime/10 rounded flex items-center justify-center mb-4">
                     <Award className="w-6 h-6 text-odillon-lime" />

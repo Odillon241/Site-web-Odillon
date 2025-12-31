@@ -36,7 +36,7 @@ const contactMethods = [
 
 export function ContactHome() {
   return (
-    <section id="contact" className="relative py-24 lg:py-32 bg-gray-50/50 overflow-hidden">
+    <section id="contact" className="relative py-24 lg:py-32 overflow-hidden">
       {/* Background Decor */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 right-0 w-1/2 h-1/2 bg-odillon-teal/5 rounded-full blur-[120px] -translate-y-1/2" />

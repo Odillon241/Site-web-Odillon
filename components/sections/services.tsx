@@ -2,10 +2,10 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { FadeIn } from "@/components/magicui/fade-in"
-import { 
-  Shield, 
-  Scale, 
-  TrendingUp, 
+import {
+  Shield,
+  Scale,
+  TrendingUp,
   Users,
   CheckCircle2,
   ArrowRight
@@ -21,12 +21,12 @@ const services = [
     color: "odillon-teal",
     description: "Promotion des règles de bonne gouvernance",
     features: [
-      "Définition des orientations et de la vision",
+      "Définition des orientations, de la vision et des valeurs",
       "Rédaction du plan stratégique",
       "Formalisation de l'organisation",
-      "Code d'éthique et standards",
-      "Mécanismes de bonne gouvernance",
-      "Structuration du conseil d'Administration"
+      "Code d'éthique standards",
+      "Mise en place des mécanismes et outils de bonne gouvernance",
+      "Structuration du Conseil d'Administration et des Comités spécialisés"
     ]
   },
   {
@@ -35,11 +35,10 @@ const services = [
     color: "odillon-lime",
     description: "Service juridique externalisé complet",
     features: [
-      "Négociation des clauses financières",
-      "Rédaction des contrats",
-      "Analyse des contrats",
       "Service juridique externalisé",
-      "Accompagnement dans l'audit externe"
+      "Négociation des clauses financières des Contrats",
+      "Rédaction des contrats",
+      "Analyse des contrats"
     ]
   },
   {
@@ -48,10 +47,12 @@ const services = [
     color: "odillon-teal",
     description: "Conseil financier pour les opérations stratégiques",
     features: [
-      "Rédaction des procédures",
-      "Rédaction du Business plan",
-      "Accompagnement dans l'élaboration du budget",
-      "Mise ne place des tableaux de bord",
+      "Conseil Financier pour les opérations de levée de fonds",
+      "Conseil en Investissement",
+      "Rédaction des Procédures",
+      "Rédaction du Business Plan",
+      "Accompagnement dans l'élaboration du Budget",
+      "Mise en place des tableaux de bord",
       "Lobbying financier"
     ]
   },
@@ -61,19 +62,19 @@ const services = [
     color: "odillon-lime",
     description: "Gestion complète des ressources humaines",
     features: [
-      "Identification des atouts et handicaps",
-      "Définition des objectifs et plans d'action",
-      "Indicateurs de performance",
+      "Identification des atouts et des handicaps de l'Entreprise",
+      "Définition des objectifs et des plans d'action",
+      "Mise en place des indicateurs de performance",
       "Management de la mauvaise performance",
-      "Transformation qualitative des ressources",
-      "Gestion des talents et carrières"
+      "Transformation qualitative des Ressources Humaines",
+      "Gestion des Talents et remodelage des carrières"
     ]
   }
 ]
 
 export function Services() {
   return (
-    <section id="services" className="py-12 md:py-16 lg:py-24 bg-white">
+    <section id="services" className="py-12 md:py-16 lg:py-24 bg-transparent">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-10 md:mb-16 px-4">
@@ -92,7 +93,7 @@ export function Services() {
           </FadeIn>
           <FadeIn delay={0.3}>
             <p className="text-base md:text-lg text-gray-600">
-              Nous accompagnons les entreprises dans leur structuration, 
+              Nous accompagnons les entreprises dans leur structuration,
               leur gestion administrative, leurs relations publiques et le management des risques.
             </p>
           </FadeIn>
@@ -107,8 +108,8 @@ export function Services() {
                 <Card className="h-full border border-gray-200 hover:border-odillon-teal transition-all duration-300 group">
                   <CardHeader className="px-4 md:px-6 py-4 md:py-6">
                     <div className={`w-10 h-10 md:w-12 md:h-12 bg-${service.color}/10 rounded flex items-center justify-center mb-3 md:mb-4 group-hover:scale-105 transition-transform duration-300`}>
-                      <Icon className={`w-5 h-5 md:w-6 md:h-6 text-${service.color}`} style={{ 
-                        color: service.color === 'odillon-teal' ? '#39837a' : '#C4D82E' 
+                      <Icon className={`w-5 h-5 md:w-6 md:h-6 text-${service.color}`} style={{
+                        color: service.color === 'odillon-teal' ? '#39837a' : '#C4D82E'
                       }} />
                     </div>
                     <CardTitle className="text-lg md:text-xl text-gray-900">{service.title}</CardTitle>
@@ -118,8 +119,8 @@ export function Services() {
                     <ul className="space-y-2 md:space-y-3">
                       {service.features.map((feature) => (
                         <li key={feature} className="flex items-start">
-                          <CheckCircle2 
-                            className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 flex-shrink-0 mt-0.5" 
+                          <CheckCircle2
+                            className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 flex-shrink-0 mt-0.5"
                             style={{ color: service.color === 'odillon-teal' ? '#39837a' : '#C4D82E' }}
                           />
                           <span className="text-xs md:text-sm text-gray-700">{feature}</span>

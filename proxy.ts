@@ -57,15 +57,15 @@ export async function proxy(request: NextRequest) {
 
     // Si on est sur le domaine principal (odillon.fr ou www.odillon.fr)
     // ET qu'on n'est pas en développement local
-    // NOTE: Redirection vers admin.odillon.fr désactivée tant que le sous-domaine n'est pas configuré
-    // if (!isLocalDev && (host === 'odillon.fr' || host === 'www.odillon.fr')) {
-    //   // Rediriger les accès /admin vers admin.odillon.fr
-    //   if (pathname.startsWith('/admin')) {
-    //     const adminUrl = new URL(pathname, 'https://admin.odillon.fr')
-    //     adminUrl.search = request.nextUrl.search
-    //     return NextResponse.redirect(adminUrl)
-    //   }
-    // }
+    // Rediriger les accès /admin vers admin.odillon.fr
+    if (!isLocalDev && (host === 'odillon.fr' || host === 'www.odillon.fr')) {
+      // Rediriger les accès /admin vers admin.odillon.fr
+      if (pathname.startsWith('/admin')) {
+        const adminUrl = new URL(pathname, 'https://admin.odillon.fr')
+        adminUrl.search = request.nextUrl.search
+        return NextResponse.redirect(adminUrl, 308) // 308 = Permanent Redirect (préserve la méthode HTTP)
+      }
+    }
 
     // Gestion de la session Supabase pour toutes les routes
     // Cela protège automatiquement les routes /admin/* (sauf /admin/login)

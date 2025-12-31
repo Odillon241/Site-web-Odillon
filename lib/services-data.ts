@@ -22,48 +22,60 @@ export const servicesData: ServiceData[] = [
   {
     id: "gouvernance",
     icon: "Shield",
-    title: "Gouvernance d'Entreprise",
+    title: "Gouvernance",
     color: "#39837a",
     gradient: "from-[#39837a]/20 via-[#39837a]/10 to-transparent",
-    tagline: "Bâtissez les fondations de votre excellence organisationnelle",
-    description: "Structurez votre organisation avec des mécanismes de gouvernance robustes et transparents qui inspirent confiance et performance.",
+    tagline: "Structuration et Restructuration d'Entreprises",
+    description: "Nous mettons en place des règles de bonne gouvernance pour structurer votre organisation de manière transparente et performante.",
     keyBenefits: [
-      { icon: "Target", text: "Alignement stratégique", detail: "Vision claire partagée par tous" },
-      { icon: "Shield", text: "Conformité assurée", detail: "Standards internationaux respectés" },
-      { icon: "TrendingUp", text: "Performance optimale", detail: "Décisions basées sur des données" }
+      { icon: "Target", text: "Vision stratégique claire", detail: "Orientations et valeurs définies" },
+      { icon: "Shield", text: "Contrôle des risques", detail: "Cartographie et audit interne" },
+      { icon: "TrendingUp", text: "Performance globale", detail: "Évaluation et suivi continu" }
     ],
     workflow: [
-      { step: "1", title: "Diagnostic", description: "Analyse de votre organisation actuelle", icon: "FileText" },
-      { step: "2", title: "Conception", description: "Définition du cadre de gouvernance", icon: "Lightbulb" },
-      { step: "3", title: "Déploiement", description: "Mise en œuvre des structures", icon: "Rocket" },
-      { step: "4", title: "Suivi", description: "Accompagnement et ajustements", icon: "BarChart3" }
+      { step: "1", title: "Analiser", description: "Identification et évaluation des risques", icon: "BarChart3" },
+      { step: "2", title: "Transférer", description: "Délégation des risques à des tiers", icon: "Users" },
+      { step: "3", title: "Réduire", description: "Diminution de l'impact des risques", icon: "TrendingUp" },
+      { step: "4", title: "Contrôler", description: "Surveillance et vérification", icon: "Shield" },
+      { step: "5", title: "Préparer", description: "Plans de continuité d'activité", icon: "Rocket" },
+      { step: "6", title: "Éviter", description: "Stratégies d'évitement", icon: "Target" }
     ],
     services: [
       {
         icon: "Target",
-        name: "Stratégie & Vision",
-        tagline: "Définissez votre cap",
+        name: "Promotion des Règles de Bonne Gouvernance",
+        tagline: "Définissez votre cap stratégique",
         description: "Construisez les fondations stratégiques de votre entreprise avec une vision claire et des valeurs partagées.",
         details: [
           {
-            title: "Définition des orientations stratégiques",
+            title: "Définition des orientations, de la vision et des valeurs",
             content: "Clarifiez votre mission, vision et valeurs pour guider toutes les décisions organisationnelles",
-            impact: "Une direction claire augmente l'engagement des équipes de 40%"
+            impact: "Une direction claire augmente l'engagement des équipes"
           },
           {
-            title: "Plan stratégique à 3-5 ans",
+            title: "Rédaction du plan stratégique",
             content: "Élaborez une feuille de route détaillée avec objectifs mesurables et jalons clés",
-            impact: "Les entreprises avec plan stratégique croissent 2x plus vite"
+            impact: "Les entreprises avec plan stratégique croissent plus vite"
           },
           {
-            title: "Formalisation organisationnelle",
+            title: "Formalisation de l'organisation",
             content: "Créez organigrammes, fiches de poste et procédures pour une structure claire",
-            impact: "Réduit les conflits de rôles de 60%"
+            impact: "Réduit les conflits de rôles"
           },
           {
-            title: "Code d'éthique",
+            title: "Code d'éthique standards",
             content: "Établissez les standards de conduite et principes éthiques de votre organisation",
             impact: "Renforce la confiance des parties prenantes"
+          },
+          {
+            title: "Mise en place des mécanismes et outils de bonne gouvernance",
+            content: "Implémentation des structures de gouvernance adaptées à votre organisation",
+            impact: "Transparence et efficacité décisionnelle"
+          },
+          {
+            title: "Mise en place des politiques et procédures de l'entreprise",
+            content: "Documentation et formalisation des processus internes",
+            impact: "Standardisation et conformité"
           }
         ]
       },
@@ -74,70 +86,100 @@ export const servicesData: ServiceData[] = [
         description: "Structurez et dynamisez votre conseil pour une gouvernance efficace et performante.",
         details: [
           {
-            title: "Structuration du conseil",
+            title: "Structuration du Conseil d'Administration et des Comités spécialisés",
             content: "Organisation du conseil d'administration et des comités spécialisés (Audit, Rémunération, Stratégie)",
             impact: "Améliore la qualité des décisions stratégiques"
           },
           {
-            title: "Documentation et cadre légal",
+            title: "Documentation et information clés du Conseil d'Administration",
             content: "Formalisation des règlements intérieurs, charte du conseil et processus décisionnels",
             impact: "Sécurise juridiquement votre gouvernance"
           },
           {
-            title: "Formation des membres",
+            title: "Formation et développement des membres du Management et du Conseil",
             content: "Développement des compétences du conseil et du management",
-            impact: "Augmente l'efficacité du conseil de 35%"
-          },
-          {
-            title: "Tableaux de bord",
-            content: "Mise en place d'indicateurs de performance pour le suivi stratégique",
-            impact: "Décisions 3x plus rapides et éclairées"
+            impact: "Augmente l'efficacité du conseil"
           }
         ]
       },
       {
         icon: "FileText",
-        name: "Gestion des Risques",
+        name: "Couverture des Risques Opérationnels",
         tagline: "Anticipez et maîtrisez",
         description: "Identifiez, évaluez et gérez proactivement les risques pour protéger votre organisation.",
         details: [
           {
-            title: "Contrôle interne",
+            title: "Mise en place du contrôle interne",
             content: "Système de contrôle et audit interne pour sécuriser vos opérations",
-            impact: "Réduit les incidents de 70%"
+            impact: "Réduit les incidents"
           },
           {
-            title: "Cartographie des risques",
+            title: "Définition de la cartographie des risques",
             content: "Identification et évaluation systématique de tous les risques organisationnels",
             impact: "Permet une allocation optimale des ressources"
           },
           {
-            title: "Audit et évaluation",
+            title: "Audit Interne",
             content: "Évaluation régulière de la performance et de la conformité",
             impact: "Amélioration continue garantie"
+          },
+          {
+            title: "Préparation et accompagnement de l'Audit Externe",
+            content: "Support complet avant et pendant les audits externes",
+            impact: "Réussite des audits assurée"
+          },
+          {
+            title: "Audit et évaluation de la performance globale de l'entreprise",
+            content: "Évaluation complète de la performance organisationnelle",
+            impact: "Identification des axes d'amélioration"
+          },
+          {
+            title: "Gestion de l'information",
+            content: "Organisation et sécurisation des flux d'information",
+            impact: "Information fiable et accessible"
+          },
+          {
+            title: "Gestion de la documentation de l'entreprise",
+            content: "Structuration et archivage de la documentation entreprise",
+            impact: "Traçabilité et conformité"
           }
         ]
       },
       {
         icon: "BarChart3",
-        name: "Communication d'Entreprise",
+        name: "La Communication d'Entreprise",
         tagline: "Valorisez votre image",
         description: "Développez une communication stratégique cohérente et impactante.",
         details: [
           {
             title: "Management de l'image",
-            content: "Stratégie de communication interne et externe pour renforcer votre réputation",
-            impact: "Augmente la valeur de marque de 45%"
+            content: "Stratégie de communication pour renforcer votre réputation",
+            impact: "Augmente la valeur de marque"
           },
           {
-            title: "Gestion de crise",
+            title: "Communication de crise",
             content: "Préparation et gestion des situations de crise avec protocoles adaptés",
             impact: "Minimise l'impact des crises"
           },
           {
-            title: "Conduite du changement",
+            title: "Gestion du changement",
             content: "Accompagnement des transformations organisationnelles",
-            impact: "Taux de réussite des changements de 85%"
+            impact: "Taux de réussite des changements élevé"
+          },
+          {
+            title: "Communication interne & externe",
+            content: "Stratégies de communication adaptées à chaque audience",
+            impact: "Cohérence du message"
+          },
+          {
+            title: "Assistance dans la prise des rendez-vous avec les Administrations",
+            content: "Facilitation des relations avec les institutions publiques",
+            impact: "Accès facilité aux interlocuteurs clés"
+          },
+          {
+            title: "Assistance dans la coordination et le suivi des projets avec les Administrations",
+            content: "Gestion des projets impliquant les administrations publiques",
+            impact: "Projets menés à terme efficacement"
           }
         ]
       }
@@ -146,10 +188,10 @@ export const servicesData: ServiceData[] = [
   {
     id: "juridique",
     icon: "Scale",
-    title: "Services Juridiques",
+    title: "Juridique",
     color: "#C4D82E",
     gradient: "from-[#C4D82E]/20 via-[#C4D82E]/10 to-transparent",
-    tagline: "Sécurisez vos opérations avec une expertise juridique de pointe",
+    tagline: "Gestion Administrative, Juridique et Financière",
     description: "Bénéficiez d'un accompagnement juridique complet et externalisé pour tous vos besoins contractuels et réglementaires.",
     keyBenefits: [
       { icon: "Shield", text: "Protection juridique", detail: "Tous vos contrats sécurisés" },
@@ -157,10 +199,12 @@ export const servicesData: ServiceData[] = [
       { icon: "Rocket", text: "Réactivité", detail: "Conseil disponible en temps réel" }
     ],
     workflow: [
-      { step: "1", title: "Analyse", description: "Compréhension de vos besoins", icon: "FileText" },
-      { step: "2", title: "Conseil", description: "Recommandations juridiques", icon: "Lightbulb" },
-      { step: "3", title: "Rédaction", description: "Documents et contrats", icon: "Award" },
-      { step: "4", title: "Suivi", description: "Accompagnement continu", icon: "Target" }
+      { step: "1", title: "Analiser", description: "Compréhension de vos besoins juridiques", icon: "BarChart3" },
+      { step: "2", title: "Transférer", description: "Recommandations et clauses contractuelles", icon: "Users" },
+      { step: "3", title: "Réduire", description: "Mitigation des risques juridiques", icon: "TrendingUp" },
+      { step: "4", title: "Contrôler", description: "Veille juridique et conformité", icon: "Shield" },
+      { step: "5", title: "Préparer", description: "Documentation et procédures", icon: "Rocket" },
+      { step: "6", title: "Éviter", description: "Prévention des litiges", icon: "Target" }
     ],
     services: [
       {
@@ -170,85 +214,24 @@ export const servicesData: ServiceData[] = [
         description: "Une expertise juridique complète sans les coûts d'une équipe interne.",
         details: [
           {
-            title: "Négociation de contrats",
+            title: "Service juridique externalisé",
+            content: "Mise à disposition d'une expertise juridique complète pour votre entreprise",
+            impact: "Réduction des coûts RH juridiques"
+          },
+          {
+            title: "Négociation des clauses financières des Contrats",
             content: "Négociation des clauses financières et commerciales pour protéger vos intérêts",
-            impact: "Économies moyennes de 25% sur les transactions"
+            impact: "Économies sur les transactions"
           },
           {
-            title: "Rédaction contractuelle",
+            title: "Rédaction des contrats",
             content: "Tous types de contrats : commerciaux, travail, partenariat, prestations...",
-            impact: "Taux de litige réduit de 80%"
+            impact: "Taux de litige réduit"
           },
           {
-            title: "Analyse juridique",
+            title: "Analyse des contrats",
             content: "Revue approfondie des documents légaux et identification des risques",
             impact: "Sécurisation totale de vos opérations"
-          },
-          {
-            title: "Conseil permanent",
-            content: "Assistance juridique en temps réel pour vos questions quotidiennes",
-            impact: "Décisions sécurisées instantanément"
-          },
-          {
-            title: "Veille réglementaire",
-            content: "Surveillance des évolutions légales impactant votre activité",
-            impact: "Toujours en conformité"
-          }
-        ]
-      },
-      {
-        icon: "Shield",
-        name: "Conformité & Audit",
-        tagline: "Restez conforme",
-        description: "Préparez et réussissez vos audits avec un accompagnement expert.",
-        details: [
-          {
-            title: "Préparation aux audits",
-            content: "Mise en conformité et préparation complète avant audit externe",
-            impact: "Taux de réussite de 95%"
-          },
-          {
-            title: "Accompagnement audit",
-            content: "Présence et support durant tout le processus d'audit",
-            impact: "Réduction du stress de 70%"
-          },
-          {
-            title: "Mise en conformité",
-            content: "Alignement avec les réglementations légales et sectorielles",
-            impact: "Zéro risque de sanction"
-          },
-          {
-            title: "Gestion des contentieux",
-            content: "Résolution des litiges et gestion des conflits juridiques",
-            impact: "Résolution 60% plus rapide"
-          }
-        ]
-      },
-      {
-        icon: "Briefcase",
-        name: "Droit des Affaires",
-        tagline: "Développez sereinement",
-        description: "Expertise complète en droit commercial et droit des sociétés.",
-        details: [
-          {
-            title: "Création de sociétés",
-            content: "Structuration juridique optimale de votre entreprise",
-            impact: "Structure fiscalement avantageuse"
-          },
-          {
-            title: "Fusions & Acquisitions",
-            content: "Accompagnement dans les opérations de croissance externe",
-            impact: "Transactions sécurisées"
-          },
-          {
-            title: "Propriété intellectuelle",
-            content: "Protection de vos marques, brevets et créations",
-            impact: "Valorisation de vos actifs immatériels"
-          },
-          {
-            title: "Optimisation fiscale",
-            content: "Conseil en droit fiscal pour minimiser votre charge fiscale légalement",
-            impact: "Économies fiscales substantielles"
           }
         ]
       }
@@ -257,10 +240,10 @@ export const servicesData: ServiceData[] = [
   {
     id: "finances",
     icon: "TrendingUp",
-    title: "Conseil Financier",
+    title: "Finances",
     color: "#39837a",
     gradient: "from-[#39837a]/20 via-[#39837a]/10 to-transparent",
-    tagline: "Optimisez votre santé financière et accélérez votre croissance",
+    tagline: "Management des Risques",
     description: "De l'élaboration du business plan à la levée de fonds, structurez votre stratégie financière pour maximiser vos performances.",
     keyBenefits: [
       { icon: "TrendingUp", text: "Croissance accélérée", detail: "Stratégie financière optimale" },
@@ -268,103 +251,54 @@ export const servicesData: ServiceData[] = [
       { icon: "BarChart3", text: "Performance mesurée", detail: "KPIs et tableaux de bord" }
     ],
     workflow: [
-      { step: "1", title: "Diagnostic", description: "Analyse de votre situation financière", icon: "BarChart3" },
-      { step: "2", title: "Stratégie", description: "Élaboration du plan financier", icon: "Target" },
-      { step: "3", title: "Financement", description: "Recherche et négociation", icon: "TrendingUp" },
-      { step: "4", title: "Pilotage", description: "Suivi et optimisation", icon: "BarChart3" }
+      { step: "1", title: "Analiser", description: "Diagnostic financier complet", icon: "BarChart3" },
+      { step: "2", title: "Transférer", description: "Partenariats financiers", icon: "Users" },
+      { step: "3", title: "Réduire", description: "Optimisation des coûts et risques", icon: "TrendingUp" },
+      { step: "4", title: "Contrôler", description: "Tableaux de bord et reporting", icon: "Shield" },
+      { step: "5", title: "Préparer", description: "Business plan et projections", icon: "Rocket" },
+      { step: "6", title: "Éviter", description: "Stratégies de prudence", icon: "Target" }
     ],
     services: [
       {
-        icon: "FileText",
-        name: "Structuration Financière",
-        tagline: "Posez les bases solides",
-        description: "Mettez en place les processus et outils pour un pilotage financier efficace.",
+        icon: "TrendingUp",
+        name: "Conseil Financier",
+        tagline: "Financez votre ambition",
+        description: "Accompagnement complet dans la structuration et la recherche de financements.",
         details: [
           {
-            title: "Procédures financières",
-            content: "Rédaction des processus comptables et financiers standardisés",
-            impact: "Efficacité opérationnelle +50%"
+            title: "Conseil Financier pour les opérations de levée de fonds sous forme de Dette ou d'Actions",
+            content: "Identification des meilleures sources de financement : dette, equity, subventions...",
+            impact: "Coût du capital optimisé"
           },
           {
-            title: "Business plan",
+            title: "Conseil en Investissement",
+            content: "Analyse et recommandations pour vos décisions d'investissement",
+            impact: "ROI maximisé"
+          },
+          {
+            title: "Rédaction des Procédures",
+            content: "Documentation des processus comptables et financiers standardisés",
+            impact: "Efficacité opérationnelle"
+          },
+          {
+            title: "Rédaction du Business Plan",
             content: "Élaboration de prévisions financières détaillées sur 3-5 ans",
             impact: "Crédibilité auprès des investisseurs"
           },
           {
-            title: "Budget annuel",
+            title: "Accompagnement dans l'élaboration du Budget",
             content: "Construction du budget avec allocation optimale des ressources",
             impact: "Contrôle des dépenses assuré"
           },
           {
-            title: "Tableaux de bord",
+            title: "Mise en place des tableaux de bord",
             content: "KPIs financiers et indicateurs de performance en temps réel",
-            impact: "Décisions 5x plus rapides"
-          },
-          {
-            title: "Gestion de trésorerie",
-            content: "Optimisation des flux financiers et prévisions de cash",
-            impact: "Zéro rupture de trésorerie"
-          }
-        ]
-      },
-      {
-        icon: "TrendingUp",
-        name: "Levée de Fonds",
-        tagline: "Financez votre ambition",
-        description: "Accompagnement complet dans la recherche et négociation de financements.",
-        details: [
-          {
-            title: "Stratégie de financement",
-            content: "Identification des meilleures sources : dette, equity, subventions...",
-            impact: "Coût du capital optimisé"
-          },
-          {
-            title: "Montage de dossiers",
-            content: "Préparation des documents pour banques et investisseurs",
-            impact: "Taux d'acceptation de 75%"
+            impact: "Décisions rapides et éclairées"
           },
           {
             title: "Lobbying financier",
             content: "Réseau et relations avec institutions financières",
             impact: "Accès privilégié aux financements"
-          },
-          {
-            title: "Négociation",
-            content: "Négociation des termes et conditions avec les financeurs",
-            impact: "Conditions 20% plus favorables"
-          },
-          {
-            title: "Structure financière",
-            content: "Optimisation du mix dette/equity",
-            impact: "Dilution minimisée"
-          }
-        ]
-      },
-      {
-        icon: "BarChart3",
-        name: "Analyse & Performance",
-        tagline: "Pilotez avec précision",
-        description: "Évaluez et optimisez votre performance financière en continu.",
-        details: [
-          {
-            title: "Analyse financière",
-            content: "Diagnostic approfondi de la santé financière",
-            impact: "Identification des leviers de croissance"
-          },
-          {
-            title: "Audit financier",
-            content: "Évaluation indépendante de vos états financiers",
-            impact: "Crédibilité renforcée"
-          },
-          {
-            title: "Optimisation des coûts",
-            content: "Identification et réduction des dépenses non essentielles",
-            impact: "Marge améliorée de 15-30%"
-          },
-          {
-            title: "Planification stratégique",
-            content: "Vision financière long terme alignée avec la stratégie",
-            impact: "Croissance durable assurée"
           }
         ]
       }
@@ -373,46 +307,48 @@ export const servicesData: ServiceData[] = [
   {
     id: "ressources-humaines",
     icon: "Users",
-    title: "Ressources Humaines",
+    title: "Administration et Ressources Humaines",
     color: "#C4D82E",
     gradient: "from-[#C4D82E]/20 via-[#C4D82E]/10 to-transparent",
-    tagline: "Transformez votre capital humain en avantage compétitif",
+    tagline: "Relations Publiques",
     description: "De la stratégie RH à la gestion des talents, développez une organisation performante centrée sur l'humain.",
     keyBenefits: [
-      { icon: "Users2", text: "Talents retenus", detail: "Turnover réduit de 50%" },
-      { icon: "Award", text: "Performance accrue", detail: "Engagement +60%" },
+      { icon: "Users2", text: "Talents retenus", detail: "Turnover réduit" },
+      { icon: "Award", text: "Performance accrue", detail: "Engagement renforcé" },
       { icon: "Rocket", text: "Culture d'excellence", detail: "Organisation apprenante" }
     ],
     workflow: [
-      { step: "1", title: "Audit RH", description: "État des lieux de votre capital humain", icon: "FileText" },
-      { step: "2", title: "Stratégie", description: "Définition de la politique RH", icon: "Target" },
-      { step: "3", title: "Déploiement", description: "Mise en œuvre des programmes", icon: "Rocket" },
-      { step: "4", title: "Développement", description: "Formation et évolution", icon: "TrendingUp" }
+      { step: "1", title: "Analiser", description: "Audit du capital humain", icon: "BarChart3" },
+      { step: "2", title: "Transférer", description: "Externalisation et partenariats RH", icon: "Users" },
+      { step: "3", title: "Réduire", description: "Optimisation des processus RH", icon: "TrendingUp" },
+      { step: "4", title: "Contrôler", description: "Indicateurs de performance RH", icon: "Shield" },
+      { step: "5", title: "Préparer", description: "Développement des compétences", icon: "Rocket" },
+      { step: "6", title: "Éviter", description: "Prévention des conflits", icon: "Target" }
     ],
     services: [
       {
         icon: "Target",
-        name: "Stratégie RH",
+        name: "Projets et Chartes d'Entreprise",
         tagline: "Alignez votre capital humain",
         description: "Définissez le cadre stratégique et opérationnel de vos ressources humaines.",
         details: [
           {
-            title: "Diagnostic RH",
-            content: "Identification des forces et faiblesses de votre organisation humaine",
+            title: "Identification des atouts et des handicaps de l'Entreprise",
+            content: "Diagnostic complet des forces et faiblesses de votre organisation humaine",
             impact: "Vision claire des enjeux"
           },
           {
-            title: "Objectifs et plans d'action",
+            title: "Définition des objectifs et des plans d'action",
             content: "Définition de la feuille de route RH alignée avec la stratégie",
             impact: "Cohérence organisationnelle totale"
           },
           {
-            title: "Indicateurs de performance",
+            title: "Mise en place des indicateurs de performance",
             content: "Mise en place de KPIs RH pour mesurer l'efficacité",
             impact: "Décisions basées sur la data"
           },
           {
-            title: "Systèmes d'information RH",
+            title: "Analyse des systèmes d'information des Ressources Humaines",
             content: "Analyse et optimisation des outils SIRH",
             impact: "Processus RH digitalisés"
           }
@@ -420,95 +356,90 @@ export const servicesData: ServiceData[] = [
       },
       {
         icon: "Users2",
-        name: "Développement des Talents",
+        name: "Politiques de Développement des Ressources Humaines",
         tagline: "Cultivez l'excellence",
         description: "Développez et optimisez votre capital humain pour une performance maximale.",
         details: [
           {
-            title: "Gestion de la performance",
+            title: "Management de la mauvaise performance",
             content: "Management des sous-performances et plans d'amélioration",
-            impact: "Performance +40% en 6 mois"
+            impact: "Performance améliorée"
           },
           {
-            title: "Transformation qualitative",
+            title: "Transformation qualitative des Ressources Humaines",
             content: "Développement des compétences et montée en puissance des équipes",
             impact: "Qualité du travail améliorée"
           },
           {
-            title: "Gestion des talents",
+            title: "Gestion des Talents",
             content: "Identification et développement des hauts potentiels",
             impact: "Pipeline de leaders assuré"
           },
           {
-            title: "Plans de carrière",
+            title: "Remodelage des carrières",
             content: "Remodelage des parcours et plans de succession",
             impact: "Rétention des talents clés"
           },
           {
-            title: "Formation continue",
-            content: "Programmes de développement des compétences",
+            title: "Mise en place et suivi du Plan individuel de développement",
+            content: "Programmes de développement des compétences personnalisés",
             impact: "Organisation apprenante"
           }
         ]
       },
       {
         icon: "Award",
-        name: "Évaluation & Performance",
+        name: "Politiques d'Évaluation de la Performance des Employés",
         tagline: "Mesurez et reconnaissez",
         description: "Systèmes d'évaluation objectifs et programmes de reconnaissance.",
         details: [
           {
-            title: "Système d'évaluation",
+            title: "Mise en place du système d'appréciation et d'évaluation",
             content: "Mise en place de processus d'appréciation transparents et équitables",
-            impact: "Équité perçue de 90%"
+            impact: "Équité perçue"
           },
           {
-            title: "Fiches de poste",
+            title: "Inventaire des positions/fonctions à développer",
+            content: "Identification des postes clés nécessitant un développement",
+            impact: "Focus stratégique"
+          },
+          {
+            title: "Évaluation des emplois (fiches de poste et pesée des postes)",
             content: "Description détaillée et pesée des postes",
             impact: "Clarté des attentes"
-          },
-          {
-            title: "Management par objectifs",
-            content: "Système MBO avec objectifs SMART et suivi régulier",
-            impact: "Atteinte des objectifs +65%"
-          },
-          {
-            title: "Entretiens d'évaluation",
-            content: "Formation des managers et processus d'entretien structurés",
-            impact: "Feedback de qualité"
           }
         ]
       },
       {
         icon: "BarChart3",
-        name: "Rémunération & Avantages",
+        name: "Politiques des Rémunérations et Avantages Divers",
         tagline: "Récompensez justement",
         description: "Politique de rémunération compétitive et attractive.",
         details: [
           {
-            title: "Audit de rémunération",
+            title: "Analyse des avantages et de la rémunération globale",
             content: "Analyse de la rémunération globale et benchmarking sectoriel",
             impact: "Compétitivité salariale assurée"
           },
           {
-            title: "Enquête salariale",
+            title: "Analyse de l'enquête salariale",
             content: "Comparaison avec le marché pour rester attractif",
             impact: "Positionnement optimal"
           },
           {
-            title: "Grille salariale",
+            title: "Gestion des augmentations des salaires",
+            content: "Processus de révision salariale transparent",
+            impact: "Motivation maintenue"
+          },
+          {
+            title: "Assistance dans l'élaboration de la grille salariale",
             content: "Élaboration d'une structure salariale équitable",
             impact: "Équité interne garantie"
           },
           {
-            title: "Avantages sociaux",
+            title: "Audit des avantages sociaux et autres avantages",
             content: "Design de packages attractifs au-delà du salaire",
-            impact: "Attractivité +50%"
-          },
-          {
-            title: "Politique d'augmentation",
-            content: "Processus de révision salariale transparent",
-            impact: "Motivation maintenue"
+            impact: "Attractivité renforcée"
           }
         ]
       }

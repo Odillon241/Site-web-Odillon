@@ -11,54 +11,44 @@ import {
   Scale,
   TrendingUp,
   Users,
-  ArrowRight,
-  Sparkles,
-  Zap,
-  Target
+  ArrowRight
 } from "lucide-react"
 import Link from "next/link"
-import { NumberTicker } from "@/components/ui/number-ticker"
 
 const mainServices = [
   {
     icon: Shield,
     title: "Gouvernance",
-    tagline: "Structurez votre organisation",
+    tagline: "Structuration et Restructuration d'Entreprises",
     color: "#39837a",
-    highlights: ["Conseil d'admin.", "Politique interne", "Contrôle"]
+    highlights: ["Règles de bonne gouvernance", "Conseil d'Administration", "Risques opérationnels"]
   },
   {
     icon: Scale,
     title: "Juridique",
-    tagline: "Sécurisez vos opérations",
+    tagline: "Gestion Administrative, Juridique et Financière",
     color: "#C4D82E",
-    highlights: ["Contrats", "Conformité", "Audit"]
+    highlights: ["Service externalisé", "Contrats", "Négociation"]
   },
   {
     icon: TrendingUp,
-    title: "Finance",
-    tagline: "Optimisez votre croissance",
+    title: "Finances",
+    tagline: "Management des Risques",
     color: "#39837a",
-    highlights: ["Business plan", "Levée de fonds", "Reporting"]
+    highlights: ["Business plan", "Levée de fonds", "Tableaux de bord"]
   },
   {
     icon: Users,
     title: "Ressources Humaines",
-    tagline: "Développez vos talents",
+    tagline: "Relations Publiques",
     color: "#C4D82E",
-    highlights: ["Recrutement", "Formation", "Carrières"]
+    highlights: ["Développement RH", "Évaluation", "Rémunérations"]
   }
-]
-
-const benefits = [
-  { icon: Sparkles, text: "Excellence garantie", metric: "95%" },
-  { icon: Zap, text: "Réponse rapide", metric: "24h" },
-  { icon: Target, text: "Résultats mesurables", metric: "100%" }
 ]
 
 export function ServicesHome() {
   return (
-    <section id="services" className="relative py-24 lg:py-32 bg-gray-50/50 overflow-hidden">
+    <section id="services" className="relative py-24 lg:py-32 overflow-hidden">
       {/* Background Decor */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-odillon-teal/5 rounded-full blur-[100px]" />
@@ -138,30 +128,7 @@ export function ServicesHome() {
           })}
         </div>
 
-        {/* Minimalist Stats/Benefits */}
-        <BlurFade delay={0.5}>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-8 md:p-12">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-              {benefits.map((benefit, idx) => {
-                const BenefitIcon = benefit.icon
-                return (
-                  <div key={idx} className="flex items-center gap-5">
-                    <div className="bg-odillon-teal/5 p-4 rounded-md">
-                      <BenefitIcon className="w-8 h-8 text-odillon-teal" />
-                    </div>
-                    <div>
-                      <div className="text-3xl font-bold text-gray-900 font-petrov-sans">
-                        <NumberTicker value={parseInt(benefit.metric)} />
-                        {benefit.metric.replace(/\d+/g, '')}
-                      </div>
-                      <div className="text-sm font-medium text-gray-500 uppercase tracking-wide mt-1">{benefit.text}</div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </BlurFade>
+
       </div>
     </section>
   )

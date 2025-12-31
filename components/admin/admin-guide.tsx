@@ -13,7 +13,10 @@ import {
   Quote,
   Settings,
   CalendarDays,
-  ChevronRight
+  ChevronRight,
+  Users,
+  Sparkles,
+  Target
 } from "lucide-react"
 
 export function AdminGuide() {
@@ -137,6 +140,66 @@ export function AdminGuide() {
             </ul>
           </div>
 
+          {/* Equipe */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-teal-500 text-white">
+                <Users className="w-4 h-4" />
+              </div>
+              <h3 className="font-semibold text-blue-900">Équipe</h3>
+            </div>
+            <ul className="text-sm text-blue-800 space-y-1 ml-7">
+              <li className="flex items-start gap-2">
+                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                <span>Gérez les membres de l'équipe et la direction</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                <span>Ordre modifiable par glisser-déposer</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* À Propos */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-indigo-500 text-white">
+                <Target className="w-4 h-4" />
+              </div>
+              <h3 className="font-semibold text-blue-900">À Propos</h3>
+            </div>
+            <ul className="text-sm text-blue-800 space-y-1 ml-7">
+              <li className="flex items-start gap-2">
+                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                <span>Définissez la mission et la description</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                <span>Gérez les valeurs (icônes, couleurs)</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Expertise CTA */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-amber-500 text-white">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <h3 className="font-semibold text-blue-900">Expertise CTA</h3>
+            </div>
+            <ul className="text-sm text-blue-800 space-y-1 ml-7">
+              <li className="flex items-start gap-2">
+                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                <span>Personnalisez la bannière d'appel à l'action</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                <span>Modifiez titre, bouton et image de fond</span>
+              </li>
+            </ul>
+          </div>
+
           {/* Calendrier */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
@@ -172,7 +235,7 @@ export function AdminGuide() {
               </li>
               <li className="flex items-start gap-2">
                 <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Gérez images CTA Services et Expertise</span>
+                <span>Configuration globale du site</span>
               </li>
             </ul>
           </div>

@@ -12,13 +12,13 @@ import { createClient } from "@/lib/supabase/server"
 
 // Lazy load components below the fold (not visible initially)
 const AboutHome = dynamic(() => import("@/components/sections/about-home").then(mod => ({ default: mod.AboutHome })), {
-  loading: () => <div className="min-h-[400px] bg-gray-50" />,
+  loading: () => <div className="min-h-[400px]" />,
 })
 const TestimonialsSection = dynamic(() => import("@/components/sections/testimonials-section").then(mod => ({ default: mod.TestimonialsSection })), {
   loading: () => null,
 })
 const ContactHome = dynamic(() => import("@/components/sections/contact-home").then(mod => ({ default: mod.ContactHome })), {
-  loading: () => <div className="min-h-[600px] bg-white" />,
+  loading: () => <div className="min-h-[600px]" />,
 })
 
 // Lazy load UI enhancement components (client-only)

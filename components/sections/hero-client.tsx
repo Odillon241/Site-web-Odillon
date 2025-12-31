@@ -7,6 +7,7 @@ import { ArrowRight, Shield, TrendingUp, Users, Award } from "lucide-react"
 import Link from "next/link"
 import { m } from "framer-motion"
 import { BackgroundSlideshow } from "@/components/ui/background-slideshow"
+import TextPressure from "@/components/ui/shadcn-io/text-pressure"
 
 interface HeroClientProps {
   images: Array<{ src: string; alt: string }>
@@ -14,7 +15,7 @@ interface HeroClientProps {
 
 export function HeroClient({ images }: HeroClientProps) {
   return (
-    <section id="accueil" className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-white">
+    <section id="accueil" className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-transparent">
       {/* Background Layer */}
       {images.length > 0 ? (
         <div className="absolute inset-0 z-0">
@@ -32,7 +33,7 @@ export function HeroClient({ images }: HeroClientProps) {
 
       {/* Content Container */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 text-center">
-        
+
         {/* Main Badge/Tagline */}
         <FadeIn delay={0.1}>
           <div className="flex justify-center mb-8">
@@ -54,7 +55,7 @@ export function HeroClient({ images }: HeroClientProps) {
         {/* Subtitle - More readable */}
         <FadeIn delay={0.3}>
           <p className="text-lg sm:text-xl md:text-2xl text-gray-200 leading-relaxed max-w-3xl mx-auto mb-10 md:mb-12 font-light">
-            Cabinet expert en <strong>gouvernance</strong>, <strong>finance</strong>, <strong>RH</strong> et <strong>juridique</strong>. 
+            Cabinet expert en <strong>gouvernance</strong>, <strong>finance</strong>, <strong>RH</strong> et <strong>juridique</strong>.
             Nous transformons vos défis organisationnels en leviers de performance durable.
           </p>
         </FadeIn>
@@ -85,25 +86,25 @@ export function HeroClient({ images }: HeroClientProps) {
           </div>
         </FadeIn>
 
-        {/* Stats / Trust Indicators - Minimized at bottom */}
+        {/* Footer Tagline - Future Vision */}
         <FadeIn delay={0.6}>
-          <div className="mt-20 md:mt-24 pt-8 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-             <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-1">15+</div>
-                <div className="text-sm text-gray-300 uppercase tracking-wider">Années d'expérience</div>
-             </div>
-             <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-1">100+</div>
-                <div className="text-sm text-gray-300 uppercase tracking-wider">Projets Réalisés</div>
-             </div>
-             <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-1">4</div>
-                <div className="text-sm text-gray-300 uppercase tracking-wider">Pôles d'Expertise</div>
-             </div>
-             <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-1">Libreville</div>
-                <div className="text-sm text-gray-300 uppercase tracking-wider">Basé au Gabon</div>
-             </div>
+          <div className="mt-20 md:mt-24 pt-8 border-t border-white/10 flex justify-center w-full max-w-4xl mx-auto min-h-[100px]">
+            <div className="relative w-full h-full flex items-center justify-center">
+              <TextPressure
+                text="Together we @ the future"
+                flex={true}
+                alpha={false}
+                stroke={false}
+                width={true}
+                weight={true}
+                italic={true}
+                textColor="#ffffff"
+                minFontSize={24}
+                icons={{
+                  "@": "https://img.icons8.com/?id=36871&format=png&size=64"
+                }}
+              />
+            </div>
           </div>
         </FadeIn>
       </div>

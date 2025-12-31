@@ -33,11 +33,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Taille max 50MB pour les vidéos
-    const maxSize = file.type.startsWith('video/') ? 50 * 1024 * 1024 : 5 * 1024 * 1024
+    // Taille max 50MB pour les vidéos, 20MB pour les images
+    const maxSize = file.type.startsWith('video/') ? 50 * 1024 * 1024 : 20 * 1024 * 1024
     if (file.size > maxSize) {
+      const maxSizeMB = maxSize / (1024 * 1024)
+      const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
       return NextResponse.json(
-        { error: `Fichier trop volumineux. Maximum ${maxSize / (1024 * 1024)}MB` },
+        { error: `Fichier trop volumineux (${fileSizeMB}MB). Maximum ${maxSizeMB}MB` },
         { status: 400 }
       )
     }
@@ -49,6 +51,7 @@ export async function POST(request: NextRequest) {
     const bucketName = (formData.get('bucket') as string) || 'hero-photos'
 
     // Upload vers Supabase Storage
+    console.log(`Uploading to bucket: ${bucketName}, filename: ${fileName}`)
     const { data, error } = await supabase.storage
       .from(bucketName)
       .upload(fileName, file, {
@@ -57,7 +60,10 @@ export async function POST(request: NextRequest) {
       })
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      console.error('Supabase Storage error:', error)
+      return NextResponse.json({
+        error: `Erreur Supabase Storage: ${error.message}`
+      }, { status: 500 })
     }
 
     // Obtenir l'URL publique

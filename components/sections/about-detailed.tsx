@@ -6,7 +6,7 @@ import { BlurFade } from "@/components/magicui/blur-fade"
 import { AboutHeroBackground } from "@/components/ui/about-hero-background"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { StatCardClean } from "@/components/ui/stat-card-clean"
+
 import { TeamCard } from "@/components/ui/team-card"
 import { Separator } from "@/components/ui/separator"
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee"
@@ -20,50 +20,12 @@ import {
   CheckCircle,
   Sparkles,
   TrendingUp,
-  Shield,
-  Clock,
-  Star,
-  CheckCircle2
+  Shield
 } from "lucide-react"
 import Link from "next/link"
 import { TeamGrid } from "@/components/sections/team-grid"
 import { VideoPlayer } from "@/components/ui/video-player"
 import { Video } from "@/types/admin"
-
-const stats = [
-  {
-    icon: Clock,
-    value: 48,
-    suffix: "h",
-    label: "Temps de réponse",
-    description: "Réactivité garantie",
-    color: "#39837a"
-  },
-  {
-    icon: Star,
-    value: 98,
-    suffix: "%",
-    label: "Satisfaction",
-    description: "Clients satisfaits",
-    color: "#C4D82E"
-  },
-  {
-    icon: CheckCircle2,
-    value: 50,
-    suffix: "+",
-    label: "Projets réalisés",
-    description: "Missions réussies",
-    color: "#39837a"
-  },
-  {
-    icon: Users,
-    value: 10,
-    suffix: "+",
-    label: "Clients accompagnés",
-    description: "Partenaires de confiance",
-    color: "#C4D82E"
-  }
-]
 
 const timeline = [
   {
@@ -188,7 +150,7 @@ export function AboutDetailed() {
   }, [])
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-gray-50 via-white to-gray-50">
+    <section className="relative overflow-hidden bg-transparent">
       {/* Hero Section Simplified */}
       <div className="relative pt-8 pb-16 md:pt-16 md:pb-24 lg:pt-24 lg:pb-32">
         {/* Background Pattern - Keeping it subtle */}
@@ -244,23 +206,7 @@ export function AboutDetailed() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 space-y-24 md:space-y-32 pb-24">
 
-        {/* Stats Section - New Design */}
-        <BlurFade delay={0.4}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {stats.map((stat, idx) => (
-              <StatCardClean
-                key={stat.label}
-                icon={stat.icon}
-                value={stat.value}
-                suffix={stat.suffix}
-                label={stat.label}
-                description={stat.description}
-                color={stat.color}
-                delay={idx * 0.1}
-              />
-            ))}
-          </div>
-        </BlurFade>
+
 
         {/* Mission / Vision - Clean Typography */}
         <div className="grid lg:grid-cols-2 gap-12 items-center">

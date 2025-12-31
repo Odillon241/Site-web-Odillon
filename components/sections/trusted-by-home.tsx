@@ -44,7 +44,7 @@ export function TrustedByHome({ logos }: { logos: CompanyLogo[] }) {
   if (!logos || logos.length === 0) return null
 
   return (
-    <section className="relative py-20 bg-gray-50/50">
+    <section className="relative py-20 bg-white">
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <BlurFade delay={0.2}>
           <div className="text-center mb-10">
@@ -68,8 +68,8 @@ export function TrustedByHome({ logos }: { logos: CompanyLogo[] }) {
                   </MarqueeItem>
                 ))}
               </MarqueeContent>
-              <MarqueeFade side="left" />
-              <MarqueeFade side="right" />
+              <MarqueeFade side="left" className="from-white" />
+              <MarqueeFade side="right" className="from-white" />
             </Marquee>
           </div>
         </BlurFade>

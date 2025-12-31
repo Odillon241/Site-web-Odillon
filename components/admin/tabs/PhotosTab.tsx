@@ -229,7 +229,10 @@ export function PhotosTab() {
                         body: formData
                     })
 
-                    if (!uploadRes.ok) throw new Error(`Erreur upload ${file.name}`)
+                    if (!uploadRes.ok) {
+                        const errorData = await uploadRes.json()
+                        throw new Error(`Erreur upload ${file.name}: ${errorData.error || uploadRes.statusText}`)
+                    }
 
                     const { url } = await uploadRes.json()
 

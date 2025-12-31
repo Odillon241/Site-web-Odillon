@@ -52,7 +52,7 @@ const expertiseDomains = [
 
 export function ExpertiseHome() {
   return (
-    <section id="expertise" className="relative py-24 lg:py-32 bg-white border-t border-gray-100/50">
+    <section id="expertise" className="relative py-24 lg:py-32 bg-transparent border-t border-gray-100/50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
 

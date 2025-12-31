@@ -11,7 +11,7 @@ export function AboutPageClient() {
   return (
     <>
       {/* Background avec grille interactive inclinée */}
-      <div className="fixed inset-0 w-screen h-screen -z-10 bg-white overflow-hidden">
+      <div className="fixed inset-0 w-screen h-screen -z-10 bg-transparent overflow-hidden">
         <InteractiveGridPattern
           width={40}
           height={40}
@@ -19,7 +19,7 @@ export function AboutPageClient() {
           className="inset-x-0 inset-y-[-30%] h-[200%] skew-y-12 [mask-image:radial-gradient(500px_circle_at_center,white,transparent)]"
         />
       </div>
-      
+
       <ScrollProgress />
       <ScrollToTop />
       <HeaderPro />

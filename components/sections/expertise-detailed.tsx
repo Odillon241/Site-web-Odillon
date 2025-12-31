@@ -7,10 +7,11 @@ import { BlurFade } from "@/components/magicui/blur-fade"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 import { TextShimmer } from "@/components/ui/text-shimmer"
 import { CountingNumber } from "@/components/ui/counting-number"
-import { StatCardClean } from "@/components/ui/stat-card-clean"
+
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee"
 
 import { VideosSection } from "@/components/sections/videos-section"
@@ -33,13 +34,9 @@ import {
   FileText,
   Zap,
   ArrowRight,
-  Building2,
   ShieldCheck,
   Rocket,
-  Clock,
   TrendingDown,
-  Star,
-  CheckCircle2,
   Users,
   Search
 } from "lucide-react"
@@ -149,35 +146,49 @@ const expertiseDomains = [
 
 const methodology = {
   title: "Notre Méthodologie",
-  subtitle: "Une approche éprouvée en 4 phases",
+  subtitle: "Le cycle du Management des Risques en 6 étapes",
   steps: [
     {
       number: "01",
-      title: "Diagnostic & Analyse",
-      description: "Compréhension approfondie de votre contexte, enjeux et objectifs",
+      title: "Analiser",
+      description: "Identification et évaluation approfondie des risques potentiels",
       icon: BarChart3,
-      deliverables: ["Audit complet", "Cartographie", "Rapport de diagnostic"]
+      deliverables: ["Cartographie des risques", "Analyse d'impact", "Priorisation"]
     },
     {
       number: "02",
-      title: "Conception & Stratégie",
-      description: "Élaboration de solutions sur mesure adaptées à vos besoins spécifiques",
-      icon: Lightbulb,
-      deliverables: ["Plan stratégique", "Roadmap", "Quick wins"]
+      title: "Transférer",
+      description: "Transfert des risques vers des tiers spécialisés (assurance, sous-traitance)",
+      icon: Users,
+      deliverables: ["Contrats d'assurance", "Partenariats", "Clauses contractuelles"]
     },
     {
       number: "03",
-      title: "Déploiement & Formation",
-      description: "Mise en œuvre des solutions avec accompagnement terrain de vos équipes",
-      icon: Rocket,
-      deliverables: ["Implémentation", "Formation", "Documentation"]
+      title: "Réduire",
+      description: "Mise en place de mesures pour diminuer la probabilité ou l'impact des risques",
+      icon: TrendingDown,
+      deliverables: ["Plans d'action", "Mesures correctives", "Formations"]
     },
     {
       number: "04",
-      title: "Suivi & Optimisation",
-      description: "Monitoring des résultats et ajustements pour garantir le succès",
-      icon: TrendingUp,
-      deliverables: ["KPIs", "Reporting", "Amélioration continue"]
+      title: "Contrôler",
+      description: "Surveillance continue et vérification de l'efficacité des mesures",
+      icon: ShieldCheck,
+      deliverables: ["Audits internes", "Indicateurs clés", "Reporting"]
+    },
+    {
+      number: "05",
+      title: "Préparer",
+      description: "Élaboration des plans de continuité et de reprise d'activité",
+      icon: Rocket,
+      deliverables: ["PCA/PRA", "Procédures d'urgence", "Tests réguliers"]
+    },
+    {
+      number: "06",
+      title: "Éviter",
+      description: "Stratégies d'évitement pour les risques inacceptables",
+      icon: Zap,
+      deliverables: ["Décisions stratégiques", "Réorientation", "Abandon de projets risqués"]
     }
   ]
 }
@@ -341,6 +352,7 @@ export function ExpertiseDetailed() {
 
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedDomain, setSelectedDomain] = useState<string | null>(null)
+  const [mobileDetailDomain, setMobileDetailDomain] = useState<typeof expertiseDomains[0] | null>(null)
 
   // Filtrer les domaines d'expertise basés sur la recherche et le filtre
   const filteredDomains = expertiseDomains.filter((domain) => {
@@ -400,15 +412,15 @@ export function ExpertiseDetailed() {
   }, [selectedDomain])
 
   return (
-    <div className="relative overflow-hidden bg-white">
+    <div className="relative overflow-hidden bg-transparent">
       {/* Hero Section with Background */}
-      <div className="relative py-8 md:py-12 lg:py-16 overflow-hidden bg-white">
+      <div className="relative py-8 md:py-12 lg:py-16 overflow-hidden bg-transparent">
         {/* Background Pattern */}
         {/* Background Pattern - Simplified for Professional Look */}
         <div className="absolute inset-0 overflow-hidden z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-50/50" />
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-50/50 via-transparent to-gray-50/30" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-          <div className="absolute inset-0 bg-gradient-radial from-transparent via-white/30 to-white/80 p-0" />
+          <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-background/80 p-0" />
         </div>
 
         {/* Content */}
@@ -449,7 +461,7 @@ export function ExpertiseDetailed() {
                     placeholder="Rechercher un domaine d'expertise..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="h-14 rounded-full pl-12 pr-32 text-lg shadow-lg border-gray-200 focus:border-odillon-teal focus:ring-odillon-teal"
+                    className="h-14 rounded-full pl-12 pr-32 text-lg shadow-lg border-gray-200 focus:border-odillon-teal focus:ring-odillon-teal bg-white"
                   />
                   <Button
                     type="submit"
@@ -524,55 +536,7 @@ export function ExpertiseDetailed() {
             </BlurFade>
           </div>
 
-          {/* Stats Row - Below Hero */}
-          <BlurFade delay={0.5}>
-            <div className="relative mt-8 md:mt-12 lg:mt-16">
-              {/* Animated Zigzag Curve Background */}
 
-
-              <div className="relative z-10">
-                {/* Desktop: Horizontal layout with animated stat cards */}
-                <div className="hidden lg:grid grid-cols-4 gap-6 max-w-6xl mx-auto">
-                  {[
-                    { icon: Building2, value: 8, suffix: "", label: "Années d'expérience", description: "Plus de 8 ans d'expertise", color: "#39837a" },
-                    { icon: CheckCircle2, value: 50, suffix: "+", label: "Projets réalisés", description: "Missions menées à bien", color: "#C4D82E" },
-                    { icon: Star, value: 95, suffix: "%", label: "Satisfaction client", description: "Taux de satisfaction moyen", color: "#39837a" },
-                    { icon: Target, value: 4, suffix: "", label: "Domaines d'expertise", description: "Spécialisations clés", color: "#C4D82E" }
-                  ].map((stat, idx) => (
-                    <StatCardClean
-                      key={stat.label}
-                      icon={stat.icon}
-                      value={stat.value}
-                      suffix={stat.suffix}
-                      label={stat.label}
-                      description={stat.description}
-                      color={stat.color}
-                    />
-                  ))}
-                </div>
-
-                {/* Mobile/Tablet: Grid layout with animated stat cards */}
-                <div className="lg:hidden grid grid-cols-2 gap-4 md:gap-6">
-                  {[
-                    { icon: Building2, value: 8, suffix: "", label: "Années d'expérience", description: "Plus de 8 ans d'expertise", color: "#39837a" },
-                    { icon: CheckCircle2, value: 50, suffix: "+", label: "Projets réalisés", description: "Missions menées à bien", color: "#C4D82E" },
-                    { icon: Star, value: 95, suffix: "%", label: "Satisfaction client", description: "Taux de satisfaction moyen", color: "#39837a" },
-                    { icon: Target, value: 4, suffix: "", label: "Domaines d'expertise", description: "Spécialisations clés", color: "#C4D82E" }
-                  ].map((stat, idx) => (
-                    <StatCardClean
-                      key={stat.label}
-                      icon={stat.icon}
-                      value={stat.value}
-                      suffix={stat.suffix}
-                      label={stat.label}
-                      description={stat.description}
-                      color={stat.color}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </BlurFade>
         </div>
       </div>
 
@@ -609,135 +573,259 @@ export function ExpertiseDetailed() {
           </BlurFade>
 
           {filteredDomains.length > 0 ? (
-            <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-              {filteredDomains.map((domain, idx) => {
-                const DomainIcon = domain.icon
-                return (
-                  <BlurFade key={domain.id} delay={0.1 * (idx + 1)}>
-                    <HoverCard openDelay={200}>
-                      <HoverCardTrigger asChild>
-                        <Card
-                          className="border-2 hover:border-gray-400 transition-all duration-500 cursor-pointer group h-full"
-                          style={{ borderColor: `${domain.color}30` }}
-                        >
-                          <CardHeader className="px-4 md:px-6 py-4 md:py-6">
-                            <div className="flex items-start justify-between mb-2 md:mb-3">
-                              <div
-                                className="w-12 h-12 md:w-14 md:h-14 rounded-lg md:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
-                                style={{ backgroundColor: `${domain.color}20`, color: domain.color }}
-                              >
-                                <DomainIcon className="w-6 h-6 md:w-7 md:h-7" />
-                              </div>
-                              <Badge
-                                className="text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1"
-                                style={{ backgroundColor: `${domain.color}15`, color: domain.color, border: `1px solid ${domain.color}30` }}
-                              >
-                                Expertise clé
-                              </Badge>
-                            </div>
-                            <CardTitle className="text-lg md:text-2xl mb-1 md:mb-2 group-hover:text-[#39837a] transition-colors">
-                              {domain.title}
-                            </CardTitle>
-                            <CardDescription className="text-xs md:text-sm font-medium" style={{ color: domain.color }}>
-                              {domain.shortDesc}
-                            </CardDescription>
-                          </CardHeader>
-                          <CardContent className="space-y-3 md:space-y-4 px-4 md:px-6 pb-4 md:pb-6">
-                            <p className="text-xs md:text-sm text-gray-600 leading-relaxed">
-                              {domain.description}
-                            </p>
-
-                            {/* Stats Badge */}
-                            <div
-                              className="inline-flex items-baseline gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-lg"
-                              style={{ backgroundColor: `${domain.color}10` }}
+            <>
+              <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+                {filteredDomains.map((domain, idx) => {
+                  const DomainIcon = domain.icon
+                  return (
+                    <BlurFade key={domain.id} delay={0.1 * (idx + 1)}>
+                      {/* Desktop: HoverCard */}
+                      <div className="hidden md:block">
+                        <HoverCard openDelay={200}>
+                          <HoverCardTrigger asChild>
+                            <Card
+                              className="border-2 hover:border-gray-400 transition-all duration-500 cursor-pointer group h-full"
+                              style={{ borderColor: `${domain.color}30` }}
                             >
-                              <span className="text-2xl md:text-3xl font-bold" style={{ color: domain.color }}>
-                                {domain.stats.value}{domain.stats.suffix}
-                              </span>
-                              <span className="text-[10px] md:text-xs text-gray-600">{domain.stats.label}</span>
-                            </div>
-
-                            {/* Highlights */}
-                            <div className="grid grid-cols-2 gap-1.5 md:gap-2 pt-2">
-                              {domain.highlights.map((highlight, i) => (
-                                <div key={i} className="flex items-start gap-1.5 md:gap-2">
-                                  <CheckCircle className="w-3 h-3 md:w-4 md:h-4 mt-0.5 flex-shrink-0" style={{ color: domain.color }} />
-                                  <span className="text-[10px] md:text-xs text-gray-700 leading-tight">{highlight}</span>
+                              <CardHeader className="px-4 md:px-6 py-4 md:py-6">
+                                <div className="flex items-start justify-between mb-2 md:mb-3">
+                                  <div
+                                    className="w-12 h-12 md:w-14 md:h-14 rounded-lg md:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                                    style={{ backgroundColor: `${domain.color}20`, color: domain.color }}
+                                  >
+                                    <DomainIcon className="w-6 h-6 md:w-7 md:h-7" />
+                                  </div>
+                                  <Badge
+                                    className="text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1"
+                                    style={{ backgroundColor: `${domain.color}15`, color: domain.color, border: `1px solid ${domain.color}30` }}
+                                  >
+                                    Expertise clé
+                                  </Badge>
                                 </div>
-                              ))}
-                            </div>
+                                <CardTitle className="text-lg md:text-2xl mb-1 md:mb-2 group-hover:text-[#39837a] transition-colors">
+                                  {domain.title}
+                                </CardTitle>
+                                <CardDescription className="text-xs md:text-sm font-medium" style={{ color: domain.color }}>
+                                  {domain.shortDesc}
+                                </CardDescription>
+                              </CardHeader>
+                              <CardContent className="space-y-3 md:space-y-4 px-4 md:px-6 pb-4 md:pb-6">
+                                <p className="text-xs md:text-sm text-gray-600 leading-relaxed">
+                                  {domain.description}
+                                </p>
 
-                            <div className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm font-medium pt-2" style={{ color: domain.color }}>
-                              <span className="hidden sm:inline">Survolez pour en savoir plus</span>
-                              <span className="sm:hidden">Touchez pour plus</span>
-                              <ArrowRight className="w-3 h-3 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" />
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </HoverCardTrigger>
-
-                      <HoverCardContent className="w-[500px] p-6" align="center">
-                        <div className="space-y-4">
-                          <div>
-                            <div className="flex items-center gap-2 mb-3">
-                              <DomainIcon className="w-5 h-5" style={{ color: domain.color }} />
-                              <h4 className="font-bold text-lg">{domain.title}</h4>
-                            </div>
-                            <Separator className="mb-4" />
-                          </div>
-
-                          <div>
-                            <div className="flex items-start gap-2 mb-2">
-                              <Badge variant="outline" className="text-xs">Défi</Badge>
-                            </div>
-                            <p className="text-sm text-gray-700 leading-relaxed mb-4">
-                              {domain.details.challenge}
-                            </p>
-                          </div>
-
-                          <div>
-                            <div className="flex items-start gap-2 mb-2">
-                              <Badge className="text-xs" style={{ backgroundColor: `${domain.color}20`, color: domain.color }}>
-                                Notre Solution
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-gray-700 leading-relaxed mb-4">
-                              {domain.details.solution}
-                            </p>
-                          </div>
-
-                          <div>
-                            <div className="text-xs font-semibold text-gray-500 uppercase mb-3">Résultats Mesurables</div>
-                            <div className="grid gap-2">
-                              {domain.details.results.map((result, i) => (
-                                <div key={i} className="flex items-center gap-3 p-2 bg-gray-50 border-l-2" style={{ borderColor: domain.color }}>
-                                  <div className="font-bold text-lg" style={{ color: domain.color }}>{result.metric}</div>
-                                  <div className="text-xs text-gray-700">{result.description}</div>
+                                {/* Stats Badge */}
+                                <div
+                                  className="inline-flex items-baseline gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-lg"
+                                  style={{ backgroundColor: `${domain.color}10` }}
+                                >
+                                  <span className="text-2xl md:text-3xl font-bold" style={{ color: domain.color }}>
+                                    {domain.stats.value}{domain.stats.suffix}
+                                  </span>
+                                  <span className="text-[10px] md:text-xs text-gray-600">{domain.stats.label}</span>
                                 </div>
-                              ))}
-                            </div>
-                          </div>
 
-                          <Link
-                            href="/contact"
-                            className="relative inline-flex items-center justify-center gap-2 w-full h-10 px-6 rounded-md text-sm font-medium shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group mt-4"
-                            style={{
-                              backgroundColor: domain.color,
-                              color: '#ffffff'
-                            }}
+                                {/* Highlights */}
+                                <div className="grid grid-cols-2 gap-1.5 md:gap-2 pt-2">
+                                  {domain.highlights.map((highlight, i) => (
+                                    <div key={i} className="flex items-start gap-1.5 md:gap-2">
+                                      <CheckCircle className="w-3 h-3 md:w-4 md:h-4 mt-0.5 flex-shrink-0" style={{ color: domain.color }} />
+                                      <span className="text-[10px] md:text-xs text-gray-700 leading-tight">{highlight}</span>
+                                    </div>
+                                  ))}
+                                </div>
+
+                                <div className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm font-medium pt-2" style={{ color: domain.color }}>
+                                  <span className="hidden sm:inline">Survolez pour en savoir plus</span>
+                                  <span className="sm:hidden">Touchez pour plus</span>
+                                  <ArrowRight className="w-3 h-3 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </HoverCardTrigger>
+
+                          <HoverCardContent className="w-[500px] p-6" align="center">
+                            <div className="space-y-4">
+                              <div>
+                                <div className="flex items-center gap-2 mb-3">
+                                  <DomainIcon className="w-5 h-5" style={{ color: domain.color }} />
+                                  <h4 className="font-bold text-lg">{domain.title}</h4>
+                                </div>
+                                <Separator className="mb-4" />
+                              </div>
+
+                              <div>
+                                <div className="flex items-start gap-2 mb-2">
+                                  <Badge variant="outline" className="text-xs">Défi</Badge>
+                                </div>
+                                <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                                  {domain.details.challenge}
+                                </p>
+                              </div>
+
+                              <div>
+                                <div className="flex items-start gap-2 mb-2">
+                                  <Badge className="text-xs" style={{ backgroundColor: `${domain.color}20`, color: domain.color }}>
+                                    Notre Solution
+                                  </Badge>
+                                </div>
+                                <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                                  {domain.details.solution}
+                                </p>
+                              </div>
+
+                              <div>
+                                <div className="text-xs font-semibold text-gray-500 uppercase mb-3">Résultats Mesurables</div>
+                                <div className="grid gap-2">
+                                  {domain.details.results.map((result, i) => (
+                                    <div key={i} className="flex items-center gap-3 p-2 bg-gray-50 border-l-2" style={{ borderColor: domain.color }}>
+                                      <div className="font-bold text-lg" style={{ color: domain.color }}>{result.metric}</div>
+                                      <div className="text-xs text-gray-700">{result.description}</div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+
+                              <Link
+                                href="/contact"
+                                className="relative inline-flex items-center justify-center gap-2 w-full h-10 px-6 rounded-md text-sm font-medium shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group mt-4"
+                                style={{
+                                  backgroundColor: domain.color,
+                                  color: '#ffffff'
+                                }}
+                              >
+                                <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-15 transition-opacity duration-300"></span>
+                                <span className="relative" style={{ color: '#ffffff' }}>Discutons de votre projet</span>
+                                <ArrowRight className="w-4 h-4 relative" style={{ color: '#ffffff' }} />
+                              </Link>
+                            </div>
+                          </HoverCardContent>
+                        </HoverCard>
+                      </div>
+
+                      {/* Mobile: Clickable Card that opens Dialog */}
+                      <Card
+                        className="md:hidden border-2 hover:border-gray-400 transition-all duration-500 cursor-pointer group h-full active:scale-[0.98]"
+                        style={{ borderColor: `${domain.color}30` }}
+                        onClick={() => setMobileDetailDomain(domain)}
+                      >
+                        <CardHeader className="px-4 py-4">
+                          <div className="flex items-start justify-between mb-2">
+                            <div
+                              className="w-12 h-12 rounded-lg flex items-center justify-center"
+                              style={{ backgroundColor: `${domain.color}20`, color: domain.color }}
+                            >
+                              <DomainIcon className="w-6 h-6" />
+                            </div>
+                            <Badge
+                              className="text-[10px] px-1.5 py-0.5"
+                              style={{ backgroundColor: `${domain.color}15`, color: domain.color, border: `1px solid ${domain.color}30` }}
+                            >
+                              Expertise clé
+                            </Badge>
+                          </div>
+                          <CardTitle className="text-lg mb-1">
+                            {domain.title}
+                          </CardTitle>
+                          <CardDescription className="text-xs font-medium" style={{ color: domain.color }}>
+                            {domain.shortDesc}
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-3 px-4 pb-4">
+                          <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">
+                            {domain.description}
+                          </p>
+
+                          {/* Stats Badge */}
+                          <div
+                            className="inline-flex items-baseline gap-1.5 px-3 py-1.5 rounded-lg"
+                            style={{ backgroundColor: `${domain.color}10` }}
                           >
-                            <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-15 transition-opacity duration-300"></span>
-                            <span className="relative" style={{ color: '#ffffff' }}>Discutons de votre projet</span>
-                            <ArrowRight className="w-4 h-4 relative" style={{ color: '#ffffff' }} />
-                          </Link>
+                            <span className="text-2xl font-bold" style={{ color: domain.color }}>
+                              {domain.stats.value}{domain.stats.suffix}
+                            </span>
+                            <span className="text-[10px] text-gray-600">{domain.stats.label}</span>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 text-xs font-medium pt-2" style={{ color: domain.color }}>
+                            <span>Touchez pour les détails</span>
+                            <ArrowRight className="w-3 h-3" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </BlurFade>
+                  )
+                })}
+              </div>
+
+              {/* Mobile Detail Dialog */}
+              <Dialog open={!!mobileDetailDomain} onOpenChange={(open) => !open && setMobileDetailDomain(null)}>
+                <DialogContent className="max-w-[95vw] max-h-[85vh] overflow-y-auto rounded-xl">
+                  {mobileDetailDomain && (() => {
+                    const domain = mobileDetailDomain
+                    const DomainIcon = domain.icon
+                    return (
+                      <div className="space-y-4">
+                        <DialogHeader>
+                          <div className="flex items-center gap-3 mb-2">
+                            <div
+                              className="w-12 h-12 rounded-lg flex items-center justify-center"
+                              style={{ backgroundColor: `${domain.color}20`, color: domain.color }}
+                            >
+                              <DomainIcon className="w-6 h-6" />
+                            </div>
+                            <div>
+                              <DialogTitle className="text-lg font-bold">{domain.title}</DialogTitle>
+                              <p className="text-xs font-medium" style={{ color: domain.color }}>{domain.shortDesc}</p>
+                            </div>
+                          </div>
+                        </DialogHeader>
+
+                        <Separator />
+
+                        <div>
+                          <Badge variant="outline" className="text-xs mb-2">Défi</Badge>
+                          <p className="text-sm text-gray-700 leading-relaxed">
+                            {domain.details.challenge}
+                          </p>
                         </div>
-                      </HoverCardContent>
-                    </HoverCard>
-                  </BlurFade>
-                )
-              })}
-            </div>
+
+                        <div>
+                          <Badge className="text-xs mb-2" style={{ backgroundColor: `${domain.color}20`, color: domain.color }}>
+                            Notre Solution
+                          </Badge>
+                          <p className="text-sm text-gray-700 leading-relaxed">
+                            {domain.details.solution}
+                          </p>
+                        </div>
+
+                        <div>
+                          <div className="text-xs font-semibold text-gray-500 uppercase mb-2">Résultats Mesurables</div>
+                          <div className="grid gap-2">
+                            {domain.details.results.map((result, i) => (
+                              <div key={i} className="flex items-center gap-3 p-2 bg-gray-50 border-l-2" style={{ borderColor: domain.color }}>
+                                <div className="font-bold text-lg" style={{ color: domain.color }}>{result.metric}</div>
+                                <div className="text-xs text-gray-700">{result.description}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <Link
+                          href="/contact"
+                          className="relative inline-flex items-center justify-center gap-2 w-full h-11 px-6 rounded-md text-sm font-medium shadow-md transition-all duration-300 overflow-hidden group mt-2"
+                          style={{ backgroundColor: domain.color, color: '#ffffff' }}
+                          onClick={() => setMobileDetailDomain(null)}
+                        >
+                          <span>Discutons de votre projet</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      </div>
+                    )
+                  })()}
+                </DialogContent>
+              </Dialog>
+            </>
           ) : (
             <div className="text-center py-12 md:py-16">
               <div className="max-w-md mx-auto">
@@ -765,7 +853,7 @@ export function ExpertiseDetailed() {
           )}
         </div>
 
-        {/* Methodology Section - Horizontal Timeline */}
+        {/* Methodology Section - Circular Cycle Layout */}
         <BlurFade delay={0.6}>
           <div className="mb-12 md:mb-16 lg:mb-20">
             <div className="text-center mb-8 md:mb-12 px-4">
@@ -773,45 +861,128 @@ export function ExpertiseDetailed() {
               <p className="text-sm md:text-base text-gray-600">{methodology.subtitle}</p>
             </div>
 
-            <div className="relative">
-              {/* Timeline Line */}
-              <div className="hidden md:block absolute top-16 left-0 right-0 h-1 bg-gradient-to-r from-[#39837a] via-[#C4D82E] to-[#39837a] opacity-20" />
+            {/* Desktop: Hexagonal/Circular Layout */}
+            <div className="hidden lg:block relative max-w-5xl mx-auto">
+              {/* Central Element */}
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+                <div className="w-40 h-40 rounded-full bg-gradient-to-br from-[#39837a] to-[#2a6b63] flex items-center justify-center shadow-2xl border-4 border-white">
+                  <div className="text-center text-white px-4">
+                    <ShieldCheck className="w-10 h-10 mx-auto mb-2" />
+                    <div className="text-sm font-bold leading-tight">Management<br />des Risques</div>
+                  </div>
+                </div>
+              </div>
 
-              <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+              {/* Circular Arrows SVG Background */}
+              <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 600 500">
+                <defs>
+                  <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="#39837a" opacity="0.4" />
+                  </marker>
+                </defs>
+                {/* Circular path with arrows */}
+                <path
+                  d="M 300 60 
+                     Q 480 60, 520 200 
+                     Q 540 340, 400 420 
+                     Q 300 480, 200 420 
+                     Q 60 340, 80 200 
+                     Q 120 60, 300 60"
+                  fill="none"
+                  stroke="#39837a"
+                  strokeWidth="2"
+                  strokeDasharray="8 4"
+                  opacity="0.3"
+                  markerMid="url(#arrowhead)"
+                />
+              </svg>
+
+              {/* Steps positioned in hexagonal pattern */}
+              <div className="relative h-[500px]">
                 {methodology.steps.map((step, idx) => {
                   const StepIcon = step.icon
+                  // Position each step in a hexagonal pattern around the center
+                  const positions = [
+                    { top: '0%', left: '50%', transform: 'translateX(-50%)' }, // Top center - Analiser (sur le cercle)
+                    { top: '15%', right: '5%', transform: 'none' }, // Top right - Transférer
+                    { top: '55%', right: '0%', transform: 'none' }, // Bottom right - Réduire
+                    { top: '85%', left: '50%', transform: 'translateX(-50%)' }, // Bottom center - Contrôler (sur le cercle)
+                    { top: '55%', left: '0%', transform: 'none' }, // Bottom left - Préparer
+                    { top: '15%', left: '5%', transform: 'none' }, // Top left - Éviter
+                  ]
+                  const pos = positions[idx] || positions[0]
+                  const colors = idx % 2 === 0 ? { border: '#39837a', bg: '#39837a' } : { border: '#C4D82E', bg: '#8a9920' }
+
                   return (
                     <FadeIn key={idx} delay={0.1 * (idx + 1)}>
-                      <div className="relative">
-                        {/* Step Number Circle */}
-                        <div className="flex justify-center mb-3 md:mb-4">
-                          <div className="relative">
-                            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white border-3 md:border-4 flex items-center justify-center shadow-lg relative z-10"
-                              style={{ borderColor: idx % 2 === 0 ? '#39837a' : '#C4D82E' }}
-                            >
-                              <div className="text-center">
-                                <StepIcon className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-0.5 md:mb-1" style={{ color: idx % 2 === 0 ? '#39837a' : '#C4D82E' }} />
-                                <div className="text-[10px] md:text-xs font-bold text-gray-500">{step.number}</div>
-                              </div>
+                      <div
+                        className="absolute w-44 group cursor-pointer"
+                        style={pos}
+                      >
+                        <div className="flex flex-col items-center text-center">
+                          {/* Step Circle */}
+                          <div
+                            className="w-20 h-20 rounded-full bg-white border-[3px] flex items-center justify-center shadow-lg mb-3 group-hover:scale-110 transition-transform duration-300"
+                            style={{ borderColor: colors.border }}
+                          >
+                            <div className="text-center">
+                              <StepIcon className="w-7 h-7 mx-auto" style={{ color: colors.border }} />
+                              <div className="text-[10px] font-bold text-gray-400 mt-0.5">{step.number}</div>
                             </div>
                           </div>
+
+                          {/* Step Title */}
+                          <h3 className="text-sm font-bold text-gray-900 mb-1">{step.title}</h3>
+
+                          {/* Description - shown on hover */}
+                          <p className="text-xs text-gray-500 leading-tight opacity-70 group-hover:opacity-100 transition-opacity">
+                            {step.description}
+                          </p>
+                        </div>
+                      </div>
+                    </FadeIn>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Mobile/Tablet: Horizontal scrollable cards */}
+            <div className="lg:hidden">
+              {/* Mobile Center Badge */}
+              <div className="flex justify-center mb-8">
+                <div className="px-6 py-3 rounded-full bg-gradient-to-r from-[#39837a] to-[#2a6b63] text-white shadow-lg">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="w-5 h-5" />
+                    <span className="font-bold text-sm">Management des Risques</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Steps Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 px-4">
+                {methodology.steps.map((step, idx) => {
+                  const StepIcon = step.icon
+                  const colors = idx % 2 === 0 ? { border: '#39837a', bg: '#39837a' } : { border: '#C4D82E', bg: '#8a9920' }
+
+                  return (
+                    <FadeIn key={idx} delay={0.1 * (idx + 1)}>
+                      <div className="flex flex-col items-center text-center p-3 rounded-xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                        {/* Step Circle */}
+                        <div
+                          className="w-14 h-14 rounded-full bg-white border-[3px] flex items-center justify-center shadow mb-2"
+                          style={{ borderColor: colors.border }}
+                        >
+                          <StepIcon className="w-5 h-5" style={{ color: colors.border }} />
                         </div>
 
-                        {/* Step Content */}
-                        <div className="text-center px-2">
-                          <h3 className="text-base md:text-lg font-bold text-gray-900 mb-1.5 md:mb-2">{step.title}</h3>
-                          <p className="text-xs md:text-sm text-gray-600 mb-3 md:mb-4 leading-relaxed">{step.description}</p>
+                        {/* Step Number & Title */}
+                        <div className="text-[10px] font-bold text-gray-400 mb-0.5">{step.number}</div>
+                        <h3 className="text-sm font-bold text-gray-900 mb-1">{step.title}</h3>
 
-                          {/* Deliverables */}
-                          <div className="space-y-0.5 md:space-y-1">
-                            {step.deliverables.map((deliverable, i) => (
-                              <div key={i} className="text-[10px] md:text-xs text-gray-500 flex items-center justify-center gap-1">
-                                <div className="w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: idx % 2 === 0 ? '#39837a' : '#C4D82E' }} />
-                                <span className="line-clamp-1">{deliverable}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
+                        {/* Description */}
+                        <p className="text-[11px] text-gray-500 leading-tight line-clamp-2">
+                          {step.description}
+                        </p>
                       </div>
                     </FadeIn>
                   )
@@ -958,7 +1129,7 @@ export function ExpertiseDetailed() {
             </CardContent>
           </Card>
         </BlurFade>
-      </div>
-    </div>
+      </div >
+    </div >
   )
 }

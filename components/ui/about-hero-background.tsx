@@ -4,7 +4,7 @@ export const AboutHeroBackground = () => {
   return (
     <div className="absolute inset-0 overflow-hidden">
       {/* Soft gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-odillon-teal/5 via-white to-odillon-lime/5" />
+      <div className="absolute inset-0 bg-gradient-to-br from-odillon-teal/5 via-transparent to-odillon-lime/5" />
 
       {/* Large circle patterns */}
       <div className="absolute -top-24 -right-24 w-96 h-96 border border-odillon-teal/10 rounded-full" />
@@ -53,7 +53,7 @@ export const AboutHeroBackground = () => {
       <div className="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-transparent via-odillon-lime/10 to-transparent" />
 
       {/* Radial fade overlay */}
-      <div className="absolute inset-0 bg-gradient-radial from-transparent via-white/30 to-white/80" />
+      <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-background/80" />
     </div>
   );
 };
