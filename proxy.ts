@@ -11,26 +11,58 @@ import { updateSession } from '@/lib/supabase/middleware'
  * 
  * @see https://nextjs.org/docs/app/api-reference/file-conventions/proxy
  */
+
+/**
+ * Récupère le hostname effectif depuis les headers de la requête
+ * Supporte plusieurs configurations de reverse proxy (Apache, Nginx, etc.)
+ */
+function getEffectiveHost(request: NextRequest): string {
+  // Priorité des headers pour déterminer le hostname:
+  // 1. x-forwarded-host (standard pour les reverse proxies)
+  // 2. x-original-host (certains reverse proxies)
+  // 3. host (header HTTP standard)
+  const forwardedHost = request.headers.get('x-forwarded-host')
+  const originalHost = request.headers.get('x-original-host')
+  const hostHeader = request.headers.get('host')
+  
+  const hostname = forwardedHost || originalHost || hostHeader || ''
+  
+  // Normaliser: enlever le port si présent et mettre en minuscules
+  return hostname.split(':')[0].toLowerCase()
+}
+
+/**
+ * Vérifie si le host correspond au sous-domaine admin
+ */
+function isAdminHost(host: string): boolean {
+  return (
+    host === 'admin.odillon.fr' ||
+    host === 'admin.odillon.com' ||
+    host.startsWith('admin.odillon.') ||
+    host.startsWith('admin.localhost') ||
+    host === 'admin'
+  )
+}
+
 export async function proxy(request: NextRequest) {
   try {
-    // Récupérer le hostname depuis plusieurs sources (pour compatibilité reverse proxy)
-    const forwardedHost = request.headers.get('x-forwarded-host')
-    const hostname = forwardedHost || request.headers.get('host') || ''
+    const host = getEffectiveHost(request)
     const { pathname } = request.nextUrl
-
-    // Normaliser le hostname (enlever le port si présent)
-    const host = hostname.split(':')[0].toLowerCase()
-
-    // Log pour débogage en production (visible dans les logs serveur)
+    
+    // Log détaillé pour débogage en production
     if (process.env.NODE_ENV === 'production') {
-      console.log(`[Proxy] Host: ${host}, Path: ${pathname}, Forwarded-Host: ${forwardedHost || 'none'}`)
+      const forwardedHost = request.headers.get('x-forwarded-host')
+      const originalHost = request.headers.get('x-original-host')
+      const hostHeader = request.headers.get('host')
+      console.log(`[Proxy] Effective Host: ${host}, Path: ${pathname}`)
+      console.log(`[Proxy] Headers - Host: ${hostHeader}, X-Forwarded-Host: ${forwardedHost}, X-Original-Host: ${originalHost}`)
     }
 
     // En développement local (localhost, 127.0.0.1), autoriser l'accès direct aux routes /admin
     const isLocalDev = host === 'localhost' || host === '127.0.0.1'
 
     // Gestion du sous-domaine admin.odillon.fr
-    if (host === 'admin.odillon.fr' || host.startsWith('admin.odillon.') || host === 'admin') {
+    if (isAdminHost(host)) {
       // Rediriger la racine vers /admin/photos
       if (pathname === '/') {
         const photosUrl = new URL('/admin/photos', request.url)

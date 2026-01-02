@@ -1,18 +1,41 @@
-# Configuration Apache pour le routage Next.js
-# Transmettre le header Host original pour la gestion des sous-domaines
+# Configuration Apache pour le routage Next.js avec sous-domaines
+# Transmettre les headers pour la gestion des sous-domaines (admin.odillon.fr)
 
 <IfModule mod_headers.c>
-    RequestHeader set X-Forwarded-Host "%{HTTP_HOST}s"
+    # Transmettre le hostname original (CRITIQUE pour le routage sous-domaine)
+    RequestHeader set X-Forwarded-Host "%{HTTP_HOST}e"
+    RequestHeader set X-Original-Host "%{HTTP_HOST}e"
+    
+    # Transmettre le protocole (HTTP/HTTPS)
+    RequestHeader set X-Forwarded-Proto expr=%{REQUEST_SCHEME}
+    
+    # Transmettre l'IP du client
+    RequestHeader set X-Forwarded-For "%{REMOTE_ADDR}e"
+    RequestHeader set X-Real-IP "%{REMOTE_ADDR}e"
 </IfModule>
 
 # Proxy vers l'application Node.js
 <IfModule mod_proxy.c>
+    # IMPORTANT: Préserver le header Host original
     ProxyPreserveHost On
+    
+    # Timeout pour les connexions longues
+    ProxyTimeout 60
 </IfModule>
 
-# Rediriger toutes les requêtes vers Node.js
+# Rediriger toutes les requêtes vers Node.js (sauf fichiers statiques)
 RewriteEngine On
+
+# Ne pas proxy les fichiers statiques qui existent
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+
+# Proxy vers l'application Node.js
 RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
 
+# Headers de sécurité
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
