@@ -39,7 +39,8 @@ const contactInfo: ContactInfo[] = [
     icon: Phone,
     title: "Par Téléphone",
     items: [
-      { label: "+241 11747574", link: "tel:+24111747574" }
+      { label: "+241 11 74 75 74", link: "tel:+24111747574" },
+      { label: "+241 74 75 95 15", link: "tel:+24174759515" }
     ],
     color: "#39837a"
   },
@@ -129,7 +130,7 @@ export function Contact() {
   return (
     <section className="relative min-h-screen overflow-hidden">
       {/* Simple Hero Header */}
-      <div className="relative py-12 md:py-16 lg:py-20">
+      <div className="relative pt-6 pb-12 md:pt-10 md:pb-16 lg:pt-12 lg:pb-20">
         {/* Background Pattern */}
         <ContactHeroBackground />
 
@@ -274,7 +275,7 @@ export function Contact() {
                     <h3 className="text-sm md:text-base font-semibold text-gray-900 mb-2">Horaires d'ouverture</h3>
                     <p className="text-xs md:text-sm text-gray-600">
                       Lundi - Vendredi<br />
-                      8h00 - 17h00
+                      8h00 - 16h30
                     </p>
                   </div>
                 </FadeIn>

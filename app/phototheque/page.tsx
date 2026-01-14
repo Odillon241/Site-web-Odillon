@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { X, Calendar, MapPin, Search, ChevronRight, Filter, SortAsc } from "lucide-react";
+import { X, Calendar, MapPin, Search, ChevronRight, SortAsc, GraduationCap, Users2, Rocket, Lightbulb, Sparkles, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dialog";
 import { HeaderPro } from "@/components/layout/header-pro";
 import { Footer } from "@/components/layout/footer";
-import { MONTHLY_THEMES } from "@/lib/photo-themes";
 import { FadeIn } from "@/components/magicui/fade-in";
 import { BlurFade } from "@/components/magicui/blur-fade";
 import { Badge } from "@/components/ui/badge";
@@ -48,8 +47,7 @@ interface Album {
 
 interface FilterState {
   search: string;
-  theme: string | null;
-  month: number | null;
+  category: string | null;
 }
 
 // Album Card Component
@@ -137,8 +135,7 @@ export default function PhotothequePage() {
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<FilterState>({
     search: "",
-    theme: null,
-    month: null,
+    category: null,
   });
   const [selectedAlbum, setSelectedAlbum] = useState<Album | null>(null);
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
@@ -175,18 +172,20 @@ export default function PhotothequePage() {
       album.title.toLowerCase().includes(filters.search.toLowerCase()) ||
       (album.location && album.location.toLowerCase().includes(filters.search.toLowerCase()));
 
-    const themeMatch = !filters.theme || album.themeId === filters.theme;
+    const categoryMatch = !filters.category ||
+      // album.activity_type === filters.category || // TODO: activity_type doesn't exist in Album type
+      album.title.toLowerCase().includes(filters.category.toLowerCase());
 
-    // Check if ANY photo in the album matches the month
-    const monthMatch = !filters.month || album.photos.some(p => p.month === filters.month);
-
-    return searchMatch && themeMatch && monthMatch;
+    return searchMatch && categoryMatch;
   });
 
-  const monthOptions = Array.from({ length: 12 }, (_, i) => ({
-    value: i + 1,
-    label: new Date(2024, i).toLocaleDateString('fr-FR', { month: 'long' })
-  }));
+  const activityOptions = [
+    { id: "formation", label: "Formations", icon: GraduationCap },
+    { id: "seminaire", label: "Séminaires", icon: Users2 },
+    { id: "team-building", label: "Team Building", icon: Rocket },
+    { id: "atelier", label: "Ateliers", icon: Lightbulb },
+    { id: "evenement", label: "Événements", icon: Sparkles },
+  ];
 
   return (
     <>
@@ -214,60 +213,61 @@ export default function PhotothequePage() {
               </p>
             </FadeIn>
 
-            {/* Integrated Search & Filters */}
-            <FadeIn delay={0.2} className="max-w-4xl mx-auto">
-              <div className="bg-white/80 backdrop-blur-lg rounded-xl p-4 shadow-lg border border-gray-100 flex flex-col md:flex-row gap-4 items-center">
-                <div className="relative flex-1 w-full">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <Input
-                    placeholder="Rechercher un événement..."
-                    className="pl-9 bg-transparent border-gray-200 focus:bg-white transition-colors"
-                    value={filters.search}
-                    onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-                  />
-                </div>
-                <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
-                  {/* Theme Filter */}
-                  <div className="flex gap-2">
-                    <Button
-                      variant={!filters.theme ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setFilters(prev => ({ ...prev, theme: null }))}
-                      className={cn(!filters.theme && "bg-gray-900 hover:bg-gray-800")}
-                    >
-                      Tous
-                    </Button>
-                    {MONTHLY_THEMES.map(theme => (
-                      <Button
-                        key={theme.id}
-                        variant={filters.theme === theme.id ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setFilters(prev => ({ ...prev, theme: prev.theme === theme.id ? null : theme.id }))}
-                        className={cn(filters.theme === theme.id && "bg-odillon-teal hover:bg-odillon-teal/90 text-white")}
-                      >
-                        {theme.name}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
+            {/* Structured Categories (Rubriques) */}
+            <FadeIn delay={0.2} className="max-w-5xl mx-auto space-y-12">
+              {/* Minimal Search at the top */}
+              <div className="relative max-w-md mx-auto group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-odillon-teal transition-colors" />
+                <Input
+                  placeholder="Rechercher par nom d'événement..."
+                  className="pl-11 bg-white/50 border-gray-100 focus:bg-white transition-all rounded-full h-12 shadow-sm focus:shadow-md"
+                  value={filters.search}
+                  onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                />
               </div>
 
-              {/* Month secondary filter */}
-              <div className="flex justify-center gap-2 mt-4 flex-wrap">
-                {monthOptions.slice(0, 6).map(month => (
+              {/* Activity Categories Section */}
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                    <span className="w-8 h-8 rounded-lg bg-odillon-lime/10 flex items-center justify-center">
+                      <ChevronRight className="w-4 h-4 text-odillon-lime-dark" />
+                    </span>
+                    Explorer par Activité
+                  </h2>
+                </div>
+                <div className="flex flex-wrap justify-center gap-3">
                   <button
-                    key={month.value}
-                    onClick={() => setFilters(prev => ({ ...prev, month: prev.month === month.value ? null : month.value }))}
+                    onClick={() => setFilters(prev => ({ ...prev, category: null }))}
                     className={cn(
-                      "text-xs px-3 py-1 rounded-full transition-all",
-                      filters.month === month.value
-                        ? "bg-odillon-lime text-black font-medium"
-                        : "text-gray-500 hover:bg-gray-100"
+                      "px-6 py-4 rounded-2xl text-sm font-semibold transition-all border flex items-center gap-2 shadow-sm",
+                      filters.category === null
+                        ? "bg-gray-900 border-gray-900 text-white scale-105"
+                        : "bg-white border-gray-100 text-gray-600 hover:border-odillon-teal/30 hover:shadow-md"
                     )}
                   >
-                    {month.label}
+                    <LayoutGrid className="w-5 h-5" />
+                    Tout voir
                   </button>
-                ))}
+                  {activityOptions.map(activity => {
+                    const Icon = activity.icon;
+                    return (
+                      <button
+                        key={activity.id}
+                        onClick={() => setFilters(prev => ({ ...prev, category: prev.category === activity.label ? null : activity.label }))}
+                        className={cn(
+                          "px-6 py-4 rounded-2xl text-sm font-semibold transition-all border flex items-center gap-2 shadow-sm",
+                          filters.category === activity.label
+                            ? "bg-odillon-teal border-odillon-teal text-white scale-105 shadow-lg"
+                            : "bg-white border-gray-100 text-gray-600 hover:border-odillon-teal/30 hover:shadow-md"
+                        )}
+                      >
+                        <Icon className="w-5 h-5 opacity-80" />
+                        {activity.label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </FadeIn>
           </div>
@@ -312,7 +312,7 @@ export default function PhotothequePage() {
               <p className="text-gray-500">Essayez d'autres termes de recherche ou filtres.</p>
               <Button
                 variant="link"
-                onClick={() => setFilters({ search: "", theme: null, month: null })}
+                onClick={() => setFilters({ search: "", category: null })}
                 className="mt-2 text-odillon-teal"
               >
                 Réinitialiser tout
@@ -320,7 +320,7 @@ export default function PhotothequePage() {
             </div>
           )}
         </section>
-      </main>
+      </main >
 
       <Footer />
 

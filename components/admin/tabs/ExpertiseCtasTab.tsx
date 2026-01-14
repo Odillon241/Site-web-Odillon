@@ -36,7 +36,7 @@ export function ExpertiseCtasTab() {
                 expertise_cta_title: siteSettings.expertise_cta_title || "Découvrez notre expertise approfondie et nos méthodologies éprouvées",
                 expertise_cta_description: siteSettings.expertise_cta_description || "",
                 expertise_cta_button_text: siteSettings.expertise_cta_button_text || "En savoir plus sur notre expertise",
-                expertise_cta_button_link: siteSettings.expertise_cta_button_link || "/expertise",
+                expertise_cta_button_link: siteSettings.expertise_cta_button_link || "/services",
                 expertise_cta_badge_text: siteSettings.expertise_cta_badge_text || "Expertise"
             })
         }
@@ -196,7 +196,7 @@ export function ExpertiseCtasTab() {
                                     <Input
                                         value={formData.expertise_cta_button_link}
                                         onChange={(e) => setFormData(prev => ({ ...prev, expertise_cta_button_link: e.target.value }))}
-                                        placeholder="Ex: /expertise"
+                                        placeholder="Ex: /services"
                                     />
                                 </div>
 

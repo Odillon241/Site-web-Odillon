@@ -11,7 +11,11 @@ import { Button } from "@/components/ui/button"
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee"
 import { CtaBanner } from "@/components/sections/cta-banner"
 import { VideoSection } from "@/components/sections/video-section"
+import { VideosSection } from "@/components/sections/videos-section"
+import type { VideoItem } from "@/components/sections/videos-section"
 import { Video } from "@/types/admin"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { Separator } from "@/components/ui/separator"
 import { servicesData as rawServicesData } from "@/lib/services-data"
 import {
   Shield,
@@ -27,24 +31,29 @@ import {
   Award,
   Lightbulb,
   Rocket,
-  ChevronRight
+  ChevronRight,
+  Search,
+  ArrowRightLeft,
+  Minimize2,
+  ShieldCheck,
+  ClipboardList,
+  Ban,
+  Quote,
+  ChevronLeft
 } from "lucide-react"
 import Link from "next/link"
 
 // Mapping des noms d'icônes vers les composants
 const iconMap: Record<string, React.ComponentType<any>> = {
-  Shield,
-  Scale,
-  TrendingUp,
-  Users,
-  Target,
-  FileText,
-  Users2,
-  BarChart3,
-  Briefcase,
   Award,
   Lightbulb,
   Rocket,
+  Search,
+  ArrowRightLeft,
+  Minimize2,
+  ShieldCheck,
+  ClipboardList,
+  Ban
 }
 
 // Transformer les données pour utiliser les composants icons
@@ -69,6 +78,14 @@ export function ServicesDetailed() {
   const [activeTab, setActiveTab] = useState("gouvernance")
   const activeService = servicesData.find(s => s.id === activeTab)
   const [video, setVideo] = useState<Video | null>(null)
+  const [testimonialVideos, setTestimonialVideos] = useState<VideoItem[]>([])
+  const [testimonials, setTestimonials] = useState<Array<{
+    quote: string
+    name: string
+    position: string
+    avatar: string
+  }>>([])
+  const [currentTestimonial, setCurrentTestimonial] = useState(0)
 
   useEffect(() => {
     const fetchVideo = async () => {
@@ -84,12 +101,93 @@ export function ServicesDetailed() {
       }
     }
     fetchVideo()
+
+    const loadVideos = async () => {
+      try {
+        // Charger les vidéos de témoignages
+        const testimonialRes = await fetch('/api/videos?category=testimonial&active=true')
+        if (testimonialRes.ok) {
+          const testimonialData = await testimonialRes.json()
+          setTestimonialVideos(
+            (testimonialData.videos || []).map((v: any) => {
+              // Détecter automatiquement le type si l'URL ne correspond pas au type enregistré
+              let videoType = v.type as 'youtube' | 'vimeo' | 'direct'
+              if (v.url.includes("youtube.com") || v.url.includes("youtu.be")) {
+                videoType = "youtube"
+              } else if (v.url.includes("vimeo.com")) {
+                videoType = "vimeo"
+              }
+
+              return {
+                id: v.id,
+                title: v.title,
+                description: v.description || undefined,
+                url: v.url,
+                type: videoType,
+                thumbnail: v.thumbnail || undefined
+              }
+            })
+          )
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement des vidéos:", error)
+      }
+    }
+
+    const loadTestimonials = async () => {
+      try {
+        const res = await fetch('/api/testimonials?active=true')
+        if (res.ok) {
+          const data = await res.json()
+          setTestimonials(
+            (data.testimonials || []).map((t: any) => ({
+              quote: t.quote,
+              name: t.name,
+              position: t.position,
+              avatar: t.avatar_url
+            }))
+          )
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement des témoignages:", error)
+        // Fallback vers les témoignages par défaut si la base de données n'est pas disponible
+        setTestimonials([
+          {
+            quote: "Compréhension approfondie de vos enjeux, contraintes et objectifs avant toute intervention",
+            name: "Écoute Active",
+            position: "Notre Approche - Étape 1",
+            avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&w=100&q=80"
+          },
+          {
+            quote: "Conception de stratégies personnalisées adaptées à votre contexte organisationnel unique",
+            name: "Solutions Sur-Mesure",
+            position: "Notre Approche - Étape 2",
+            avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&w=100&q=80"
+          },
+          {
+            quote: "Travail main dans la main avec vos équipes pour garantir appropriation et pérennité",
+            name: "Collaboration",
+            position: "Notre Approche - Étape 3",
+            avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&w=100&q=80"
+          },
+          {
+            quote: "Engagement sur des livrables concrets avec indicateurs de performance clairs et transparents",
+            name: "Résultats Mesurables",
+            position: "Notre Approche - Étape 4",
+            avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&w=100&q=80"
+          }
+        ])
+      }
+    }
+
+    loadVideos()
+    loadTestimonials()
   }, [])
 
   return (
-    <section className="relative py-12 md:py-16 lg:py-20 overflow-hidden bg-transparent">
+    <section className="relative overflow-hidden bg-transparent">
       {/* Hero Section with Background */}
-      <div className="relative py-12 md:py-16 lg:py-20 overflow-hidden bg-transparent">
+      <div className="relative pt-6 pb-12 md:pt-10 md:pb-16 lg:pt-12 lg:pb-20 overflow-hidden bg-transparent">
         {/* Background Pattern */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Soft gradient background */}
@@ -268,7 +366,7 @@ export function ServicesDetailed() {
                       <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
                         Notre méthode d'accompagnement
                       </h3>
-                      <p className="text-sm md:text-base text-gray-600">Un processus éprouvé en 4 étapes</p>
+                      <p className="text-sm md:text-base text-gray-600">Un processus éprouvé pour sécuriser votre activité</p>
                     </div>
 
                     <Marquee className="py-4">
@@ -290,7 +388,7 @@ export function ServicesDetailed() {
                                   >
                                     <StepIcon className="w-8 h-8" />
                                   </div>
-                                  <div className="text-xs font-semibold text-gray-500 mb-2">ÉTAPE {step.step}</div>
+                                  <div className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-widest">{step.title}</div>
                                   <h4 className="font-bold text-lg text-gray-900 mb-2">{step.title}</h4>
                                   <p className="text-sm text-gray-600">{step.description}</p>
                                 </CardContent>
@@ -383,6 +481,97 @@ export function ServicesDetailed() {
               </TabsContent>
             ))}
           </Tabs>
+
+          {/* Section Vidéos de Témoignages */}
+          <VideosSection
+            title="Témoignages Clients"
+            badge="Témoignages"
+            videos={testimonialVideos}
+          />
+
+          <Separator className="my-12 md:my-16 lg:my-20" />
+
+          {/* Section Nos Valeurs avec carousel de témoignages */}
+          <BlurFade delay={0.7}>
+            <div className="mb-12 md:mb-16 lg:mb-20">
+              <div className="text-center mb-8 md:mb-12 px-4">
+                <Badge variant="odillon" className="mb-3 md:mb-4">
+                  Nos Valeurs
+                </Badge>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4">
+                  Les principes qui nous guident
+                </h2>
+                <p className="text-sm md:text-base text-gray-600 max-w-2xl mx-auto">
+                  Des valeurs fondamentales qui inspirent notre action quotidienne et façonnent notre engagement envers l'excellence.
+                </p>
+              </div>
+
+              {/* Testimonials Carousel */}
+              {testimonials.length > 0 && (
+                <section className="container mx-auto px-4 py-6">
+                  <div className="mb-6 text-center">
+                    <h1 className="text-3xl font-bold tracking-tight">Ce que les gens disent</h1>
+                  </div>
+                  <div className="mx-auto w-[700px] max-w-full">
+                    <Card className="flex flex-col gap-6 rounded-xl border py-6 shadow-sm">
+                      <CardContent className="p-8">
+                        <div className="mb-6 flex justify-center">
+                          <Quote className="h-10 w-10 text-muted-foreground/30" aria-hidden="true" />
+                        </div>
+                        <blockquote className="mb-8 text-center text-xl font-medium leading-relaxed">
+                          "{testimonials[currentTestimonial].quote}"
+                        </blockquote>
+                        <div className="flex flex-col items-center">
+                          <Avatar className="mb-3 h-14 w-14">
+                            <AvatarImage
+                              src={testimonials[currentTestimonial].avatar}
+                              alt={testimonials[currentTestimonial].name}
+                            />
+                            <AvatarFallback>{testimonials[currentTestimonial].name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div className="text-center">
+                            <p className="font-semibold">{testimonials[currentTestimonial].name}</p>
+                            <p className="text-sm text-muted-foreground">{testimonials[currentTestimonial].position}</p>
+                          </div>
+                        </div>
+                        <div className="mt-8 flex items-center justify-center gap-4">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => setCurrentTestimonial((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1))}
+                            className="h-9 w-9"
+                          >
+                            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+                          </Button>
+                          <div className="flex items-center gap-2">
+                            {testimonials.map((_, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => setCurrentTestimonial(idx)}
+                                className={`h-2 w-2 rounded-full border transition-colors ${idx === currentTestimonial
+                                  ? "bg-primary border-primary"
+                                  : "bg-background border-border"
+                                  }`}
+                                aria-label={`Aller au témoignage ${idx + 1}`}
+                              />
+                            ))}
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => setCurrentTestimonial((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1))}
+                            className="h-9 w-9"
+                          >
+                            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </section>
+              )}
+            </div>
+          </BlurFade>
         </BlurFade>
       </div>
     </section>

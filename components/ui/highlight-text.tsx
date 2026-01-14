@@ -21,7 +21,7 @@ export function HighlightText({
       <m.span
         initial={{ width: "0%" }}
         whileInView={{ width: "100%" }}
-        viewport={{ once: true }}
+        viewport={{ once: false }}
         transition={{
           duration: 0.8,
           ease: "easeInOut",

@@ -48,6 +48,7 @@ import { ExpertiseCtasTab } from "@/components/admin/tabs/ExpertiseCtasTab"
 import { SettingsTab } from "@/components/admin/tabs/SettingsTab"
 import { TeamTab } from "@/components/admin/tabs/TeamTab"
 import { AboutTab } from "@/components/admin/tabs/AboutTab"
+import { ArticlesTab } from "@/components/admin/tabs/ArticlesTab"
 
 export default function AdminPhotosPage() {
   const router = useRouter()
@@ -132,6 +133,7 @@ export default function AdminPhotosPage() {
       about: "A Propos",
       logos: "Logos",
       videos: "Vidéos",
+      articles: "Articles",
       testimonials: "Témoignages",
       calendar: "Calendrier",
       "expertise-cta": "Expertise CTA",
@@ -220,6 +222,7 @@ export default function AdminPhotosPage() {
             {activeTab === 'photos' && <PhotosTab />}
             {activeTab === 'logos' && <LogosTab />}
             {activeTab === 'videos' && <VideosTab />}
+            {activeTab === 'articles' && <ArticlesTab />}
             {activeTab === 'testimonials' && <TestimonialsTab />}
             {activeTab === 'calendar' && <CalendarTab />}
             {activeTab === 'expertise-cta' && <ExpertiseCtasTab />}

@@ -38,10 +38,32 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'img.youtube.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.emploi.ga',
+      },
+      // Allow other external company logos
+      {
+        protocol: 'https',
+        hostname: '**.ga',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.seeg-gabon.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.startpage.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.fbcdn.net',
+      },
     ],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
   },
   // Configuration pour supporter les sous-domaines
   // Le proxy (proxy.ts) gère le routage admin.odillon.fr

@@ -21,8 +21,12 @@ export async function GET() {
       expertise_cta_title: 'Découvrez notre expertise approfondie et nos méthodologies éprouvées',
       expertise_cta_description: '',
       expertise_cta_button_text: 'En savoir plus sur notre expertise',
-      expertise_cta_button_link: '/expertise',
+      expertise_cta_button_link: '/services',
       expertise_cta_badge_text: 'Expertise',
+      // Blog Banner Defaults
+      show_blog_banner: false,
+      blog_banner_image_url: null,
+      blog_banner_link: null,
       // About Section Defaults
       about_mission_title: 'Notre Mission',
       about_mission_description: "Fondée sur la conviction que chaque entreprise possède un potentiel inexploité, Odillon s'est donné pour mission de révéler cette valeur cachée.",
@@ -73,6 +77,9 @@ export async function PATCH(request: NextRequest) {
       expertise_cta_button_text,
       expertise_cta_button_link,
       expertise_cta_badge_text,
+      show_blog_banner,
+      blog_banner_image_url,
+      blog_banner_link,
       about_mission_title,
       about_mission_description,
       about_values_json
@@ -83,6 +90,8 @@ export async function PATCH(request: NextRequest) {
     if (typeof show_photos_section !== "boolean" && show_photos_section !== undefined) return NextResponse.json({ error: "show_photos_section doit être un booléen" }, { status: 400 })
     if (services_cta_image_url && typeof services_cta_image_url !== "string") return NextResponse.json({ error: "services_cta_image_url doit être une chaîne" }, { status: 400 })
     if (expertise_image_url && typeof expertise_image_url !== "string") return NextResponse.json({ error: "expertise_image_url doit être une chaîne" }, { status: 400 })
+    if (show_blog_banner !== undefined && typeof show_blog_banner !== "boolean") return NextResponse.json({ error: "show_blog_banner doit être un booléen" }, { status: 400 })
+    if (blog_banner_image_url && typeof blog_banner_image_url !== "string") return NextResponse.json({ error: "blog_banner_image_url doit être une chaîne" }, { status: 400 })
 
     // Construire l'objet de mise à jour
     const updateData: Record<string, any> = {}
@@ -99,6 +108,11 @@ export async function PATCH(request: NextRequest) {
     if (expertise_cta_button_text !== undefined) updateData.expertise_cta_button_text = expertise_cta_button_text
     if (expertise_cta_button_link !== undefined) updateData.expertise_cta_button_link = expertise_cta_button_link
     if (expertise_cta_badge_text !== undefined) updateData.expertise_cta_badge_text = expertise_cta_badge_text
+
+    // Blog Banner
+    if (show_blog_banner !== undefined) updateData.show_blog_banner = show_blog_banner
+    if (blog_banner_image_url !== undefined) updateData.blog_banner_image_url = blog_banner_image_url
+    if (blog_banner_link !== undefined) updateData.blog_banner_link = blog_banner_link
 
     // About Section
     if (about_mission_title !== undefined) updateData.about_mission_title = about_mission_title

@@ -28,7 +28,7 @@ export function NumberTicker({
     damping: 60,
     stiffness: 100,
   })
-  const isInView = useInView(ref, { once: true, margin: "0px" })
+  const isInView = useInView(ref, { once: false, margin: "0px" })
 
   useEffect(() => {
     if (isInView) {
@@ -36,6 +36,8 @@ export function NumberTicker({
         motionValue.set(direction === "down" ? startValue : value)
       }, delay * 1000)
       return () => clearTimeout(timer)
+    } else {
+      motionValue.set(direction === "down" ? value : startValue)
     }
   }, [motionValue, isInView, delay, value, direction, startValue])
 

@@ -204,6 +204,9 @@ export function VideosTab() {
         page: string
         section: string
         source: "url" | "file"
+        presenter_name: string
+        presenter_position: string
+        activity_type: string
     }>({
         title: "",
         url: "",
@@ -213,7 +216,10 @@ export function VideosTab() {
         is_active: true,
         page: "",
         section: "",
-        source: "url"
+        source: "url",
+        presenter_name: "",
+        presenter_position: "",
+        activity_type: ""
     });
 
     const sensors = useSensors(
@@ -335,7 +341,10 @@ export function VideosTab() {
             is_active: true,
             page: "",
             section: "",
-            source: "url"
+            source: "url",
+            presenter_name: "",
+            presenter_position: "",
+            activity_type: ""
         });
         setEditingVideo(null);
     }
@@ -358,8 +367,11 @@ export function VideosTab() {
                 thumbnail,
                 // Convert empty strings to null for optional fields
                 page: formData.page || null,
-                section: formData.section || null
-            };
+                section: formData.section || null,
+                presenter_name: formData.presenter_name || null,
+                presenter_position: formData.presenter_position || null,
+                activity_type: formData.activity_type || null
+            }
 
             const isEditing = !!editingVideo;
             const url = isEditing ? `/api/videos/${editingVideo.id}` : '/api/videos';
@@ -415,7 +427,10 @@ export function VideosTab() {
             is_active: video.is_active,
             page: video.page || "",
             section: video.section || "",
-            source: video.type === 'direct' ? 'file' : 'url'
+            source: video.type === 'direct' ? 'file' : 'url',
+            presenter_name: video.presenter_name || "",
+            presenter_position: video.presenter_position || "",
+            activity_type: video.activity_type || ""
         });
         setIsAddDialogOpen(true);
     };
@@ -674,6 +689,25 @@ export function VideosTab() {
                             </Select>
                         </div>
                         <div className="grid gap-2">
+                            <Label>Type d'activité (Explorer par Activité)</Label>
+                            <Select
+                                value={formData.activity_type}
+                                onValueChange={(value) => setFormData({ ...formData, activity_type: value })}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Choisir un type d'activité" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="none">Aucun</SelectItem>
+                                    <SelectItem value="Formations">Formations</SelectItem>
+                                    <SelectItem value="Séminaires">Séminaires</SelectItem>
+                                    <SelectItem value="Team Building">Team Building</SelectItem>
+                                    <SelectItem value="Ateliers">Ateliers</SelectItem>
+                                    <SelectItem value="Événements">Événements</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="grid gap-2">
                             <Label htmlFor="description">Description (Optionnel)</Label>
                             <Textarea
                                 id="description"
@@ -681,6 +715,27 @@ export function VideosTab() {
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 placeholder="Brève description..."
                             />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="grid gap-2">
+                                <Label htmlFor="presenter_name">Nom du Présentateur</Label>
+                                <Input
+                                    id="presenter_name"
+                                    value={formData.presenter_name}
+                                    onChange={(e) => setFormData({ ...formData, presenter_name: e.target.value })}
+                                    placeholder="Ex: Jean Dupont"
+                                />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="presenter_position">Poste du Présentateur</Label>
+                                <Input
+                                    id="presenter_position"
+                                    value={formData.presenter_position}
+                                    onChange={(e) => setFormData({ ...formData, presenter_position: e.target.value })}
+                                    placeholder="Ex: DG, Odillon"
+                                />
+                            </div>
                         </div>
                         <div className="flex items-center space-x-2 pt-2">
                             <Switch

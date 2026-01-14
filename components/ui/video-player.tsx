@@ -16,6 +16,8 @@ export interface VideoPlayerProps {
   autoplay?: boolean
   muted?: boolean
   loop?: boolean
+  presenterName?: string
+  presenterPosition?: string
 }
 
 // Fonction pour détecter automatiquement le type de vidéo
@@ -80,6 +82,8 @@ export function VideoPlayer({
   autoplay = false,
   muted = false,
   loop = false,
+  presenterName,
+  presenterPosition,
 }: VideoPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(autoplay)
   const [isLoaded, setIsLoaded] = useState(autoplay)
@@ -162,6 +166,7 @@ export function VideoPlayer({
           )}
         </div>
       )}
+
 
       {/* Iframe vidéo (après clic) */}
       {isPlaying && (

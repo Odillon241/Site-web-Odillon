@@ -20,10 +20,9 @@ export function AboutPageClient() {
         />
       </div>
 
-      <ScrollProgress />
       <ScrollToTop />
       <HeaderPro />
-      <main className="relative min-h-screen pt-[88px] md:pt-[104px]">
+      <main className="relative min-h-screen pt-[88px]">
         <AboutDetailed />
       </main>
       <Footer />

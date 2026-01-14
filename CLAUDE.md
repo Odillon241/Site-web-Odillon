@@ -49,7 +49,7 @@ The proxy in `proxy.ts` handles domain-based routing and redirects using Next.js
 
 - `/` - Homepage with Hero, Services, Expertise, About, Contact sections
 - `/admin/login` - Admin authentication page
-- `/admin/photos` - Photo management dashboard (protected route)
+- `/admin/settings` - Admin settings and photo management dashboard (protected route)
 - `/api/photos` - CRUD operations for photos (GET supports filtering: `?month=11&theme=novembre-bleu&active=true`)
 - `/api/photos/[id]` - Individual photo operations (PATCH, DELETE)
 - `/api/upload` - File upload to Supabase Storage

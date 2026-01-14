@@ -1,27 +1,10 @@
 import localFont from 'next/font/local'
 
+// Optimized font loading: only load weights that are actually used
+// Removed: 100 (thin), 200 (ultralight) - not used in the codebase
+// Kept: 300-900 for design flexibility
 export const airFont = localFont({
   src: [
-    {
-      path: '../public/fonts/air-black/Air-Thin.ttf',
-      weight: '100',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/air-black/Air-ThinItalic.ttf',
-      weight: '100',
-      style: 'italic',
-    },
-    {
-      path: '../public/fonts/air-black/Air-UltraLight.ttf',
-      weight: '200',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/air-black/Air-UltraLightItalic.ttf',
-      weight: '200',
-      style: 'italic',
-    },
     {
       path: '../public/fonts/air-black/Air-Light.ttf',
       weight: '300',
@@ -95,4 +78,5 @@ export const airFont = localFont({
   ],
   variable: '--font-air',
   display: 'swap',
+  preload: true,
 })

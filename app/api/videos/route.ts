@@ -6,9 +6,10 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const category = searchParams.get('category')
   const active = searchParams.get('active')
+  const activity_type = searchParams.get('activity_type')
 
   const supabase = await createClient()
-  
+
   let query = supabase
     .from('videos')
     .select('*')
@@ -22,6 +23,11 @@ export async function GET(request: Request) {
   // Filtrer par catégorie
   if (category) {
     query = query.eq('category', category)
+  }
+
+  // Filtrer par type d'activité
+  if (activity_type) {
+    query = query.eq('activity_type', activity_type)
   }
 
   const { data, error } = await query
@@ -44,7 +50,7 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json()
-  
+
   const { data, error } = await supabase
     .from('videos')
     .insert([{

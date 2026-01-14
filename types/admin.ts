@@ -9,6 +9,7 @@ export interface Photo {
     section_id: string | null
     is_active: boolean
     display_order: number
+    activity_type?: string | null
 }
 
 export interface CompanyLogo {
@@ -34,6 +35,9 @@ export interface Video {
     section?: string | null
     is_active: boolean
     display_order: number
+    presenter_name?: string | null
+    presenter_position?: string | null
+    activity_type?: string | null
 }
 
 export interface PhotoSection {
@@ -74,6 +78,9 @@ export interface SiteSettings {
     expertise_cta_button_text: string | null
     expertise_cta_button_link: string | null
     expertise_cta_badge_text: string | null
+    show_blog_banner: boolean
+    blog_banner_image_url: string | null
+    blog_banner_link: string | null
     created_at: string
     updated_at: string
 }

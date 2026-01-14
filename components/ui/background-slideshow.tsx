@@ -16,29 +16,9 @@ export function BackgroundSlideshow({
   className = ""
 }: BackgroundSlideshowProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set([0]))
 
-  // Preload next and previous images for smooth transitions
-  useEffect(() => {
-    if (images.length <= 1) return
-
-    const preloadImage = (index: number) => {
-      if (!loadedImages.has(index)) {
-        const img = new window.Image()
-        img.src = images[index].src
-        img.onload = () => {
-          setLoadedImages((prev) => new Set(prev).add(index))
-        }
-      }
-    }
-
-    // Preload next 2 images
-    const nextIndex = (currentIndex + 1) % images.length
-    const nextNextIndex = (currentIndex + 2) % images.length
-    preloadImage(nextIndex)
-    preloadImage(nextNextIndex)
-  }, [currentIndex, images, loadedImages])
-
+  // Next.js Image component handles preloading automatically
+  // No need for manual vanilla preloading which causes double requests
   useEffect(() => {
     if (images.length <= 1) return
 

@@ -6,18 +6,21 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee"
+import { TiltCard } from "@/components/ui/tilt-card"
 import {
-  Shield,
+  Landmark,
   Scale,
   TrendingUp,
   Users,
   ArrowRight
 } from "lucide-react"
 import Link from "next/link"
+import { SpotlightCard } from "@/components/ui/spotlight-card"
+import { TextReveal } from "@/components/magicui/text-reveal"
 
 const mainServices = [
   {
-    icon: Shield,
+    icon: Landmark, // Changed from Shield
     title: "Gouvernance",
     tagline: "Structuration et Restructuration d'Entreprises",
     color: "#39837a",
@@ -39,7 +42,7 @@ const mainServices = [
   },
   {
     icon: Users,
-    title: "Ressources Humaines",
+    title: "Capital Humain",
     tagline: "Relations Publiques",
     color: "#C4D82E",
     highlights: ["Développement RH", "Évaluation", "Rémunérations"]
@@ -59,10 +62,12 @@ export function ServicesHome() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <BlurFade delay={0.2} className="max-w-2xl">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-petrov-sans tracking-tight">
-              Solutions complètes pour <br />
-              <span className="text-odillon-teal">votre réussite</span>.
-            </h2>
+            <TextReveal
+              text="L'expertise stratégique au service de votre transformation."
+              className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-petrov-sans tracking-tight justify-start"
+              delay={0.2}
+            />
+            {/* Keeping the 'votre réussite' highlight logic by custom styling if needed, or accepting the TextReveal style */}
             <p className="text-lg text-gray-600 leading-relaxed">
               Quatre piliers d'expertise pour transformer et structurer votre organisation de manière pérenne.
             </p>
@@ -71,8 +76,8 @@ export function ServicesHome() {
           <BlurFade delay={0.3}>
             <Button
               asChild
-              variant="outline"
-              className="group border-odillon-teal/20 hover:border-odillon-teal/50 hover:bg-odillon-teal/5 text-odillon-teal font-medium rounded-md px-6 h-12"
+              variant="default"
+              className="group bg-odillon-teal hover:bg-odillon-teal/90 text-white font-semibold rounded-md px-8 h-12 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <Link href="/services">
                 Voir tous nos services
@@ -87,41 +92,66 @@ export function ServicesHome() {
           {mainServices.map((service, idx) => {
             const ServiceIcon = service.icon
             return (
-              <BlurFade key={service.title} delay={0.1 * (idx + 1)}>
-                <Link href="/services" className="block h-full group">
-                  <Card className="h-full border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-white relative overflow-hidden group-hover:border-odillon-teal/30 rounded-lg">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-odillon-teal/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                    <CardContent className="p-8 flex flex-col h-full">
+              <BlurFade key={service.title} delay={0.1 * (idx + 1)} className="h-full">
+                <Link href="/services" className="block h-full cursor-none-target">
+                  <TiltCard containerClassName="h-full" className="h-full">
+                    <div className="relative h-full bg-white rounded-2xl p-8 shadow-lg border border-gray-100/50 overflow-hidden transform-style-3d group">
+                      {/* Hover Gradient Background */}
                       <div
-                        className="w-14 h-14 rounded-md flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110"
-                        style={{ backgroundColor: `${service.color}10` }}
-                      >
-                        <ServiceIcon className="w-7 h-7" style={{ color: service.color }} />
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style={{
+                          background: `linear-gradient(135deg, ${service.color}05 0%, transparent 100%)`
+                        }}
+                      />
+
+                      <div className="relative z-10 flex flex-col h-full transform-style-3d">
+                        <div
+                          className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 shadow-sm group-hover:shadow-md transition-all duration-300"
+                          style={{
+                            backgroundColor: `${service.color}15`,
+                            color: service.color,
+                            transform: "translateZ(20px)"
+                          }}
+                        >
+                          <ServiceIcon className="w-7 h-7" strokeWidth={1.5} />
+                        </div>
+
+                        <h3
+                          className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-odillon-teal transition-colors"
+                          style={{ transform: "translateZ(30px)" }}
+                        >
+                          {service.title}
+                        </h3>
+
+                        <p
+                          className="text-sm font-medium text-gray-500 mb-6 uppercase tracking-wider"
+                          style={{ transform: "translateZ(25px)" }}
+                        >
+                          {service.tagline}
+                        </p>
+
+                        <ul className="space-y-3 mb-8 flex-grow" style={{ transform: "translateZ(15px)" }}>
+                          {service.highlights.map((highlight, i) => (
+                            <li key={i} className="flex items-center text-sm text-gray-600">
+                              <span
+                                className="w-1.5 h-1.5 rounded-full mr-3"
+                                style={{ backgroundColor: service.color }}
+                              />
+                              {highlight}
+                            </li>
+                          ))}
+                        </ul>
+
+                        <div
+                          className="flex items-center text-sm font-semibold mt-auto"
+                          style={{ color: service.color, transform: "translateZ(10px)" }}
+                        >
+                          En savoir plus
+                          <ArrowRight className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" />
+                        </div>
                       </div>
-
-                      <h3 className="text-xl font-bold text-gray-900 mb-3 font-petrov-sans group-hover:text-odillon-teal transition-colors">
-                        {service.title}
-                      </h3>
-                      <p className="text-sm text-gray-500 mb-8 flex-grow leading-relaxed">
-                        {service.tagline}
-                      </p>
-
-                      <ul className="space-y-3 mb-8">
-                        {service.highlights.map((highlight, i) => (
-                          <li key={i} className="text-xs font-medium text-gray-500 flex items-center">
-                            <div className="w-1.5 h-1.5 rounded-full bg-odillon-teal/40 mr-3 group-hover:bg-odillon-teal transition-colors" />
-                            {highlight}
-                          </li>
-                        ))}
-                      </ul>
-
-                      <div className="pt-6 border-t border-gray-50 flex items-center justify-between text-sm font-medium text-gray-400 group-hover:text-odillon-teal transition-colors">
-                        <span>En savoir plus</span>
-                        <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </TiltCard>
                 </Link>
               </BlurFade>
             )
@@ -129,8 +159,8 @@ export function ServicesHome() {
         </div>
 
 
-      </div>
-    </section>
+      </div >
+    </section >
   )
 }
 

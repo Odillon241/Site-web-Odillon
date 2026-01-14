@@ -14,6 +14,7 @@ import {
   ArrowRight
 } from "lucide-react"
 import { NumberTicker } from "@/components/ui/number-ticker"
+import { TextReveal } from "@/components/magicui/text-reveal"
 
 const expertiseDomains = [
   {
@@ -57,7 +58,7 @@ export function ExpertiseHome() {
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
 
           {/* Left Content - Sticky Header */}
-          <div className="sticky top-32">
+          <div className="relative lg:sticky lg:top-32">
             <BlurFade delay={0.1}>
               <div className="inline-flex items-center space-x-3 text-odillon-teal font-medium mb-8">
                 <span className="w-12 h-[1px] bg-odillon-teal"></span>
@@ -66,11 +67,11 @@ export function ExpertiseHome() {
             </BlurFade>
 
             <BlurFade delay={0.2}>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-8 font-petrov-sans leading-[1.1]">
-                Des résultats <br />
-                <span className="text-odillon-teal">mesurables</span> et <br />
-                durables.
-              </h2>
+              <TextReveal
+                text="Des résultats mesurables et durables."
+                className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-8 font-petrov-sans leading-[1.1] items-start justify-start"
+                delay={0.2}
+              />
             </BlurFade>
 
             <BlurFade delay={0.3}>
@@ -79,22 +80,9 @@ export function ExpertiseHome() {
               </p>
             </BlurFade>
 
-            <BlurFade delay={0.4}>
-              <div className="grid grid-cols-2 gap-12 mb-12">
-                <div className="border-l-2 border-odillon-teal/20 pl-6">
-                  <div className="text-4xl font-bold text-gray-900 mb-2 font-petrov-sans">4</div>
-                  <div className="text-sm text-gray-500 uppercase tracking-wide font-medium">Pôles d'expertise</div>
-                </div>
-                <div className="border-l-2 border-odillon-teal/20 pl-6">
-                  <div className="text-4xl font-bold text-gray-900 mb-2 font-petrov-sans">100%</div>
-                  <div className="text-sm text-gray-500 uppercase tracking-wide font-medium">Engagement</div>
-                </div>
-              </div>
-            </BlurFade>
-
             <BlurFade delay={0.5}>
               <Link
-                href="/expertise"
+                href="/services"
                 className="inline-flex items-center text-odillon-teal font-semibold group"
               >
                 Découvrir notre approche
@@ -109,35 +97,37 @@ export function ExpertiseHome() {
               const DomainIcon = domain.icon
               return (
                 <FadeIn key={domain.title} delay={0.1 * (idx + 1)}>
-                  <Link href="/expertise" className="block group">
-                    <div className="bg-gray-50/50 p-8 md:p-10 rounded-lg border border-gray-100 hover:border-odillon-teal/30 hover:bg-white hover:shadow-xl hover:-translate-x-2 transition-all duration-300">
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                  <Link href="/services" className="block group perspective-1000">
+                    <div className="relative overflow-hidden bg-white/40 backdrop-blur-md p-8 md:p-10 rounded-lg border border-white/20 hover:border-odillon-teal/40 hover:bg-white/60 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-odillon-teal/10 hover:-translate-y-2 transition-all duration-500 group">
+                      {/* Decorative Background Glow */}
+                      <div
+                        className="absolute -right-20 -top-20 w-40 h-40 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500"
+                        style={{ backgroundColor: domain.color }}
+                      />
+
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 relative z-10">
                         <div className="flex items-center gap-5">
-                          <div className={`p-4 rounded-md bg-white shadow-sm group-hover:scale-110 transition-transform duration-300`} >
+                          <div
+                            className="p-4 rounded-lg bg-white shadow-lg border border-slate-100 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300"
+                            style={{ boxShadow: `0 10px 25px -5px ${domain.color}20` }}
+                          >
                             <DomainIcon className="w-8 h-8" style={{ color: domain.color }} />
                           </div>
                           <div>
-                            <h3 className="text-2xl font-bold text-gray-900 group-hover:text-odillon-teal transition-colors font-petrov-sans">
+                            <h3 className="text-2xl font-bold text-slate-900 group-hover:text-odillon-teal transition-colors font-petrov-sans">
                               {domain.title}
                             </h3>
-                            <div className="text-sm text-gray-400 mt-1 font-medium flex items-center group-hover:text-odillon-teal/70 transition-colors">
-                              En savoir plus <ArrowRight className="w-3 h-3 ml-1" />
+                            <div className="text-sm text-slate-400 mt-1 font-medium flex items-center group-hover:text-odillon-teal/70 transition-colors">
+                              Explorez notre savoir-faire <ArrowRight className="w-3 h-3 ml-1" />
                             </div>
                           </div>
                         </div>
-
-
-                        <div className="flex items-baseline gap-2 bg-white px-5 py-3 rounded-md shadow-sm border border-gray-100">
-                          <span className="text-3xl font-bold font-petrov-sans" style={{ color: domain.color }}>
-                            +<NumberTicker value={parseInt(domain.impact)} />%
-                          </span>
-                        </div>
                       </div>
 
-                      <div className="pt-8 border-t border-gray-200/50 flex flex-wrap gap-x-8 gap-y-3">
+                      <div className="pt-8 border-t border-slate-100 flex flex-wrap gap-x-8 gap-y-3 relative z-10">
                         {domain.features.map((feature, i) => (
-                          <div key={i} className="flex items-center text-sm font-medium text-gray-600">
-                            <CheckCircle className="w-4 h-4 mr-2.5 text-odillon-teal/60" />
+                          <div key={i} className="flex items-center text-sm font-semibold text-slate-600">
+                            <CheckCircle className="w-4 h-4 mr-2.5 text-odillon-teal transition-transform group-hover:scale-110" />
                             {feature}
                           </div>
                         ))}
@@ -148,7 +138,6 @@ export function ExpertiseHome() {
               )
             })}
           </div>
-
         </div>
       </div>
     </section>

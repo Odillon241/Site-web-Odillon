@@ -58,7 +58,7 @@ const services = [
   },
   {
     icon: Users,
-    title: "Administration et RH",
+    title: "Administration et Capital Humain",
     color: "odillon-lime",
     description: "Gestion complète des ressources humaines",
     features: [

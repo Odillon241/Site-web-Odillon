@@ -8,7 +8,7 @@ export function ScrollProgress() {
   return (
     <m.div
       className="fixed top-0 left-0 right-0 h-1 bg-odillon-teal origin-left z-50"
-      style={{ scaleX: scrollYProgress }}
+      style={{ scaleX: scrollYProgress, willChange: 'transform' }}
     />
   )
 }

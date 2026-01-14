@@ -33,12 +33,12 @@ export const servicesData: ServiceData[] = [
       { icon: "TrendingUp", text: "Performance globale", detail: "Évaluation et suivi continu" }
     ],
     workflow: [
-      { step: "1", title: "Analiser", description: "Identification et évaluation des risques", icon: "BarChart3" },
-      { step: "2", title: "Transférer", description: "Délégation des risques à des tiers", icon: "Users" },
-      { step: "3", title: "Réduire", description: "Diminution de l'impact des risques", icon: "TrendingUp" },
-      { step: "4", title: "Contrôler", description: "Surveillance et vérification", icon: "Shield" },
-      { step: "5", title: "Préparer", description: "Plans de continuité d'activité", icon: "Rocket" },
-      { step: "6", title: "Éviter", description: "Stratégies d'évitement", icon: "Target" }
+      { step: "", title: "Analiser", description: "Identification et évaluation des risques", icon: "Search" },
+      { step: "", title: "Transférer", description: "Délégation des risques à des tiers", icon: "ArrowRightLeft" },
+      { step: "", title: "Réduire", description: "Diminution de l'impact des risques", icon: "Minimize2" },
+      { step: "", title: "Contrôler", description: "Surveillance et vérification", icon: "ShieldCheck" },
+      { step: "", title: "Préparer", description: "Plans de continuité d'activité", icon: "ClipboardList" },
+      { step: "", title: "Éviter", description: "Stratégies d'évitement", icon: "Ban" }
     ],
     services: [
       {
@@ -199,12 +199,12 @@ export const servicesData: ServiceData[] = [
       { icon: "Rocket", text: "Réactivité", detail: "Conseil disponible en temps réel" }
     ],
     workflow: [
-      { step: "1", title: "Analiser", description: "Compréhension de vos besoins juridiques", icon: "BarChart3" },
-      { step: "2", title: "Transférer", description: "Recommandations et clauses contractuelles", icon: "Users" },
-      { step: "3", title: "Réduire", description: "Mitigation des risques juridiques", icon: "TrendingUp" },
-      { step: "4", title: "Contrôler", description: "Veille juridique et conformité", icon: "Shield" },
-      { step: "5", title: "Préparer", description: "Documentation et procédures", icon: "Rocket" },
-      { step: "6", title: "Éviter", description: "Prévention des litiges", icon: "Target" }
+      { step: "", title: "Analiser", description: "Compréhension de vos besoins juridiques", icon: "Search" },
+      { step: "", title: "Transférer", description: "Recommandations et clauses contractuelles", icon: "ArrowRightLeft" },
+      { step: "", title: "Réduire", description: "Mitigation des risques juridiques", icon: "Minimize2" },
+      { step: "", title: "Contrôler", description: "Veille juridique et conformité", icon: "ShieldCheck" },
+      { step: "", title: "Préparer", description: "Documentation et procédures", icon: "ClipboardList" },
+      { step: "", title: "Éviter", description: "Prévention des litiges", icon: "Ban" }
     ],
     services: [
       {
@@ -251,12 +251,12 @@ export const servicesData: ServiceData[] = [
       { icon: "BarChart3", text: "Performance mesurée", detail: "KPIs et tableaux de bord" }
     ],
     workflow: [
-      { step: "1", title: "Analiser", description: "Diagnostic financier complet", icon: "BarChart3" },
-      { step: "2", title: "Transférer", description: "Partenariats financiers", icon: "Users" },
-      { step: "3", title: "Réduire", description: "Optimisation des coûts et risques", icon: "TrendingUp" },
-      { step: "4", title: "Contrôler", description: "Tableaux de bord et reporting", icon: "Shield" },
-      { step: "5", title: "Préparer", description: "Business plan et projections", icon: "Rocket" },
-      { step: "6", title: "Éviter", description: "Stratégies de prudence", icon: "Target" }
+      { step: "", title: "Analiser", description: "Diagnostic financier complet", icon: "Search" },
+      { step: "", title: "Transférer", description: "Partenariats financiers", icon: "ArrowRightLeft" },
+      { step: "", title: "Réduire", description: "Optimisation des coûts et risques", icon: "Minimize2" },
+      { step: "", title: "Contrôler", description: "Tableaux de bord et reporting", icon: "ShieldCheck" },
+      { step: "", title: "Préparer", description: "Business plan et projections", icon: "ClipboardList" },
+      { step: "", title: "Éviter", description: "Stratégies de prudence", icon: "Ban" }
     ],
     services: [
       {
@@ -307,7 +307,7 @@ export const servicesData: ServiceData[] = [
   {
     id: "ressources-humaines",
     icon: "Users",
-    title: "Administration et Ressources Humaines",
+    title: "Administration et Capital Humain",
     color: "#C4D82E",
     gradient: "from-[#C4D82E]/20 via-[#C4D82E]/10 to-transparent",
     tagline: "Relations Publiques",
@@ -318,12 +318,12 @@ export const servicesData: ServiceData[] = [
       { icon: "Rocket", text: "Culture d'excellence", detail: "Organisation apprenante" }
     ],
     workflow: [
-      { step: "1", title: "Analiser", description: "Audit du capital humain", icon: "BarChart3" },
-      { step: "2", title: "Transférer", description: "Externalisation et partenariats RH", icon: "Users" },
-      { step: "3", title: "Réduire", description: "Optimisation des processus RH", icon: "TrendingUp" },
-      { step: "4", title: "Contrôler", description: "Indicateurs de performance RH", icon: "Shield" },
-      { step: "5", title: "Préparer", description: "Développement des compétences", icon: "Rocket" },
-      { step: "6", title: "Éviter", description: "Prévention des conflits", icon: "Target" }
+      { step: "", title: "Analiser", description: "Audit du capital humain", icon: "Search" },
+      { step: "", title: "Transférer", description: "Externalisation et partenariats RH", icon: "ArrowRightLeft" },
+      { step: "", title: "Réduire", description: "Optimisation des processus RH", icon: "Minimize2" },
+      { step: "", title: "Contrôler", description: "Indicateurs de performance RH", icon: "ShieldCheck" },
+      { step: "", title: "Préparer", description: "Développement des compétences", icon: "ClipboardList" },
+      { step: "", title: "Éviter", description: "Prévention des conflits", icon: "Ban" }
     ],
     services: [
       {
@@ -348,7 +348,7 @@ export const servicesData: ServiceData[] = [
             impact: "Décisions basées sur la data"
           },
           {
-            title: "Analyse des systèmes d'information des Ressources Humaines",
+            title: "Analyse des systèmes d'information du Capital Humain",
             content: "Analyse et optimisation des outils SIRH",
             impact: "Processus RH digitalisés"
           }
@@ -356,7 +356,7 @@ export const servicesData: ServiceData[] = [
       },
       {
         icon: "Users2",
-        name: "Politiques de Développement des Ressources Humaines",
+        name: "Politiques de Développement du Capital Humain",
         tagline: "Cultivez l'excellence",
         description: "Développez et optimisez votre capital humain pour une performance maximale.",
         details: [
@@ -366,7 +366,7 @@ export const servicesData: ServiceData[] = [
             impact: "Performance améliorée"
           },
           {
-            title: "Transformation qualitative des Ressources Humaines",
+            title: "Transformation qualitative du Capital Humain",
             content: "Développement des compétences et montée en puissance des équipes",
             impact: "Qualité du travail améliorée"
           },

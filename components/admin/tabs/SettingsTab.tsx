@@ -4,8 +4,10 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, Upload, Settings as SettingsIcon, Image as ImageIcon } from "lucide-react"
+import { Loader2, Upload, Settings as SettingsIcon, Image as ImageIcon, Newspaper } from "lucide-react"
 import { SiteSettings } from "@/types/admin"
 import { toast } from "sonner"
 
@@ -71,7 +73,10 @@ export function SettingsTab() {
             toast.success("Image mise à jour avec succès !")
 
             // Reset input
-            const inputId = settingKey === 'expertise_image_url' ? 'expertise-image-input' : 'services-cta-image-input'
+            const inputId = settingKey === 'services_cta_image_url'
+                ? 'services-cta-image-input'
+                : 'expertise-image-input'
+
             const input = document.getElementById(inputId) as HTMLInputElement
             if (input) input.value = ''
 
@@ -84,12 +89,15 @@ export function SettingsTab() {
         }
     }
 
+
+
+
     return (
         <Card className="border-none shadow-md">
             <CardHeader className="bg-gray-50/50 border-b border-gray-100">
                 <CardTitle className="flex items-center gap-2 text-gray-900">
                     <SettingsIcon className="w-5 h-5 text-gray-500" />
-                    Paramètres du Site - Gestion des Images
+                    Paramètres du Site
                 </CardTitle>
             </CardHeader>
             <CardContent className="pt-6 space-y-8 bg-gray-50/30 min-h-[400px]">
@@ -174,22 +182,6 @@ export function SettingsTab() {
                         </div>
 
                         <div className="border-t border-gray-200 my-6"></div>
-
-                        {/* Section Image CTA Services (Optionnel - Exemple) */}
-                        <div className="grid md:grid-cols-2 gap-8 items-start opacity-75">
-                            <div className="space-y-4">
-                                <div className="flex items-center gap-2">
-                                    <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                                        <ImageIcon className="w-5 h-5 text-gray-500" />
-                                        Section CTA Services (Optionnel)
-                                    </h3>
-                                    <Badge variant="outline" className="text-xs">Bientôt</Badge>
-                                </div>
-                                <p className="text-sm text-gray-600 leading-relaxed">
-                                    Image d'arrière-plan ou d'illustration pour le bloc d'appel à l'action des services.
-                                </p>
-                            </div>
-                        </div>
                     </>
                 )}
             </CardContent>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { Card, CardContent } from "@/components/ui/card"
@@ -14,8 +14,11 @@ import {
   Heart,
   ArrowRight,
   TrendingUp,
-  Send
+  Send,
+  Milestone,
+  History
 } from "lucide-react"
+import { m, useScroll, useSpring, useTransform } from "framer-motion"
 import Link from "next/link"
 
 const coreValues = [
@@ -45,11 +48,14 @@ const coreValues = [
   }
 ]
 
-const journey = [
-  { year: "2017", title: "Fondation", description: "Création d'Odillon avec une vision claire" },
-  { year: "2019", title: "Expansion", description: "Extension de nos services et équipe" },
-  { year: "2022", title: "Reconnaissance", description: "Certifications et leadership régional" },
-  { year: "2024", title: "Innovation", description: "Solutions digitales et présence renforcée" }
+type JourneyItem = { year: string; title: string; description: string }
+
+const journey: JourneyItem[] = [
+  { year: "2017", title: "FONDATION", description: "Création d'Odillon avec une vision claire" },
+  { year: "2019", title: "EXPANSION", description: "Extension de nos services et équipe" },
+  { year: "2022", title: "RECONNAISSANCE", description: "Certifications et leadership régional" },
+  { year: "2024", title: "INNOVATION", description: "Solutions digitales et présence renforcée" },
+  { year: "2026", title: "EXCELLENCE", description: "Référence en ingénierie d'entreprise au Gabon" }
 ]
 
 export function AboutHome() {
@@ -122,24 +128,11 @@ export function AboutHome() {
           </div>
         </div>
 
-        {/* Timeline - Simplified */}
-        <BlurFade delay={0.4}>
-          <div className="mb-24 relative">
-            <div className="absolute top-1/2 left-0 w-full h-[1px] bg-gray-100 -translate-y-1/2 hidden md:block" />
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              {journey.map((step, idx) => (
-                <div key={step.year} className="relative bg-white md:bg-transparent p-4 md:p-0 rounded-lg md:rounded-none border md:border-0 border-gray-100">
-                  <div className="w-4 h-4 rounded-full bg-odillon-teal border-4 border-white shadow-sm absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block z-10" />
-                  <div className="text-center md:pt-12">
-                    <div className="text-3xl font-bold text-gray-900 mb-2 font-petrov-sans">{step.year}</div>
-                    <div className="text-sm font-semibold text-odillon-teal uppercase tracking-wide mb-2">{step.title}</div>
-                    <p className="text-sm text-gray-500">{step.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </BlurFade>
+        {/* Timeline - Modern Vertical Redesign */}
+        <div className="mb-32 relative">
+          <JourneyTimeline journey={journey} />
+        </div>
+
 
         {/* Core Values - Clean Grid */}
         <BlurFade delay={0.5}>
@@ -165,5 +158,121 @@ export function AboutHome() {
       </div>
     </section>
   )
+}
+
+function JourneyTimeline({ journey }: { journey: JourneyItem[] }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 0.8", "end 0.2"]
+  })
+
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  })
+
+  return (
+    <div ref={containerRef} className="relative max-w-5xl mx-auto px-4">
+      {/* Central Line */}
+      <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 bg-gray-100 -translate-x-1/2 rounded-full overflow-hidden">
+        <m.div
+          className="absolute top-0 w-full bg-odillon-teal origin-top"
+          style={{ height: "100%", scaleY }}
+        />
+      </div>
+
+      <div className="space-y-12 md:space-y-24 pt-8">
+        {journey.map((item, index) => (
+          <TimelineItem
+            key={item.year}
+            item={item}
+            index={index}
+            isLast={index === journey.length - 1}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function TimelineItem({ item, index, isLast }: { item: JourneyItem; index: number; isLast: boolean }) {
+  const isEven = index % 2 === 0
+  const ref = useRef(null)
+  const isInView = useScroll({
+    target: ref,
+    offset: ["start 0.9", "end 0.1"]
+  })
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "relative flex items-center justify-between md:justify-normal group",
+        isEven ? "md:flex-row-reverse" : "md:flex-row"
+      )}
+    >
+      {/* Dot on the line */}
+      <div className="absolute left-4 md:left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-20">
+        <m.div
+          initial={{ scale: 0, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ type: "spring", stiffness: 300, delay: 0.2 }}
+          className={cn(
+            "w-5 h-5 rounded-full border-4 bg-white shadow-sm ring-4 ring-white/50 transition-colors duration-500",
+            index % 2 === 0 ? "border-odillon-teal" : "border-odillon-lime"
+          )}
+        />
+      </div>
+
+      {/* Content Side */}
+      <div className="w-[calc(100%-3rem)] md:w-[42%] ml-12 md:ml-0">
+        <m.div
+          initial={{ opacity: 0, x: isEven ? -50 : 50, y: 20 }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
+          viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+        >
+          <div className={cn(
+            "relative p-6 md:p-8 rounded-2xl border bg-white/40 backdrop-blur-md shadow-sm hover:shadow-xl transition-all duration-500 group-hover:bg-white/60",
+            isEven ? "border-odillon-teal/10 hover:border-odillon-teal/30" : "border-odillon-lime/10 hover:border-odillon-lime/30"
+          )}>
+            {/* Year Label */}
+            <div className={cn(
+              "text-4xl md:text-5xl font-black mb-2 select-none opacity-20 group-hover:opacity-40 transition-opacity flex items-center gap-3",
+              isEven ? "text-odillon-teal" : "text-odillon-lime"
+            )}>
+              {item.year}
+            </div>
+
+            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 tracking-tight">
+              {item.title}
+            </h3>
+
+            <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+              {item.description}
+            </p>
+
+            {/* Accent Corner */}
+            <div className={cn(
+              "absolute top-0 right-0 w-24 h-24 -mr-12 -mt-12 opacity-[0.03] group-hover:opacity-10 transition-opacity rotate-12 pointer-events-none",
+              isEven ? "text-odillon-teal" : "text-odillon-lime"
+            )}>
+              <Milestone size={120} />
+            </div>
+          </div>
+        </m.div>
+      </div>
+
+      {/* Empty Side (Desktop only) */}
+      <div className="hidden md:block w-[42%]" />
+    </div>
+  )
+}
+
+function cn(...inputs: any[]) {
+  return inputs.filter(Boolean).join(" ")
 }
 

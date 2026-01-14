@@ -29,7 +29,7 @@ export function GradientText({
       }}
       initial={animate ? { opacity: 0, y: 20 } : undefined}
       whileInView={animate ? { opacity: 1, y: 0 } : undefined}
-      viewport={{ once: true }}
+      viewport={{ once: false }}
       transition={{
         duration: 0.5,
         ease: "easeOut",

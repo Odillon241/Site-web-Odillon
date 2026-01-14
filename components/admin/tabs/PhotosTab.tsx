@@ -76,7 +76,8 @@ export function PhotosTab() {
         location: "" as string,
         month: null as number | null,
         theme_id: null as string | null,
-        section_id: null as string | null
+        section_id: null as string | null,
+        activity_type: null as string | null
     })
 
     // File Input Ref
@@ -246,7 +247,8 @@ export function PhotosTab() {
                             details: newPhoto.details || null,
                             location: newPhoto.location || null,
                             month: newPhoto.month,
-                            theme_id: newPhoto.theme_id,
+                            category: null, // Legacy field if needed, but we use activity_type now
+                            activity_type: newPhoto.activity_type,
                             section_id: activeSection,
                             is_active: true,
                             display_order: photos.length + successCount + 1
@@ -274,7 +276,8 @@ export function PhotosTab() {
                     location: "",
                     month: null,
                     theme_id: null,
-                    section_id: null
+                    section_id: null,
+                    activity_type: null
                 })
                 setIsSheetOpen(false)
                 loadPhotos()
@@ -351,7 +354,8 @@ export function PhotosTab() {
                     details: editingPhoto.details,
                     month: editingPhoto.month,
                     theme_id: editingPhoto.theme_id,
-                    location: editingPhoto.location
+                    location: editingPhoto.location,
+                    activity_type: editingPhoto.activity_type
                 }),
             })
 
@@ -662,6 +666,26 @@ export function PhotosTab() {
                                             </SelectContent>
                                         </Select>
                                     </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Type d'activité (Optionnel)</label>
+                                    <Select
+                                        value={newPhoto.activity_type || "none"}
+                                        onValueChange={(val) => setNewPhoto({ ...newPhoto, activity_type: val === "none" ? null : val })}
+                                    >
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Choisir une catégorie" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="none">Aucun</SelectItem>
+                                            <SelectItem value="Formations">Formations</SelectItem>
+                                            <SelectItem value="Séminaires">Séminaires</SelectItem>
+                                            <SelectItem value="Team Building">Team Building</SelectItem>
+                                            <SelectItem value="Ateliers">Ateliers</SelectItem>
+                                            <SelectItem value="Événements">Événements</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                             </div>
 
@@ -978,22 +1002,42 @@ export function PhotosTab() {
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Thème</Label>
+                                    <Label>Type d'activité</Label>
                                     <Select
-                                        value={editingPhoto.theme_id || "none"}
-                                        onValueChange={(val) => setEditingPhoto({ ...editingPhoto, theme_id: val === "none" ? null : val })}
+                                        value={editingPhoto.activity_type || "none"}
+                                        onValueChange={(v) => setEditingPhoto({ ...editingPhoto, activity_type: v === "none" ? null : v })}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Thème" />
+                                            <SelectValue placeholder="Choisir" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="none">Aucun</SelectItem>
-                                            {MONTHLY_THEMES.map((t) => (
-                                                <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
-                                            ))}
+                                            <SelectItem value="Formations">Formations</SelectItem>
+                                            <SelectItem value="Séminaires">Séminaires</SelectItem>
+                                            <SelectItem value="Team Building">Team Building</SelectItem>
+                                            <SelectItem value="Ateliers">Ateliers</SelectItem>
+                                            <SelectItem value="Événements">Événements</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label>Thème</Label>
+                                <Select
+                                    value={editingPhoto.theme_id || "none"}
+                                    onValueChange={(val) => setEditingPhoto({ ...editingPhoto, theme_id: val === "none" ? null : val })}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Thème" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="none">Aucun</SelectItem>
+                                        {MONTHLY_THEMES.map((t) => (
+                                            <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </div>
                         </div>
                     )}

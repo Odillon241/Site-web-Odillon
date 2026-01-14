@@ -29,10 +29,8 @@ export async function PATCH(
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  // @ts-ignore
-  revalidateTag('photos')
-  // @ts-ignore
-  revalidateTag('active-photos')
+  revalidateTag('photos', 'max')
+  revalidateTag('active-photos', 'max')
 
   return NextResponse.json({ photo: data })
 }
@@ -86,10 +84,8 @@ export async function DELETE(
       return NextResponse.json({ error: deleteError.message }, { status: 500 })
     }
 
-    // @ts-ignore
-    revalidateTag('photos')
-    // @ts-ignore
-    revalidateTag('active-photos')
+    revalidateTag('photos', 'max')
+    revalidateTag('active-photos', 'max')
 
     return NextResponse.json({ success: true, message: 'Photo supprimée avec succès' }, { status: 200 })
   } catch (error: unknown) {

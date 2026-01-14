@@ -10,14 +10,14 @@ interface BlurFadeProps {
   className?: string
 }
 
-export function BlurFade({ 
-  children, 
-  delay = 0, 
+export function BlurFade({
+  children,
+  delay = 0,
   duration = 0.4,
-  className = "" 
+  className = ""
 }: BlurFadeProps) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-50px" })
+  const isInView = useInView(ref, { once: false, margin: "-50px" })
 
   return (
     <m.div

@@ -34,8 +34,8 @@ export default function LoginPage() {
       setError(error.message)
       setLoading(false)
     } else {
-      // Rediriger vers /admin/photos
-      router.push("/admin/photos")
+      // Rediriger vers /admin/settings
+      router.push("/admin/settings")
       router.refresh()
     }
   }

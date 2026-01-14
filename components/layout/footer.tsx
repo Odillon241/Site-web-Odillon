@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Phone, Mail, MapPin, ExternalLink, ChevronRight, Briefcase, Scale, PiggyBank, Users } from "lucide-react"
+import { BlurFade } from "@/components/magicui/blur-fade"
 
 
 export function Footer() {
@@ -10,13 +11,14 @@ export function Footer() {
     { name: 'Gouvernance', icon: Briefcase, href: '/#services' },
     { name: 'Juridique', icon: Scale, href: '/#services' },
     { name: 'Finances', icon: PiggyBank, href: '/#services' },
-    { name: 'Ressources Humaines', icon: Users, href: '/#services' },
+    { name: 'Capital Humain', icon: Users, href: '/#services' },
   ]
 
   const quickLinks = [
     { name: 'Accueil', href: '/#accueil' },
-    { name: 'Notre Expertise', href: '/#expertise' },
+    { name: 'Services', href: '/services' },
     { name: 'Photothèque', href: '/phototheque' },
+    { name: 'Blog', href: '/blog' },
     { name: 'À Propos', href: '/#apropos' },
     { name: 'Contact', href: '/#contact' },
   ]
@@ -34,123 +36,141 @@ export function Footer() {
 
           {/* Brand Column */}
           <div className="lg:col-span-4 space-y-6">
-            <Link
-              href="/#accueil"
-              className="inline-block focus:outline-none focus:ring-2 focus:ring-odillon-teal/50 rounded-lg transition-all group"
-              aria-label="Retour à l'accueil"
-            >
-              <Image
-                src="/images/logos/odillon-logo-white.svg?v=2"
-                alt="Odillon"
-                width={180}
-                height={54}
-                className="h-12 w-auto transition-transform group-hover:scale-105"
-              />
-            </Link>
-            <p className="text-white/80 leading-relaxed max-w-sm">
-              Cabinet de conseil en ingénierie d'entreprises,
-              spécialisé dans la structuration et le management stratégique pour une croissance durable.
-            </p>
-            {/* Decorative Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full backdrop-blur-sm border border-white/20">
-              <span className="w-2 h-2 rounded-full bg-odillon-lime animate-pulse" />
-              <span className="text-sm text-white">Basé au Gabon 🇬🇦</span>
-            </div>
+            <BlurFade delay={0.1}>
+              <Link
+                href="/#accueil"
+                className="inline-block focus:outline-none focus:ring-2 focus:ring-odillon-teal/50 rounded-lg transition-all group"
+                aria-label="Retour à l'accueil"
+              >
+                <Image
+                  src="/images/logos/odillon-logo-white.svg?v=2"
+                  alt="Odillon"
+                  width={180}
+                  height={54}
+                  className="h-12 w-auto transition-transform group-hover:scale-105"
+                />
+              </Link>
+              <p className="text-white/80 leading-relaxed max-w-sm mt-6">
+                Cabinet de conseil en ingénierie d'entreprises,
+                spécialisé dans la structuration et le management stratégique pour une croissance durable.
+              </p>
+              {/* Decorative Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full backdrop-blur-sm border border-white/20 mt-6">
+                <span className="w-2 h-2 rounded-full bg-odillon-lime animate-pulse" />
+                <span className="text-sm text-white">Basé au Gabon 🇬🇦</span>
+              </div>
+            </BlurFade>
           </div>
 
           {/* Expertises Column */}
           <div className="lg:col-span-3">
-            <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-6 flex items-center gap-2">
-              <span className="w-8 h-[2px] bg-odillon-lime rounded-full" />
-              Expertises
-            </h3>
-            <ul className="space-y-3">
-              {expertises.map((item) => {
-                const IconComponent = item.icon
-                return (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="group flex items-center gap-3 text-white/80 hover:text-odillon-lime transition-all duration-300"
-                    >
-                      <span className="p-2 rounded-lg bg-white/10 group-hover:bg-white/20 transition-all border border-white/10 group-hover:border-odillon-lime/30">
-                        <IconComponent className="w-4 h-4 text-odillon-lime" />
-                      </span>
-                      <span className="group-hover:translate-x-1 transition-transform">{item.name}</span>
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
+            <BlurFade delay={0.2}>
+              <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-6 flex items-center gap-2">
+                <span className="w-8 h-[2px] bg-odillon-lime rounded-full" />
+                Expertises
+              </h3>
+              <ul className="space-y-3">
+                {expertises.map((item, idx) => {
+                  const IconComponent = item.icon
+                  return (
+                    <li key={item.name}>
+                      <Link
+                        href={item.href}
+                        className="group flex items-center gap-3 text-white/80 hover:text-odillon-lime transition-all duration-300"
+                      >
+                        <span className="p-2 rounded-lg bg-white/10 group-hover:bg-white/20 transition-all border border-white/10 group-hover:border-odillon-lime/30">
+                          <IconComponent className="w-4 h-4 text-odillon-lime" />
+                        </span>
+                        <span className="group-hover:translate-x-1 transition-transform">{item.name}</span>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            </BlurFade>
           </div>
 
           {/* Quick Links Column */}
           <div className="lg:col-span-2">
-            <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-6 flex items-center gap-2">
-              <span className="w-8 h-[2px] bg-odillon-lime rounded-full" />
-              Navigation
-            </h3>
-            <ul className="space-y-3">
-              {quickLinks.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="group flex items-center text-white/80 hover:text-odillon-lime transition-all duration-300"
-                  >
-                    <ChevronRight className="w-4 h-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all text-odillon-lime" />
-                    <span>{link.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <BlurFade delay={0.3}>
+              <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-6 flex items-center gap-2">
+                <span className="w-8 h-[2px] bg-odillon-lime rounded-full" />
+                Navigation
+              </h3>
+              <ul className="space-y-3">
+                {quickLinks.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      href={link.href}
+                      className="group flex items-center text-white/80 hover:text-odillon-lime transition-all duration-300"
+                    >
+                      <ChevronRight className="w-4 h-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all text-odillon-lime" />
+                      <span>{link.name}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </BlurFade>
           </div>
 
           {/* Contact Column */}
           <div className="lg:col-span-3">
-            <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-6 flex items-center gap-2">
-              <span className="w-8 h-[2px] bg-odillon-lime rounded-full" />
-              Nous Contacter
-            </h3>
-            <div className="space-y-4">
-              {/* Phone Card */}
-              <a
-                href="tel:+24111747574"
-                className="group flex items-center gap-4 p-3 rounded-xl bg-white/10 hover:bg-white/15 transition-all border border-white/10 hover:border-odillon-lime/30"
-              >
-                <div className="p-2.5 rounded-lg bg-odillon-lime text-odillon-dark shadow-sm">
-                  <Phone className="w-4 h-4" />
+            <BlurFade delay={0.4}>
+              <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-6 flex items-center gap-2">
+                <span className="w-8 h-[2px] bg-odillon-lime rounded-full" />
+                Nous Contacter
+              </h3>
+              <div className="space-y-4">
+                {/* Phone Card */}
+                <div className="p-3 rounded-xl bg-white/10 border border-white/10">
+                  <div className="flex items-center gap-4 mb-2">
+                    <div className="p-2.5 rounded-lg bg-odillon-lime text-odillon-dark shadow-sm">
+                      <Phone className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs text-white/60 block">Téléphone</span>
+                  </div>
+                  <div className="space-y-1 pl-12">
+                    <a
+                      href="tel:+24111747574"
+                      className="block text-white font-medium hover:text-odillon-lime transition-colors"
+                    >
+                      +241 11 74 75 74
+                    </a>
+                    <a
+                      href="tel:+24174759515"
+                      className="block text-white font-medium hover:text-odillon-lime transition-colors"
+                    >
+                      +241 74 75 95 15
+                    </a>
+                  </div>
                 </div>
-                <div>
-                  <span className="text-xs text-white/60 block">Téléphone</span>
-                  <span className="text-white font-medium group-hover:text-odillon-lime transition-colors">+241 11 74 75 74</span>
-                </div>
-              </a>
 
-              {/* Email Card */}
-              <a
-                href="mailto:contact@odillon.fr"
-                className="group flex items-center gap-4 p-3 rounded-xl bg-white/10 hover:bg-white/15 transition-all border border-white/10 hover:border-odillon-lime/30"
-              >
-                <div className="p-2.5 rounded-lg bg-white text-odillon-teal shadow-sm">
-                  <Mail className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-xs text-white/60 block">Email</span>
-                  <span className="text-white font-medium group-hover:text-odillon-lime transition-colors">contact@odillon.fr</span>
-                </div>
-              </a>
+                {/* Email Card */}
+                <a
+                  href="mailto:contact@odillon.fr"
+                  className="group flex items-center gap-4 p-3 rounded-xl bg-white/10 hover:bg-white/15 transition-all border border-white/10 hover:border-odillon-lime/30"
+                >
+                  <div className="p-2.5 rounded-lg bg-white text-odillon-teal shadow-sm">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-xs text-white/60 block">Email</span>
+                    <span className="text-white font-medium group-hover:text-odillon-lime transition-colors">contact@odillon.fr</span>
+                  </div>
+                </a>
 
-              {/* Address Card */}
-              <div className="flex items-start gap-4 p-3 rounded-xl bg-white/10 border border-white/10">
-                <div className="p-2.5 rounded-lg bg-white/20 text-white">
-                  <MapPin className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-xs text-white/60 block">Adresse</span>
-                  <span className="text-white font-medium">BP- 13262 Libreville, Gabon</span>
+                {/* Address Card */}
+                <div className="flex items-start gap-4 p-3 rounded-xl bg-white/10 border border-white/10">
+                  <div className="p-2.5 rounded-lg bg-white/20 text-white">
+                    <MapPin className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-xs text-white/60 block">Adresse</span>
+                    <span className="text-white font-medium">BP- 13262 Libreville, Gabon</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </BlurFade>
           </div>
         </div>
 

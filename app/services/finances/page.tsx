@@ -1,5 +1,6 @@
 import { use } from "react"
-import { HeaderPro } from "@/components/layout/header-pro"
+import dynamic from "next/dynamic"
+const HeaderPro = dynamic(() => import("@/components/layout/header-pro").then(mod => mod.HeaderPro), { ssr: true })
 import { Footer } from "@/components/layout/footer"
 import { ServiceSingle } from "@/components/sections/service-single"
 import { ScrollProgress } from "@/components/magicui/scroll-progress"
@@ -22,7 +23,7 @@ export default function FinancesPage({
   use(params)
   use(searchParams)
   const service = servicesData.find(s => s.id === "finances")
-  
+
   if (!service) {
     return null
   }
@@ -32,7 +33,7 @@ export default function FinancesPage({
       <ScrollProgress />
       <ScrollToTop />
       <HeaderPro />
-      <main className="min-h-screen pt-[88px] md:pt-[104px]">
+      <main className="min-h-screen pt-[88px]">
         <ServiceSingle service={service} />
       </main>
       <Footer />

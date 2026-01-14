@@ -6,7 +6,7 @@ import { BackgroundsDemoClient } from "./client"
 export default function BackgroundsDemo() {
   return (
     <BackgroundsDemoClient
-      hero={<Hero />}
+      hero={<Hero logos={[]} />}
       aurora={<HeroWithAurora />}
       retro={<HeroWithRetroGrid />}
     />

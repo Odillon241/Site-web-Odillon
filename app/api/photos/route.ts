@@ -9,6 +9,7 @@ export async function GET(request: Request) {
   const theme = searchParams.get('theme')
   const active = searchParams.get('active')
   const section = searchParams.get('section')
+  const activity_type = searchParams.get('activity_type')
 
   const supabase = await createClient()
 
@@ -30,6 +31,11 @@ export async function GET(request: Request) {
   // Filtrer par thématique
   if (theme) {
     query = query.eq('theme_id', theme)
+  }
+
+  // Filtrer par type d'activité
+  if (activity_type) {
+    query = query.eq('activity_type', activity_type)
   }
 
   // Filtrer par section
@@ -78,10 +84,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  // @ts-ignore
-  revalidateTag('photos')
-  // @ts-ignore
-  revalidateTag('active-photos')
+  revalidateTag('photos', 'max')
+  revalidateTag('active-photos', 'max')
 
   return NextResponse.json({ photo: data }, { status: 201 })
 }

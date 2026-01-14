@@ -21,7 +21,6 @@ function LogoItem({ company }: { company: CompanyLogo }) {
             height={80}
             className="object-contain max-w-full max-h-full"
             onError={() => setImageError(true)}
-            unoptimized
           />
         </div>
       ) : (

@@ -35,9 +35,25 @@ yarn-error.log*
 next-env.d.ts
 
 # sensitive files
+.env
 .env.production
 .mcp.json
 .claude/settings.local.json
 .cursor/debug.log
 
+# temp files
 nul
+tmpclaude-*
+*.log
+
+# IDE/Editor specific
+.agent/
+.cursor/
+.vscode/
+
+# build logs
+build_log*.txt
+conversion-log.txt
+
+# test scripts (keep in scripts/ if needed)
+test-*.js

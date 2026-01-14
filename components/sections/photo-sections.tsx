@@ -38,10 +38,8 @@ export function PhotoSections({ page }: PhotoSectionsProps = {}) {
       const path = window.location.pathname
       if (path === '/') {
         setCurrentPage('home')
-      } else if (path.startsWith('/services')) {
+      } else if (path.startsWith('/services') || path.startsWith('/expertise')) {
         setCurrentPage('services')
-      } else if (path.startsWith('/expertise')) {
-        setCurrentPage('expertise')
       } else if (path.startsWith('/a-propos')) {
         setCurrentPage('about')
       } else if (path.startsWith('/contact')) {
@@ -76,9 +74,9 @@ export function PhotoSections({ page }: PhotoSectionsProps = {}) {
       try {
         setLoading(true)
         const url = `/api/photo-sections/with-photos?active=true&page=${currentPage}`
-        
+
         const res = await fetch(url)
-        
+
         if (!res.ok) {
           console.error('Erreur lors du chargement des sections')
           return

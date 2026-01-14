@@ -24,12 +24,14 @@ export function CountingNumber({
     damping: 60,
     stiffness: 100,
   })
-  const isInView = useInView(ref, { once: true, margin: "0px" })
+  const isInView = useInView(ref, { once: false, margin: "0px" })
   const [displayValue, setDisplayValue] = useState(0)
 
   useEffect(() => {
     if (isInView) {
       motionValue.set(value)
+    } else {
+      motionValue.set(0)
     }
   }, [motionValue, isInView, value])
 

@@ -63,9 +63,9 @@ export async function proxy(request: NextRequest) {
 
     // Gestion du sous-domaine admin.odillon.fr
     if (isAdminHost(host)) {
-      // Rediriger la racine vers /admin/photos
+      // Rediriger la racine vers /admin/settings
       if (pathname === '/') {
-        const photosUrl = new URL('/admin/photos', request.url)
+        const photosUrl = new URL('/admin/settings', request.url)
         // Préserver le protocole HTTPS en production
         if (process.env.NODE_ENV === 'production') {
           photosUrl.protocol = 'https:'

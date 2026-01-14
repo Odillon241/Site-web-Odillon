@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
@@ -8,12 +9,52 @@ import Link from "next/link"
 import { m } from "framer-motion"
 import { BackgroundSlideshow } from "@/components/ui/background-slideshow"
 import TextPressure from "@/components/ui/shadcn-io/text-pressure"
+import { WordPullUp } from "@/components/magicui/word-pull-up"
+import { FlipWords } from "@/components/magicui/flip-words"
+import { TextReveal } from "@/components/magicui/text-reveal"
+import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/marquee"
+import Image from "next/image"
+import { CompanyLogo } from "@/types/admin"
 
 interface HeroClientProps {
   images: Array<{ src: string; alt: string }>
+  logos: CompanyLogo[]
 }
 
-export function HeroClient({ images }: HeroClientProps) {
+// Composant pour afficher un logo avec fallback
+function LogoItem({ company }: { company: CompanyLogo }) {
+  const [imageError, setImageError] = useState(false)
+
+  return (
+    <div className="group relative flex items-center justify-center w-32 h-20 md:w-40 md:h-24 transition-all duration-300">
+      {!imageError && company.logo_path ? (
+        <div className="relative w-full h-full flex items-center justify-center transition-all duration-300 group-hover:scale-105">
+          <Image
+            src={company.logo_path}
+            alt={`${company.name} logo`}
+            width={120}
+            height={80}
+            className="object-contain max-w-full max-h-full opacity-80 group-hover:opacity-100 transition-opacity"
+            onError={() => setImageError(true)}
+          />
+        </div>
+      ) : (
+        <div className="text-center w-full group-hover:scale-105 transition-transform">
+          <div
+            className="text-xl md:text-2xl font-bold mb-1 text-odillon-teal/60 group-hover:text-odillon-teal transition-colors duration-300"
+          >
+            {company.fallback}
+          </div>
+          <div className="text-xs text-gray-500 font-medium group-hover:text-gray-700 transition-colors">
+            {company.name}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export function HeroClient({ images, logos }: HeroClientProps) {
   return (
     <section id="accueil" className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-transparent">
       {/* Background Layer */}
@@ -32,32 +73,31 @@ export function HeroClient({ images }: HeroClientProps) {
       )}
 
       {/* Content Container */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 text-center">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 
-        {/* Main Badge/Tagline */}
-        <FadeIn delay={0.1}>
-          <div className="flex justify-center mb-8">
-            <span className="inline-flex items-center rounded-full bg-white/10 border border-white/20 px-4 py-1.5 text-sm font-medium text-white backdrop-blur-md">
-              <span className="w-2 h-2 rounded-full bg-odillon-lime mr-2 animate-pulse" />
-              Ingénierie d'Entreprises & Conseil Stratégique
-            </span>
-          </div>
-        </FadeIn>
-
-        {/* Main Headline - Simplified and Stronger */}
+        {/* Main Headline - With FlipWords */}
         <FadeIn delay={0.2}>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 md:mb-8 font-petrov-sans drop-shadow-lg">
-            Structurer pour <span className="text-odillon-lime">réussir</span>,<br className="hidden md:block" />
+            Structurer pour{" "}
+            <span className="text-odillon-lime">
+              <FlipWords
+                words={["réussir", "croître", "performer", "exceller"]}
+                duration={3000}
+                className="text-odillon-lime"
+              />
+            </span>
+            <br className="hidden md:block" />
             Innover pour <span className="text-odillon-teal">durer</span>.
           </h1>
         </FadeIn>
 
         {/* Subtitle - More readable */}
-        <FadeIn delay={0.3}>
-          <p className="text-lg sm:text-xl md:text-2xl text-gray-200 leading-relaxed max-w-3xl mx-auto mb-10 md:mb-12 font-light">
-            Cabinet expert en <strong>gouvernance</strong>, <strong>finance</strong>, <strong>RH</strong> et <strong>juridique</strong>.
-            Nous transformons vos défis organisationnels en leviers de performance durable.
-          </p>
+        <FadeIn delay={0.5}>
+          <TextReveal
+            text="Cabinet de conseil en stratégie et organisation."
+            className="text-lg sm:text-xl md:text-2xl text-gray-200 leading-relaxed max-w-3xl mx-auto mb-10 md:mb-12 font-light justify-center"
+            delay={0.3}
+          />
         </FadeIn>
 
         {/* CTA Buttons - Centered and Premium */}
@@ -88,8 +128,8 @@ export function HeroClient({ images }: HeroClientProps) {
 
         {/* Footer Tagline - Future Vision */}
         <FadeIn delay={0.6}>
-          <div className="mt-20 md:mt-24 pt-8 border-t border-white/10 flex justify-center w-full max-w-4xl mx-auto min-h-[100px]">
-            <div className="relative w-full h-full flex items-center justify-center">
+          <div className="mt-10 md:mt-12 pt-6 border-t border-white/10">
+            <div className="relative w-full h-full flex items-center justify-center min-h-[100px] mb-6">
               <TextPressure
                 text="Together we @ the future"
                 flex={true}
@@ -105,6 +145,29 @@ export function HeroClient({ images }: HeroClientProps) {
                 }}
               />
             </div>
+
+            {/* Logos Marquee - Trusted By - No Background */}
+            {logos && logos.length > 0 && (
+              <div className="mt-8 py-8 px-4">
+                <p className="text-sm text-white/80 uppercase tracking-widest mb-6 font-medium text-center">
+                  Ils nous font confiance
+                </p>
+                <Marquee>
+                  <MarqueeContent speed={30} pauseOnHover>
+                    {logos.map((company) => (
+                      <MarqueeItem
+                        key={company.id}
+                        className="mx-6 md:mx-10"
+                      >
+                        <LogoItem company={company} />
+                      </MarqueeItem>
+                    ))}
+                  </MarqueeContent>
+                  <MarqueeFade side="left" className="from-transparent" />
+                  <MarqueeFade side="right" className="from-transparent" />
+                </Marquee>
+              </div>
+            )}
           </div>
         </FadeIn>
       </div>

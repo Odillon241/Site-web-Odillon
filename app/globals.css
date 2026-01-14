@@ -2,13 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Animated gradient background - lightweight replacement for THREE.js LiquidEther */
+.animated-gradient-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  opacity: 0.5;
+  /* Increased from 0.3 for more vibrancy */
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(57, 131, 122, 0.4), transparent),
+    radial-gradient(ellipse 60% 50% at 80% 60%, rgba(196, 216, 46, 0.3), transparent),
+    radial-gradient(ellipse 60% 50% at 20% 80%, rgba(57, 131, 122, 0.35), transparent),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(235, 245, 244, 0.1) 100%);
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
 @layer base {
   :root {
-    --background: 66 75% 95%;
+    --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
+    --card: 0 50% 100%;
     --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
+    --popover: 66 75% 100%;
     --popover-foreground: 222.2 84% 4.9%;
     --primary: 173 72% 36%;
     --primary-foreground: 0 0% 100%;
@@ -23,14 +52,14 @@
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 173 72% 36%;
-    --radius: 0.5rem;
+    --radius: 0.1rem;
 
     /* Aurora Background Variables */
     --white: rgba(255, 255, 255, 0.05);
     --black: rgba(0, 0, 0, 0.05);
     --transparent: rgba(255, 255, 255, 0);
-    --odillon-teal: rgba(57, 131, 122, 0.5);
-    --odillon-lime: rgba(196, 216, 46, 0.5);
+    --odillon-teal: rgba(57, 131, 122, 0.2);
+    --odillon-lime: rgba(196, 216, 46, 0.2);
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -89,17 +118,6 @@
     position: relative;
   }
 
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    /* Behind content but above background color */
-    pointer-events: none;
-    /* Updated noise pattern */
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.5'/%3E%3C/svg%3E");
-    opacity: 0.15;
-  }
 
   h1,
   h2,

@@ -22,7 +22,9 @@ import {
     Settings as SettingsIcon,
     LogOut,
     Target,
-    LayoutDashboard
+    LayoutDashboard,
+    Newspaper,
+    Mail
 } from "lucide-react"
 
 import {
@@ -72,8 +74,15 @@ export function AdminSidebar({
             items: [
                 { title: "Photos", icon: ImageIcon, value: "photos" },
                 { title: "Vidéos", icon: Video, value: "videos" },
+                { title: "Articles", icon: Newspaper, value: "articles" },
                 { title: "Témoignages", icon: Quote, value: "testimonials" },
                 { title: "Logos Partenaires", icon: Building2, value: "logos" },
+            ]
+        },
+        {
+            label: "Marketing",
+            items: [
+                { title: "Newsletter", icon: Mail, value: "newsletter" },
             ]
         },
         {

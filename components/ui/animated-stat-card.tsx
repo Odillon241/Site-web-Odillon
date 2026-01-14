@@ -98,6 +98,7 @@ export function AnimatedStatCard({
           className="absolute inset-0 rounded-xl"
           style={{
             background: `conic-gradient(from 0deg, ${color}, transparent 30%, transparent 70%, ${color})`,
+            willChange: 'transform',
           }}
           animate={{ rotate: 360 }}
           transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
@@ -106,7 +107,7 @@ export function AnimatedStatCard({
         {/* Moving halo/dot */}
         <m.div
           className="absolute w-16 h-16 rounded-full blur-2xl z-10"
-          style={{ background: hexToRgba(color, 0.4) }}
+          style={{ background: hexToRgba(color, 0.4), willChange: 'top, left' }}
           animate={{
             top: ["10%", "10%", "70%", "70%", "10%"],
             left: ["10%", "75%", "75%", "10%", "10%"],
@@ -135,6 +136,7 @@ export function AnimatedStatCard({
             style={{
               background: `linear-gradient(90deg, transparent, ${hexToRgba(color, 0.5)}, transparent)`,
               filter: "blur(20px)",
+              willChange: 'transform',
             }}
             animate={{ rotate: 360 }}
             transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
@@ -162,7 +164,7 @@ export function AnimatedStatCard({
               {/* Icon glow */}
               <m.div
                 className="absolute inset-0 rounded-xl blur-xl"
-                style={{ background: hexToRgba(color, 0.4) }}
+                style={{ background: hexToRgba(color, 0.4), willChange: 'transform, opacity' }}
                 animate={{
                   scale: [1, 1.2, 1],
                   opacity: [0.4, 0.6, 0.4],

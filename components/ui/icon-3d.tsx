@@ -41,7 +41,6 @@ export function Icon3D({
       height={height}
       className={className}
       onError={() => setImageError(true)}
-      unoptimized // Pour permettre les images PNG statiques
     />
   )
 }
