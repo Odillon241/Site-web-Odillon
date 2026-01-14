@@ -29,6 +29,7 @@ interface Photo {
   location: string | null;
   event_description?: string;
   theme_id: string | null;
+  activity_type: string | null;
   month: number | null;
   year: number | null;
   is_active: boolean;
@@ -43,6 +44,7 @@ interface Album {
   date?: string;
   location?: string | null;
   themeId?: string | null;
+  activityType?: string | null;
 }
 
 interface FilterState {
@@ -50,7 +52,35 @@ interface FilterState {
   category: string | null;
 }
 
-// Album Card Component
+// Activity Badge Component
+const ActivityBadge: React.FC<{ type: string | null }> = ({ type }) => {
+  if (!type) return null;
+
+  const featured = ['Formations', 'Séminaires', 'Ateliers'];
+  if (!featured.includes(type)) return null;
+
+  const colors = {
+    'Formations': 'bg-blue-500 text-white',
+    'Séminaires': 'bg-purple-500 text-white',
+    'Ateliers': 'bg-orange-500 text-white'
+  };
+
+  const icons = {
+    'Formations': GraduationCap,
+    'Séminaires': Users2,
+    'Ateliers': Lightbulb
+  };
+
+  const Icon = icons[type as keyof typeof icons];
+
+  return (
+    <Badge className={cn('absolute top-2 right-2 z-10 shadow-lg', colors[type as keyof typeof colors])}>
+      <Icon className="w-3 h-3 mr-1" />
+      {type}
+    </Badge>
+  );
+};
+
 // Album Card Component
 const AlbumCard: React.FC<{
   album: Album;
@@ -80,12 +110,19 @@ const AlbumCard: React.FC<{
     });
   }
 
+  const featuredTypes = ['Formations', 'Séminaires', 'Ateliers'];
+  const isFeatured = featuredTypes.includes(album.activityType || '');
+
   return (
     <BlurFade delay={0.05 * index}>
       <div
-        className="relative w-full aspect-[7/8] max-w-[350px] mx-auto group perspective-1000"
+        className={cn(
+          "relative w-full aspect-[7/8] max-w-[350px] mx-auto group perspective-1000 cursor-pointer transition-all",
+          isFeatured && "ring-2 ring-odillon-teal/30 rounded-2xl hover:ring-odillon-teal/50 max-w-[400px]"
+        )}
         onClick={onClick}
       >
+        <ActivityBadge type={album.activityType ?? null} />
         <StackedCardsInteraction
           cards={cardsData}
           spreadDistance={20}
@@ -98,18 +135,17 @@ const AlbumCard: React.FC<{
 
 // Helper: Group photos by description (Event Name)
 function groupPhotosByEvent(photos: Photo[]): Album[] {
-  const groups: { [key: string]: Photo[] } = {};
+  const albumsMap = new Map<string, Photo[]>();
 
   photos.forEach(photo => {
     const key = photo.description.trim();
-    if (!groups[key]) {
-      groups[key] = [];
+    if (!albumsMap.has(key)) {
+      albumsMap.set(key, []);
     }
-    groups[key].push(photo);
+    albumsMap.get(key)!.push(photo);
   });
 
-  return Object.keys(groups).map(title => {
-    const eventPhotos = groups[title];
+  return Array.from(albumsMap.entries()).map(([title, eventPhotos]) => {
     const cover = eventPhotos[0];
     const date = cover.month && cover.year
       ? new Date(cover.year, cover.month - 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
@@ -124,7 +160,8 @@ function groupPhotosByEvent(photos: Photo[]): Album[] {
       coverPhoto: cover,
       date,
       location: cover.location,
-      themeId: cover.theme_id
+      themeId: cover.theme_id,
+      activityType: cover.activity_type
     };
   });
 }
@@ -173,10 +210,19 @@ export default function PhotothequePage() {
       (album.location && album.location.toLowerCase().includes(filters.search.toLowerCase()));
 
     const categoryMatch = !filters.category ||
-      // album.activity_type === filters.category || // TODO: activity_type doesn't exist in Album type
-      album.title.toLowerCase().includes(filters.category.toLowerCase());
+      album.activityType === filters.category;
 
     return searchMatch && categoryMatch;
+  });
+
+  // Sort albums: Featured types first (Formations, Séminaires, Ateliers)
+  const featuredTypes = ['Formations', 'Séminaires', 'Ateliers'];
+  const sortedFilteredAlbums = [...filteredAlbums].sort((a, b) => {
+    const aIsFeatured = featuredTypes.includes(a.activityType || '');
+    const bIsFeatured = featuredTypes.includes(b.activityType || '');
+    if (aIsFeatured && !bIsFeatured) return -1;
+    if (!aIsFeatured && bIsFeatured) return 1;
+    return 0;
   });
 
   const activityOptions = [
@@ -280,7 +326,7 @@ export default function PhotothequePage() {
           <div className="flex justify-between items-end mb-8 border-b border-gray-100 pb-4">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Albums</h2>
-              <p className="text-sm text-gray-500 mt-1">{filteredAlbums.length} événement(s) trouvé(s)</p>
+              <p className="text-sm text-gray-500 mt-1">{sortedFilteredAlbums.length} événement(s) trouvé(s)</p>
             </div>
 
             {/* Optional: Add sort functionality here if needed */}
@@ -292,9 +338,9 @@ export default function PhotothequePage() {
                 <div key={i} className="aspect-[4/3] bg-gray-100 rounded-xl animate-pulse" />
               ))}
             </div>
-          ) : filteredAlbums.length > 0 ? (
+          ) : sortedFilteredAlbums.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-              {filteredAlbums.map((album, idx) => (
+              {sortedFilteredAlbums.map((album, idx) => (
                 <AlbumCard
                   key={album.id}
                   album={album}

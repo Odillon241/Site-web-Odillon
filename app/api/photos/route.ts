@@ -2,6 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 
+export const dynamic = 'force-dynamic'
+
 // GET - Récupérer toutes les photos
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
@@ -39,6 +40,50 @@ import { toast } from "sonner"
 import { ImageCropper } from "../ImageCropper"
 import getCroppedImg from "@/lib/image"
 
+
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    DragEndEvent,
+} from '@dnd-kit/core'
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    useSortable,
+    rectSortingStrategy,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+
+function SortablePhotoItem({ id, children }: { id: string, children: React.ReactNode }) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging
+    } = useSortable({ id })
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        zIndex: isDragging ? 10 : 1,
+        opacity: isDragging ? 0.5 : 1,
+        touchAction: 'none' as React.CSSProperties['touchAction']
+    }
+
+    return (
+        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+            {children}
+        </div>
+    )
+}
+
 export function PhotosTab() {
     // ─────────────────────────────────────────────────────────────────────────
     // STATE
@@ -65,6 +110,9 @@ export function PhotosTab() {
     const [searchTerm, setSearchTerm] = useState("")
     const [filterMonth, setFilterMonth] = useState<number | null>(null)
     const [filterStatus, setFilterStatus] = useState<string>("all")
+
+    // Album Order Control (Admin maintains this order)
+    const [albumOrder, setAlbumOrder] = useState<string[]>([])
 
     // New Photo Form
     const [selectedFiles, setSelectedFiles] = useState<File[]>([])
@@ -94,7 +142,19 @@ export function PhotosTab() {
 
     useEffect(() => {
         loadPhotos()
+        // Reset albumOrder when switching sections
+        setAlbumOrder([])
     }, [activeSection])
+
+    // Initialize albumOrder from photos on first load or when changed
+    useEffect(() => {
+        if (photos.length > 0) {
+            const derived = Array.from(new Set(
+                photos.map(p => p.description)
+            )).filter(Boolean)
+            setAlbumOrder(derived)
+        }
+    }, [photos])
 
     // ─────────────────────────────────────────────────────────────────────────
     // DATA LOADING
@@ -137,6 +197,65 @@ export function PhotosTab() {
         e.stopPropagation()
         setIsDragging(true)
     }, [])
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8,
+            },
+        }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    )
+
+    const handleDragEnd = async (event: DragEndEvent) => {
+        const { active, over } = event
+
+        if (over && active.id !== over.id) {
+            const oldIndex = albumOrder.indexOf(active.id as string)
+            const newIndex = albumOrder.indexOf(over.id as string)
+
+            const newOrder = arrayMove(albumOrder, oldIndex, newIndex)
+
+            // Update local state immediately
+            setAlbumOrder(newOrder)
+
+            // Optimistic update
+            const albumRank = new Map(newOrder.map((name, index) => [name, index]))
+
+            const sortedPhotos = [...photos].sort((a, b) => {
+                const rankA = albumRank.has(a.description) ? albumRank.get(a.description)! : 999999
+                const rankB = albumRank.has(b.description) ? albumRank.get(b.description)! : 999999
+                // Preserve relative order if same album
+                if (rankA === rankB) {
+                    // We assume photos are already sorted correctly within album (newest first or strictly by display_order)
+                    // If we want to strictly keep 'display_order' ASC which simulates 'created_at' DESC per our initial setup? 
+                    // No, initally we had 'created_at' desc. Reverting to 'display_order' ASC means we rely on display_order.
+                    // The backend reorder sets display_order sequentially.
+                    // Here we just want to group them visually.
+                    // Let's rely on current array order stability or index.
+                    return 0
+                }
+                return rankA - rankB
+            })
+
+            setPhotos(sortedPhotos)
+
+            // API Call
+            try {
+                await fetch('/api/photos/reorder', {
+                    method: 'POST',
+                    body: JSON.stringify({ albumNames: newOrder })
+                })
+                toast.success("Ordre mis à jour")
+            } catch (err) {
+                console.error(err)
+                toast.error("Erreur mise à jour ordre")
+                loadPhotos() // Revert
+            }
+        }
+    }
 
     const onDragLeave = useCallback((e: React.DragEvent) => {
         e.preventDefault()
@@ -247,8 +366,8 @@ export function PhotosTab() {
                             details: newPhoto.details || null,
                             location: newPhoto.location || null,
                             month: newPhoto.month,
-                            category: null, // Legacy field if needed, but we use activity_type now
-                            activity_type: newPhoto.activity_type,
+                            theme_id: newPhoto.theme_id || null,
+                            activity_type: newPhoto.activity_type || null,
                             section_id: activeSection,
                             is_active: true,
                             display_order: photos.length + successCount + 1
@@ -450,13 +569,8 @@ export function PhotosTab() {
         return true
     })
 
-    // Get unique album names (descriptions) for the stacked view
-    // Only strictly needed when NOT filtering by album (to show the list of albums)
-    const uniqueAlbums = Array.from(new Set(
-        photos
-            .filter(p => !searchTerm && !filterMonth && filterStatus === 'all') // Optional: show all albums regardless of filters? Or filter albums? Let's show all available albums unless filtered.
-            .map(p => p.description)
-    )).filter(Boolean)
+    // Use albumOrder as the source of truth for album display order
+    // This gives admin control instead of adapting to database order
 
     return (
         <div className="space-y-6">
@@ -516,7 +630,7 @@ export function PhotosTab() {
                                     : "Albums de la Photothèque"}
                         </CardTitle>
                         <Badge variant="secondary" className="bg-white border shadow-sm text-xs font-normal">
-                            {activeSection === 'hero' || selectedAlbum ? filteredPhotos.length : uniqueAlbums.length}
+                            {activeSection === 'hero' || selectedAlbum ? filteredPhotos.length : albumOrder.length}
                         </Badge>
                     </div>
 
@@ -528,7 +642,7 @@ export function PhotosTab() {
                                 Ajouter des photos
                             </Button>
                         </SheetTrigger>
-                        <SheetContent className="overflow-y-auto w-full sm:max-w-md">
+                        <SheetContent className="overflow-y-auto w-full sm:max-w-md bg-white">
                             <SheetHeader>
                                 <SheetTitle>Ajouter des photos</SheetTitle>
                                 <SheetDescription>
@@ -619,6 +733,17 @@ export function PhotosTab() {
                                             Ce nom sera appliqué à toutes les photos sélectionnées pour les regrouper.
                                         </p>
                                     )}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Description détaillée (Optionnel)</label>
+                                    <Textarea
+                                        placeholder="Ajoutez une description plus détaillée..."
+                                        value={newPhoto.details}
+                                        onChange={(e) => setNewPhoto({ ...newPhoto, details: e.target.value })}
+                                        className="resize-none"
+                                        rows={3}
+                                    />
                                 </div>
 
                                 {activeSection === 'phototheque' && (
@@ -778,45 +903,58 @@ export function PhotosTab() {
                             // Let's apply filters to the grid view of albums if wanted, but simpler to just show albums.
                             // For now, let's assume if I filter, I might want to see individual photos, or I filter albums.
                             // Let's stick to the plan: Group photos by description. 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                                {uniqueAlbums.length === 0 ? (
-                                    <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
-                                        <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                                            <ImageIcon className="w-10 h-10 text-gray-300" />
-                                        </div>
-                                        <h3 className="text-lg font-medium text-gray-900">Aucun album</h3>
-                                        <p className="text-gray-500">Ajoutez des photos pour créer des albums.</p>
-                                    </div>
-                                ) : (
-                                    uniqueAlbums.map((albumName) => {
-                                        const albumPhotos = photos.filter(p => p.description === albumName);
-                                        const coverPhoto = albumPhotos[0];
-                                        if (!coverPhoto) return null;
-
-                                        // Prepare cards data for stack
-                                        const cardsData = albumPhotos.slice(0, 3).map((photo, i) => ({
-                                            image: photo.url,
-                                            title: i === 0 ? albumName : undefined,
-                                            description: i === 0 ? `${albumPhotos.length} photos` : undefined
-                                        }));
-
-                                        return (
-                                            <BlurFade key={albumName} delay={0.05}>
-                                                <div
-                                                    className="relative w-full aspect-[7/8] max-w-[300px] mx-auto group perspective-1000 cursor-pointer"
-                                                    onClick={() => setSelectedAlbum(albumName)}
-                                                >
-                                                    <StackedCardsInteraction
-                                                        cards={cardsData}
-                                                        spreadDistance={15}
-                                                        rotationAngle={4}
-                                                    />
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <SortableContext
+                                    items={albumOrder}
+                                    strategy={rectSortingStrategy}
+                                >
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                                        {albumOrder.length === 0 ? (
+                                            <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
+                                                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                                                    <ImageIcon className="w-10 h-10 text-gray-300" />
                                                 </div>
-                                            </BlurFade>
-                                        );
-                                    })
-                                )}
-                            </div>
+                                                <h3 className="text-lg font-medium text-gray-900">Aucun album</h3>
+                                                <p className="text-gray-500">Ajoutez des photos pour créer des albums.</p>
+                                            </div>
+                                        ) : (
+                                            albumOrder.map((albumName) => {
+                                                const albumPhotos = photos.filter(p => p.description === albumName);
+                                                const coverPhoto = albumPhotos[0];
+                                                if (!coverPhoto) return null;
+
+                                                // Prepare cards data for stack
+                                                const cardsData = albumPhotos.slice(0, 3).map((photo, i) => ({
+                                                    image: photo.url,
+                                                    title: i === 0 ? albumName : undefined,
+                                                    description: i === 0 ? (coverPhoto.details ? `${coverPhoto.details} (${albumPhotos.length} photos)` : `${albumPhotos.length} photos`) : undefined
+                                                }));
+
+                                                return (
+                                                    <SortablePhotoItem key={albumName} id={albumName}>
+                                                        <BlurFade delay={0.05}>
+                                                            <div
+                                                                className="relative w-full aspect-[7/8] max-w-[300px] mx-auto group perspective-1000 cursor-pointer"
+                                                                onClick={() => setSelectedAlbum(albumName)}
+                                                            >
+                                                                <StackedCardsInteraction
+                                                                    cards={cardsData}
+                                                                    spreadDistance={15}
+                                                                    rotationAngle={4}
+                                                                />
+                                                            </div>
+                                                        </BlurFade>
+                                                    </SortablePhotoItem>
+                                                );
+                                            })
+                                        )}
+                                    </div>
+                                </SortableContext>
+                            </DndContext>
                         ) : (
                             // STANDARD GRID VIEW (Detail view or Hero or Filtered)
                             filteredPhotos.length === 0 ? (
@@ -1001,25 +1139,6 @@ export function PhotosTab() {
                                         </SelectContent>
                                     </Select>
                                 </div>
-                                <div className="space-y-2">
-                                    <Label>Type d'activité</Label>
-                                    <Select
-                                        value={editingPhoto.activity_type || "none"}
-                                        onValueChange={(v) => setEditingPhoto({ ...editingPhoto, activity_type: v === "none" ? null : v })}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Choisir" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="none">Aucun</SelectItem>
-                                            <SelectItem value="Formations">Formations</SelectItem>
-                                            <SelectItem value="Séminaires">Séminaires</SelectItem>
-                                            <SelectItem value="Team Building">Team Building</SelectItem>
-                                            <SelectItem value="Ateliers">Ateliers</SelectItem>
-                                            <SelectItem value="Événements">Événements</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
                             </div>
 
                             <div className="space-y-2">
@@ -1036,6 +1155,26 @@ export function PhotosTab() {
                                         {MONTHLY_THEMES.map((t) => (
                                             <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
                                         ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label>Type d'activité</Label>
+                                <Select
+                                    value={editingPhoto.activity_type || "none"}
+                                    onValueChange={(v) => setEditingPhoto({ ...editingPhoto, activity_type: v === "none" ? null : v })}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Choisir" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="none">Aucun</SelectItem>
+                                        <SelectItem value="Formations">Formations</SelectItem>
+                                        <SelectItem value="Séminaires">Séminaires</SelectItem>
+                                        <SelectItem value="Team Building">Team Building</SelectItem>
+                                        <SelectItem value="Ateliers">Ateliers</SelectItem>
+                                        <SelectItem value="Événements">Événements</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
