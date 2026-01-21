@@ -24,7 +24,8 @@ import {
     Target,
     LayoutDashboard,
     Newspaper,
-    Mail
+    Mail,
+    MessageSquare
 } from "lucide-react"
 
 import {
@@ -82,6 +83,7 @@ export function AdminSidebar({
         {
             label: "Marketing",
             items: [
+                { title: "Messages", icon: MessageSquare, value: "messages" },
                 { title: "Newsletter", icon: Mail, value: "newsletter" },
             ]
         },
