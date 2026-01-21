@@ -1,12 +1,90 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
+import {
+    validateEmail,
+    checkRateLimit,
+    verifyOrigin,
+    getClientIP,
+    logSecurityEvent
+} from "@/lib/security"
 
-// POST: Subscribe to newsletter
+/**
+ * Configuration du rate limiting pour la newsletter
+ */
+const RATE_LIMIT_CONFIG = {
+    maxRequests: 3,        // Maximum 3 requêtes
+    windowMs: 60 * 1000,   // Par minute
+}
+
+/**
+ * POST: Subscribe to newsletter
+ *
+ * Protections de sécurité implémentées :
+ * - Rate limiting par IP
+ * - Validation de l'origine (CSRF basique)
+ * - Validation stricte de l'email
+ * - Blocage des emails jetables
+ */
 export async function POST(request: NextRequest) {
-    try {
-        const { email } = await request.json()
+    const clientIP = getClientIP(request)
 
-        // Validate email format
+    try {
+        // 1. Vérifier l'origine de la requête (protection CSRF)
+        if (!verifyOrigin(request)) {
+            logSecurityEvent('origin_blocked', clientIP, 'Origin/Referer non autorisé pour /api/newsletter')
+            return NextResponse.json(
+                { error: 'Requête non autorisée' },
+                { status: 403 }
+            )
+        }
+
+        // 2. Vérifier le rate limiting
+        const rateLimitResult = checkRateLimit(
+            `newsletter:${clientIP}`,
+            RATE_LIMIT_CONFIG.maxRequests,
+            RATE_LIMIT_CONFIG.windowMs
+        )
+
+        if (!rateLimitResult.allowed) {
+            logSecurityEvent('rate_limit', clientIP, 'Rate limit dépassé pour /api/newsletter')
+            return NextResponse.json(
+                {
+                    error: 'Trop de requêtes. Veuillez réessayer dans quelques minutes.',
+                    retryAfter: rateLimitResult.resetIn
+                },
+                {
+                    status: 429,
+                    headers: {
+                        'Retry-After': rateLimitResult.resetIn.toString(),
+                        'X-RateLimit-Remaining': rateLimitResult.remaining.toString()
+                    }
+                }
+            )
+        }
+
+        // 3. Vérifier le Content-Type
+        const contentType = request.headers.get('content-type')
+        if (!contentType?.includes('application/json')) {
+            return NextResponse.json(
+                { error: 'Content-Type invalide' },
+                { status: 415 }
+            )
+        }
+
+        // 4. Parser le body
+        let body: Record<string, unknown>
+        try {
+            body = await request.json()
+        } catch {
+            return NextResponse.json(
+                { error: 'Format JSON invalide' },
+                { status: 400 }
+            )
+        }
+
+        const { email } = body
+
+        // 5. Validation de base
         if (!email || typeof email !== 'string') {
             return NextResponse.json(
                 { error: 'Email est requis' },
@@ -14,21 +92,28 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!emailRegex.test(email)) {
+        // 6. Validation stricte de l'email
+        const emailValidation = validateEmail(email)
+        if (!emailValidation.isValid) {
+            // Log si c'est une tentative d'injection
+            if (emailValidation.error?.includes('caractères non autorisés')) {
+                logSecurityEvent('email_header_injection', clientIP, `Email rejeté: ${email.substring(0, 50)}`)
+            }
             return NextResponse.json(
-                { error: 'Format d\'email invalide' },
+                { error: emailValidation.error || 'Format d\'email invalide' },
                 { status: 400 }
             )
         }
 
+        const sanitizedEmail = emailValidation.sanitized
+
         const supabase = await createClient()
 
-        // Check if email already exists
+        // 7. Check if email already exists
         const { data: existingSubscriber } = await supabase
             .from('newsletter_subscribers')
             .select('id, is_active')
-            .eq('email', email.toLowerCase())
+            .eq('email', sanitizedEmail)
             .single()
 
         if (existingSubscriber) {
@@ -41,7 +126,11 @@ export async function POST(request: NextRequest) {
                 // Reactivate the subscription
                 const { error: updateError } = await supabase
                     .from('newsletter_subscribers')
-                    .update({ is_active: true, subscribed_at: new Date().toISOString() })
+                    .update({
+                        is_active: true,
+                        subscribed_at: new Date().toISOString(),
+                        ip_address: clientIP // Track IP for audit
+                    })
                     .eq('id', existingSubscriber.id)
 
                 if (updateError) {
@@ -58,12 +147,13 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        // Create new subscriber
+        // 8. Create new subscriber
         const { error: insertError } = await supabase
             .from('newsletter_subscribers')
             .insert({
-                email: email.toLowerCase(),
-                is_active: true
+                email: sanitizedEmail,
+                is_active: true,
+                ip_address: clientIP // Track IP for audit
             })
 
         if (insertError) {
@@ -87,7 +177,9 @@ export async function POST(request: NextRequest) {
     }
 }
 
-// GET: Get all subscribers (admin only)
+/**
+ * GET: Get all subscribers (admin only)
+ */
 export async function GET(request: NextRequest) {
     const supabase = await createClient()
 
@@ -99,11 +191,26 @@ export async function GET(request: NextRequest) {
 
     const url = new URL(request.url)
     const activeOnly = url.searchParams.get('active') === 'true'
+    const limitParam = url.searchParams.get('limit')
+
+    // Valider le paramètre limit
+    let limit = 100
+    if (limitParam) {
+        const parsedLimit = parseInt(limitParam)
+        if (isNaN(parsedLimit) || parsedLimit < 1 || parsedLimit > 500) {
+            return NextResponse.json(
+                { error: 'Le paramètre limit doit être un nombre entre 1 et 500' },
+                { status: 400 }
+            )
+        }
+        limit = parsedLimit
+    }
 
     let query = supabase
         .from('newsletter_subscribers')
         .select('*')
         .order('subscribed_at', { ascending: false })
+        .limit(limit)
 
     if (activeOnly) {
         query = query.eq('is_active', true)
@@ -122,7 +229,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(subscribers)
 }
 
-// DELETE: Unsubscribe from newsletter (using token or admin)
+/**
+ * DELETE: Unsubscribe from newsletter (using token or admin)
+ */
 export async function DELETE(request: NextRequest) {
     const supabase = await createClient()
     const url = new URL(request.url)
@@ -141,11 +250,20 @@ export async function DELETE(request: NextRequest) {
         .update({ is_active: false })
 
     if (token) {
+        // Validate token format (prevent injection)
+        if (typeof token !== 'string' || token.length > 100 || !/^[a-zA-Z0-9\-_]+$/.test(token)) {
+            return NextResponse.json({ error: 'Token invalide' }, { status: 400 })
+        }
         // Unsubscribe via token (public)
         query = query.eq('unsubscribe_token', token)
     } else if (user && email) {
+        // Validate email
+        const emailValidation = validateEmail(email)
+        if (!emailValidation.isValid) {
+            return NextResponse.json({ error: 'Email invalide' }, { status: 400 })
+        }
         // Admin unsubscribe via email
-        query = query.eq('email', email.toLowerCase())
+        query = query.eq('email', emailValidation.sanitized)
     } else {
         return NextResponse.json({ error: 'Paramètres invalides' }, { status: 400 })
     }
