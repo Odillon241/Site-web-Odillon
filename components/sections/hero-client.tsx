@@ -8,17 +8,19 @@ import { ArrowRight, Shield, TrendingUp, Users, Award } from "lucide-react"
 import Link from "next/link"
 import { m } from "framer-motion"
 import { BackgroundSlideshow } from "@/components/ui/background-slideshow"
-import TextPressure from "@/components/ui/shadcn-io/text-pressure"
+import { AnimatedSlogan } from "@/components/magicui/animated-slogan"
 import { WordPullUp } from "@/components/magicui/word-pull-up"
 import { FlipWords } from "@/components/magicui/flip-words"
 import { TextReveal } from "@/components/magicui/text-reveal"
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/marquee"
 import Image from "next/image"
-import { CompanyLogo } from "@/types/admin"
+import { CompanyLogo, Video } from "@/types/admin"
+import { VideoPlayer } from "@/components/ui/video-player"
 
 interface HeroClientProps {
   images: Array<{ src: string; alt: string }>
   logos: CompanyLogo[]
+  video?: Video | null
 }
 
 // Composant pour afficher un logo avec fallback
@@ -54,7 +56,7 @@ function LogoItem({ company }: { company: CompanyLogo }) {
   )
 }
 
-export function HeroClient({ images, logos }: HeroClientProps) {
+export function HeroClient({ images, logos, video }: HeroClientProps) {
   return (
     <section id="accueil" className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-transparent">
       {/* Background Layer */}
@@ -126,30 +128,46 @@ export function HeroClient({ images, logos }: HeroClientProps) {
           </div>
         </FadeIn>
 
+        {/* Hero Video - Displayed prominently if available */}
+        {video && (
+          <FadeIn delay={0.5}>
+            <div className="mt-10 md:mt-14 mx-auto max-w-4xl">
+              <div className="rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 backdrop-blur-sm bg-black/20">
+                <VideoPlayer
+                  url={video.url}
+                  type={video.type}
+                  thumbnail={video.thumbnail || undefined}
+                  title={video.title}
+                  className="w-full aspect-video"
+                  autoplay={false}
+                  muted={true}
+                  loop={true}
+                />
+              </div>
+              {(video.presenter_name || video.presenter_position) && (
+                <div className="mt-4 text-center">
+                  <p className="font-semibold text-white text-base md:text-lg">{video.presenter_name}</p>
+                  <p className="text-odillon-lime font-medium text-sm uppercase tracking-wide">{video.presenter_position}</p>
+                </div>
+              )}
+            </div>
+          </FadeIn>
+        )}
+
         {/* Footer Tagline - Future Vision */}
         <FadeIn delay={0.6}>
           <div className="mt-10 md:mt-12 pt-6 border-t border-white/10">
-            <div className="relative w-full h-full flex items-center justify-center min-h-[100px] mb-6">
-              <TextPressure
-                text="Together we @ the future"
-                flex={true}
-                alpha={false}
-                stroke={false}
-                width={true}
-                weight={true}
-                italic={true}
-                textColor="#ffffff"
-                minFontSize={24}
-                icons={{
-                  "@": "https://img.icons8.com/?id=36871&format=png&size=64"
-                }}
+            <div className="relative w-full flex items-center justify-center min-h-[80px] mb-6">
+              <AnimatedSlogan
+                text="Together we the future"
+                iconPosition={2}
               />
             </div>
 
-            {/* Logos Marquee - Trusted By - No Background */}
+            {/* Logos Marquee - Trusted By - White Background */}
             {logos && logos.length > 0 && (
-              <div className="mt-8 py-8 px-4">
-                <p className="text-sm text-white/80 uppercase tracking-widest mb-6 font-medium text-center">
+              <div className="mt-8 -mx-4 sm:-mx-6 lg:-mx-8 bg-white rounded-2xl shadow-lg py-8 px-4 border border-odillon-teal/30">
+                <p className="text-sm text-odillon-dark/70 uppercase tracking-widest mb-6 font-medium text-center -mt-2">
                   Ils nous font confiance
                 </p>
                 <Marquee>
@@ -163,8 +181,8 @@ export function HeroClient({ images, logos }: HeroClientProps) {
                       </MarqueeItem>
                     ))}
                   </MarqueeContent>
-                  <MarqueeFade side="left" className="from-transparent" />
-                  <MarqueeFade side="right" className="from-transparent" />
+                  <MarqueeFade side="left" className="from-white" />
+                  <MarqueeFade side="right" className="from-white" />
                 </Marquee>
               </div>
             )}

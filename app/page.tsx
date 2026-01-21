@@ -72,7 +72,10 @@ export default async function Home({
     .order('published_at', { ascending: false })
     .limit(3)
 
-  const homeVideo = videosData?.find(v => v.page === 'Accueil' && (v.section === 'Contenu' || v.section === 'Hero')) || null
+  // Vidéo Hero (pour le background du hero)
+  const heroVideo = videosData?.find(v => v.page === 'Accueil' && v.section === 'Hero' && v.is_active) || null
+  // Vidéo de contenu (pour la section vidéo séparée)
+  const contentVideo = videosData?.find(v => v.page === 'Accueil' && v.section === 'Contenu' && v.is_active) || null
 
   // Fetch site settings for CTA
   const { data: requestSettings } = await supabase
@@ -87,11 +90,11 @@ export default async function Home({
       <ScrollToTop />
       <HeaderPro />
       <main className="min-h-screen pt-[88px]">
-        <Hero logos={logos || []} />
+        <Hero logos={logos || []} video={heroVideo} />
         <ServicesHome />
         <ExpertiseHome />
         <RiskManagementSection />
-        <VideoSection video={homeVideo} />
+        <VideoSection video={contentVideo} />
         <CtaBanner
           title={settings.expertise_cta_title || "Découvrez notre expertise approfondie et nos méthodologies éprouvées"}
           description={settings.expertise_cta_description || ""}

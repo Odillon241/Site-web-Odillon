@@ -39,8 +39,8 @@ const contactMethods = [
   {
     icon: MapPin,
     title: "Nous rendre visite",
-    value: "Libreville, Gabon",
-    link: "https://www.google.com/maps",
+    value: "BP 13262, Libreville, Gabon",
+    link: "https://www.google.com/maps?q=0.3780070242976405,9.454325471658247",
     description: "Sur rendez-vous uniquement"
   }
 ]

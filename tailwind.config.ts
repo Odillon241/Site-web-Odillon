@@ -82,6 +82,11 @@ const config = {
 				'petrov-sans': [
 					'var(--font-air)',
 					'sans-serif'
+				],
+				baskvill: [
+					'Baskvill',
+					'Georgia',
+					'serif'
 				]
 			},
 			backgroundImage: {

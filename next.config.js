@@ -112,8 +112,8 @@ const nextConfig = {
               "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://api.resend.com",
               // Médias
               "media-src 'self' https://*.supabase.co",
-              // Frames (YouTube embeds si nécessaire)
-              "frame-src 'self' https://www.youtube.com https://youtube.com",
+              // Frames (YouTube, Google Maps, OpenStreetMap embeds)
+              "frame-src 'self' https://www.youtube.com https://youtube.com https://www.google.com https://maps.google.com https://www.openstreetmap.org",
               // Formulaires
               "form-action 'self'",
               // Base URI
@@ -162,17 +162,16 @@ const nextConfig = {
           },
         ],
       },
-      {
-        // HSTS (HTTP Strict Transport Security)
-        // Activer uniquement en production avec HTTPS
+      // HSTS (HTTP Strict Transport Security) - uniquement en production avec HTTPS
+      ...(process.env.NODE_ENV === 'production' ? [{
         source: '/:path*',
-        headers: process.env.NODE_ENV === 'production' ? [
+        headers: [
           {
             key: 'Strict-Transport-Security',
             value: 'max-age=31536000; includeSubDomains; preload',
           },
-        ] : [],
-      },
+        ],
+      }] : []),
     ]
   },
 }

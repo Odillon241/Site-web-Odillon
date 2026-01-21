@@ -50,6 +50,8 @@ export default function RootLayout({
   return (
     <html lang="fr" className="scroll-smooth" suppressHydrationWarning>
       <body className={cn(airFont.className, airFont.variable, "antialiased")} suppressHydrationWarning>
+        {/* Grid background pattern */}
+        <div className="grid-bg" />
         {/* Lightweight CSS gradient background - replaces heavy THREE.js LiquidEther */}
         <div className="animated-gradient-bg" />
         <MotionProvider>

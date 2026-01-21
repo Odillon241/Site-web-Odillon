@@ -95,7 +95,7 @@ export function HeaderPro() {
               </a>
             </div>
             <div className="text-[10px] md:text-xs text-white/80">
-              Libreville, Gabon
+              BP 13262, Libreville, Gabon
             </div>
           </div>
         </div>

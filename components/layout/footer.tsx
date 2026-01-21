@@ -166,7 +166,7 @@ export function Footer() {
                   </div>
                   <div>
                     <span className="text-xs text-white/60 block">Adresse</span>
-                    <span className="text-white font-medium">BP- 13262 Libreville, Gabon</span>
+                    <span className="text-white font-medium">BP 13262, Libreville, Gabon</span>
                   </div>
                 </div>
               </div>
