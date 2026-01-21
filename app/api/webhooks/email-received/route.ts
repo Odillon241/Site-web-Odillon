@@ -1,5 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { headers } from 'next/headers'
+import {
+    verifyWebhookSignature,
+    sanitizeEmailHeader,
+    logSecurityEvent,
+    getClientIP,
+    escapeHtml
+} from '@/lib/security'
 
 /**
  * Structure de l'événement email.received de Resend
@@ -26,20 +33,45 @@ interface ResendEmailReceivedEvent {
 }
 
 /**
+ * Limite de taille maximale pour les champs
+ */
+const MAX_FIELD_LENGTHS = {
+  subject: 500,
+  email: 254,
+  name: 200,
+  bodyText: 100000, // 100KB max
+  bodyHtml: 500000, // 500KB max
+}
+
+/**
  * Extrait le nom et l'email d'une chaîne "Name <email@domain.com>"
  */
 function parseEmailAddress(emailString: string): { name: string | null; email: string } {
-  const match = emailString.match(/^(.+?)\s*<(.+?)>$/)
+  // Sanitiser l'entrée
+  const sanitized = sanitizeEmailHeader(emailString)
+
+  const match = sanitized.match(/^(.+?)\s*<(.+?)>$/)
   if (match) {
     return {
-      name: match[1].trim(),
-      email: match[2].trim().toLowerCase()
+      name: match[1].trim().substring(0, MAX_FIELD_LENGTHS.name),
+      email: match[2].trim().toLowerCase().substring(0, MAX_FIELD_LENGTHS.email)
     }
   }
   return {
     name: null,
-    email: emailString.trim().toLowerCase()
+    email: sanitized.trim().toLowerCase().substring(0, MAX_FIELD_LENGTHS.email)
   }
+}
+
+/**
+ * Échappe les caractères spéciaux pour la recherche LIKE/ILIKE
+ * Prévient l'injection de wildcards SQL
+ */
+function escapeLikePattern(pattern: string): string {
+  return pattern
+    .replace(/\\/g, '\\\\')  // Échapper les backslashes d'abord
+    .replace(/%/g, '\\%')    // Échapper le wildcard %
+    .replace(/_/g, '\\_')    // Échapper le wildcard _
 }
 
 /**
@@ -51,42 +83,50 @@ function parseEmailAddress(emailString: string): { name: string | null; email: s
 async function findOriginalMessage(
   fromEmail: string,
   subject: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: any
 ): Promise<string | null> {
-  // Nettoyer le sujet pour enlever "Re:", "Fwd:", etc.
+  // Nettoyer et valider le sujet
   const cleanSubject = subject
-    .replace(/^(Re|RE|Fwd|FWD):\s*/i, '')
+    .replace(/^(Re|RE|Fwd|FWD):\s*/gi, '')
     .trim()
+    .substring(0, MAX_FIELD_LENGTHS.subject)
+
+  // Valider l'email
+  const sanitizedEmail = fromEmail.toLowerCase().trim().substring(0, MAX_FIELD_LENGTHS.email)
 
   // Recherche 1: Par email de l'expéditeur avec sujet similaire
   const { data: messagesByEmail } = await supabase
     .from('contact_messages')
     .select('id, subject, email')
-    .eq('email', fromEmail)
+    .eq('email', sanitizedEmail)
     .order('created_at', { ascending: false })
     .limit(10)
 
   if (messagesByEmail && messagesByEmail.length > 0) {
-    // Chercher une correspondance exacte du sujet
-    const exactMatch = messagesByEmail.find((msg: any) =>
+    // Chercher une correspondance exacte du sujet (case insensitive)
+    const exactMatch = (messagesByEmail as Array<{ id: string; subject: string; email: string }>).find((msg) =>
       msg.subject.toLowerCase() === cleanSubject.toLowerCase()
     )
     if (exactMatch) return exactMatch.id
 
     // Sinon, prendre le plus récent
-    return messagesByEmail[0].id
+    return (messagesByEmail as Array<{ id: string }>)[0].id
   }
 
   // Recherche 2: Par sujet seul (au cas où l'email serait différent)
+  // SÉCURITÉ: Échapper le pattern pour prévenir l'injection de wildcards
+  const escapedSubject = escapeLikePattern(cleanSubject)
+
   const { data: messagesBySubject } = await supabase
     .from('contact_messages')
     .select('id, subject, email')
-    .ilike('subject', `%${cleanSubject}%`)
+    .ilike('subject', `%${escapedSubject}%`)
     .order('created_at', { ascending: false })
     .limit(1)
 
   if (messagesBySubject && messagesBySubject.length > 0) {
-    return messagesBySubject[0].id
+    return (messagesBySubject as Array<{ id: string }>)[0].id
   }
 
   return null
@@ -95,13 +135,69 @@ async function findOriginalMessage(
 /**
  * POST /api/webhooks/email-received
  * Webhook pour recevoir les emails entrants via Resend
+ *
+ * Protections de sécurité implémentées :
+ * - Vérification de la signature Svix
+ * - Validation et sanitisation des entrées
+ * - Protection contre l'injection SQL via ILIKE
+ * - Limites de taille des champs
  */
 export async function POST(request: NextRequest) {
-  try {
-    // 1. Parser le body
-    const body: ResendEmailReceivedEvent = await request.json()
+  const clientIP = getClientIP(request)
 
-    // 2. Vérifier que c'est bien un événement email.received
+  try {
+    // 1. Récupérer le body brut pour la vérification de signature
+    const rawBody = await request.text()
+
+    // 2. Vérifier la taille du payload
+    const maxPayloadSize = 10 * 1024 * 1024 // 10MB max (pour les pièces jointes)
+    if (rawBody.length > maxPayloadSize) {
+      return NextResponse.json(
+        { error: 'Payload too large' },
+        { status: 413 }
+      )
+    }
+
+    // 3. Vérification de sécurité - Signature Svix
+    const headersList = await headers()
+    const webhookSecret = process.env.RESEND_WEBHOOK_SECRET
+
+    if (webhookSecret) {
+      const svixId = headersList.get('svix-id')
+      const svixTimestamp = headersList.get('svix-timestamp')
+      const svixSignature = headersList.get('svix-signature')
+
+      // Construire la signature complète
+      const fullSignature = svixTimestamp && svixSignature
+        ? `t=${svixTimestamp},${svixSignature}`
+        : null
+
+      const isValid = await verifyWebhookSignature(rawBody, fullSignature, webhookSecret)
+
+      if (!isValid) {
+        logSecurityEvent('webhook_invalid', clientIP, 'Signature webhook invalide')
+        return NextResponse.json(
+          { error: 'Invalid webhook signature' },
+          { status: 401 }
+        )
+      }
+    } else {
+      // En production, la signature devrait être obligatoire
+      console.warn('[SECURITY] RESEND_WEBHOOK_SECRET non configuré - webhook non vérifié')
+    }
+
+    // 4. Parser le body
+    let body: ResendEmailReceivedEvent
+    try {
+      body = JSON.parse(rawBody)
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid JSON' },
+        { status: 400 }
+      )
+    }
+
+    // 5. Vérifier que c'est bien un événement email.received
     if (body.type !== 'email.received') {
       return NextResponse.json(
         { error: 'Invalid event type' },
@@ -111,31 +207,31 @@ export async function POST(request: NextRequest) {
 
     const emailData = body.data
 
-    // 3. Vérification de sécurité optionnelle (Resend Webhook Secret)
-    // Note: Pour l'instant on fait confiance, mais en production il faudrait vérifier
-    // la signature svix dans les headers
-    const headersList = await headers()
-    const webhookSecret = process.env.RESEND_WEBHOOK_SECRET
-
-    if (webhookSecret) {
-      const signature = headersList.get('svix-signature')
-      // TODO: Vérifier la signature avec svix
-      // Pour l'instant, on log juste pour debug
-      console.log('Webhook signature présente:', !!signature)
+    // 6. Valider les champs requis
+    if (!emailData.from || !emailData.subject || !emailData.to?.length) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      )
     }
 
-    // 4. Parser l'expéditeur et le destinataire
+    // 7. Parser et sanitiser l'expéditeur et le destinataire
     const from = parseEmailAddress(emailData.from)
-    const toEmail = emailData.to[0] || ''
+    const toEmail = sanitizeEmailHeader(emailData.to[0] || '')
+      .substring(0, MAX_FIELD_LENGTHS.email)
+
+    // Sanitiser le sujet
+    const sanitizedSubject = sanitizeEmailHeader(emailData.subject)
+      .substring(0, MAX_FIELD_LENGTHS.subject)
 
     console.log('📧 Email reçu:', {
       from: from.email,
       to: toEmail,
-      subject: emailData.subject,
+      subject: sanitizedSubject.substring(0, 50),
       emailId: emailData.email_id
     })
 
-    // 5. Créer le client Supabase avec service role
+    // 8. Créer le client Supabase avec service role
     const { createClient } = await import('@supabase/supabase-js')
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -148,12 +244,16 @@ export async function POST(request: NextRequest) {
       }
     )
 
-    // 6. Trouver le message de contact original
+    // 9. Trouver le message de contact original
     const originalMessageId = await findOriginalMessage(
       from.email,
-      emailData.subject,
+      sanitizedSubject,
       supabase
     )
+
+    // 10. Tronquer le contenu si nécessaire
+    const bodyText = emailData.text?.substring(0, MAX_FIELD_LENGTHS.bodyText) || null
+    const bodyHtml = emailData.html?.substring(0, MAX_FIELD_LENGTHS.bodyHtml) || null
 
     if (!originalMessageId) {
       // Si on ne trouve pas de message original, on crée un nouveau message de contact
@@ -164,8 +264,8 @@ export async function POST(request: NextRequest) {
         .insert({
           name: from.name || from.email,
           email: from.email,
-          subject: emailData.subject.replace(/^(Re|RE|Fwd|FWD):\s*/i, '').trim(),
-          message: emailData.text || emailData.html || '',
+          subject: sanitizedSubject.replace(/^(Re|RE|Fwd|FWD):\s*/gi, '').trim(),
+          message: bodyText || bodyHtml || '',
           status: 'new'
         })
         .select()
@@ -187,9 +287,9 @@ export async function POST(request: NextRequest) {
           from_email: from.email,
           from_name: from.name,
           to_email: toEmail,
-          subject: emailData.subject,
-          body_text: emailData.text || null,
-          body_html: emailData.html || null,
+          subject: sanitizedSubject,
+          body_text: bodyText,
+          body_html: bodyHtml,
           attachments: emailData.attachments || [],
           resend_email_id: emailData.email_id,
           message_id: emailData.headers?.['message-id'] || null,
@@ -204,7 +304,7 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // 7. Stocker la réponse dans contact_replies
+    // 11. Stocker la réponse dans contact_replies
     const { data: reply, error: replyError } = await supabase
       .from('contact_replies')
       .insert({
@@ -212,9 +312,9 @@ export async function POST(request: NextRequest) {
         from_email: from.email,
         from_name: from.name,
         to_email: toEmail,
-        subject: emailData.subject,
-        body_text: emailData.text || null,
-        body_html: emailData.html || null,
+        subject: sanitizedSubject,
+        body_text: bodyText,
+        body_html: bodyHtml,
         attachments: emailData.attachments || [],
         resend_email_id: emailData.email_id,
         message_id: emailData.headers?.['message-id'] || null,
@@ -232,7 +332,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 8. Mettre à jour le statut du message original si nécessaire
+    // 12. Mettre à jour le statut du message original si nécessaire
     await supabase
       .from('contact_messages')
       .update({
@@ -244,9 +344,6 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ Réponse stockée avec succès:', reply.id)
 
-    // 9. Optionnel: Envoyer une notification à l'équipe
-    // TODO: Implémenter la notification par email si souhaité
-
     return NextResponse.json({
       success: true,
       replyId: reply.id,
@@ -256,10 +353,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('❌ Erreur webhook email-received:', error)
     return NextResponse.json(
-      {
-        error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }

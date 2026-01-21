@@ -1,5 +1,15 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
+import {
+  validateContactForm,
+  checkRateLimit,
+  verifyOrigin,
+  getClientIP,
+  logSecurityEvent,
+  escapeHtml,
+  sanitizeEmailHeader,
+  FIELD_LIMITS
+} from '@/lib/security'
 
 /**
  * Types pour les données du formulaire de contact
@@ -7,24 +17,18 @@ import { NextRequest, NextResponse } from 'next/server'
 interface ContactFormData {
   name: string
   email: string
-  phone?: string
-  company?: string
+  phone?: string | null
+  company?: string | null
   subject: string
   message: string
 }
 
 /**
- * Fonction pour échapper les caractères HTML (sécurité XSS)
+ * Configuration du rate limiting
  */
-function escapeHtml(text: string): string {
-  const map: Record<string, string> = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;',
-  }
-  return text.replace(/[&<>"']/g, (m) => map[m])
+const RATE_LIMIT_CONFIG = {
+  maxRequests: 5,        // Maximum 5 requêtes
+  windowMs: 60 * 1000,   // Par minute
 }
 
 /**
@@ -123,7 +127,7 @@ function generateNotificationEmailHTML(data: ContactFormData, messageId: string)
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding: 16px 0;">
-                    <a href="mailto:${safeEmail}?subject=Re: ${encodeURIComponent(data.subject)}"
+                    <a href="mailto:${safeEmail}?subject=${encodeURIComponent('Re: ' + data.subject)}"
                        style="display: inline-block; background-color: #1A9B8E; color: #FFFFFF; padding: 12px 32px; text-decoration: none; border-radius: 4px; font-size: 15px; font-weight: 500; letter-spacing: -0.01em;">
                       Répondre à ${safeName}
                     </a>
@@ -291,32 +295,108 @@ function generateConfirmationEmailHTML(data: ContactFormData): string {
 /**
  * POST /api/contact
  * Traite les soumissions du formulaire de contact
+ *
+ * Protections de sécurité implémentées :
+ * - Rate limiting par IP
+ * - Validation de l'origine (CSRF basique)
+ * - Validation et sanitisation des entrées
+ * - Protection contre l'injection SQL
+ * - Protection contre l'injection d'en-têtes email
+ * - Limites de taille des champs
  */
 export async function POST(request: NextRequest) {
+  const clientIP = getClientIP(request)
+
   try {
-    // 1. Parser les données du formulaire
-    const body = await request.json()
-
-    // 2. Validation des champs requis
-    const { name, email, subject, message } = body
-
-    if (!name || !email || !subject || !message) {
+    // 1. Vérifier l'origine de la requête (protection CSRF)
+    if (!verifyOrigin(request)) {
+      logSecurityEvent('origin_blocked', clientIP, `Origin/Referer non autorisé`)
       return NextResponse.json(
-        { error: 'Les champs nom, email, sujet et message sont obligatoires' },
+        { error: 'Requête non autorisée' },
+        { status: 403 }
+      )
+    }
+
+    // 2. Vérifier le rate limiting
+    const rateLimitResult = checkRateLimit(
+      `contact:${clientIP}`,
+      RATE_LIMIT_CONFIG.maxRequests,
+      RATE_LIMIT_CONFIG.windowMs
+    )
+
+    if (!rateLimitResult.allowed) {
+      logSecurityEvent('rate_limit', clientIP, 'Rate limit dépassé pour /api/contact')
+      return NextResponse.json(
+        {
+          error: 'Trop de requêtes. Veuillez réessayer dans quelques minutes.',
+          retryAfter: rateLimitResult.resetIn
+        },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': rateLimitResult.resetIn.toString(),
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString()
+          }
+        }
+      )
+    }
+
+    // 3. Vérifier la taille de la requête
+    const contentLength = request.headers.get('content-length')
+    const maxPayloadSize = 100 * 1024 // 100KB max
+    if (contentLength && parseInt(contentLength) > maxPayloadSize) {
+      return NextResponse.json(
+        { error: 'La taille de la requête dépasse la limite autorisée' },
+        { status: 413 }
+      )
+    }
+
+    // 4. Vérifier le Content-Type
+    const contentType = request.headers.get('content-type')
+    if (!contentType?.includes('application/json')) {
+      return NextResponse.json(
+        { error: 'Content-Type invalide. Attendu: application/json' },
+        { status: 415 }
+      )
+    }
+
+    // 5. Parser les données du formulaire
+    let body: Record<string, unknown>
+    try {
+      body = await request.json()
+    } catch {
+      return NextResponse.json(
+        { error: 'Format JSON invalide' },
         { status: 400 }
       )
     }
 
-    // 3. Validation de l'email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
+    // 6. Valider et sanitiser toutes les entrées
+    const validation = validateContactForm({
+      name: body.name as string,
+      email: body.email as string,
+      phone: body.phone as string | undefined,
+      company: body.company as string | undefined,
+      subject: body.subject as string,
+      message: body.message as string
+    })
+
+    if (!validation.isValid) {
+      // Log les tentatives d'injection potentielles
+      const errorString = validation.errors.join(', ')
+      if (errorString.includes('caractères non autorisés')) {
+        logSecurityEvent('sql_injection', clientIP, `Validation échouée: ${errorString}`)
+      }
+
       return NextResponse.json(
-        { error: 'Format d\'email invalide' },
+        { error: validation.errors[0], errors: validation.errors },
         { status: 400 }
       )
     }
 
-    // 4. Créer le client Supabase avec service role pour l'insertion publique
+    const sanitizedData = validation.sanitizedData!
+
+    // 7. Créer le client Supabase avec service role pour l'insertion publique
     const { createClient: createServiceClient } = await import('@supabase/supabase-js')
     const serviceClient = createServiceClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -329,18 +409,19 @@ export async function POST(request: NextRequest) {
       }
     )
 
-    // 5. Insérer le message dans la base de données
+    // 8. Insérer le message dans la base de données
     const { data, error: dbError } = await serviceClient
       .from('contact_messages')
       .insert([
         {
-          name: name.trim(),
-          email: email.trim().toLowerCase(),
-          phone: body.phone?.trim() || null,
-          company: body.company?.trim() || null,
-          subject: subject.trim(),
-          message: message.trim(),
-          status: 'new'
+          name: sanitizedData.name,
+          email: sanitizedData.email,
+          phone: sanitizedData.phone,
+          company: sanitizedData.company,
+          subject: sanitizedData.subject,
+          message: sanitizedData.message,
+          status: 'new',
+          ip_address: clientIP // Stocke l'IP pour l'audit
         }
       ])
       .select()
@@ -354,20 +435,23 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 6. Envoyer les emails (notification à l'équipe + confirmation au visiteur)
+    // 9. Envoyer les emails (notification à l'équipe + confirmation au visiteur)
     if (process.env.RESEND_API_KEY) {
       try {
         const { Resend } = await import('resend')
         const resend = new Resend(process.env.RESEND_API_KEY)
 
         const contactData: ContactFormData = {
-          name: name.trim(),
-          email: email.trim(),
-          phone: body.phone?.trim(),
-          company: body.company?.trim(),
-          subject: subject.trim(),
-          message: message.trim(),
+          name: sanitizedData.name,
+          email: sanitizedData.email,
+          phone: sanitizedData.phone,
+          company: sanitizedData.company,
+          subject: sanitizedData.subject,
+          message: sanitizedData.message,
         }
+
+        // Sanitiser le sujet pour l'en-tête email
+        const safeSubjectHeader = sanitizeEmailHeader(sanitizedData.subject)
 
         // Envoyer 3 emails en parallèle
         const [notificationResult, webhookCopyResult, confirmationResult] = await Promise.allSettled([
@@ -375,23 +459,23 @@ export async function POST(request: NextRequest) {
           resend.emails.send({
             from: process.env.FROM_EMAIL || 'Odillon <noreply@support.odillon.fr>',
             to: process.env.CONTACT_EMAIL || 'contact@odillon.fr',
-            replyTo: email,
-            subject: `[Contact Site Web] ${subject.trim()}`,
+            replyTo: sanitizedData.email,
+            subject: `[Contact Site Web] ${safeSubjectHeader}`,
             html: generateNotificationEmailHTML(contactData, data.id),
           }),
           // 2. Copie à support@odillon.fr (Resend - pour déclencher le webhook)
           process.env.SUPPORT_EMAIL ? resend.emails.send({
             from: process.env.FROM_EMAIL || 'Odillon <noreply@support.odillon.fr>',
             to: process.env.SUPPORT_EMAIL,
-            replyTo: email,
-            subject: `[Contact Site Web] ${subject.trim()}`,
+            replyTo: sanitizedData.email,
+            subject: `[Contact Site Web] ${safeSubjectHeader}`,
             html: generateNotificationEmailHTML(contactData, data.id),
           }) : Promise.resolve({ data: null }),
           // 3. Email de confirmation au visiteur
           resend.emails.send({
             from: process.env.FROM_EMAIL || 'Odillon <noreply@support.odillon.fr>',
-            to: email.trim(),
-            subject: `Confirmation de réception - ${subject.trim()}`,
+            to: sanitizedData.email,
+            subject: `Confirmation de réception - ${safeSubjectHeader}`,
             html: generateConfirmationEmailHTML(contactData),
           }),
         ])
@@ -418,8 +502,8 @@ export async function POST(request: NextRequest) {
                 contact_message_id: data.id,
                 from_email: (process.env.FROM_EMAIL || 'noreply@odillon.fr').match(/<(.+)>/)?.[1] || 'noreply@odillon.fr',
                 from_name: 'Cabinet Odillon',
-                to_email: email.trim().toLowerCase(),
-                subject: `Confirmation de réception - ${subject.trim()}`,
+                to_email: sanitizedData.email,
+                subject: `Confirmation de réception - ${safeSubjectHeader}`,
                 body_html: generateConfirmationEmailHTML(contactData),
                 resend_email_id: confirmationResult.value.data?.id || null,
                 direction: 'outbound'
@@ -443,14 +527,19 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 7. Retourner la réponse de succès
+    // 10. Retourner la réponse de succès
     return NextResponse.json(
       {
         success: true,
         message: 'Votre message a été envoyé avec succès. Nous vous recontacterons rapidement.',
         id: data.id
       },
-      { status: 201 }
+      {
+        status: 201,
+        headers: {
+          'X-RateLimit-Remaining': rateLimitResult.remaining.toString()
+        }
+      }
     )
 
   } catch (error: unknown) {
@@ -477,25 +566,48 @@ export async function GET(request: NextRequest) {
 
   const { searchParams } = new URL(request.url)
   const status = searchParams.get('status')
-  const limit = searchParams.get('limit')
+  const limitParam = searchParams.get('limit')
+
+  // Valider le paramètre limit
+  let limit = 50 // valeur par défaut
+  if (limitParam) {
+    const parsedLimit = parseInt(limitParam)
+    if (isNaN(parsedLimit) || parsedLimit < 1 || parsedLimit > 100) {
+      return NextResponse.json(
+        { error: 'Le paramètre limit doit être un nombre entre 1 et 100' },
+        { status: 400 }
+      )
+    }
+    limit = parsedLimit
+  }
+
+  // Valider le paramètre status
+  const validStatuses = ['new', 'read', 'replied', 'archived']
+  if (status && !validStatuses.includes(status)) {
+    return NextResponse.json(
+      { error: `Statut invalide. Valeurs acceptées: ${validStatuses.join(', ')}` },
+      { status: 400 }
+    )
+  }
 
   let query = supabase
     .from('contact_messages')
     .select('*')
     .order('created_at', { ascending: false })
+    .limit(limit)
 
   if (status) {
     query = query.eq('status', status)
   }
 
-  if (limit) {
-    query = query.limit(parseInt(limit))
-  }
-
   const { data, error } = await query
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Erreur lors de la récupération des messages:', error)
+    return NextResponse.json(
+      { error: 'Erreur lors de la récupération des messages' },
+      { status: 500 }
+    )
   }
 
   return NextResponse.json({ messages: data })
