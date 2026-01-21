@@ -17,7 +17,8 @@ import {
   Sparkles,
   Users,
   Target,
-  LayoutDashboard
+  LayoutDashboard,
+  Mail
 } from "lucide-react"
 import { AdminSidebar } from "@/components/admin/admin-sidebar"
 import {
@@ -50,6 +51,7 @@ import { TeamTab } from "@/components/admin/tabs/TeamTab"
 import { AboutTab } from "@/components/admin/tabs/AboutTab"
 import { ArticlesTab } from "@/components/admin/tabs/ArticlesTab"
 import { NewsletterTab } from "@/components/admin/tabs/NewsletterTab"
+import { MessagesTab } from "@/components/admin/tabs/MessagesTab"
 
 export default function AdminPhotosPage() {
   const router = useRouter()
@@ -61,7 +63,8 @@ export default function AdminPhotosPage() {
     photos: 0,
     team: 0,
     testimonials: 0,
-    logos: 0
+    logos: 0,
+    messages: 0
   })
 
   // Fetch Dashboard Stats
@@ -73,12 +76,14 @@ export default function AdminPhotosPage() {
       const { count: teamCount } = await supabase.from('team_members').select('*', { count: 'exact', head: true })
       const { count: testimonialsCount } = await supabase.from('testimonials').select('*', { count: 'exact', head: true })
       const { count: logosCount } = await supabase.from('company_logos').select('*', { count: 'exact', head: true })
+      const { count: messagesCount } = await supabase.from('contact_messages').select('*', { count: 'exact', head: true }).eq('status', 'new')
 
       setDashboardStats({
         photos: photosCount || 0,
         team: teamCount || 0,
         testimonials: testimonialsCount || 0,
-        logos: logosCount || 0
+        logos: logosCount || 0,
+        messages: messagesCount || 0
       })
     }
 
@@ -139,7 +144,8 @@ export default function AdminPhotosPage() {
       calendar: "Calendrier",
       "expertise-cta": "Expertise CTA",
       settings: "Paramètres",
-      newsletter: "Newsletter"
+      newsletter: "Newsletter",
+      messages: "Messages"
     }
     return labels[val] || val
   }
@@ -187,7 +193,8 @@ export default function AdminPhotosPage() {
                 <p className="text-gray-500">Aperçu rapide de l'activité du site.</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                <StatCard title="Messages non lus" value={dashboardStats.messages} icon={Mail} color="bg-red-500" />
                 <StatCard title="Photos en ligne" value={dashboardStats.photos} icon={ImageIcon} color="bg-blue-500" />
                 <StatCard title="Membres de l'équipe" value={dashboardStats.team} icon={Users} color="bg-teal-500" />
                 <StatCard title="Témoignages" value={dashboardStats.testimonials} icon={Quote} color="bg-orange-500" />
@@ -232,6 +239,7 @@ export default function AdminPhotosPage() {
             {activeTab === 'team' && <TeamTab />}
             {activeTab === 'about' && <AboutTab />}
             {activeTab === 'newsletter' && <NewsletterTab />}
+            {activeTab === 'messages' && <MessagesTab />}
           </div>
         </div>
       </SidebarInset>
