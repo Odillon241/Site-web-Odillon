@@ -528,46 +528,204 @@ export async function verifyWebhookSignature(
 // LOGGING DE SÉCURITÉ
 // ============================================================================
 
+export type SecurityEventType =
+  | 'sql_injection'
+  | 'email_header_injection'
+  | 'rate_limit'
+  | 'origin_blocked'
+  | 'webhook_invalid'
+  | 'auth_failure'
+  | 'suspicious_activity'
+
+export type SecuritySeverity = 'low' | 'medium' | 'high' | 'critical'
+
 interface SecurityLogEntry {
   timestamp: string
-  type: 'sql_injection' | 'email_header_injection' | 'rate_limit' | 'origin_blocked' | 'webhook_invalid'
+  type: SecurityEventType
   ip: string
   details: string
+  severity?: SecuritySeverity
+  userAgent?: string
+  requestPath?: string
+  requestMethod?: string
+  metadata?: Record<string, unknown>
 }
 
-// En production, cela devrait aller dans une base de données ou un service de logging
+// In-memory fallback (for when database is unavailable)
 const securityLogs: SecurityLogEntry[] = []
 const MAX_LOGS = 1000
 
+// Severity mapping for event types
+const EVENT_SEVERITY_MAP: Record<SecurityEventType, SecuritySeverity> = {
+  sql_injection: 'critical',
+  email_header_injection: 'high',
+  rate_limit: 'medium',
+  origin_blocked: 'medium',
+  webhook_invalid: 'high',
+  auth_failure: 'medium',
+  suspicious_activity: 'high',
+}
+
 /**
- * Enregistre un événement de sécurité
+ * Enregistre un événement de sécurité (in-memory + database)
+ * @param type - Type d'événement de sécurité
+ * @param ip - Adresse IP du client
+ * @param details - Détails de l'événement
+ * @param options - Options additionnelles (userAgent, requestPath, etc.)
  */
-export function logSecurityEvent(
-  type: SecurityLogEntry['type'],
+export async function logSecurityEvent(
+  type: SecurityEventType,
   ip: string,
-  details: string
-) {
+  details: string,
+  options?: {
+    userAgent?: string
+    requestPath?: string
+    requestMethod?: string
+    severity?: SecuritySeverity
+    metadata?: Record<string, unknown>
+  }
+): Promise<void> {
+  const severity = options?.severity || EVENT_SEVERITY_MAP[type] || 'medium'
+
   const entry: SecurityLogEntry = {
     timestamp: new Date().toISOString(),
     type,
     ip,
-    details: details.substring(0, 500) // Limiter la taille
+    details: details.substring(0, 500),
+    severity,
+    userAgent: options?.userAgent,
+    requestPath: options?.requestPath,
+    requestMethod: options?.requestMethod,
+    metadata: options?.metadata,
   }
 
+  // Always log to memory (fast, immediate)
   securityLogs.push(entry)
-
-  // Rotation des logs
   if (securityLogs.length > MAX_LOGS) {
     securityLogs.shift()
   }
 
-  // Log en console pour le monitoring
-  console.warn(`[SECURITY] ${type}`, entry)
+  // Console warning for immediate visibility
+  console.warn(`[SECURITY] [${severity.toUpperCase()}] ${type}`, {
+    ip,
+    details: entry.details,
+    path: options?.requestPath,
+  })
+
+  // Persist to database (async, non-blocking)
+  persistSecurityLog(entry).catch((error) => {
+    console.error('[SECURITY] Failed to persist security log to database:', error)
+  })
 }
 
 /**
- * Récupère les derniers événements de sécurité (pour l'admin)
+ * Persists a security log entry to the database
+ */
+async function persistSecurityLog(entry: SecurityLogEntry): Promise<void> {
+  // Check if we have the required environment variables
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    // Skip database persistence if not configured
+    return
+  }
+
+  try {
+    const { createClient } = await import('@supabase/supabase-js')
+    const supabase = createClient(supabaseUrl, serviceRoleKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    })
+
+    await supabase.from('security_logs').insert({
+      event_type: entry.type,
+      ip_address: entry.ip,
+      details: entry.details,
+      severity: entry.severity || 'medium',
+      user_agent: entry.userAgent,
+      request_path: entry.requestPath,
+      request_method: entry.requestMethod,
+      metadata: entry.metadata || {},
+    })
+  } catch {
+    // Silently fail - we don't want logging to break the application
+    // The in-memory log is still available
+  }
+}
+
+/**
+ * Récupère les derniers événements de sécurité (in-memory, pour backward compatibility)
  */
 export function getSecurityLogs(limit: number = 100): SecurityLogEntry[] {
   return securityLogs.slice(-limit)
+}
+
+/**
+ * Récupère les logs de sécurité depuis la base de données
+ * @param options - Options de filtrage
+ */
+export async function getSecurityLogsFromDatabase(options?: {
+  limit?: number
+  eventType?: SecurityEventType
+  severity?: SecuritySeverity
+  since?: Date
+}): Promise<SecurityLogEntry[]> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    // Fall back to in-memory logs
+    return getSecurityLogs(options?.limit)
+  }
+
+  try {
+    const { createClient } = await import('@supabase/supabase-js')
+    const supabase = createClient(supabaseUrl, serviceRoleKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    })
+
+    let query = supabase
+      .from('security_logs')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(options?.limit || 100)
+
+    if (options?.eventType) {
+      query = query.eq('event_type', options.eventType)
+    }
+    if (options?.severity) {
+      query = query.eq('severity', options.severity)
+    }
+    if (options?.since) {
+      query = query.gte('created_at', options.since.toISOString())
+    }
+
+    const { data, error } = await query
+
+    if (error) {
+      console.error('[SECURITY] Failed to fetch logs from database:', error)
+      return getSecurityLogs(options?.limit)
+    }
+
+    return (data || []).map((row) => ({
+      timestamp: row.created_at,
+      type: row.event_type as SecurityEventType,
+      ip: row.ip_address,
+      details: row.details,
+      severity: row.severity as SecuritySeverity,
+      userAgent: row.user_agent,
+      requestPath: row.request_path,
+      requestMethod: row.request_method,
+      metadata: row.metadata,
+    }))
+  } catch {
+    // Fall back to in-memory logs
+    return getSecurityLogs(options?.limit)
+  }
 }

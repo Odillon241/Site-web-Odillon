@@ -161,16 +161,34 @@ export async function POST(request: NextRequest) {
     // 3. Vérification de sécurité - Signature Svix
     const headersList = await headers()
     const webhookSecret = process.env.RESEND_WEBHOOK_SECRET
+    const isProduction = process.env.NODE_ENV === 'production'
+
+    // En production, le secret webhook est OBLIGATOIRE
+    if (isProduction && !webhookSecret) {
+      console.error('[SECURITY] CRITICAL: RESEND_WEBHOOK_SECRET not configured in production!')
+      logSecurityEvent('webhook_invalid', clientIP, 'Webhook secret not configured in production - request rejected')
+      return NextResponse.json(
+        { error: 'Webhook security not configured' },
+        { status: 500 }
+      )
+    }
 
     if (webhookSecret) {
       const svixId = headersList.get('svix-id')
       const svixTimestamp = headersList.get('svix-timestamp')
       const svixSignature = headersList.get('svix-signature')
 
+      // Vérifier que les headers de signature sont présents
+      if (!svixTimestamp || !svixSignature) {
+        logSecurityEvent('webhook_invalid', clientIP, 'Missing Svix signature headers')
+        return NextResponse.json(
+          { error: 'Missing webhook signature headers' },
+          { status: 401 }
+        )
+      }
+
       // Construire la signature complète
-      const fullSignature = svixTimestamp && svixSignature
-        ? `t=${svixTimestamp},${svixSignature}`
-        : null
+      const fullSignature = `t=${svixTimestamp},${svixSignature}`
 
       const isValid = await verifyWebhookSignature(rawBody, fullSignature, webhookSecret)
 
@@ -182,8 +200,8 @@ export async function POST(request: NextRequest) {
         )
       }
     } else {
-      // En production, la signature devrait être obligatoire
-      console.warn('[SECURITY] RESEND_WEBHOOK_SECRET non configuré - webhook non vérifié')
+      // En développement uniquement - avertissement
+      console.warn('[SECURITY] RESEND_WEBHOOK_SECRET non configuré - webhook non vérifié (dev mode only)')
     }
 
     // 4. Parser le body
