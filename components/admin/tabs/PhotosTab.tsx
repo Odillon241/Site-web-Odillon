@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, useCallback } from "react"
+import { AnimatePresence, m } from "framer-motion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -31,7 +32,7 @@ import {
 import { StackedCardsInteraction } from "@/components/ui/stacked-cards-interaction"
 import { BlurFade } from "@/components/magicui/blur-fade"
 
-import { Loader2, Plus, Search, Trash2, Eye, EyeOff, Camera, Filter, ImageIcon, CalendarDays, RefreshCw, UploadCloud, X, ArrowLeft, Edit, FolderEdit, Save, Crop } from "lucide-react"
+import { Loader2, Plus, Search, Trash2, Eye, EyeOff, Camera, Filter, ImageIcon, CalendarDays, RefreshCw, UploadCloud, X, ArrowLeft, Edit, FolderEdit, Save, Crop, MapPin } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Photo } from "@/types/admin"
@@ -97,6 +98,7 @@ export function PhotosTab() {
     const [isSheetOpen, setIsSheetOpen] = useState(false)
     const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null)
     const [isDragging, setIsDragging] = useState(false)
+    const [selectedPhotoForPreview, setSelectedPhotoForPreview] = useState<Photo | null>(null)
 
     // Edit States
     const [editingPhoto, setEditingPhoto] = useState<Photo | null>(null)
@@ -983,7 +985,10 @@ export function PhotosTab() {
                                                 }`}
                                         >
                                             {/* Image Container */}
-                                            <div className="aspect-[4/3] relative overflow-hidden bg-gray-200">
+                                            <div
+                                                className="aspect-[4/3] relative overflow-hidden bg-gray-200 cursor-pointer"
+                                                onClick={() => setSelectedPhotoForPreview(photo)}
+                                            >
                                                 <img
                                                     src={photo.url}
                                                     alt={photo.description}
@@ -1247,6 +1252,88 @@ export function PhotosTab() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* PHOTO PREVIEW LIGHTBOX */}
+            <AnimatePresence>
+                {selectedPhotoForPreview && (
+                    <div className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-sm flex items-center justify-center p-8">
+                        {/* Close Button */}
+                        <button
+                            className="absolute top-6 right-6 z-[100002] text-white/80 hover:text-white hover:bg-white/10 rounded-full w-12 h-12 flex items-center justify-center transition-all"
+                            onClick={() => setSelectedPhotoForPreview(null)}
+                            type="button"
+                        >
+                            <X className="w-6 h-6" />
+                        </button>
+
+                        {/* Centered Content */}
+                        <m.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            transition={{ duration: 0.2 }}
+                            className="relative max-w-7xl w-full max-h-full flex flex-col"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Image */}
+                            <div className="relative flex-1 flex items-center justify-center mb-6">
+                                <img
+                                    src={selectedPhotoForPreview.url}
+                                    alt={selectedPhotoForPreview.description}
+                                    className="max-h-[calc(100vh-250px)] max-w-full object-contain rounded-lg shadow-2xl"
+                                    draggable={false}
+                                />
+                            </div>
+
+                            {/* Info Card */}
+                            <div className="bg-white/10 backdrop-blur-xl rounded-xl p-6 border border-white/20">
+                                <div className="flex items-start justify-between gap-4">
+                                    <div className="flex-1 space-y-3">
+                                        <div className="flex items-center gap-3">
+                                            <h3 className="text-white font-bold text-xl">{selectedPhotoForPreview.description}</h3>
+                                            <Badge variant={selectedPhotoForPreview.is_active ? "default" : "secondary"} className="bg-green-500/90 hover:bg-green-600">
+                                                {selectedPhotoForPreview.is_active ? "Active" : "Masquée"}
+                                            </Badge>
+                                        </div>
+
+                                        <div className="flex flex-wrap items-center gap-4 text-white/70 text-sm">
+                                            {selectedPhotoForPreview.location && (
+                                                <div className="flex items-center gap-2">
+                                                    <MapPin className="w-4 h-4" />
+                                                    <span>{selectedPhotoForPreview.location}</span>
+                                                </div>
+                                            )}
+                                            {selectedPhotoForPreview.month && (
+                                                <div className="flex items-center gap-2">
+                                                    <CalendarDays className="w-4 h-4" />
+                                                    <span>{["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"][selectedPhotoForPreview.month - 1]}</span>
+                                                </div>
+                                            )}
+                                            {selectedPhotoForPreview.activity_type && (
+                                                <Badge variant="outline" className="text-white/80 border-white/30">
+                                                    {selectedPhotoForPreview.activity_type}
+                                                </Badge>
+                                            )}
+                                        </div>
+
+                                        {selectedPhotoForPreview.details && (
+                                            <p className="text-white/80 text-sm leading-relaxed">
+                                                {selectedPhotoForPreview.details}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </m.div>
+
+                        {/* Background Overlay Click to Close */}
+                        <div
+                            className="absolute inset-0 -z-10"
+                            onClick={() => setSelectedPhotoForPreview(null)}
+                        />
+                    </div>
+                )}
+            </AnimatePresence>
 
         </div >
     )

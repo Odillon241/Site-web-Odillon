@@ -45,13 +45,13 @@ export function BlogHome({ articles }: { articles: Article[] }) {
                 <div className="text-center mb-16">
                     <BlurFade delay={0.1}>
                         <Badge variant="odillon" className="mb-4">
-                            Actualités
+                            Ressources
                         </Badge>
                         <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-petrov-sans">
-                            Nos dernières <span className="text-odillon-teal">publications</span>
+                            Notre sélection <span className="text-odillon-teal">d'articles</span>
                         </h2>
                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                            Restez informés des tendances et bonnes pratiques en stratégie d'entreprise.
+                            Découvrez les articles que nous vous recommandons sur la stratégie d'entreprise.
                         </p>
                     </BlurFade>
                 </div>

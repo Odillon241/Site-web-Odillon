@@ -2,7 +2,6 @@ import { use } from "react"
 import { HeaderPro } from "@/components/layout/header-pro"
 import { Footer } from "@/components/layout/footer"
 import { Contact } from "@/components/sections/contact"
-import { ScrollProgress } from "@/components/magicui/scroll-progress"
 import { ScrollToTop } from "@/components/magicui/scroll-to-top"
 
 export default function ContactPage({
@@ -17,7 +16,6 @@ export default function ContactPage({
   use(searchParams)
   return (
     <>
-      <ScrollProgress />
       <ScrollToTop />
       <HeaderPro />
       <main className="min-h-screen pt-[88px]">

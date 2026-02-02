@@ -65,7 +65,7 @@ export function HeaderPro() {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-[60] transition-all duration-300",
         isScrolled
           ? "bg-background/60 backdrop-blur-2xl border-b border-gray-200/30"
           : "bg-background/70 backdrop-blur-xl border-b border-white/10"

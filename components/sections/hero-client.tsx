@@ -1,17 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
 import { FadeIn } from "@/components/magicui/fade-in"
-import { BlurFade } from "@/components/magicui/blur-fade"
-import { ArrowRight, Shield, TrendingUp, Users, Award } from "lucide-react"
-import Link from "next/link"
-import { m } from "framer-motion"
 import { BackgroundSlideshow } from "@/components/ui/background-slideshow"
 import { AnimatedSlogan } from "@/components/magicui/animated-slogan"
-import { WordPullUp } from "@/components/magicui/word-pull-up"
 import { FlipWords } from "@/components/magicui/flip-words"
-import { TextReveal } from "@/components/magicui/text-reveal"
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/marquee"
 import Image from "next/image"
 import { CompanyLogo, Video } from "@/types/admin"
@@ -58,7 +51,7 @@ function LogoItem({ company }: { company: CompanyLogo }) {
 
 export function HeroClient({ images, logos, video }: HeroClientProps) {
   return (
-    <section id="accueil" className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-transparent">
+    <section id="accueil" className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-transparent">
       {/* Background Layer */}
       {images.length > 0 ? (
         <div className="absolute inset-0 z-0">
@@ -67,19 +60,19 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
             interval={6000}
           />
           {/* Enhanced Overlay for text readability - darker/more premium */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 z-[1]" />
-          <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px] z-[1]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/65 z-[1]" />
+          <div className="absolute inset-0 bg-black/15 backdrop-blur-[1px] z-[1]" />
         </div>
       ) : (
         <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-900 to-gray-800" />
       )}
 
       {/* Content Container */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-12">
 
         {/* Main Headline - With FlipWords */}
         <FadeIn delay={0.2}>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 md:mb-8 font-petrov-sans drop-shadow-lg">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white mb-12 md:mb-16 font-petrov-sans drop-shadow-lg">
             Structurer pour{" "}
             <span className="text-odillon-lime">
               <FlipWords
@@ -93,45 +86,11 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
           </h1>
         </FadeIn>
 
-        {/* Subtitle - More readable */}
-        <FadeIn delay={0.5}>
-          <TextReveal
-            text="Cabinet de conseil en stratégie et organisation."
-            className="text-lg sm:text-xl md:text-2xl text-gray-200 leading-relaxed max-w-3xl mx-auto mb-10 md:mb-12 font-light justify-center"
-            delay={0.3}
-          />
-        </FadeIn>
-
-        {/* CTA Buttons - Centered and Premium */}
-        <FadeIn delay={0.4}>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button
-              asChild
-              size="lg"
-              className="bg-odillon-teal hover:bg-odillon-teal/90 text-white text-lg px-8 py-6 rounded-full shadow-lg shadow-odillon-teal/20 transition-all hover:scale-105"
-            >
-              <Link href="#contact">
-                Discuter de votre projet
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="bg-white/5 border-white/30 text-white hover:bg-white hover:text-odillon-dark text-lg px-8 py-6 rounded-full backpack-blur-sm transition-all"
-            >
-              <Link href="#services">
-                Découvrir nos services
-              </Link>
-            </Button>
-          </div>
-        </FadeIn>
 
         {/* Hero Video - Displayed prominently if available */}
         {video && (
-          <FadeIn delay={0.5}>
-            <div className="mt-10 md:mt-14 mx-auto max-w-4xl">
+          <FadeIn delay={0.4}>
+            <div className="mx-auto max-w-5xl">
               <div className="rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 backdrop-blur-sm bg-black/20">
                 <VideoPlayer
                   url={video.url}
@@ -155,9 +114,9 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
         )}
 
         {/* Footer Tagline - Future Vision */}
-        <FadeIn delay={0.6}>
-          <div className="mt-10 md:mt-12 pt-6 border-t border-white/10">
-            <div className="relative w-full flex items-center justify-center min-h-[80px] mb-6">
+        <FadeIn delay={0.5}>
+          <div className="mt-14 md:mt-16 pt-8 border-t border-white/15">
+            <div className="relative w-full flex items-center justify-center min-h-[90px] mb-8">
               <AnimatedSlogan
                 text="Together we the future"
                 iconPosition={2}

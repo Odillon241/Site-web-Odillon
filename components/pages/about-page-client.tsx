@@ -3,7 +3,6 @@
 import { HeaderPro } from "@/components/layout/header-pro"
 import { Footer } from "@/components/layout/footer"
 import { AboutDetailed } from "@/components/sections/about-detailed"
-import { ScrollProgress } from "@/components/magicui/scroll-progress"
 import { ScrollToTop } from "@/components/magicui/scroll-to-top"
 import { InteractiveGridPattern } from "@/components/ui/shadcn-io/interactive-grid-pattern"
 

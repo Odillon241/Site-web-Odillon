@@ -65,12 +65,12 @@ export function FaqHome() {
                 {/* FAQ Accordion */}
                 <BlurFade delay={0.2}>
                     <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-                        <Accordion type="single" collapsible className="divide-y divide-gray-100">
+                        <Accordion type="single" collapsible className="divide-y divide-gray-200">
                             {faqItems.map((item, idx) => (
                                 <AccordionItem
                                     key={idx}
                                     value={`item-${idx}`}
-                                    className="border-none px-6 md:px-8"
+                                    className="px-6 md:px-8"
                                 >
                                     <AccordionTrigger className="py-6 text-left text-base md:text-lg font-semibold text-gray-900 hover:text-odillon-teal hover:no-underline transition-colors">
                                         {item.question}

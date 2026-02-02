@@ -187,22 +187,14 @@
   animation: writingLine 1.5s ease-in-out infinite;
 }
 
-/* Scrollbar personnalisée subtile */
+/* Hide scrollbar but keep scroll functionality */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  display: none;
 }
 
-::-webkit-scrollbar-track {
-  @apply bg-transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-odillon-teal/20 rounded-full;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-odillon-teal/40;
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 /* Smooth scroll */

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { X, Calendar, MapPin, Search, ChevronRight, SortAsc, GraduationCap, Users2, Rocket, Lightbulb, Sparkles, LayoutGrid } from "lucide-react";
+import { X, Calendar, MapPin, Search, GraduationCap, Users2, Rocket, Lightbulb, Sparkles, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -90,8 +90,6 @@ const AlbumCard: React.FC<{
 
   const description = [
     (album.coverPhoto.details || "Pas de description"),
-    album.date,
-    album.location,
     `${album.photos.length} photos`
   ].filter(Boolean).join(" • ");
 
@@ -128,6 +126,22 @@ const AlbumCard: React.FC<{
           spreadDistance={20}
           rotationAngle={5}
         />
+
+        {/* Date and Location Badges */}
+        <div className="absolute bottom-3 left-3 right-3 z-20 flex flex-wrap gap-2 pointer-events-none">
+          {album.date && (
+            <Badge className="bg-white/95 text-gray-700 border border-gray-200 shadow-sm backdrop-blur-sm">
+              <Calendar className="w-3 h-3 mr-1" />
+              {album.date}
+            </Badge>
+          )}
+          {album.location && (
+            <Badge className="bg-white/95 text-gray-700 border border-gray-200 shadow-sm backdrop-blur-sm">
+              <MapPin className="w-3 h-3 mr-1" />
+              {album.location}
+            </Badge>
+          )}
+        </div>
       </div>
     </BlurFade>
   );
@@ -259,41 +273,33 @@ export default function PhotothequePage() {
               </p>
             </FadeIn>
 
-            {/* Structured Categories (Rubriques) */}
-            <FadeIn delay={0.2} className="max-w-5xl mx-auto space-y-12">
-              {/* Minimal Search at the top */}
-              <div className="relative max-w-md mx-auto group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-odillon-teal transition-colors" />
-                <Input
-                  placeholder="Rechercher par nom d'événement..."
-                  className="pl-11 bg-white/50 border-gray-100 focus:bg-white transition-all rounded-full h-12 shadow-sm focus:shadow-md"
-                  value={filters.search}
-                  onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-                />
-              </div>
-
-              {/* Activity Categories Section */}
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                    <span className="w-8 h-8 rounded-lg bg-odillon-lime/10 flex items-center justify-center">
-                      <ChevronRight className="w-4 h-4 text-odillon-lime-dark" />
-                    </span>
-                    Explorer par Activité
-                  </h2>
+            {/* Search and Filters */}
+            <FadeIn delay={0.2} className="max-w-6xl mx-auto">
+              <div className="flex flex-col md:flex-row items-center gap-4">
+                {/* Search Bar */}
+                <div className="relative w-full md:w-96 group">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-odillon-teal transition-colors" />
+                  <Input
+                    placeholder="Rechercher par nom d'événement..."
+                    className="pl-11 bg-white/80 border-gray-200 focus:bg-white transition-all rounded-full h-11 shadow-sm focus:shadow-md focus:border-odillon-teal/50"
+                    value={filters.search}
+                    onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                  />
                 </div>
-                <div className="flex flex-wrap justify-center gap-3">
+
+                {/* Activity Filters - Compact */}
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     onClick={() => setFilters(prev => ({ ...prev, category: null }))}
                     className={cn(
-                      "px-6 py-4 rounded-2xl text-sm font-semibold transition-all border flex items-center gap-2 shadow-sm",
+                      "px-4 py-2 rounded-full text-xs font-medium transition-all border flex items-center gap-1.5",
                       filters.category === null
-                        ? "bg-gray-900 border-gray-900 text-white scale-105"
-                        : "bg-white border-gray-100 text-gray-600 hover:border-odillon-teal/30 hover:shadow-md"
+                        ? "bg-gray-900 border-gray-900 text-white"
+                        : "bg-white/80 border-gray-200 text-gray-600 hover:border-odillon-teal/40 hover:bg-white"
                     )}
                   >
-                    <LayoutGrid className="w-5 h-5" />
-                    Tout voir
+                    <LayoutGrid className="w-3.5 h-3.5" />
+                    Tout
                   </button>
                   {activityOptions.map(activity => {
                     const Icon = activity.icon;
@@ -302,13 +308,13 @@ export default function PhotothequePage() {
                         key={activity.id}
                         onClick={() => setFilters(prev => ({ ...prev, category: prev.category === activity.label ? null : activity.label }))}
                         className={cn(
-                          "px-6 py-4 rounded-2xl text-sm font-semibold transition-all border flex items-center gap-2 shadow-sm",
+                          "px-4 py-2 rounded-full text-xs font-medium transition-all border flex items-center gap-1.5",
                           filters.category === activity.label
-                            ? "bg-odillon-teal border-odillon-teal text-white scale-105 shadow-lg"
-                            : "bg-white border-gray-100 text-gray-600 hover:border-odillon-teal/30 hover:shadow-md"
+                            ? "bg-odillon-teal border-odillon-teal text-white"
+                            : "bg-white/80 border-gray-200 text-gray-600 hover:border-odillon-teal/40 hover:bg-white"
                         )}
                       >
-                        <Icon className="w-5 h-5 opacity-80" />
+                        <Icon className="w-3.5 h-3.5" />
                         {activity.label}
                       </button>
                     );
@@ -424,60 +430,76 @@ export default function PhotothequePage() {
               </div>
             </>
           )}
-          {/* Lightbox moved inside Dialog to share Portal context */}
-          <AnimatePresence>
-            {selectedPhoto && (
-              <m.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-xl flex items-center justify-center"
-                onClick={() => setSelectedPhoto(null)}
-              >
-                {/* Close Button - High Z-index */}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-4 right-4 z-[10000] text-white/70 hover:text-white hover:bg-white/10 rounded-full w-12 h-12"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedPhoto(null);
-                  }}
-                >
-                  <X className="w-6 h-6" />
-                </Button>
-
-                <div className="relative w-full h-full flex flex-col items-center justify-center pb-20 p-4">
-                  <m.img
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    src={selectedPhoto.url}
-                    alt={selectedPhoto.description}
-                    className="max-h-full max-w-full w-auto h-auto object-contain rounded-lg shadow-2xl"
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                </div>
-
-                {/* Blurred Bottom Bar */}
-                <div
-                  className="absolute bottom-0 inset-x-0 z-[10000] p-6 bg-black/60 backdrop-blur-md border-t border-white/10 flex flex-col items-center text-center"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <h3 className="text-white font-semibold text-lg">{selectedPhoto.description}</h3>
-                  {selectedPhoto.details && (
-                    <p className="text-white/80 text-sm mt-1 max-w-2xl leading-relaxed">
-                      {selectedPhoto.details}
-                    </p>
-                  )}
-                </div>
-              </m.div>
-            )}
-          </AnimatePresence>
         </DialogContent>
       </Dialog>
 
       {/* Lightbox */}
+      <AnimatePresence>
+        {selectedPhoto && (
+          <div className="fixed inset-0 z-[99999] bg-black" onClick={() => setSelectedPhoto(null)}>
+            {/* Close Button */}
+            <button
+              className="absolute top-6 right-6 z-[100002] text-white hover:bg-white/20 rounded-full w-14 h-14 flex items-center justify-center transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedPhoto(null);
+              }}
+              type="button"
+              style={{ pointerEvents: 'auto' }}
+            >
+              <X className="w-7 h-7" />
+            </button>
 
+            {/* Two Column Layout */}
+            <m.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex items-stretch h-full"
+            >
+              {/* Left: Image */}
+              <div className="flex-1 flex items-center justify-center p-8">
+                <img
+                  src={selectedPhoto.url}
+                  alt={selectedPhoto.description}
+                  className="max-h-full max-w-full object-contain"
+                  draggable={false}
+                  onClick={(e) => e.stopPropagation()}
+                  style={{ pointerEvents: 'auto' }}
+                />
+              </div>
+
+              {/* Right: Description */}
+              <div
+                className="w-[400px] bg-zinc-900 border-l border-zinc-800 flex flex-col overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+                style={{ pointerEvents: 'auto' }}
+              >
+                <div className="p-8 space-y-6">
+                  <div className="space-y-3">
+                    <h3 className="text-white font-bold text-2xl leading-tight">{selectedPhoto.description}</h3>
+                    {selectedPhoto.location && (
+                      <div className="flex items-center gap-2 text-white/70 text-sm">
+                        <MapPin className="w-4 h-4" />
+                        <span>{selectedPhoto.location}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {selectedPhoto.details && (
+                    <div className="pt-4 border-t border-zinc-800">
+                      <p className="text-white/80 text-base leading-relaxed">
+                        {selectedPhoto.details}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </m.div>
+          </div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
