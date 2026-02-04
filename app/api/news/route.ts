@@ -32,11 +32,11 @@ const RSS_FEEDS: RSSFeedConfig[] = [
     source: 'Jeune Afrique',
     category: 'afrique'
   },
-  // OHADA Legal
+  // Financial Times Africa (reliable source)
   {
-    url: 'https://www.ohada.com/feed/',
-    source: 'OHADA.com',
-    category: 'juridique'
+    url: 'https://www.ft.com/africa?format=rss',
+    source: 'Financial Times',
+    category: 'finance'
   }
 ]
 
@@ -69,6 +69,22 @@ function parseRSSItem(itemXml: string): { title: string; link: string; pubDate: 
     return { title, link, pubDate, description }
   } catch {
     return null
+  }
+}
+
+// Safely parse date string, returns current date if invalid
+function safeParseDate(dateString: string | null | undefined): string {
+  if (!dateString) return new Date().toISOString()
+
+  try {
+    const date = new Date(dateString)
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return new Date().toISOString()
+    }
+    return date.toISOString()
+  } catch {
+    return new Date().toISOString()
   }
 }
 
@@ -111,7 +127,7 @@ async function fetchRSSFeed(config: RSSFeedConfig): Promise<NewsItem[]> {
           source: config.source,
           category,
           url: parsed.link,
-          publishedAt: parsed.pubDate ? new Date(parsed.pubDate).toISOString() : new Date().toISOString(),
+          publishedAt: safeParseDate(parsed.pubDate),
           summary: parsed.description ? cleanText(parsed.description).slice(0, 200) : undefined
         })
       }
