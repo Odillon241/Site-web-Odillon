@@ -25,7 +25,8 @@ import {
     LayoutDashboard,
     Newspaper,
     Mail,
-    MessageSquare
+    MessageSquare,
+    Rss
 } from "lucide-react"
 
 import {
@@ -85,6 +86,7 @@ export function AdminSidebar({
             items: [
                 { title: "Messages", icon: MessageSquare, value: "messages" },
                 { title: "Newsletter", icon: Mail, value: "newsletter" },
+                { title: "News Ticker", icon: Rss, value: "news" },
             ]
         },
         {

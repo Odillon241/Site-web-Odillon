@@ -42,7 +42,7 @@ export default async function BlogPage() {
     return (
         <>
             <HeaderPro />
-            <main className="min-h-screen pt-[88px] bg-gray-50/30">
+            <main className="min-h-screen pt-[148px] md:pt-[164px] bg-gray-50/30">
                 <BlogHero settings={settings} />
 
                 {/* Articles Grid */}

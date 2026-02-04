@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import { airFont } from "./fonts"
 import { MotionProvider } from "@/components/providers/motion-provider"
 import { Toaster } from "@/components/ui/sonner"
+import { GlobalNewsTicker } from "@/components/layout/global-news-ticker"
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.odillon.fr'),
@@ -54,6 +55,7 @@ export default function RootLayout({
         {/* Lightweight CSS gradient background - replaces heavy THREE.js LiquidEther */}
         <div className="animated-gradient-bg" />
         <MotionProvider>
+          <GlobalNewsTicker />
           {children}
           <Toaster />
         </MotionProvider>

@@ -250,9 +250,9 @@ export default function PhotothequePage() {
   return (
     <>
       <HeaderPro />
-      <main className="min-h-screen bg-transparent">
+      <main className="min-h-screen bg-transparent pt-[148px] md:pt-[164px]">
         {/* Modern Hero Section */}
-        <section className="relative pt-32 pb-20 overflow-hidden">
+        <section className="relative pt-16 pb-20 overflow-hidden">
           <div className="absolute inset-0 -z-10">
             <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-odillon-teal/10 rounded-full blur-[100px]" />
             <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-odillon-lime/10 rounded-full blur-[100px]" />

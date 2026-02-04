@@ -365,12 +365,12 @@ export function VideosTab() {
                 ...videoData,
                 type,
                 thumbnail,
-                // Convert empty strings to null for optional fields
-                page: formData.page || null,
-                section: formData.section || null,
+                // Convert empty strings and "none" to null for optional fields
+                page: formData.page && formData.page !== "none" ? formData.page : null,
+                section: formData.section && formData.section !== "none" ? formData.section : null,
                 presenter_name: formData.presenter_name || null,
                 presenter_position: formData.presenter_position || null,
-                activity_type: formData.activity_type || null
+                activity_type: formData.activity_type && formData.activity_type !== "none" ? formData.activity_type : null
             }
 
             const isEditing = !!editingVideo;
@@ -665,6 +665,7 @@ export function VideosTab() {
                                     <SelectContent>
                                         <SelectItem value="none">Aucune</SelectItem>
                                         <SelectItem value="Hero">Hero (Haut de page)</SelectItem>
+                                        <SelectItem value="MondayMotivation">Monday Motivation (Accueil)</SelectItem>
                                         <SelectItem value="Contenu">Contenu Principal</SelectItem>
                                         <SelectItem value="Sidebar">Barre Latérale</SelectItem>
                                         <SelectItem value="Footer">Pied de page</SelectItem>

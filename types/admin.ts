@@ -81,6 +81,33 @@ export interface SiteSettings {
     show_blog_banner: boolean
     blog_banner_image_url: string | null
     blog_banner_link: string | null
+    // News Ticker Settings
+    show_news_ticker: boolean
+    news_ticker_speed: number
+    news_auto_refresh: boolean
+    news_refresh_interval: number
     created_at: string
     updated_at: string
+}
+
+export interface NewsItem {
+    id: string
+    title: string
+    source: string
+    category: 'juridique' | 'finance' | 'rh' | 'gouvernance' | 'economie' | 'afrique'
+    url: string | null
+    published_at: string
+    summary: string | null
+    cached_at: string
+}
+
+export interface NewsCache {
+    id: string
+    title: string
+    source: string
+    category: string
+    url: string | null
+    published_at: string
+    summary: string | null
+    cached_at: string
 }

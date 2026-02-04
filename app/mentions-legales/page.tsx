@@ -8,10 +8,10 @@ import Link from "next/link"
 
 export default function MentionsLegalesPage() {
     return (
-        <main className="min-h-screen relative bg-slate-50/50">
+        <main className="min-h-screen relative bg-slate-50/50 pt-[148px] md:pt-[164px]">
             <HeaderPro />
 
-            <div className="mx-auto max-w-5xl px-6 py-32 lg:px-8">
+            <div className="mx-auto max-w-5xl px-6 py-16 lg:px-8">
                 {/* Hero Header */}
                 <FadeIn delay={0.1}>
                     <div className="text-center mb-16">

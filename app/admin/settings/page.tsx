@@ -52,6 +52,7 @@ import { AboutTab } from "@/components/admin/tabs/AboutTab"
 import { ArticlesTab } from "@/components/admin/tabs/ArticlesTab"
 import { NewsletterTab } from "@/components/admin/tabs/NewsletterTab"
 import { MessagesTab } from "@/components/admin/tabs/MessagesTab"
+import { NewsTab } from "@/components/admin/tabs/NewsTab"
 
 export default function AdminPhotosPage() {
   const router = useRouter()
@@ -145,7 +146,8 @@ export default function AdminPhotosPage() {
       "expertise-cta": "Expertise CTA",
       settings: "Paramètres",
       newsletter: "Newsletter",
-      messages: "Messages"
+      messages: "Messages",
+      news: "News Ticker"
     }
     return labels[val] || val
   }
@@ -240,6 +242,7 @@ export default function AdminPhotosPage() {
             {activeTab === 'about' && <AboutTab />}
             {activeTab === 'newsletter' && <NewsletterTab />}
             {activeTab === 'messages' && <MessagesTab />}
+            {activeTab === 'news' && <NewsTab />}
           </div>
         </div>
       </SidebarInset>

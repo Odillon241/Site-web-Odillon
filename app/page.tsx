@@ -7,6 +7,7 @@ import { ServicesHome } from "@/components/sections/services-home"
 import { ExpertiseHome } from "@/components/sections/expertise-home"
 import { CtaBanner } from "@/components/sections/cta-banner"
 import { VideoSection } from "@/components/sections/video-section"
+import { MondayMotivationSection } from "@/components/sections/monday-motivation-section"
 import { createClient } from "@/lib/supabase/server"
 
 // Lazy load components below the fold (not visible initially)
@@ -54,10 +55,6 @@ export default async function Home({
     .eq('is_active', true)
     .order('display_order', { ascending: true })
 
-    .select('*')
-    .eq('is_active', true)
-    .order('display_order', { ascending: true })
-
   // Fetch Homepage Video
   const { data: videosData } = await supabase
     .from('videos')
@@ -76,6 +73,8 @@ export default async function Home({
   const heroVideo = videosData?.find(v => v.page === 'Accueil' && v.section === 'Hero' && v.is_active) || null
   // Vidéo de contenu (pour la section vidéo séparée)
   const contentVideo = videosData?.find(v => v.page === 'Accueil' && v.section === 'Contenu' && v.is_active) || null
+  // Vidéo Monday Motivation (actualité de la semaine)
+  const mondayMotivationVideo = videosData?.find(v => v.page === 'Accueil' && v.section === 'MondayMotivation' && v.is_active) || null
 
   // Fetch site settings for CTA
   const { data: requestSettings } = await supabase
@@ -89,8 +88,9 @@ export default async function Home({
     <>
       <ScrollToTop />
       <HeaderPro />
-      <main className="min-h-screen pt-[88px]">
+      <main className="min-h-screen pt-[148px] md:pt-[164px]">
         <Hero logos={logos || []} video={heroVideo} />
+        <MondayMotivationSection video={mondayMotivationVideo} />
         <ServicesHome />
         <ExpertiseHome />
         <RiskManagementSection />

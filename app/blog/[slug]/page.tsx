@@ -61,7 +61,7 @@ export default async function ArticlePage({ params }: Props) {
     return (
         <>
             <HeaderPro />
-            <main className="min-h-screen pt-[88px]">
+            <main className="min-h-screen pt-[148px] md:pt-[164px]">
                 {/* Hero Section */}
                 <section className="relative py-16 lg:py-20 bg-gradient-to-br from-gray-900 to-gray-800 overflow-hidden">
                     {article.cover_image && (

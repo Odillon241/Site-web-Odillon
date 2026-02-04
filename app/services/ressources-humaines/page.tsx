@@ -31,7 +31,7 @@ export default function RessourcesHumainesPage({
     <>
       <ScrollToTop />
       <HeaderPro />
-      <main className="min-h-screen pt-[88px]">
+      <main className="min-h-screen pt-[148px] md:pt-[164px]">
         <ServiceSingle service={service} />
       </main>
       <Footer />

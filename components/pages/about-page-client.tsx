@@ -21,7 +21,7 @@ export function AboutPageClient() {
 
       <ScrollToTop />
       <HeaderPro />
-      <main className="relative min-h-screen pt-[88px]">
+      <main className="relative min-h-screen pt-[148px] md:pt-[164px]">
         <AboutDetailed />
       </main>
       <Footer />
