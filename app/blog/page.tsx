@@ -3,25 +3,12 @@ import dynamic from "next/dynamic"
 const HeaderPro = dynamic(() => import("@/components/layout/header-pro").then(mod => mod.HeaderPro))
 import { Footer } from "@/components/layout/footer"
 import { createClient } from "@/lib/supabase/server"
-import { BlogArticlesGrid } from "@/components/sections/blog-articles-grid"
-import { BlogHero } from "@/components/blog/blog-hero"
+import { BlogPageClient } from "@/components/blog/blog-page-client"
 import { NewsletterSection } from "@/components/sections/newsletter-section"
 
 export const metadata: Metadata = {
     title: "Blog | Odillon - Actualités et Conseils en Stratégie d'Entreprise",
     description: "Découvrez nos derniers articles sur la gouvernance, le management des risques, les ressources humaines et bien plus.",
-}
-
-interface Article {
-    id: string
-    title: string
-    slug: string
-    excerpt: string
-    cover_image: string | null
-    category: string
-    author: string
-    read_time: string
-    published_at: string
 }
 
 export default async function BlogPage() {
@@ -43,15 +30,7 @@ export default async function BlogPage() {
         <>
             <HeaderPro />
             <main className="min-h-screen pt-[148px] md:pt-[164px] bg-gray-50/30">
-                <BlogHero settings={settings} />
-
-                {/* Articles Grid */}
-                <section className="py-16 lg:py-24">
-                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <BlogArticlesGrid articles={articles || []} />
-                    </div>
-                </section>
-
+                <BlogPageClient articles={articles || []} settings={settings} />
                 <NewsletterSection />
             </main>
             <Footer />

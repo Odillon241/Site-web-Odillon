@@ -335,11 +335,11 @@ export function AboutDetailed() {
           </div>
         </div>
 
-        {/* Team Section (Trombinoscope) */}
+        {/* Team Section (Organigramme) */}
         <div className="py-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Notre Équipe de Direction</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">Des experts passionnés dédiés à votre réussite.</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Notre Organigramme</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">Une équipe structurée au service de votre réussite.</p>
           </div>
 
           <TeamGrid />

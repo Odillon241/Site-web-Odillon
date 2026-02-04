@@ -29,7 +29,7 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json()
-        const { name, role, bio, photo_url, linkedin_url, email } = body
+        const { name, role, bio, photo_url, linkedin_url, email, pole } = body
 
         if (!name) {
             return NextResponse.json({ error: "Name is required" }, { status: 400 })
@@ -44,6 +44,7 @@ export async function POST(request: Request) {
                 photo_url,
                 linkedin_url,
                 email,
+                pole,
                 created_by: user.id
             })
             .select()

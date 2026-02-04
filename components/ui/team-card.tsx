@@ -6,6 +6,13 @@ import { Linkedin, Mail } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
+// Fonction pour s'assurer que l'URL a un protocole
+function ensureUrl(url?: string): string | undefined {
+    if (!url || url === "#") return undefined
+    if (url.startsWith("http://") || url.startsWith("https://")) return url
+    return `https://${url}`
+}
+
 interface TeamCardProps {
     name: string
     role: string
@@ -56,8 +63,8 @@ export function TeamCard({
 
                 {/* Social Actions Overlay */}
                 <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-3 translate-y-10 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
-                    {linkedinUrl && (
-                        <Link href={linkedinUrl} className="p-2 bg-white rounded-full text-odillon-dark hover:text-odillon-teal transition-colors shadow-lg hover:scale-110">
+                    {ensureUrl(linkedinUrl) && (
+                        <Link href={ensureUrl(linkedinUrl)!} target="_blank" className="p-2 bg-white rounded-full text-odillon-dark hover:text-odillon-teal transition-colors shadow-lg hover:scale-110">
                             <Linkedin className="w-5 h-5" />
                         </Link>
                     )}

@@ -84,7 +84,8 @@ const config = {
 					'sans-serif'
 				],
 				baskvill: [
-					'Baskvill',
+					'var(--font-libre-baskerville)',
+					'Libre Baskerville',
 					'Georgia',
 					'serif'
 				]

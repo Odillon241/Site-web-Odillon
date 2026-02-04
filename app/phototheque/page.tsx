@@ -328,7 +328,7 @@ export default function PhotothequePage() {
         <VideoSection video={video} />
 
         {/* Gallery Grid */}
-        <section className="container mx-auto px-4 pb-24">
+        <section className="container mx-auto px-4 pt-8 md:pt-12 pb-24">
           <div className="flex justify-between items-end mb-8 border-b border-gray-100 pb-4">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Albums</h2>

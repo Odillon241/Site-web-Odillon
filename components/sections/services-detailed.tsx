@@ -276,7 +276,7 @@ export function ServicesDetailed() {
 
       <VideoSection video={video} />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 pt-8 md:pt-12">
 
         {/* Tabs Navigation */}
         <BlurFade delay={0.4}>

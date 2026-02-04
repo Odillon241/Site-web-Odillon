@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import { cn } from "@/lib/utils"
-import { airFont } from "./fonts"
+import { airFont, libreBaskerville } from "./fonts"
 import { MotionProvider } from "@/components/providers/motion-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { GlobalNewsTicker } from "@/components/layout/global-news-ticker"
@@ -49,7 +49,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" className="scroll-smooth" suppressHydrationWarning>
-      <body className={cn(airFont.className, airFont.variable, "antialiased")} suppressHydrationWarning>
+      <body className={cn(airFont.className, airFont.variable, libreBaskerville.variable, "antialiased")} suppressHydrationWarning>
         {/* Grid background pattern */}
         <div className="grid-bg" />
         {/* Lightweight CSS gradient background - replaces heavy THREE.js LiquidEther */}

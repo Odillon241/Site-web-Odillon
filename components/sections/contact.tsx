@@ -157,7 +157,7 @@ export function Contact() {
       </div>
 
       {/* Main Content */}
-      <div className="relative pb-24 md:pb-32">
+      <div className="relative pt-8 md:pt-12 pb-24 md:pb-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Large Map */}
           <BlurFade delay={0.2} className="mb-16 md:mb-20">

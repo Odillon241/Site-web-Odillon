@@ -1,4 +1,14 @@
 import localFont from 'next/font/local'
+import { Libre_Baskerville } from 'next/font/google'
+
+// Libre Baskerville for H1 headings
+export const libreBaskerville = Libre_Baskerville({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-libre-baskerville',
+  display: 'swap',
+})
 
 // Optimized font loading: only load weights that are actually used
 // Removed: 100 (thin), 200 (ultralight) - not used in the codebase

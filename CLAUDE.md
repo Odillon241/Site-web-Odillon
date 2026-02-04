@@ -185,6 +185,40 @@ If Supabase is not yet configured:
 
 Detailed setup instructions available in project documentation.
 
+## Supabase MCP (OBLIGATOIRE)
+
+**IMPORTANT**: Toujours utiliser le MCP Supabase pour les opérations de base de données.
+
+**Project ID**: `xqkaraihiqqfcasmduuh`
+
+### Outils MCP Supabase disponibles :
+
+- `mcp__supabase__apply_migration` - Appliquer une migration SQL
+- `mcp__supabase__list_migrations` - Lister les migrations
+- `mcp__supabase__execute_sql` - Exécuter du SQL directement
+- `mcp__supabase__list_tables` - Lister les tables
+- `mcp__supabase__get_logs` - Consulter les logs
+- `mcp__supabase__search_docs` - Rechercher dans la documentation
+
+### Workflow pour les migrations :
+
+```
+1. NE PAS créer de fichiers .sql manuellement dans supabase/migrations/
+2. Utiliser directement mcp__supabase__apply_migration avec :
+   - project_id: "xqkaraihiqqfcasmduuh"
+   - name: "nom_de_la_migration" (snake_case)
+   - query: "SQL à exécuter"
+```
+
+### Exemple :
+
+```
+mcp__supabase__apply_migration
+  project_id: "xqkaraihiqqfcasmduuh"
+  name: "add_pole_to_team_members"
+  query: "ALTER TABLE team_members ADD COLUMN pole TEXT;"
+```
+
 ## Deployment
 
 ### PM2 Configuration
@@ -227,38 +261,3 @@ Recent work has focused on:
 - Multi-domain subdomain routing
 - Responsive improvements
 - New sections (calendar, trusted-by, etc.)
-- # Error Type
-Runtime Error
-
-## Error Message
-You have rendered a `motion` component within a `LazyMotion` component. This will break tree shaking. Import and render a `m` component instead.
-
-
-    at invariant (file://C:/Users/nexon/Odillon site web/.next/dev/static/chunks/node_modules_f97b38a8._.js:5645:19)
-    at useStrictMode (file://C:/Users/nexon/Odillon site web/.next/dev/static/chunks/node_modules_43f3460c._.js:9732:408)
-    at MotionComponent (file://C:/Users/nexon/Odillon site web/.next/dev/static/chunks/node_modules_43f3460c._.js:9692:13)
-    at Object.react_stack_bottom_frame (file://C:/Users/nexon/Odillon site web/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:14816:24)
-    at renderWithHooks (file://C:/Users/nexon/Odillon site web/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:4645:24)
-    at updateForwardRef (file://C:/Users/nexon/Odillon site web/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:5933:21)
-    at beginWork (file://C:/Users/nexon/Odillon site web/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:6777:24)
-    at runWithFiberInDEV (file://C:/Users/nexon/Odillon site web/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:959:74)
-    at performUnitOfWork (file://C:/Users/nexon/Odillon site web/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9556:97)
-    at workLoopSync (file://C:/Users/nexon/Odillon site web/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9450:40)
-    at renderRootSync (file://C:/Users/nexon/Odillon site web/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9434:13)
-    at performWorkOnRoot (file://C:/Users/nexon/Odillon site web/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9099:47)
-    at performWorkOnRootViaSchedulerTask (file://C:/Users/nexon/Odillon site web/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:10224:9)
-    at MessagePort.performWorkUntilDeadline (file://C:/Users/nexon/Odillon site web/.next/dev/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js:2647:64)
-    at ScrollProgress (file://C:/Users/nexon/Odillon site web/.next/dev/static/chunks/_c278279d._.js:5423:214)
-    at Home (app\page.tsx:24:7)
-
-## Code Frame
-  22 |   return (
-  23 |     <>
-> 24 |       <ScrollProgress />
-     |       ^
-  25 |       <ScrollToTop />
-  26 |       <HeaderPro />
-  27 |       <main className="min-h-screen pt-[88px] md:pt-[104px]">
-
-Next.js version: 16.0.8 (Turbopack)
-#

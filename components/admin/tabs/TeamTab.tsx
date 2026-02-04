@@ -27,7 +27,14 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Loader2, Plus, Trash2, Eye, EyeOff, Users, Upload, Linkedin, Mail, Pencil, Crop, X } from "lucide-react"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { Loader2, Plus, Trash2, Eye, EyeOff, Users, Upload, Linkedin, Mail, Pencil, Crop, X, Info, Building2 } from "lucide-react"
 import { toast } from "sonner"
 import { ImageCropper } from "../ImageCropper"
 import getCroppedImg from "@/lib/image"
@@ -40,9 +47,19 @@ interface TeamMember {
     photo_url?: string
     linkedin_url?: string
     email?: string
+    pole?: string
     is_active: boolean
     display_order: number
 }
+
+// Liste des pôles de l'organigramme
+const POLES_OPTIONS = [
+    { value: "Direction Générale", label: "Direction Générale" },
+    { value: "Pôle Administratif", label: "Pôle Administratif" },
+    { value: "Pôle Audit et Conformité", label: "Pôle Audit et Conformité" },
+    { value: "Pôle Qualité et Développement", label: "Pôle Qualité et Développement" },
+    { value: "Pôle Informatique et Communication", label: "Pôle Informatique et Communication" },
+]
 
 import {
     DndContext,
@@ -63,11 +80,12 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 
 // Sortable Item Component
-function SortableTeamCard({ member, handleEdit, toggleMemberActive, deleteMember }: {
+function SortableTeamCard({ member, handleEdit, toggleMemberActive, deleteMember, poleLabel }: {
     member: TeamMember,
     handleEdit: (m: TeamMember) => void,
     toggleMemberActive: (id: string) => void,
-    deleteMember: (id: string) => void
+    deleteMember: (id: string) => void,
+    poleLabel?: string | null
 }) {
     const {
         attributes,
@@ -112,7 +130,13 @@ function SortableTeamCard({ member, handleEdit, toggleMemberActive, deleteMember
                     <div className="p-4" onPointerDown={(e) => e.stopPropagation()}>
                         {/* Stop propagation so buttons work without dragging */}
                         <h3 className="font-bold text-gray-900 truncate">{member.name}</h3>
-                        <p className="text-sm text-odillon-teal font-medium truncate mb-2">{member.role}</p>
+                        <p className="text-sm text-odillon-teal font-medium truncate">{member.role}</p>
+                        {poleLabel && (
+                            <Badge variant="outline" className="mt-1 text-[10px] font-normal border-odillon-teal/30 text-odillon-teal bg-odillon-teal/5">
+                                <Building2 className="w-2.5 h-2.5 mr-1" />
+                                {poleLabel}
+                            </Badge>
+                        )}
 
                         <div className="flex gap-2 pt-2 border-t border-gray-50 mt-2">
                             <Button
@@ -180,7 +204,8 @@ export function TeamTab() {
         bio: "",
         photo_url: "",
         linkedin_url: "",
-        email: ""
+        email: "",
+        pole: ""
     })
 
     const sensors = useSensors(
@@ -221,7 +246,8 @@ export function TeamTab() {
             bio: "",
             photo_url: "",
             linkedin_url: "",
-            email: ""
+            email: "",
+            pole: ""
         })
         setEditingMember(null)
         setCropImageSrc(null)
@@ -312,7 +338,8 @@ export function TeamTab() {
             bio: member.bio || "",
             photo_url: member.photo_url || "",
             linkedin_url: member.linkedin_url || "",
-            email: member.email || ""
+            email: member.email || "",
+            pole: member.pole || ""
         })
         setIsDialogOpen(true)
     }
@@ -439,6 +466,32 @@ export function TeamTab() {
                             </div>
 
                             <div className="space-y-2">
+                                <label className="text-sm font-medium flex items-center gap-2">
+                                    <Building2 className="w-4 h-4 text-odillon-teal" />
+                                    Pôle dans l'organigramme
+                                </label>
+                                <Select
+                                    value={newMember.pole || "none"}
+                                    onValueChange={(value) => setNewMember({ ...newMember, pole: value === "none" ? "" : value })}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Sélectionner un pôle (optionnel)" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="none">Aucun (non affiché dans l'organigramme)</SelectItem>
+                                        {POLES_OPTIONS.map((pole) => (
+                                            <SelectItem key={pole.value} value={pole.value}>
+                                                {pole.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <p className="text-xs text-gray-500">
+                                    Si un pôle est sélectionné, ce membre apparaîtra dans l'organigramme de la page À propos.
+                                </p>
+                            </div>
+
+                            <div className="space-y-2">
                                 <label className="text-sm font-medium">Bio (optionnel)</label>
                                 <Textarea
                                     value={newMember.bio}
@@ -547,6 +600,17 @@ export function TeamTab() {
             )}
 
             <CardContent className="p-6 bg-gray-50/30 min-h-[400px]">
+                {/* Info Organigramme */}
+                <div className="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-lg">
+                    <div className="flex items-start gap-3">
+                        <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                        <div className="text-sm text-blue-800">
+                            <p className="font-medium mb-1">Comment fonctionne l'organigramme ?</p>
+                            <p>Pour qu'un membre apparaisse dans l'organigramme sur la page À propos, sélectionnez son <strong>pôle</strong> lors de la création ou modification.</p>
+                        </div>
+                    </div>
+                </div>
+
                 {loading ? (
                     <div className="flex justify-center py-12">
                         <Loader2 className="w-8 h-8 animate-spin text-odillon-teal" />
@@ -574,6 +638,7 @@ export function TeamTab() {
                                         handleEdit={handleEdit}
                                         toggleMemberActive={toggleMemberActive}
                                         deleteMember={deleteMember}
+                                        poleLabel={member.pole}
                                     />
                                 ))}
                             </div>
