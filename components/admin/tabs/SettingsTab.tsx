@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, Upload, Settings as SettingsIcon, Image as ImageIcon, Newspaper } from "lucide-react"
+import { Loader2, Upload, Settings as SettingsIcon, Image as ImageIcon, Newspaper, Trash2 } from "lucide-react"
 import { SiteSettings } from "@/types/admin"
 import { toast } from "sonner"
 
@@ -15,6 +15,8 @@ export function SettingsTab() {
     const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null)
     const [loadingSettings, setLoadingSettings] = useState(false)
     const [uploadingExpertiseImage, setUploadingExpertiseImage] = useState(false)
+    const [uploadingServicesHeroImage, setUploadingServicesHeroImage] = useState(false)
+    const [deletingServicesHeroImage, setDeletingServicesHeroImage] = useState(false)
 
     useEffect(() => {
         loadSiteSettings()
@@ -35,10 +37,10 @@ export function SettingsTab() {
         }
     }
 
-    const handleUpdateSettingImage = async (settingKey: 'services_cta_image_url' | 'expertise_image_url', file: File) => {
+    const handleUpdateSettingImage = async (settingKey: 'services_cta_image_url' | 'expertise_image_url' | 'services_hero_image_url', file: File) => {
         try {
             if (settingKey === 'expertise_image_url') setUploadingExpertiseImage(true)
-            // else setUploadingCtaImage(true) // For future use
+            if (settingKey === 'services_hero_image_url') setUploadingServicesHeroImage(true)
 
             // 1. Upload du fichier
             const formData = new FormData()
@@ -75,7 +77,9 @@ export function SettingsTab() {
             // Reset input
             const inputId = settingKey === 'services_cta_image_url'
                 ? 'services-cta-image-input'
-                : 'expertise-image-input'
+                : settingKey === 'services_hero_image_url'
+                    ? 'services-hero-image-input'
+                    : 'expertise-image-input'
 
             const input = document.getElementById(inputId) as HTMLInputElement
             if (input) input.value = ''
@@ -85,7 +89,29 @@ export function SettingsTab() {
             toast.error("Erreur lors de la mise à jour")
         } finally {
             if (settingKey === 'expertise_image_url') setUploadingExpertiseImage(false)
-            // else setUploadingCtaImage(false)
+            if (settingKey === 'services_hero_image_url') setUploadingServicesHeroImage(false)
+        }
+    }
+
+    const handleDeleteServicesHeroImage = async () => {
+        try {
+            setDeletingServicesHeroImage(true)
+
+            const updateRes = await fetch("/api/settings", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ services_hero_image_url: null })
+            })
+
+            if (!updateRes.ok) throw new Error("Erreur lors de la suppression")
+
+            setSiteSettings(prev => prev ? ({ ...prev, services_hero_image_url: null }) : null)
+            toast.success("Image supprimée avec succès")
+        } catch (error: unknown) {
+            console.error("Erreur suppression image:", error)
+            toast.error("Erreur lors de la suppression")
+        } finally {
+            setDeletingServicesHeroImage(false)
         }
     }
 
@@ -107,6 +133,102 @@ export function SettingsTab() {
                     </div>
                 ) : (
                     <>
+                        {/* Section Image de Fond - Page Services */}
+                        <div className="grid md:grid-cols-2 gap-8 items-start">
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                                    <ImageIcon className="w-5 h-5 text-odillon-teal" />
+                                    Image de Fond - Page Services
+                                </h3>
+                                <p className="text-sm text-gray-600 leading-relaxed">
+                                    Cette image apparaît en arrière-plan du héros de la page Services.
+                                    Choisissez une image qui reflète l'ensemble des activités du cabinet.
+                                    <br />Format recommandé : Paysage large (ex: 1920x1080px).
+                                </p>
+
+                                <div className="flex flex-col gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-gray-700">
+                                            {siteSettings?.services_hero_image_url ? "Changer l'image" : "Ajouter une image"}
+                                        </label>
+                                        <div className="flex gap-2">
+                                            <Input
+                                                type="file"
+                                                accept="image/*"
+                                                id="services-hero-image-input"
+                                                className="bg-white cursor-pointer"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-2">
+                                        <Button
+                                            onClick={() => {
+                                                const input = document.getElementById('services-hero-image-input') as HTMLInputElement;
+                                                if (input.files && input.files[0]) {
+                                                    handleUpdateSettingImage('services_hero_image_url', input.files[0]);
+                                                } else {
+                                                    toast.error("Veuillez sélectionner une image.");
+                                                }
+                                            }}
+                                            disabled={uploadingServicesHeroImage}
+                                            className="bg-gray-900 hover:bg-black text-white"
+                                        >
+                                            {uploadingServicesHeroImage ? (
+                                                <>
+                                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                    Mise à jour...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Upload className="w-4 h-4 mr-2" />
+                                                    {siteSettings?.services_hero_image_url ? "Remplacer l'image" : "Ajouter l'image"}
+                                                </>
+                                            )}
+                                        </Button>
+
+                                        {siteSettings?.services_hero_image_url && (
+                                            <Button
+                                                variant="destructive"
+                                                onClick={handleDeleteServicesHeroImage}
+                                                disabled={deletingServicesHeroImage}
+                                            >
+                                                {deletingServicesHeroImage ? (
+                                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                ) : (
+                                                    <Trash2 className="w-4 h-4 mr-2" />
+                                                )}
+                                                Supprimer
+                                            </Button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Preview Image Services Hero */}
+                            <div className="relative aspect-video w-full max-w-md mx-auto bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200">
+                                {siteSettings?.services_hero_image_url ? (
+                                    <div className="relative w-full h-full group">
+                                        <img
+                                            src={siteSettings.services_hero_image_url}
+                                            alt="Aperçu Image Services"
+                                            className="w-full h-full object-cover"
+                                        />
+                                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                            <span className="text-white font-medium text-sm">Image Actuelle</span>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 p-6 text-center">
+                                        <ImageIcon className="w-12 h-12 mb-2 opacity-50" />
+                                        <span className="text-sm">Aucune image définie<br />(Fond décoratif par défaut)</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="border-t border-gray-200 my-6"></div>
+
                         {/* Section Image À Propos */}
                         <div className="grid md:grid-cols-2 gap-8 items-start">
                             <div className="space-y-4">

@@ -17,6 +17,7 @@ export async function GET() {
       show_videos_section: true,
       show_photos_section: true,
       services_cta_image_url: null,
+      services_hero_image_url: null,
       expertise_image_url: null,
       expertise_cta_title: 'Découvrez notre expertise approfondie et nos méthodologies éprouvées',
       expertise_cta_description: '',
@@ -71,6 +72,7 @@ export async function PATCH(request: NextRequest) {
       show_videos_section,
       show_photos_section,
       services_cta_image_url,
+      services_hero_image_url,
       expertise_image_url,
       expertise_cta_title,
       expertise_cta_description,
@@ -89,6 +91,7 @@ export async function PATCH(request: NextRequest) {
     if (typeof show_videos_section !== "boolean" && show_videos_section !== undefined) return NextResponse.json({ error: "show_videos_section doit être un booléen" }, { status: 400 })
     if (typeof show_photos_section !== "boolean" && show_photos_section !== undefined) return NextResponse.json({ error: "show_photos_section doit être un booléen" }, { status: 400 })
     if (services_cta_image_url && typeof services_cta_image_url !== "string") return NextResponse.json({ error: "services_cta_image_url doit être une chaîne" }, { status: 400 })
+    if (services_hero_image_url !== undefined && services_hero_image_url !== null && typeof services_hero_image_url !== "string") return NextResponse.json({ error: "services_hero_image_url doit être une chaîne" }, { status: 400 })
     if (expertise_image_url && typeof expertise_image_url !== "string") return NextResponse.json({ error: "expertise_image_url doit être une chaîne" }, { status: 400 })
     if (show_blog_banner !== undefined && typeof show_blog_banner !== "boolean") return NextResponse.json({ error: "show_blog_banner doit être un booléen" }, { status: 400 })
     if (blog_banner_image_url && typeof blog_banner_image_url !== "string") return NextResponse.json({ error: "blog_banner_image_url doit être une chaîne" }, { status: 400 })
@@ -100,6 +103,7 @@ export async function PATCH(request: NextRequest) {
     if (show_videos_section !== undefined) updateData.show_videos_section = show_videos_section
     if (show_photos_section !== undefined) updateData.show_photos_section = show_photos_section
     if (services_cta_image_url !== undefined) updateData.services_cta_image_url = services_cta_image_url
+    if (services_hero_image_url !== undefined) updateData.services_hero_image_url = services_hero_image_url
     if (expertise_image_url !== undefined) updateData.expertise_image_url = expertise_image_url
 
     // Expertise CTA
