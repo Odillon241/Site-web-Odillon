@@ -86,6 +86,25 @@ export function ServicesDetailed() {
     avatar: string
   }>>([])
   const [currentTestimonial, setCurrentTestimonial] = useState(0)
+  const [heroImageUrl, setHeroImageUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await fetch('/api/settings')
+        if (res.ok) {
+          const data = await res.json()
+          const settings = data.settings || data
+          if (settings?.services_hero_image_url) {
+            setHeroImageUrl(settings.services_hero_image_url)
+          }
+        }
+      } catch (e) {
+        console.error("Failed to fetch settings", e)
+      }
+    }
+    fetchSettings()
+  }, [])
 
   useEffect(() => {
     const fetchVideo = async () => {
@@ -187,60 +206,77 @@ export function ServicesDetailed() {
   return (
     <section className="relative overflow-hidden bg-transparent">
       {/* Hero Section with Background */}
-      <div className="relative pt-6 pb-12 md:pt-10 md:pb-16 lg:pt-12 lg:pb-20 overflow-hidden bg-transparent">
-        {/* Background Pattern */}
+      <div className={`relative overflow-hidden ${heroImageUrl ? 'pt-16 pb-20 md:pt-24 md:pb-28 lg:pt-32 lg:pb-36' : 'pt-6 pb-12 md:pt-10 md:pb-16 lg:pt-12 lg:pb-20'} bg-transparent`}>
+        {/* Background - Image or Decorative Pattern */}
         <div className="absolute inset-0 overflow-hidden">
-          {/* Soft gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-odillon-teal/5 via-transparent to-odillon-lime/5" />
+          {heroImageUrl ? (
+            <>
+              {/* Background Image */}
+              <img
+                src={heroImageUrl}
+                alt="Activités du cabinet Odillon"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              {/* Dark overlay for text readability */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+              {/* Brand-colored accent overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-odillon-teal/20 via-transparent to-odillon-dark/30" />
+            </>
+          ) : (
+            <>
+              {/* Soft gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-odillon-teal/5 via-transparent to-odillon-lime/5" />
 
-          {/* Large circle patterns */}
-          <div className="absolute -top-24 -right-24 w-96 h-96 border border-odillon-teal/10 rounded-full" />
-          <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] border border-odillon-lime/10 rounded-full" />
+              {/* Large circle patterns */}
+              <div className="absolute -top-24 -right-24 w-96 h-96 border border-odillon-teal/10 rounded-full" />
+              <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] border border-odillon-lime/10 rounded-full" />
 
-          {/* Smaller decorative circles */}
-          <div className="absolute top-1/4 right-1/3 w-32 h-32 border border-odillon-teal/20 rounded-full animate-pulse" style={{ animationDuration: '4s' }} />
-          <div className="absolute bottom-1/3 left-1/4 w-24 h-24 border border-odillon-lime/20 rounded-full animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
+              {/* Smaller decorative circles */}
+              <div className="absolute top-1/4 right-1/3 w-32 h-32 border border-odillon-teal/20 rounded-full animate-pulse" style={{ animationDuration: '4s' }} />
+              <div className="absolute bottom-1/3 left-1/4 w-24 h-24 border border-odillon-lime/20 rounded-full animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
 
-          {/* Simple grid overlay */}
-          <div className="absolute inset-0 opacity-[0.15]">
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="services-grid" width="50" height="50" patternUnits="userSpaceOnUse">
-                  <path
-                    d="M 50 0 L 0 0 0 50"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="0.5"
-                    className="text-odillon-teal"
-                  />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#services-grid)" />
-            </svg>
-          </div>
+              {/* Simple grid overlay */}
+              <div className="absolute inset-0 opacity-[0.15]">
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id="services-grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                      <path
+                        d="M 50 0 L 0 0 0 50"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="0.5"
+                        className="text-odillon-teal"
+                      />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#services-grid)" />
+                </svg>
+              </div>
 
-          {/* Subtle dots pattern */}
-          <div className="absolute inset-0 opacity-[0.08]">
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="services-dots" width="30" height="30" patternUnits="userSpaceOnUse">
-                  <circle cx="2" cy="2" r="1.5" fill="currentColor" className="text-odillon-lime" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#services-dots)" />
-            </svg>
-          </div>
+              {/* Subtle dots pattern */}
+              <div className="absolute inset-0 opacity-[0.08]">
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id="services-dots" width="30" height="30" patternUnits="userSpaceOnUse">
+                      <circle cx="2" cy="2" r="1.5" fill="currentColor" className="text-odillon-lime" />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#services-dots)" />
+                </svg>
+              </div>
 
-          {/* Floating squares */}
-          <div className="absolute top-1/3 left-1/4 w-20 h-20 border-2 border-odillon-teal/15 transform rotate-12 animate-pulse" style={{ animationDuration: '6s' }} />
-          <div className="absolute bottom-1/4 right-1/4 w-16 h-16 border-2 border-odillon-lime/15 transform -rotate-12 animate-pulse" style={{ animationDuration: '7s', animationDelay: '2s' }} />
+              {/* Floating squares */}
+              <div className="absolute top-1/3 left-1/4 w-20 h-20 border-2 border-odillon-teal/15 transform rotate-12 animate-pulse" style={{ animationDuration: '6s' }} />
+              <div className="absolute bottom-1/4 right-1/4 w-16 h-16 border-2 border-odillon-lime/15 transform -rotate-12 animate-pulse" style={{ animationDuration: '7s', animationDelay: '2s' }} />
 
-          {/* Subtle light beams effect */}
-          <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-odillon-teal/10 to-transparent" />
-          <div className="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-transparent via-odillon-lime/10 to-transparent" />
+              {/* Subtle light beams effect */}
+              <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-odillon-teal/10 to-transparent" />
+              <div className="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-transparent via-odillon-lime/10 to-transparent" />
 
-          {/* Radial fade overlay */}
-          <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-background/80" />
+              {/* Radial fade overlay */}
+              <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-background/80" />
+            </>
+          )}
         </div>
 
         {/* Content */}
@@ -253,19 +289,22 @@ export function ServicesDetailed() {
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">
+              <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight ${heroImageUrl ? 'text-white' : 'text-gray-900'}`}>
                 Des services qui transforment{" "}
-                <span className="bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
+                <span className={heroImageUrl
+                  ? "text-odillon-lime"
+                  : "bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent"
+                }>
                   votre entreprise
                 </span>
               </h1>
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed">
+              <p className={`text-base md:text-lg lg:text-xl leading-relaxed ${heroImageUrl ? 'text-white/90' : 'text-gray-600'}`}>
                 Solutions complètes en ingénierie d'entreprises pour structurer, développer et pérenniser votre organisation.
                 <br className="hidden sm:block" />
-                <span className="text-sm md:text-base text-gray-500 mt-2 inline-block">
+                <span className={`text-sm md:text-base mt-2 inline-block ${heroImageUrl ? 'text-white/70' : 'text-gray-500'}`}>
                   Chaque service est conçu pour répondre à vos enjeux avec finesse et expertise.
                 </span>
               </p>

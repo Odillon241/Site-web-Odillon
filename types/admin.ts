@@ -72,6 +72,7 @@ export interface SiteSettings {
     show_videos_section: boolean
     show_photos_section: boolean
     services_cta_image_url: string | null
+    services_hero_image_url: string | null
     expertise_image_url: string | null
     expertise_cta_title: string | null
     expertise_cta_description: string | null
