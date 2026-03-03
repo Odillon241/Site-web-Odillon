@@ -5,7 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Phone, Mail, ChevronDown, Home, Briefcase, Users, Send, Menu, X, Image as ImageIcon, Newspaper } from "lucide-react"
+import { Phone, Mail, ChevronDown, Home, Briefcase, Users, Send, Menu, X, Image as ImageIcon } from "lucide-react"
 import { m, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
@@ -16,7 +16,7 @@ const navigation = [
     icon: "Home"
   },
   {
-    name: "Services",
+    name: "Nos services",
     href: "/services",
     icon: "Briefcase",
     submenu: [
@@ -27,14 +27,9 @@ const navigation = [
     ]
   },
   {
-    name: "Photothèque",
+    name: "Nos événements",
     href: "/phototheque",
     icon: "Image"
-  },
-  {
-    name: "Blog",
-    href: "/blog",
-    icon: "Newspaper"
   },
   {
     name: "À propos",
@@ -85,7 +80,7 @@ export function HeaderPro() {
                 <span className="hidden sm:inline">+241 11 74 75 74</span>
                 <span className="sm:hidden">+241 117...</span>
               </a>
-              <a href="tel:+24174759515" className="hidden lg:flex items-center text-white/90 hover:text-white transition-colors">
+              <a href="tel:+24174759515" className="hidden xl:flex items-center text-white/90 hover:text-white transition-colors">
                 <Phone className="w-3.5 h-3.5 mr-1.5" />
                 +241 74 75 95 15
               </a>
@@ -117,7 +112,7 @@ export function HeaderPro() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex lg:items-center lg:space-x-1">
+          <div className="hidden xl:flex xl:items-center xl:space-x-1">
             {navigation.map((item) => {
               const getIcon = (iconName: string) => {
                 switch (iconName) {
@@ -125,7 +120,7 @@ export function HeaderPro() {
                   case 'Briefcase': return Briefcase
                   case 'Users': return Users
                   case 'Image': return ImageIcon
-                  case 'Newspaper': return Newspaper
+                  case 'Newspaper': return null
                   default: return null
                 }
               }
@@ -142,7 +137,7 @@ export function HeaderPro() {
                   <Link
                     href={item.href}
                     className={cn(
-                      "px-4 py-2 text-sm font-medium transition-all relative group flex items-center gap-2 rounded border",
+                      "px-4 py-2 text-sm font-bold uppercase tracking-wide transition-all relative group flex items-center gap-2 rounded border",
                       isActive
                         ? "text-odillon-teal bg-odillon-teal/5 border-odillon-teal"
                         : "text-gray-700 hover:text-odillon-teal border-transparent hover:border-gray-200",
@@ -184,7 +179,7 @@ export function HeaderPro() {
           </div>
 
           {/* CTA Button - Desktop */}
-          <div className="hidden lg:flex">
+          <div className="hidden xl:flex">
             <Button
               asChild
               className="bg-odillon-teal hover:bg-black text-white transition-colors"
@@ -200,7 +195,7 @@ export function HeaderPro() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="flex lg:hidden">
+          <div className="flex xl:hidden">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -225,7 +220,7 @@ export function HeaderPro() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden bg-background/95 backdrop-blur-xl border-b border-gray-200"
+            className="xl:hidden bg-background/95 backdrop-blur-xl border-b border-gray-200"
           >
             <div className="mx-auto max-w-7xl px-4 sm:px-6 py-4 space-y-2 max-h-[calc(100vh-180px)] overflow-y-auto">
               {navigation.map((item) => {
@@ -235,7 +230,7 @@ export function HeaderPro() {
                     case 'Briefcase': return Briefcase
                     case 'Users': return Users
                     case 'Image': return ImageIcon
-                    case 'Newspaper': return Newspaper
+                    case 'Newspaper': return null
                     default: return null
                   }
                 }
@@ -248,7 +243,7 @@ export function HeaderPro() {
                       href={item.href}
                       onClick={() => !item.submenu && setMobileMenuOpen(false)}
                       className={cn(
-                        "flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors",
+                        "flex items-center gap-3 px-4 py-3 rounded-lg text-base font-bold uppercase tracking-wide transition-colors",
                         isActive
                           ? "bg-odillon-teal/10 text-odillon-teal"
                           : "text-gray-700 hover:bg-gray-100 hover:text-odillon-teal"

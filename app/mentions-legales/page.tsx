@@ -8,7 +8,7 @@ import Link from "next/link"
 
 export default function MentionsLegalesPage() {
     return (
-        <main className="min-h-screen relative bg-slate-50/50 pt-[148px] md:pt-[164px]">
+        <main className="min-h-screen relative bg-slate-50/50 pt-[88px] md:pt-[104px]">
             <HeaderPro />
 
             <div className="mx-auto max-w-5xl px-6 py-16 lg:px-8">
@@ -19,7 +19,7 @@ export default function MentionsLegalesPage() {
                             <Scale className="w-4 h-4" />
                             <span>Cadre Réglementaire</span>
                         </div>
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 mb-6">
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight text-slate-900 mb-4 sm:mb-6">
                             Mentions <span className="text-odillon-teal">Légales</span>
                         </h1>
                         <p className="text-lg text-slate-600 max-w-2xl mx-auto">

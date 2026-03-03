@@ -21,7 +21,7 @@ function LogoItem({ company }: { company: CompanyLogo }) {
   const [imageError, setImageError] = useState(false)
 
   return (
-    <div className="group relative flex items-center justify-center w-32 h-20 md:w-40 md:h-24 transition-all duration-300">
+    <div className="group relative flex items-center justify-center w-20 h-14 sm:w-28 sm:h-18 md:w-36 md:h-22 lg:w-40 lg:h-24 transition-all duration-300">
       {!imageError && company.logo_path ? (
         <div className="relative w-full h-full flex items-center justify-center transition-all duration-300 group-hover:scale-105">
           <Image
@@ -29,6 +29,7 @@ function LogoItem({ company }: { company: CompanyLogo }) {
             alt={`${company.name} logo`}
             width={120}
             height={80}
+            sizes="(max-width: 640px) 70px, (max-width: 768px) 100px, 120px"
             className="object-contain max-w-full max-h-full opacity-80 group-hover:opacity-100 transition-opacity"
             onError={() => setImageError(true)}
           />
@@ -36,11 +37,11 @@ function LogoItem({ company }: { company: CompanyLogo }) {
       ) : (
         <div className="text-center w-full group-hover:scale-105 transition-transform">
           <div
-            className="text-xl md:text-2xl font-bold mb-1 text-odillon-teal/60 group-hover:text-odillon-teal transition-colors duration-300"
+            className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-1 text-odillon-teal/60 group-hover:text-odillon-teal transition-colors duration-300"
           >
             {company.fallback}
           </div>
-          <div className="text-xs text-gray-500 font-medium group-hover:text-gray-700 transition-colors">
+          <div className="text-[10px] sm:text-xs text-gray-500 font-medium group-hover:text-gray-700 transition-colors">
             {company.name}
           </div>
         </div>
@@ -72,7 +73,7 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
 
         {/* Main Headline - With FlipWords */}
         <FadeIn delay={0.2}>
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white mb-12 md:mb-16 font-petrov-sans drop-shadow-lg">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl font-bold tracking-tight text-white mb-8 sm:mb-10 md:mb-12 lg:mb-16 font-petrov-sans drop-shadow-lg">
             Structurer pour{" "}
             <span className="text-odillon-lime">
               <FlipWords
@@ -115,8 +116,8 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
 
         {/* Footer Tagline - Future Vision */}
         <FadeIn delay={0.5}>
-          <div className="mt-14 md:mt-16 pt-8 border-t border-white/15">
-            <div className="relative w-full flex items-center justify-center min-h-[90px] mb-8">
+          <div className="mt-8 sm:mt-10 md:mt-14 lg:mt-16 pt-6 sm:pt-8 border-t border-white/15">
+            <div className="relative w-full flex items-center justify-center min-h-[60px] sm:min-h-[75px] md:min-h-[90px] mb-6 sm:mb-8">
               <AnimatedSlogan
                 text="Together we the future"
                 iconPosition={2}
@@ -125,8 +126,8 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
 
             {/* Logos Marquee - Trusted By - White Background */}
             {logos && logos.length > 0 && (
-              <div className="mt-8 -mx-4 sm:-mx-6 lg:-mx-8 bg-white rounded-2xl shadow-lg py-8 px-4 border border-odillon-teal/30">
-                <p className="text-sm text-odillon-dark/70 uppercase tracking-widest mb-6 font-medium text-center -mt-2">
+              <div className="mt-6 sm:mt-8 -mx-2 sm:-mx-4 md:-mx-6 lg:-mx-8 bg-white rounded-xl sm:rounded-2xl shadow-lg py-5 sm:py-6 md:py-8 px-3 sm:px-4 border border-odillon-teal/30">
+                <p className="text-xs sm:text-sm text-odillon-dark/70 uppercase tracking-widest mb-4 sm:mb-6 font-medium text-center -mt-1 sm:-mt-2">
                   Ils nous font confiance
                 </p>
                 <Marquee>
@@ -134,14 +135,14 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
                     {logos.map((company) => (
                       <MarqueeItem
                         key={company.id}
-                        className="mx-6 md:mx-10"
+                        className="mx-3 sm:mx-5 md:mx-8 lg:mx-10"
                       >
                         <LogoItem company={company} />
                       </MarqueeItem>
                     ))}
                   </MarqueeContent>
-                  <MarqueeFade side="left" className="from-white" />
-                  <MarqueeFade side="right" className="from-white" />
+                  <MarqueeFade side="left" className="from-white !w-6 sm:!w-12 md:!w-24" />
+                  <MarqueeFade side="right" className="from-white !w-6 sm:!w-12 md:!w-24" />
                 </Marquee>
               </div>
             )}

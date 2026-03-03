@@ -21,7 +21,7 @@ export type ServiceData = {
 export const servicesData: ServiceData[] = [
   {
     id: "gouvernance",
-    icon: "Shield",
+    icon: "Landmark",
     title: "Gouvernance",
     color: "#39837a",
     gradient: "from-[#39837a]/20 via-[#39837a]/10 to-transparent",
@@ -33,12 +33,10 @@ export const servicesData: ServiceData[] = [
       { icon: "TrendingUp", text: "Performance globale", detail: "Évaluation et suivi continu" }
     ],
     workflow: [
-      { step: "", title: "Analiser", description: "Identification et évaluation des risques", icon: "Search" },
-      { step: "", title: "Transférer", description: "Délégation des risques à des tiers", icon: "ArrowRightLeft" },
-      { step: "", title: "Réduire", description: "Diminution de l'impact des risques", icon: "Minimize2" },
-      { step: "", title: "Contrôler", description: "Surveillance et vérification", icon: "ShieldCheck" },
-      { step: "", title: "Préparer", description: "Plans de continuité d'activité", icon: "ClipboardList" },
-      { step: "", title: "Éviter", description: "Stratégies d'évitement", icon: "Ban" }
+      { step: "1", title: "Diagnostic", description: "Audit de votre gouvernance actuelle et identification des axes d'amélioration", icon: "Search" },
+      { step: "2", title: "Structuration", description: "Mise en place des organes et outils de gouvernance adaptés", icon: "Target" },
+      { step: "3", title: "Déploiement", description: "Implémentation des processus, contrôles et formations", icon: "Shield" },
+      { step: "4", title: "Suivi", description: "Évaluation continue de la performance et amélioration", icon: "TrendingUp" }
     ],
     services: [
       {
@@ -191,20 +189,18 @@ export const servicesData: ServiceData[] = [
     title: "Juridique",
     color: "#C4D82E",
     gradient: "from-[#C4D82E]/20 via-[#C4D82E]/10 to-transparent",
-    tagline: "Gestion Administrative, Juridique et Financière",
+    tagline: "Accompagnement Juridique Externalisé",
     description: "Bénéficiez d'un accompagnement juridique complet et externalisé pour tous vos besoins contractuels et réglementaires.",
     keyBenefits: [
       { icon: "Shield", text: "Protection juridique", detail: "Tous vos contrats sécurisés" },
-      { icon: "BarChart3", text: "Réduction des coûts", detail: "Expertise sans recrutement interne" },
+      { icon: "Scale", text: "Conformité assurée", detail: "Respect du droit OHADA et gabonais" },
       { icon: "Rocket", text: "Réactivité", detail: "Conseil disponible en temps réel" }
     ],
     workflow: [
-      { step: "", title: "Analiser", description: "Compréhension de vos besoins juridiques", icon: "Search" },
-      { step: "", title: "Transférer", description: "Recommandations et clauses contractuelles", icon: "ArrowRightLeft" },
-      { step: "", title: "Réduire", description: "Mitigation des risques juridiques", icon: "Minimize2" },
-      { step: "", title: "Contrôler", description: "Veille juridique et conformité", icon: "ShieldCheck" },
-      { step: "", title: "Préparer", description: "Documentation et procédures", icon: "ClipboardList" },
-      { step: "", title: "Éviter", description: "Prévention des litiges", icon: "Ban" }
+      { step: "1", title: "Écoute", description: "Compréhension approfondie de vos enjeux et besoins juridiques", icon: "Search" },
+      { step: "2", title: "Analyse", description: "Étude de votre situation et identification des risques juridiques", icon: "FileText" },
+      { step: "3", title: "Action", description: "Rédaction, négociation et sécurisation de vos contrats", icon: "Scale" },
+      { step: "4", title: "Veille", description: "Suivi réglementaire continu et mise en conformité", icon: "Shield" }
     ],
     services: [
       {
@@ -251,12 +247,10 @@ export const servicesData: ServiceData[] = [
       { icon: "BarChart3", text: "Performance mesurée", detail: "KPIs et tableaux de bord" }
     ],
     workflow: [
-      { step: "", title: "Analiser", description: "Diagnostic financier complet", icon: "Search" },
-      { step: "", title: "Transférer", description: "Partenariats financiers", icon: "ArrowRightLeft" },
-      { step: "", title: "Réduire", description: "Optimisation des coûts et risques", icon: "Minimize2" },
-      { step: "", title: "Contrôler", description: "Tableaux de bord et reporting", icon: "ShieldCheck" },
-      { step: "", title: "Préparer", description: "Business plan et projections", icon: "ClipboardList" },
-      { step: "", title: "Éviter", description: "Stratégies de prudence", icon: "Ban" }
+      { step: "1", title: "Diagnostic", description: "Analyse approfondie de votre situation financière actuelle", icon: "Search" },
+      { step: "2", title: "Stratégie", description: "Élaboration du business plan et de la stratégie financière", icon: "Target" },
+      { step: "3", title: "Exécution", description: "Mise en place des outils financiers et levée de fonds", icon: "TrendingUp" },
+      { step: "4", title: "Pilotage", description: "Reporting, tableaux de bord et suivi des indicateurs", icon: "BarChart3" }
     ],
     services: [
       {
@@ -318,12 +312,10 @@ export const servicesData: ServiceData[] = [
       { icon: "Rocket", text: "Culture d'excellence", detail: "Organisation apprenante" }
     ],
     workflow: [
-      { step: "", title: "Analiser", description: "Audit du capital humain", icon: "Search" },
-      { step: "", title: "Transférer", description: "Externalisation et partenariats RH", icon: "ArrowRightLeft" },
-      { step: "", title: "Réduire", description: "Optimisation des processus RH", icon: "Minimize2" },
-      { step: "", title: "Contrôler", description: "Indicateurs de performance RH", icon: "ShieldCheck" },
-      { step: "", title: "Préparer", description: "Développement des compétences", icon: "ClipboardList" },
-      { step: "", title: "Éviter", description: "Prévention des conflits", icon: "Ban" }
+      { step: "1", title: "Audit", description: "État des lieux complet de votre capital humain et de vos pratiques RH", icon: "Search" },
+      { step: "2", title: "Stratégie", description: "Définition des politiques RH alignées avec votre vision d'entreprise", icon: "Target" },
+      { step: "3", title: "Déploiement", description: "Mise en œuvre des plans d'action et des programmes de développement", icon: "Rocket" },
+      { step: "4", title: "Évaluation", description: "Mesure de la performance et ajustement continu des dispositifs", icon: "Award" }
     ],
     services: [
       {

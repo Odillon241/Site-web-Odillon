@@ -73,20 +73,20 @@ export function CtaBanner({
               <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div>
             </div>
 
-            <div className="relative z-10 flex items-center min-h-[400px]">
-              <div className="max-w-2xl px-8 md:px-12 py-12">
+            <div className="relative z-10 flex items-center min-h-[280px] sm:min-h-[340px] md:min-h-[400px]">
+              <div className="max-w-2xl px-5 sm:px-8 md:px-12 py-8 sm:py-10 md:py-12">
                 {badgeText && (
                   <span className="inline-block py-1 px-3 rounded bg-white/10 backdrop-blur-sm text-white text-xs font-medium uppercase tracking-wider mb-6 border border-white/20">
                     {badgeText}
                   </span>
                 )}
 
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-6 font-petrov-sans">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold tracking-tight text-white mb-4 sm:mb-6 font-petrov-sans">
                   {title}
                 </h2>
 
                 {description && (
-                  <p className="text-lg text-gray-200 mb-8 leading-relaxed max-w-lg">
+                  <p className="text-sm sm:text-base md:text-lg text-gray-200 mb-6 sm:mb-8 leading-relaxed max-w-lg">
                     {description}
                   </p>
                 )}

@@ -31,7 +31,7 @@ export default function FinancesPage({
     <>
       <ScrollToTop />
       <HeaderPro />
-      <main className="min-h-screen pt-[148px] md:pt-[164px]">
+      <main className="min-h-screen pt-[88px] md:pt-[104px]">
         <ServiceSingle service={service} />
       </main>
       <Footer />

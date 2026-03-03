@@ -56,7 +56,7 @@ export function HistoryTimeline() {
           </BlurFade>
 
           <FadeIn delay={0.2}>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
               Une Histoire de{" "}
               <span className="text-odillon-teal">Croissance</span> et{" "}
               <span className="text-odillon-lime">d'Innovation</span>
@@ -75,7 +75,7 @@ export function HistoryTimeline() {
 
         {/* Stats summary */}
         <FadeIn delay={0.8}>
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+          <div className="mt-10 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 max-w-4xl mx-auto">
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-odillon-teal mb-2">9+</div>
               <div className="text-sm text-gray-600">Années d'expérience</div>

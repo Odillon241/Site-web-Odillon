@@ -27,10 +27,10 @@ export function Footer() {
     <footer className="relative bg-gradient-to-b from-[#2a6b63] to-[#1f524c]" role="contentinfo">
 
       {/* Decorative Accents */}
-      <div className="absolute top-20 right-10 w-72 h-72 bg-white/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-20 left-10 w-56 h-56 bg-odillon-lime/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-20 right-10 w-40 md:w-72 h-40 md:h-72 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-20 left-10 w-32 md:w-56 h-32 md:h-56 bg-odillon-lime/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-16 pb-8 relative z-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-8 relative z-10">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
 
@@ -187,16 +187,16 @@ export function Footer() {
             <p className="flex items-center gap-1">
               © {currentYear} <span className="font-semibold text-white">Odillon</span>. Tous droits réservés.
             </p>
-            <div className="flex items-center gap-6">
+            <div className="flex flex-wrap items-center justify-center md:justify-end gap-3 sm:gap-4 md:gap-6">
               <Link
                 href="/mentions-legales"
-                className="hover:text-white transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-odillon-lime hover:after:w-full after:transition-all"
+                className="text-xs sm:text-sm hover:text-white transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-odillon-lime hover:after:w-full after:transition-all"
               >
                 Mentions Légales
               </Link>
               <Link
                 href="/politique-confidentialite"
-                className="hover:text-white transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-odillon-lime hover:after:w-full after:transition-all"
+                className="text-xs sm:text-sm hover:text-white transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-odillon-lime hover:after:w-full after:transition-all"
               >
                 Politique de Confidentialité
               </Link>
@@ -205,10 +205,10 @@ export function Footer() {
                 href="https://www.odillon.fr"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-odillon-lime text-odillon-dark rounded-full hover:bg-white hover:text-odillon-teal transition-all group"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-odillon-lime text-odillon-dark rounded-full hover:bg-white hover:text-odillon-teal transition-all group text-xs sm:text-sm"
               >
                 odillon.fr
-                <ExternalLink className="w-3.5 h-3.5 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
+                <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
               </a>
             </div>
           </div>

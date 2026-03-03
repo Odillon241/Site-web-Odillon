@@ -28,7 +28,7 @@ export function HeroWithRetroGrid() {
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-gray-900">
                 Structurez votre{" "}
                 <span className="text-odillon-teal">entreprise</span> pour la{" "}
                 <span className="text-odillon-lime">réussite</span>

@@ -3,7 +3,6 @@
 import { m } from "framer-motion"
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
-import { AboutHeroBackground } from "@/components/ui/about-hero-background"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 
@@ -167,62 +166,85 @@ export function AboutDetailed() {
 
   return (
     <section className="relative overflow-hidden bg-transparent">
-      {/* Hero Section Simplified */}
-      <div className="relative pt-6 pb-16 md:pt-10 md:pb-24 lg:pt-12 lg:pb-32">
-        {/* Background Pattern - Keeping it subtle */}
-        <div className="absolute inset-0 z-0 opacity-80">
-          <AboutHeroBackground />
+      {/* Hero Section */}
+      <div className="relative pt-6 pb-12 md:pt-10 md:pb-16 lg:pt-12 lg:pb-20 overflow-hidden bg-transparent">
+        {/* Background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-odillon-teal/5 via-transparent to-odillon-lime/5" />
+          <div className="absolute -top-24 -right-24 w-96 h-96 border border-odillon-teal/10 rounded-full" />
+          <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] border border-odillon-lime/10 rounded-full" />
+          <div className="absolute top-0 left-[15%] w-px h-full bg-gradient-to-b from-transparent via-odillon-teal/10 to-transparent hidden lg:block" />
+          <div className="absolute top-0 right-[15%] w-px h-full bg-gradient-to-b from-transparent via-odillon-lime/10 to-transparent hidden lg:block" />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <FadeIn delay={0.1}>
-            <Badge variant="outline" className="mb-6 px-4 py-1.5 text-sm font-medium border-odillon-teal/30 text-odillon-teal bg-odillon-teal/5">
-              À Propos de Nous
-            </Badge>
-          </FadeIn>
+        {/* Content */}
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-4xl mx-auto">
+            <FadeIn delay={0.1}>
+              <Badge variant="odillon" className="mb-4 md:mb-6">
+                Cabinet d'Ingénierie d'Entreprises
+              </Badge>
+            </FadeIn>
 
-          <FadeIn delay={0.2}>
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-gray-900 mb-6 max-w-4xl mx-auto leading-tight">
-              L'excellence opérationnelle au service de votre{" "}
-              <span className="text-odillon-teal relative whitespace-nowrap">
-                croissance
-                {/* Underline decorative */}
-                <svg className="absolute -bottom-2 left-0 w-full h-3 text-odillon-lime/60 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
-                  <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="3" fill="none" />
-                </svg>
-              </span>
-            </h1>
-          </FadeIn>
+            <FadeIn delay={0.2}>
+              <h1 className="font-baskvill text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-900 mb-4 md:mb-6 leading-tight">
+                Bâtir l'avenir des{" "}
+                <span className="bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
+                  entreprises africaines
+                </span>
+              </h1>
+            </FadeIn>
 
-          <FadeIn delay={0.3}>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed mb-8">
-              Odillon est votre partenaire stratégique pour transformer vos défis en opportunités.
-              Une approche humaine, experte et orientée résultats.
-            </p>
-          </FadeIn>
+            <FadeIn delay={0.3}>
+              <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto mb-8 md:mb-10">
+                Depuis notre création, nous accompagnons les organisations du Gabon et d'Afrique Centrale
+                dans leur structuration, leur gouvernance et leur croissance durable.
+              </p>
+            </FadeIn>
 
-          {heroVideo && (
+            {/* CTA buttons */}
             <FadeIn delay={0.4}>
-              <div className="mx-auto max-w-4xl rounded-2xl overflow-hidden shadow-2xl border-4 border-white mt-8">
-                <VideoPlayer
-                  url={heroVideo.url}
-                  type={heroVideo.type}
-                  thumbnail={heroVideo.thumbnail || undefined}
-                  title={heroVideo.title}
-                  className="w-full aspect-video"
-                  autoplay={true}
-                  muted={true}
-                  loop={true}
-                />
-                {(heroVideo.presenter_name || heroVideo.presenter_position) && (
-                  <div className="bg-white px-6 py-4 border-t border-gray-100">
-                    <p className="font-bold text-gray-900 text-base md:text-lg">{heroVideo.presenter_name}</p>
-                    <p className="text-odillon-teal font-medium text-sm uppercase tracking-wide">{heroVideo.presenter_position}</p>
-                  </div>
-                )}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-odillon-teal hover:bg-odillon-teal/90 text-white font-semibold rounded-xl transition-all shadow-lg shadow-odillon-teal/20 hover:shadow-odillon-teal/30"
+                >
+                  Nous contacter
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  href="/services"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 border border-gray-300 hover:border-odillon-teal/50 hover:bg-odillon-teal/5 text-gray-700 hover:text-odillon-teal font-medium rounded-xl transition-all"
+                >
+                  Découvrir nos services
+                </Link>
               </div>
             </FadeIn>
-          )}
+
+            {/* Hero Video */}
+            {heroVideo && (
+              <FadeIn delay={0.5}>
+                <div className="mx-auto max-w-4xl rounded-2xl overflow-hidden shadow-xl border border-gray-200 mt-10">
+                  <VideoPlayer
+                    url={heroVideo.url}
+                    type={heroVideo.type}
+                    thumbnail={heroVideo.thumbnail || undefined}
+                    title={heroVideo.title}
+                    className="w-full aspect-video"
+                    autoplay={true}
+                    muted={true}
+                    loop={true}
+                  />
+                  {(heroVideo.presenter_name || heroVideo.presenter_position) && (
+                    <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                      <p className="font-bold text-gray-900 text-base md:text-lg">{heroVideo.presenter_name}</p>
+                      <p className="text-odillon-teal font-medium text-sm uppercase tracking-wide">{heroVideo.presenter_position}</p>
+                    </div>
+                  )}
+                </div>
+              </FadeIn>
+            )}
+          </div>
         </div>
       </div>
 
@@ -283,14 +305,14 @@ export function AboutDetailed() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <FadeIn delay={0.2}>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-petrov-sans">Nos Valeurs</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-petrov-sans">Nos Valeurs</h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-lg leading-relaxed">
                 Les piliers fondamentaux qui structurent notre approche et garantissent l'impact de nos actions.
               </p>
             </FadeIn>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8 auto-rows-[280px]">
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 auto-rows-[220px] sm:auto-rows-[250px] md:auto-rows-[280px]">
             {values.map((valeur, idx) => {
               const ValeurIcon = valeur.icon
               const isEven = idx % 2 === 0

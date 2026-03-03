@@ -39,7 +39,7 @@ const faqItems = [
 
 export function FaqHome() {
     return (
-        <section className="relative py-24 lg:py-32 overflow-hidden">
+        <section className="relative py-14 sm:py-20 lg:py-32 overflow-hidden">
             {/* Background Decor */}
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute top-1/2 right-0 w-1/3 h-1/2 bg-odillon-teal/5 rounded-full blur-[120px] -translate-y-1/2" />
@@ -47,13 +47,13 @@ export function FaqHome() {
 
             <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 relative">
                 {/* Header */}
-                <div className="text-center mb-16">
+                <div className="text-center mb-10 sm:mb-14 md:mb-16">
                     <BlurFade delay={0.1}>
                         <Badge variant="odillon" className="mb-4">
                             <HelpCircle className="w-3.5 h-3.5 mr-1.5" />
                             FAQ
                         </Badge>
-                        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-petrov-sans">
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-petrov-sans">
                             Questions <span className="text-odillon-teal">fréquentes</span>
                         </h2>
                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">

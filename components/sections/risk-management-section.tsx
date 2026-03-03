@@ -73,16 +73,16 @@ export function RiskManagementSection() {
     return (
         <section
             ref={containerRef}
-            className="relative py-24 lg:py-32 overflow-hidden"
+            className="relative py-14 sm:py-20 lg:py-32 overflow-hidden"
         >
             {/* Header */}
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-16">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-10 sm:mb-14 md:mb-16">
                 <div className="text-center">
                     <BlurFade delay={0.1}>
                         <Badge variant="odillon" className="mb-4">
                             Expertise
                         </Badge>
-                        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-petrov-sans">
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-petrov-sans">
                             Management des <span className="text-odillon-teal">Risques</span>
                         </h2>
                         <p className="text-lg text-gray-600 max-w-3xl mx-auto">

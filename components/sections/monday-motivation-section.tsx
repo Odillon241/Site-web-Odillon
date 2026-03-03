@@ -57,7 +57,7 @@ export function MondayMotivationSection({ video, className }: MondayMotivationSe
           </Badge>
           <h2
             id="monday-motivation-title"
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 font-baskvill"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 font-baskvill"
           >
             Monday Motivation
           </h2>

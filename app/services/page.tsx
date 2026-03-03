@@ -10,7 +10,7 @@ export default function ServicesPage() {
     <>
       <ScrollToTop />
       <HeaderPro />
-      <main className="relative min-h-screen pt-[148px] md:pt-[164px]">
+      <main className="relative min-h-screen pt-[88px] md:pt-[104px]">
         <ServicesDetailed />
       </main>
       <Footer />

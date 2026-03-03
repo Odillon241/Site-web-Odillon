@@ -18,7 +18,7 @@ export default function ContactPage({
     <>
       <ScrollToTop />
       <HeaderPro />
-      <main className="min-h-screen pt-[148px] md:pt-[164px]">
+      <main className="min-h-screen pt-[88px] md:pt-[104px]">
         <Contact />
       </main>
       <Footer />

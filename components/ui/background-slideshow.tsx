@@ -11,10 +11,12 @@ interface BackgroundSlideshowProps {
 }
 
 export function BackgroundSlideshow({
-  images,
+  images: rawImages,
   interval = 5000,
   className = ""
 }: BackgroundSlideshowProps) {
+  // Filter out images with empty or missing src
+  const images = rawImages.filter(img => img.src && img.src.trim() !== '')
   const [currentIndex, setCurrentIndex] = useState(0)
 
   // Next.js Image component handles preloading automatically

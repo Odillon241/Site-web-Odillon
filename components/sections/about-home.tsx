@@ -80,13 +80,13 @@ export function AboutHome() {
   }, [])
 
   return (
-    <section id="apropos" className="relative py-20 lg:py-32 overflow-hidden">
+    <section id="apropos" className="relative py-14 sm:py-20 lg:py-32 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         {/* Header Section - Redesigned */}
-        <div className="grid md:grid-cols-2 gap-16 items-center mb-24">
+        <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center mb-14 md:mb-24">
           <div>
             <BlurFade delay={0.1}>
-              <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-odillon-dark mb-6 font-petrov-sans leading-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-odillon-dark mb-4 sm:mb-6 font-petrov-sans leading-tight">
                 Votre partenaire <br />
                 <span className="text-odillon-teal">de confiance</span>.
               </h2>
@@ -129,15 +129,15 @@ export function AboutHome() {
         </div>
 
         {/* Timeline - Modern Vertical Redesign */}
-        <div className="mb-32 relative">
+        <div className="mb-16 md:mb-32 relative">
           <JourneyTimeline journey={journey} />
         </div>
 
 
         {/* Core Values - Clean Grid */}
         <BlurFade delay={0.5}>
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">Nos Valeurs Fondamentales</h3>
+          <div className="text-center mb-8 sm:mb-12">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">Nos Valeurs Fondamentales</h3>
             <p className="text-gray-500 max-w-2xl mx-auto">Les principes qui guident chaque action et façonnent notre engagement.</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -53,9 +53,9 @@ const expertiseDomains = [
 
 export function ExpertiseHome() {
   return (
-    <section id="expertise" className="relative py-24 lg:py-32 bg-transparent border-t border-gray-100/50">
+    <section id="expertise" className="relative py-14 sm:py-20 lg:py-32 bg-transparent border-t border-gray-100/50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+        <div className="grid lg:grid-cols-2 gap-10 sm:gap-14 lg:gap-24 items-start">
 
           {/* Left Content - Sticky Header */}
           <div className="relative lg:sticky lg:top-32">
@@ -69,13 +69,13 @@ export function ExpertiseHome() {
             <BlurFade delay={0.2}>
               <TextReveal
                 text="Des résultats mesurables et durables."
-                className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-8 font-petrov-sans leading-[1.1] items-start justify-start"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-6 sm:mb-8 font-petrov-sans leading-[1.1] items-start justify-start"
                 delay={0.2}
               />
             </BlurFade>
 
             <BlurFade delay={0.3}>
-              <p className="text-lg text-gray-600 mb-12 max-w-md leading-relaxed">
+              <p className="text-base sm:text-lg text-gray-600 mb-8 sm:mb-12 max-w-md leading-relaxed">
                 Au-delà du conseil, nous nous engageons sur l'impact réel de nos interventions. Notre approche pragmatique garantit un retour sur investissement rapide.
               </p>
             </BlurFade>
@@ -92,13 +92,13 @@ export function ExpertiseHome() {
           </div>
 
           {/* Right Content - Cards List */}
-          <div className="space-y-8">
+          <div className="space-y-5 sm:space-y-8">
             {expertiseDomains.map((domain, idx) => {
               const DomainIcon = domain.icon
               return (
                 <FadeIn key={domain.title} delay={0.1 * (idx + 1)}>
                   <Link href="/services" className="block group perspective-1000">
-                    <div className="relative overflow-hidden bg-white/40 backdrop-blur-md p-8 md:p-10 rounded-lg border border-white/20 hover:border-odillon-teal/40 hover:bg-white/60 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-odillon-teal/10 hover:-translate-y-2 transition-all duration-500 group">
+                    <div className="relative overflow-hidden bg-white/40 backdrop-blur-md p-5 sm:p-8 md:p-10 rounded-lg border border-white/20 hover:border-odillon-teal/40 hover:bg-white/60 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-odillon-teal/10 hover:-translate-y-2 transition-all duration-500 group">
                       {/* Decorative Background Glow */}
                       <div
                         className="absolute -right-20 -top-20 w-40 h-40 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500"

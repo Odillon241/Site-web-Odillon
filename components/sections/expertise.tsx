@@ -23,8 +23,8 @@ const expertiseAreas = [
   },
   {
     icon: Briefcase,
-    title: "Gestion Administrative Juridique et Financière",
-    description: "Accompagnement complet dans la gestion administrative, juridique et financière de votre entreprise."
+    title: "Accompagnement Juridique Externalisé",
+    description: "Bénéficiez d'une expertise juridique complète et externalisée pour tous vos besoins contractuels et réglementaires."
   },
   {
     icon: Globe2,

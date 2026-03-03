@@ -75,14 +75,14 @@ export function NewsletterSection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="relative overflow-hidden rounded-xl bg-white border border-gray-100 px-6 py-16 sm:px-16 sm:py-24 shadow-xl"
+                    className="relative overflow-hidden rounded-xl bg-white border border-gray-100 px-4 py-10 sm:px-10 sm:py-16 md:px-16 md:py-24 shadow-xl"
                 >
                     {/* Background effects - Subtle now */}
                     <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-odillon-teal/5 rounded-full blur-3xl" />
                     <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-odillon-lime/10 rounded-full blur-3xl" />
 
                     <div className="relative z-10 mx-auto max-w-2xl text-center">
-                        <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-4 sm:text-4xl font-petrov-sans">
+                        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-gray-900 mb-4 font-petrov-sans">
                             Restez à la pointe de l'innovation
                         </h2>
                         <p className="mx-auto mt-4 mb-8 max-w-xl text-lg text-gray-600 font-light">

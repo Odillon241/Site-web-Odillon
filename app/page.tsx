@@ -88,7 +88,7 @@ export default async function Home({
     <>
       <ScrollToTop />
       <HeaderPro />
-      <main className="min-h-screen pt-[148px] md:pt-[164px]">
+      <main className="min-h-screen pt-[88px] md:pt-[104px]">
         <Hero logos={logos || []} video={heroVideo} />
         <MondayMotivationSection video={mondayMotivationVideo} />
         <ServicesHome />

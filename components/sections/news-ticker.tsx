@@ -131,7 +131,7 @@ const NewsItemCard = memo(function NewsItemCard({
       {/* News Content */}
       <div className="flex items-center gap-3">
         <h3 className={cn(
-          "text-sm font-medium text-odillon-dark/90 max-w-[400px] truncate",
+          "text-sm font-medium text-odillon-dark/90 max-w-[180px] sm:max-w-[280px] md:max-w-[400px] truncate",
           "group-hover:text-odillon-teal transition-colors duration-200"
         )}>
           {item.title}

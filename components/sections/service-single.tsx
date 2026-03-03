@@ -21,7 +21,8 @@ import {
   Shield,
   Scale,
   TrendingUp,
-  Users
+  Users,
+  Search
 } from "lucide-react"
 import Link from "next/link"
 import { ServiceData } from "@/lib/services-data"
@@ -40,6 +41,7 @@ const iconMap: Record<string, React.ComponentType<any>> = {
   Award,
   Lightbulb,
   Rocket,
+  Search,
 }
 
 type ServiceSingleProps = {
@@ -142,7 +144,7 @@ export function ServiceSingle({ service }: ServiceSingleProps) {
               <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
                 Notre méthode d'accompagnement
               </h3>
-              <p className="text-sm md:text-base text-gray-600">Un processus éprouvé en 4 étapes</p>
+              <p className="text-sm md:text-base text-gray-600">Un processus éprouvé en {service.workflow.length} étapes</p>
             </div>
 
             <Marquee className="py-4">

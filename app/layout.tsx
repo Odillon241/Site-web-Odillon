@@ -4,12 +4,11 @@ import { cn } from "@/lib/utils"
 import { airFont, libreBaskerville } from "./fonts"
 import { MotionProvider } from "@/components/providers/motion-provider"
 import { Toaster } from "@/components/ui/sonner"
-import { GlobalNewsTicker } from "@/components/layout/global-news-ticker"
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.odillon.fr'),
   title: "Odillon - Ingénierie d'Entreprises | Cabinet de Conseil au Gabon",
-  description: "Cabinet de conseil spécialisé en structuration, gestion administrative juridique et financière, relations publiques et management des risques. Gouvernance, RH, Finances et Juridique.",
+  description: "Cabinet de conseil spécialisé en structuration d'entreprises, gouvernance, accompagnement juridique, finances et capital humain. Ingénierie d'entreprises au Gabon.",
   keywords: ["ingénierie d'entreprises", "conseil", "gabon", "gouvernance", "gestion administrative", "ressources humaines", "finances", "juridique", "libreville"],
   authors: [{ name: "Odillon" }],
   creator: "Odillon",
@@ -24,7 +23,7 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     url: "https://www.odillon.fr",
     title: "Odillon - Ingénierie d'Entreprises",
-    description: "Cabinet de conseil spécialisé en structuration, gestion administrative, relations publiques et management des risques",
+    description: "Cabinet de conseil spécialisé en structuration d'entreprises, gouvernance, accompagnement juridique, finances et capital humain au Gabon",
     siteName: "Odillon",
   },
   twitter: {
@@ -55,7 +54,6 @@ export default function RootLayout({
         {/* Lightweight CSS gradient background - replaces heavy THREE.js LiquidEther */}
         <div className="animated-gradient-bg" />
         <MotionProvider>
-          <GlobalNewsTicker />
           {children}
           <Toaster />
         </MotionProvider>

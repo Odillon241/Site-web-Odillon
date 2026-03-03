@@ -100,7 +100,7 @@ export function AnimatedSlogan({
       animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={cn(
-        "font-baskvill text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-white italic tracking-wide text-center leading-relaxed",
+        "font-baskvill text-lg sm:text-xl md:text-2xl lg:text-4xl xl:text-5xl text-white italic tracking-wide text-center leading-relaxed",
         className
       )}
     >

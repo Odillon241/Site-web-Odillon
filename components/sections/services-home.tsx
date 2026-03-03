@@ -29,7 +29,7 @@ const mainServices = [
   {
     icon: Scale,
     title: "Juridique",
-    tagline: "Gestion Administrative, Juridique et Financière",
+    tagline: "Accompagnement Juridique Externalisé",
     color: "#C4D82E",
     highlights: ["Service externalisé", "Contrats", "Négociation"]
   },
@@ -51,7 +51,7 @@ const mainServices = [
 
 export function ServicesHome() {
   return (
-    <section id="services" className="relative py-24 lg:py-32 overflow-hidden">
+    <section id="services" className="relative py-14 sm:py-20 lg:py-32 overflow-hidden">
       {/* Background Decor */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-odillon-teal/5 rounded-full blur-[100px]" />
@@ -60,15 +60,15 @@ export function ServicesHome() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 md:mb-16 gap-6 sm:gap-8">
           <BlurFade delay={0.2} className="max-w-2xl">
             <TextReveal
               text="L'expertise stratégique au service de votre transformation."
-              className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-petrov-sans tracking-tight justify-start"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-petrov-sans tracking-tight justify-start"
               delay={0.2}
             />
             {/* Keeping the 'votre réussite' highlight logic by custom styling if needed, or accepting the TextReveal style */}
-            <p className="text-lg text-gray-600 leading-relaxed">
+            <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
               Quatre piliers d'expertise pour transformer et structurer votre organisation de manière pérenne.
             </p>
           </BlurFade>
@@ -88,7 +88,7 @@ export function ServicesHome() {
         </div>
 
         {/* Clean Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-14 sm:mb-20 md:mb-24">
           {mainServices.map((service, idx) => {
             const ServiceIcon = service.icon
             return (

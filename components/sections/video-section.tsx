@@ -16,7 +16,7 @@ export function VideoSection({ video, className }: VideoSectionProps) {
         <section className={`py-16 md:py-24 ${className}`}>
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <FadeIn>
-                    <div className="mx-auto max-w-5xl rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-black">
+                    <div className="mx-auto max-w-5xl rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl border-2 md:border-4 border-white bg-black">
                         <VideoPlayer
                             url={video.url}
                             type={video.type}

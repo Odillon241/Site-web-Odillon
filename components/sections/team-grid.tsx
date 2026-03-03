@@ -189,7 +189,7 @@ export function TeamGrid() {
                                     title="Direction Générale"
                                     members={directionGenerale}
                                     variant="direction"
-                                    className="w-72"
+                                    className="w-full max-w-72"
                                 />
                             </div>
 
@@ -209,7 +209,7 @@ export function TeamGrid() {
                                 <OrgBox
                                     title="Pôle Administratif"
                                     members={poleAdministratif}
-                                    className="w-64"
+                                    className="w-full max-w-64"
                                 />
                             </div>
 
@@ -231,10 +231,9 @@ export function TeamGrid() {
                             </div>
 
                             <div
-                                className="relative grid gap-4 md:gap-6 mt-0 mx-auto"
+                                className="relative grid gap-4 md:gap-6 mt-0 mx-auto w-full md:w-[85%]"
                                 style={{
-                                    width: "85%",
-                                    gridTemplateColumns: `repeat(${autresPoles.length}, minmax(0, 1fr))`
+                                    gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, 220px), 1fr))`
                                 }}
                             >
                                 {/* Lignes verticales vers chaque pôle - Desktop */}

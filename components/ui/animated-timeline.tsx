@@ -102,7 +102,7 @@ export function AnimatedTimeline({ events, className }: AnimatedTimelineProps) {
                     animate={isActive ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
                     transition={{ duration: 0.4, delay: index * 0.1 + 0.4 }}
                   >
-                    <span className={cn("text-4xl md:text-5xl font-bold", colorClass)}>
+                    <span className={cn("text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold", colorClass)}>
                       {event.year}
                     </span>
                   </m.div>

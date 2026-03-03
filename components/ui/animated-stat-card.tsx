@@ -154,7 +154,7 @@ export function AnimatedStatCard({
           />
 
           {/* Content */}
-          <div className="relative z-10 p-6 md:p-8 text-center flex flex-col items-center justify-center min-h-[200px] md:min-h-[240px]">
+          <div className="relative z-10 p-4 sm:p-6 md:p-8 text-center flex flex-col items-center justify-center min-h-[160px] sm:min-h-[180px] md:min-h-[220px] lg:min-h-[240px]">
             {/* Animated icon container */}
             <m.div
               className="relative mb-4"
@@ -191,7 +191,7 @@ export function AnimatedStatCard({
             {/* Animated value */}
             <div className="relative mb-2">
               <m.div
-                className="text-4xl md:text-5xl lg:text-6xl font-bold"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold"
                 style={{ color: color }}
                 animate={{
                   textShadow: [

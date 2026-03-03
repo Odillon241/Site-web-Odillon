@@ -115,7 +115,7 @@ export function ContactHome() {
   }
 
   return (
-    <section id="contact" className="relative py-24 lg:py-32 overflow-hidden">
+    <section id="contact" className="relative py-14 sm:py-20 lg:py-32 overflow-hidden">
       {/* Background Decor */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 right-0 w-1/2 h-1/2 bg-odillon-teal/5 rounded-full blur-[120px] -translate-y-1/2" />
@@ -123,20 +123,20 @@ export function ContactHome() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+        <div className="grid lg:grid-cols-2 gap-10 sm:gap-14 lg:gap-24 items-start">
           <div>
             <BlurFade delay={0.1}>
-              <div className="inline-flex items-center space-x-2 text-odillon-teal font-medium mb-6">
+              <div className="inline-flex items-center space-x-2 text-odillon-teal font-medium mb-4 sm:mb-6">
                 <span className="w-8 h-[1px] bg-odillon-teal"></span>
-                <span className="uppercase tracking-widest text-sm">Contact</span>
+                <span className="uppercase tracking-widest text-xs sm:text-sm">Contact</span>
               </div>
-              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 font-petrov-sans leading-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-petrov-sans leading-tight">
                 Transformons votre <br />
                 <span className="text-odillon-teal">vision en réalité</span>.
               </h2>
             </BlurFade>
             <BlurFade delay={0.2}>
-              <p className="text-lg text-gray-600 mb-10 max-w-lg leading-relaxed">
+              <p className="text-base sm:text-lg text-gray-600 mb-8 sm:mb-10 max-w-lg leading-relaxed">
                 Vous avez un projet de structuration ou de développement ? Notre équipe est prête à vous écouter et à construire avec vous des solutions sur mesure.
               </p>
             </BlurFade>
@@ -174,7 +174,7 @@ export function ContactHome() {
 
           <div className="lg:sticky lg:top-32">
             <BlurFade delay={0.4}>
-              <div className="bg-white p-8 md:p-10 rounded-lg shadow-xl shadow-gray-200/50 border border-gray-100 relative overflow-hidden">
+              <div className="bg-white p-5 sm:p-8 md:p-10 rounded-lg shadow-xl shadow-gray-200/50 border border-gray-100 relative overflow-hidden">
 
 
                 <div className="mb-8">
@@ -202,7 +202,7 @@ export function ContactHome() {
                     </div>
                   )}
 
-                  <div className="grid grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                     <div className="space-y-2">
                       <label htmlFor="lastName" className="text-sm font-semibold text-gray-700 ml-1">Nom *</label>
                       <Input

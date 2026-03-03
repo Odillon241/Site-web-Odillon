@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
+import { BackgroundSlideshow } from "@/components/ui/background-slideshow"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -14,6 +15,7 @@ import { VideoSection } from "@/components/sections/video-section"
 import { VideosSection } from "@/components/sections/videos-section"
 import type { VideoItem } from "@/components/sections/videos-section"
 import { Video } from "@/types/admin"
+import { DEFAULT_PHOTOS } from "@/lib/photo-themes"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { servicesData as rawServicesData } from "@/lib/services-data"
@@ -77,6 +79,15 @@ const servicesData = rawServicesData.map(service => ({
 export function ServicesDetailed() {
   const [activeTab, setActiveTab] = useState("gouvernance")
   const activeService = servicesData.find(s => s.id === activeTab)
+  const tabsContentRef = useRef<HTMLDivElement>(null)
+
+  const handleTabChange = useCallback((value: string) => {
+    setActiveTab(value)
+    // Scroll vers le contenu de l'onglet après un court délai pour laisser le rendu se faire
+    setTimeout(() => {
+      tabsContentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 100)
+  }, [])
   const [video, setVideo] = useState<Video | null>(null)
   const [testimonialVideos, setTestimonialVideos] = useState<VideoItem[]>([])
   const [testimonials, setTestimonials] = useState<Array<{
@@ -86,24 +97,47 @@ export function ServicesDetailed() {
     avatar: string
   }>>([])
   const [currentTestimonial, setCurrentTestimonial] = useState(0)
-  const [heroImageUrl, setHeroImageUrl] = useState<string | null>(null)
+  const [heroImages, setHeroImages] = useState<Array<{ src: string; alt: string }>>(
+    DEFAULT_PHOTOS.slice(0, 4).map(p => ({ src: p.src, alt: p.alt }))
+  )
 
   useEffect(() => {
-    const fetchSettings = async () => {
+    const fetchHeroImages = async () => {
       try {
-        const res = await fetch('/api/settings')
+        // Try fetching active photos from the API
+        const res = await fetch('/api/photos?active=true')
         if (res.ok) {
           const data = await res.json()
-          const settings = data.settings || data
-          if (settings?.services_hero_image_url) {
-            setHeroImageUrl(settings.services_hero_image_url)
+          const photos = data.photos || data
+          if (Array.isArray(photos)) {
+            // Filter out photos with empty or missing src
+            const validPhotos = photos
+              .filter((p: any) => p.src && typeof p.src === 'string' && p.src.trim() !== '')
+              .map((p: any) => ({ src: p.src, alt: p.alt || 'Odillon' }))
+            if (validPhotos.length > 0) {
+              setHeroImages(validPhotos)
+              return
+            }
           }
         }
       } catch (e) {
-        console.error("Failed to fetch settings", e)
+        // Fallback: try settings for a single hero image
+        try {
+          const settingsRes = await fetch('/api/settings')
+          if (settingsRes.ok) {
+            const data = await settingsRes.json()
+            const settings = data.settings || data
+            if (settings?.services_hero_image_url && settings.services_hero_image_url.trim() !== '') {
+              setHeroImages([{ src: settings.services_hero_image_url, alt: 'Activités du cabinet Odillon' }])
+              return
+            }
+          }
+        } catch (_) {
+          // Keep default photos
+        }
       }
     }
-    fetchSettings()
+    fetchHeroImages()
   }, [])
 
   useEffect(() => {
@@ -205,108 +239,38 @@ export function ServicesDetailed() {
 
   return (
     <section className="relative overflow-hidden bg-transparent">
-      {/* Hero Section with Background */}
-      <div className={`relative overflow-hidden ${heroImageUrl ? 'pt-16 pb-20 md:pt-24 md:pb-28 lg:pt-32 lg:pb-36' : 'pt-6 pb-12 md:pt-10 md:pb-16 lg:pt-12 lg:pb-20'} bg-transparent`}>
-        {/* Background - Image or Decorative Pattern */}
-        <div className="absolute inset-0 overflow-hidden">
-          {heroImageUrl ? (
-            <>
-              {/* Background Image */}
-              <img
-                src={heroImageUrl}
-                alt="Activités du cabinet Odillon"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              {/* Dark overlay for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
-              {/* Brand-colored accent overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-odillon-teal/20 via-transparent to-odillon-dark/30" />
-            </>
-          ) : (
-            <>
-              {/* Soft gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-odillon-teal/5 via-transparent to-odillon-lime/5" />
-
-              {/* Large circle patterns */}
-              <div className="absolute -top-24 -right-24 w-96 h-96 border border-odillon-teal/10 rounded-full" />
-              <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] border border-odillon-lime/10 rounded-full" />
-
-              {/* Smaller decorative circles */}
-              <div className="absolute top-1/4 right-1/3 w-32 h-32 border border-odillon-teal/20 rounded-full animate-pulse" style={{ animationDuration: '4s' }} />
-              <div className="absolute bottom-1/3 left-1/4 w-24 h-24 border border-odillon-lime/20 rounded-full animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
-
-              {/* Simple grid overlay */}
-              <div className="absolute inset-0 opacity-[0.15]">
-                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <pattern id="services-grid" width="50" height="50" patternUnits="userSpaceOnUse">
-                      <path
-                        d="M 50 0 L 0 0 0 50"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="0.5"
-                        className="text-odillon-teal"
-                      />
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#services-grid)" />
-                </svg>
-              </div>
-
-              {/* Subtle dots pattern */}
-              <div className="absolute inset-0 opacity-[0.08]">
-                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <pattern id="services-dots" width="30" height="30" patternUnits="userSpaceOnUse">
-                      <circle cx="2" cy="2" r="1.5" fill="currentColor" className="text-odillon-lime" />
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#services-dots)" />
-                </svg>
-              </div>
-
-              {/* Floating squares */}
-              <div className="absolute top-1/3 left-1/4 w-20 h-20 border-2 border-odillon-teal/15 transform rotate-12 animate-pulse" style={{ animationDuration: '6s' }} />
-              <div className="absolute bottom-1/4 right-1/4 w-16 h-16 border-2 border-odillon-lime/15 transform -rotate-12 animate-pulse" style={{ animationDuration: '7s', animationDelay: '2s' }} />
-
-              {/* Subtle light beams effect */}
-              <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-odillon-teal/10 to-transparent" />
-              <div className="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-transparent via-odillon-lime/10 to-transparent" />
-
-              {/* Radial fade overlay */}
-              <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-background/80" />
-            </>
-          )}
+      {/* Hero Section with Background Slideshow */}
+      <div className="relative min-h-[50vh] md:min-h-[55vh] lg:min-h-[60vh] flex items-center overflow-hidden">
+        {/* Background Slideshow */}
+        <div className="absolute inset-0 z-0">
+          <BackgroundSlideshow images={heroImages} interval={6000} />
+          {/* Overlay for readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/40 to-black/65 z-[1]" />
+          <div className="absolute inset-0 bg-gradient-to-br from-odillon-teal/15 via-transparent to-odillon-dark/20 z-[1]" />
         </div>
 
         {/* Content */}
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24">
           <div className="text-center max-w-3xl mx-auto">
             <FadeIn delay={0.1}>
-              <Badge variant="odillon" className="mb-4 md:mb-6">
+              <Badge className="mb-4 md:mb-6 bg-white/10 border border-white/20 text-white backdrop-blur-sm text-xs md:text-sm px-4 py-1.5 font-medium rounded-full">
                 Excellence · Expertise · Innovation
               </Badge>
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight ${heroImageUrl ? 'text-white' : 'text-gray-900'}`}>
+              <h1 className="font-baskvill text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight drop-shadow-lg">
                 Des services qui transforment{" "}
-                <span className={heroImageUrl
-                  ? "text-odillon-lime"
-                  : "bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent"
-                }>
+                <span className="text-odillon-lime">
                   votre entreprise
                 </span>
               </h1>
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <p className={`text-base md:text-lg lg:text-xl leading-relaxed ${heroImageUrl ? 'text-white/90' : 'text-gray-600'}`}>
-                Solutions complètes en ingénierie d'entreprises pour structurer, développer et pérenniser votre organisation.
-                <br className="hidden sm:block" />
-                <span className={`text-sm md:text-base mt-2 inline-block ${heroImageUrl ? 'text-white/70' : 'text-gray-500'}`}>
-                  Chaque service est conçu pour répondre à vos enjeux avec finesse et expertise.
-                </span>
+              <p className="text-base md:text-lg lg:text-xl text-white/85 leading-relaxed max-w-2xl mx-auto drop-shadow">
+                Solutions complètes en ingénierie d'entreprises pour structurer,
+                développer et pérenniser votre organisation.
               </p>
             </FadeIn>
           </div>
@@ -319,7 +283,7 @@ export function ServicesDetailed() {
 
         {/* Tabs Navigation */}
         <BlurFade delay={0.4}>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3 bg-transparent h-auto p-0 mb-8 md:mb-12">
               {servicesData.map((service, index) => {
                 const Icon = service.icon
@@ -352,6 +316,7 @@ export function ServicesDetailed() {
               })}
             </TabsList>
 
+            <div ref={tabsContentRef} className="scroll-mt-[120px]" />
             {servicesData.map((service) => (
               <TabsContent key={service.id} value={service.id} className="space-y-8 md:space-y-12 mt-0">
                 {/* Service Header */}

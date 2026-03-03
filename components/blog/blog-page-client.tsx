@@ -149,12 +149,12 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                                     rel="noopener noreferrer"
                                     className="group"
                                 >
-                                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 font-petrov-sans group-hover:opacity-90 transition-opacity">
+                                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 font-petrov-sans group-hover:opacity-90 transition-opacity">
                                         Actualités & <span className="text-odillon-lime">Insights</span>
                                     </h1>
                                 </a>
                             ) : (
-                                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 font-petrov-sans">
+                                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 font-petrov-sans">
                                     Actualités & <span className="text-odillon-lime">Insights</span>
                                 </h1>
                             )}
