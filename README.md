@@ -85,24 +85,26 @@ git branch --set-upstream-to=origin/main main
 #### Mise à jour du dépôt sur Infomaniak
 
 ```bash
-# Se connecter en SSH
-ssh votre-user@odillon.fr
+# Se connecter en SSH puis aller dans le dossier du site
+cd sites/odillon.fr
 
-# Aller dans le dossier du site
-cd /chemin/vers/site
+# Si le pull échoue à cause de fichiers locaux modifiés (ex: package-lock.json)
+git checkout -- package-lock.json
 
 # Récupérer les dernières modifications
 git pull origin main
 
-# Réinstaller si nécessaire
+# Réinstaller les dépendances
 npm install
 
 # Rebuilder
 npm run build
 
-# Redémarrer l'application (via l'interface Infomaniak ou PM2)
+# Redémarrer l'application
 pm2 restart odillon-site
 ```
+
+> **Astuce** : Si `git pull` échoue avec l'erreur "Your local changes would be overwritten by merge", c'est généralement `package-lock.json` qui a été modifié par un `npm install` sur le serveur. Lancez `git checkout -- package-lock.json` avant le pull pour résoudre le conflit.
 
 **Note** : Pour changer la branche par défaut sur GitHub, allez dans **Settings > Branches > Default branch** et sélectionnez `main`.
 
@@ -151,11 +153,13 @@ La documentation complète du projet se trouve dans le dossier [`docs/`](./docs/
 1. **Gouvernance** - Structuration et règles de bonne gouvernance
 2. **Juridique** - Service juridique externalisé complet
 3. **Finances** - Conseil financier et levée de fonds
-4. **Administration & RH** - Gestion complète des ressources humaines
+4. **Capital Humain** - Administration et ressources humaines
+5. **Formations** - Master Class, coaching, formations en ligne
+6. **Communication** - Institutionnelle, digitale, de crise, médiatique
 
 ## Contact
 
-- **Téléphone** : +241 11747574
+- **Téléphone** : +241 11 74 75 74
 - **Email** : contact@odillon.fr
 - **Adresse** : BP- 13262 Libreville, Gabon
 - **Site web** : www.odillon.fr
