@@ -1,113 +1,58 @@
 "use client"
 
-import { m } from "framer-motion"
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-
-import { TeamCard } from "@/components/ui/team-card"
-import { Separator } from "@/components/ui/separator"
-import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee"
 import {
-  Users,
-  Target,
-  Heart,
-  Lightbulb,
-  Award,
+  Gem,
+  Flame,
+  HeartHandshake,
   ArrowRight,
   CheckCircle,
-  Sparkles,
-  TrendingUp,
-  Shield,
-  Zap
+  PenLine,
+  Target,
+  Sparkles
 } from "lucide-react"
 import Link from "next/link"
 import { TeamGrid } from "@/components/sections/team-grid"
 import { VideoPlayer } from "@/components/ui/video-player"
 import { Video } from "@/types/admin"
 import { SpotlightCard } from "@/components/ui/spotlight-card"
+import { JourneyTimeline, type JourneyItem } from "@/components/sections/about-home"
 
-const timeline = [
-  {
-    year: "2017",
-    title: "Fondation",
-    description: "Création d'Odillon avec une vision claire : transformer le paysage entrepreneurial local.",
-    color: "#39837a",
-    icon: Sparkles
-  },
-  {
-    year: "2019",
-    title: "Expansion",
-    description: "Développement de nos services et constitution d'une équipe d'experts multidisciplinaires.",
-    color: "#C4D82E",
-    icon: TrendingUp
-  },
-  {
-    year: "2022",
-    title: "Reconnaissance",
-    description: "Certification internationale et positionnement comme leader régional en conseil.",
-    color: "#39837a",
-    icon: Award
-  },
-  {
-    year: "2024",
-    title: "Innovation",
-    description: "Lancement de solutions digitales inédites pour accélérer la croissance de nos clients.",
-    color: "#C4D82E",
-    icon: Lightbulb
-  },
-  {
-    year: "2025",
-    title: "Expansion Régionale",
-    description: "Ouverture de nouveaux bureaux et renforcement de notre présence sur le continent.",
-    color: "#39837a",
-    icon: Target
-  },
-  {
-    year: "2026",
-    title: "Excellence & Impact",
-    description: "Consolidation de notre position de leader et lancement d'Odillon Academy.",
-    color: "#C4D82E",
-    icon: Sparkles
-  }
+const aboutJourney: JourneyItem[] = [
+  { year: "2017", title: "FONDATION", description: "Création de la Société ODILLON, spécialisée en Ingénierie d'Entreprises." }
 ]
 
 const initialValues = [
   {
-    icon: Award,
-    title: "Excellence",
-    value: "Standards élevés",
-    description: "Une rigueur absolue dans chaque mission pour dépasser vos attentes.",
+    icon: Gem,
+    title: "Talent",
+    value: "Compétences",
+    description: "Notre équipe se définit par l'expression de ses compétences transversales matérialisées par le professionnalisme, la rigueur et la discipline.",
     gradient: "from-[#39837a]/20 to-[#39837a]/5"
   },
   {
-    icon: Shield,
-    title: "Intégrité",
-    value: "Éthique totale",
-    description: "Transparence et confidentialité sont les piliers de notre relation client.",
+    icon: Flame,
+    title: "Challenge",
+    value: "Détermination",
+    description: "Notre détermination et notre motivation à toujours proposer des solutions innovantes mieux adaptées aux besoins de nos clients.",
     gradient: "from-[#C4D82E]/20 to-[#C4D82E]/5"
   },
   {
-    icon: Lightbulb,
-    title: "Innovation",
-    value: "Créativité utile",
-    description: "Des solutions modernes et adaptées à votre contexte spécifique.",
+    icon: HeartHandshake,
+    title: "Proximité",
+    value: "Qualité",
+    description: "Notre implication à fournir des services de qualité exceptionnelle aux clients.",
     gradient: "from-[#39837a]/20 to-[#39837a]/5"
-  },
-  {
-    icon: Heart,
-    title: "Partenariat",
-    value: "Confiance durable",
-    description: "Nous ne sommes pas juste des consultants, mais vos partenaires de croissance.",
-    gradient: "from-[#C4D82E]/20 to-[#C4D82E]/5"
   }
 ]
 
 import { useEffect, useState } from "react"
 
 const ICON_MAP: Record<string, any> = {
-  Award, Shield, Lightbulb, Heart, Target, Sparkles
+  Gem, Flame, HeartHandshake, Target, Sparkles,
+  Award: Gem, Shield: Flame, Lightbulb: HeartHandshake, Heart: HeartHandshake
 }
 
 export function AboutDetailed() {
@@ -130,7 +75,7 @@ export function AboutDetailed() {
           if (s.about_values_json && Array.isArray(s.about_values_json) && s.about_values_json.length > 0) {
             const mappedValues = s.about_values_json.map((v: any, idx: number) => ({
               ...v,
-              icon: ICON_MAP[v.icon] || Award,
+              icon: ICON_MAP[v.icon] || Gem,
               gradient: idx % 2 === 0 ? "from-[#39837a]/20 to-[#39837a]/5" : "from-[#C4D82E]/20 to-[#C4D82E]/5"
             }))
             setValues(mappedValues)
@@ -182,7 +127,7 @@ export function AboutDetailed() {
           <div className="text-center max-w-4xl mx-auto">
             <FadeIn delay={0.1}>
               <Badge variant="odillon" className="mb-4 md:mb-6">
-                Cabinet d'Ingénierie d'Entreprises
+                Together we draw <PenLine className="inline w-3.5 h-3.5 mx-1" /> the future
               </Badge>
             </FadeIn>
 
@@ -196,10 +141,16 @@ export function AboutDetailed() {
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto mb-8 md:mb-10">
-                Depuis notre création, nous accompagnons les organisations du Gabon et d'Afrique Centrale
-                dans leur structuration, leur gouvernance et leur croissance durable.
+              <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto mb-4 md:mb-6">
+                Crée en mai 2017, la Société ODILLON, spécialisée en Ingénierie d'Entreprises propose des solutions robustes, pertinentes, durables, adaptées aux besoins de nos clients. Le profil transversal de notre équipe fait de nous le partenaire idéal pour relever vos défis.
               </p>
+              <p className="text-base md:text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto mb-4">
+                Nous partageons notre expérience professionnelle et notre éthique afin que nos clients puissent intégrer les pratiques qui pourraient leur convenir. Nous les encourageons à implémenter la diversité, respecter les normes environnementales et celles relatives à la vie privée des collaborateurs. Nous les accompagnons dans la mise en place des outils de mesure et d'analyse de la performance de leur stratégie.
+              </p>
+              <div className="inline-flex items-center gap-2 text-odillon-teal font-semibold mb-8 md:mb-10">
+                <span className="uppercase tracking-widest text-sm">Vision :</span>
+                <span className="font-baskvill text-lg">Entreprise Compétitive</span>
+              </div>
             </FadeIn>
 
             {/* CTA buttons */}
@@ -207,14 +158,14 @@ export function AboutDetailed() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-odillon-teal hover:bg-odillon-teal/90 text-white font-semibold rounded-xl transition-all shadow-lg shadow-odillon-teal/20 hover:shadow-odillon-teal/30"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-odillon-teal hover:bg-odillon-teal/90 text-white font-semibold rounded-lg transition-all shadow-lg shadow-odillon-teal/20 hover:shadow-odillon-teal/30"
                 >
                   Nous contacter
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   href="/services"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 border border-gray-300 hover:border-odillon-teal/50 hover:bg-odillon-teal/5 text-gray-700 hover:text-odillon-teal font-medium rounded-xl transition-all"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 border border-gray-300 hover:border-odillon-teal/50 hover:bg-odillon-teal/5 text-gray-700 hover:text-odillon-teal font-medium rounded-lg transition-all"
                 >
                   Découvrir nos services
                 </Link>
@@ -224,7 +175,7 @@ export function AboutDetailed() {
             {/* Hero Video */}
             {heroVideo && (
               <FadeIn delay={0.5}>
-                <div className="mx-auto max-w-4xl rounded-2xl overflow-hidden shadow-xl border border-gray-200 mt-10">
+                <div className="mx-auto max-w-4xl rounded-lg overflow-hidden shadow-xl border border-gray-200 mt-10">
                   <VideoPlayer
                     url={heroVideo.url}
                     type={heroVideo.type}
@@ -262,7 +213,7 @@ export function AboutDetailed() {
               </div>
             </div>
 
-            <div className="bg-gray-50 rounded-2xl p-8 md:p-10 mb-12">
+            <div className="bg-gray-50 rounded-lg p-8 md:p-10 mb-12">
               <ul className="grid md:grid-cols-3 gap-6">
                 {[
                   "Expertise locale, standards internationaux",
@@ -282,7 +233,7 @@ export function AboutDetailed() {
           </FadeIn>
 
           {video && (
-            <FadeIn delay={0.4} className="mt-8 md:mt-12 mx-auto max-w-5xl rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
+            <FadeIn delay={0.4} className="mt-8 md:mt-12 mx-auto max-w-5xl rounded-lg overflow-hidden shadow-2xl border-4 border-white">
               <VideoPlayer
                 url={video.url}
                 type={video.type}
@@ -305,7 +256,7 @@ export function AboutDetailed() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <FadeIn delay={0.2}>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-petrov-sans">Nos Valeurs</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-baskvill">Nos Valeurs</h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-lg leading-relaxed">
                 Les piliers fondamentaux qui structurent notre approche et garantissent l'impact de nos actions.
               </p>
@@ -317,15 +268,12 @@ export function AboutDetailed() {
               const ValeurIcon = valeur.icon
               const isEven = idx % 2 === 0
 
-              // Bento spans logic
-              let spanClass = "md:col-span-1 md:row-span-1"
-              if (idx === 0) spanClass = "md:col-span-2 md:row-span-1" // Excellence
-              if (idx === 3) spanClass = "md:col-span-2 md:row-span-1" // Partenariat
+              const spanClass = "md:col-span-1 md:row-span-1"
 
               return (
                 <BlurFade key={valeur.title} delay={0.1 * (idx + 1)} className={spanClass}>
                   <SpotlightCard
-                    className="h-full w-full bg-white border border-gray-100 shadow-sm rounded-xl p-8 overflow-hidden group"
+                    className="h-full w-full bg-white border border-gray-100 shadow-sm rounded-lg p-8 overflow-hidden group"
                     spotlightColor={isEven ? "rgba(57, 131, 122, 0.05)" : "rgba(196, 216, 46, 0.05)"}
                   >
                     <div className="relative z-10 flex flex-col h-full">
@@ -341,7 +289,7 @@ export function AboutDetailed() {
                       </div>
 
                       <div className="mt-auto">
-                        <h3 className="text-xl font-bold text-gray-900 mb-2 font-petrov-sans">
+                        <h3 className="text-xl font-bold text-gray-900 mb-2 font-baskvill">
                           {valeur.title}
                         </h3>
 
@@ -367,97 +315,25 @@ export function AboutDetailed() {
           <TeamGrid />
         </div>
 
-        {/* Timeline - Elegant Vertical Line */}
+        {/* Timeline - Same component as homepage */}
         <div className="py-24">
           <div className="text-center mb-16">
-            <m.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 font-petrov-sans"
-            >
-              Notre Histoire
-            </m.h2>
-            <m.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-gray-600 max-w-2xl mx-auto text-lg"
-            >
-              Une croissance constante au service de nos clients.
-            </m.p>
+            <BlurFade delay={0.1}>
+              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 font-baskvill">
+                Notre Histoire
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+                Une croissance constante au service de nos clients.
+              </p>
+            </BlurFade>
           </div>
 
-          <div className="relative max-w-4xl mx-auto px-4 sm:px-6">
-            {/* Central Line with Gradient */}
-            <m.div
-              initial={{ height: 0, x: "-50%" }}
-              whileInView={{ height: "100%", x: "-50%" }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-              className="absolute left-[20px] md:left-1/2 top-0 w-0.5 bg-gradient-to-b from-odillon-teal via-odillon-lime/50 to-transparent"
-            ></m.div>
-
-            <div className="space-y-16">
-              {timeline.map((event, idx) => (
-                <div key={event.year} className={`relative flex items-center md:justify-between ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-
-                  {/* Dot with Pulse Effect */}
-                  <m.div
-                    initial={{ scale: 0, opacity: 0, x: "-50%" }}
-                    whileInView={{ scale: 1, opacity: 1, x: "-50%" }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="absolute left-[20px] md:left-1/2 w-10 h-10 rounded-full border-4 border-white bg-white shadow-xl flex items-center justify-center z-20 overflow-visible"
-                  >
-                    <div className="w-4 h-4 rounded-full relative" style={{ backgroundColor: event.color }}>
-                      <m.div
-                        animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-                        transition={{ repeat: Infinity, duration: 2 }}
-                        className="absolute inset-0 rounded-full"
-                        style={{ backgroundColor: event.color }}
-                      ></m.div>
-                    </div>
-                  </m.div>
-
-                  {/* Content with Hover Interactions */}
-                  <div className="pl-16 md:pl-0 w-full md:w-[calc(50%-50px)]">
-                    <m.div
-                      initial={{ opacity: 0, x: idx % 2 === 0 ? 50 : -50 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.6, delay: idx * 0.1 }}
-                    >
-                      <m.div
-                        whileHover={{ scale: 1.02, translateY: -5 }}
-                        className={`group relative p-8 bg-white/70 backdrop-blur-xl rounded-2xl border border-gray-100/50 shadow-sm hover:shadow-2xl hover:border-odillon-teal/20 transition-all duration-300 ${idx % 2 === 0 ? 'md:text-right md:items-end' : 'md:text-left md:items-start'} flex flex-col`}
-                      >
-                        <div className={`mb-4 inline-flex items-center justify-center p-3 rounded-xl bg-white shadow-inner ${idx % 2 === 0 ? 'md:self-end' : 'md:self-start'}`}>
-                          <event.icon className="w-6 h-6" style={{ color: event.color }} />
-                        </div>
-                        <span className="inline-block px-4 py-1.5 rounded-full text-sm font-black mb-4 tracking-tighter" style={{ backgroundColor: `${event.color}15`, color: event.color }}>
-                          {event.year}
-                        </span>
-                        <h3 className="text-2xl font-black text-gray-900 mb-3 font-petrov-sans tracking-tight leading-none group-hover:text-odillon-teal transition-colors">
-                          {event.title}
-                        </h3>
-                        <p className="text-gray-600 leading-relaxed text-sm lg:text-base font-medium opacity-80 group-hover:opacity-100 transition-opacity">
-                          {event.description}
-                        </p>
-
-                        {/* Decorative background element on hover */}
-                        <m.div
-                          className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-10 pointer-events-none transition-opacity duration-500"
-                          style={{ background: `radial-gradient(circle at center, ${event.color}, transparent)` }}
-                        />
-                      </m.div>
-                    </m.div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <JourneyTimeline journey={aboutJourney} />
         </div>
 
 
         {/* Final CTA */}
-        <div className="relative rounded-xl overflow-hidden bg-odillon-dark text-white p-8 md:p-16 text-center">
+        <div className="relative rounded-lg overflow-hidden bg-odillon-dark text-white p-8 md:p-16 text-center">
           {/* Background Effects */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-odillon-teal/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-odillon-lime/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
@@ -471,14 +347,14 @@ export function AboutDetailed() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/contact"
-                className="w-full sm:w-auto px-8 py-4 bg-odillon-teal hover:bg-odillon-teal/90 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-odillon-teal/25 flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-8 py-4 bg-odillon-teal hover:bg-odillon-teal/90 text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-odillon-teal/25 flex items-center justify-center gap-2"
               >
                 Commencer maintenant
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
                 href="/services"
-                className="w-full sm:w-auto px-8 py-4 bg-transparent border border-white/20 hover:bg-white/5 text-white font-semibold rounded-xl transition-all flex items-center justify-center"
+                className="w-full sm:w-auto px-8 py-4 bg-transparent border border-white/20 hover:bg-white/5 text-white font-semibold rounded-lg transition-all flex items-center justify-center"
               >
                 Découvrir nos services
               </Link>

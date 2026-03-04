@@ -43,7 +43,7 @@ const contactInfo: ContactInfo[] = [
     title: "Téléphone",
     items: [
       { label: "+241 11 74 75 74", link: "tel:+24111747574" },
-      { label: "+241 74 75 95 15", link: "tel:+24174759515" }
+      { label: "+241 74 75 95 15", link: "tel:+24174759515" },
     ],
     description: "Du lundi au vendredi, 8h-16h30"
   },
@@ -51,7 +51,8 @@ const contactInfo: ContactInfo[] = [
     icon: Mail,
     title: "Email",
     items: [
-      { label: "contact@odillon.fr", link: "mailto:contact@odillon.fr" }
+      { label: "contact@odillon.fr", link: "mailto:contact@odillon.fr" },
+      { label: "odillon2017@gmail.com", link: "mailto:odillon2017@gmail.com" }
     ],
     description: "Réponse sous 24h ouvrées"
   },
@@ -59,11 +60,19 @@ const contactInfo: ContactInfo[] = [
     icon: MapPin,
     title: "Adresse",
     items: [
-      { label: "BP 13262" },
-      { label: "Libreville, Gabon" }
+      { label: "BP: 13 262" },
+      { label: "Libreville (Gabon)" }
     ],
     link: "https://www.google.com/maps?q=0.3780070242976405,9.454325471658247",
     description: "Sur rendez-vous uniquement"
+  },
+  {
+    icon: MapPin,
+    title: "Nos Bureaux",
+    items: [
+      { label: "Libreville - Glass (Gabon)" },
+    ],
+    description: ""
   }
 ]
 
@@ -176,7 +185,7 @@ export function Contact() {
             {/* ===== LEFT: FORM (focal point) ===== */}
             <div className="lg:col-span-7 order-1">
               <BlurFade delay={0.2}>
-                <div className="relative bg-white rounded-2xl p-6 sm:p-8 md:p-10 border border-gray-100 shadow-lg shadow-gray-100/50">
+                <div className="relative bg-white rounded-lg p-6 sm:p-8 md:p-10 border border-gray-100 shadow-lg shadow-gray-100/50">
                   {/* Subtle top accent */}
                   <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-odillon-teal/30 to-transparent" />
 
@@ -199,7 +208,7 @@ export function Contact() {
                     {submitStatus.type && (
                       <div
                         role="alert"
-                        className={`p-4 rounded-xl border ${submitStatus.type === 'success'
+                        className={`p-4 rounded-lg border ${submitStatus.type === 'success'
                           ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
                           : 'bg-red-50 border-red-200 text-red-800'
                           }`}
@@ -228,7 +237,7 @@ export function Contact() {
                           name="name"
                           required
                           placeholder="Jean Ndong"
-                          className="h-12 bg-gray-50/60 border-gray-200 rounded-xl focus:border-odillon-teal focus:ring-2 focus:ring-odillon-teal/10 transition-all placeholder:text-gray-300"
+                          className="h-12 bg-gray-50/60 border-gray-200 rounded-lg focus:border-odillon-teal focus:ring-2 focus:ring-odillon-teal/10 transition-all placeholder:text-gray-300"
                         />
                       </div>
 
@@ -243,7 +252,7 @@ export function Contact() {
                           name="email"
                           required
                           placeholder="jean@entreprise.com"
-                          className="h-12 bg-gray-50/60 border-gray-200 rounded-xl focus:border-odillon-teal focus:ring-2 focus:ring-odillon-teal/10 transition-all placeholder:text-gray-300"
+                          className="h-12 bg-gray-50/60 border-gray-200 rounded-lg focus:border-odillon-teal focus:ring-2 focus:ring-odillon-teal/10 transition-all placeholder:text-gray-300"
                         />
                       </div>
                     </div>
@@ -260,7 +269,7 @@ export function Contact() {
                           id="phone"
                           name="phone"
                           placeholder="+241 XX XX XX XX"
-                          className="h-12 bg-gray-50/60 border-gray-200 rounded-xl focus:border-odillon-teal focus:ring-2 focus:ring-odillon-teal/10 transition-all placeholder:text-gray-300"
+                          className="h-12 bg-gray-50/60 border-gray-200 rounded-lg focus:border-odillon-teal focus:ring-2 focus:ring-odillon-teal/10 transition-all placeholder:text-gray-300"
                         />
                       </div>
 
@@ -274,7 +283,7 @@ export function Contact() {
                           id="company"
                           name="company"
                           placeholder="Nom de votre entreprise"
-                          className="h-12 bg-gray-50/60 border-gray-200 rounded-xl focus:border-odillon-teal focus:ring-2 focus:ring-odillon-teal/10 transition-all placeholder:text-gray-300"
+                          className="h-12 bg-gray-50/60 border-gray-200 rounded-lg focus:border-odillon-teal focus:ring-2 focus:ring-odillon-teal/10 transition-all placeholder:text-gray-300"
                         />
                       </div>
                     </div>
@@ -291,7 +300,7 @@ export function Contact() {
                         name="subject"
                         required
                         placeholder="Objet de votre demande"
-                        className="h-12 bg-gray-50/60 border-gray-200 rounded-xl focus:border-odillon-teal focus:ring-2 focus:ring-odillon-teal/10 transition-all placeholder:text-gray-300"
+                        className="h-12 bg-gray-50/60 border-gray-200 rounded-lg focus:border-odillon-teal focus:ring-2 focus:ring-odillon-teal/10 transition-all placeholder:text-gray-300"
                       />
                     </div>
 
@@ -306,7 +315,7 @@ export function Contact() {
                         name="message"
                         rows={5}
                         required
-                        className="resize-none bg-gray-50/60 border-gray-200 rounded-xl focus:border-odillon-teal focus:ring-2 focus:ring-odillon-teal/10 transition-all placeholder:text-gray-300"
+                        className="resize-none bg-gray-50/60 border-gray-200 rounded-lg focus:border-odillon-teal focus:ring-2 focus:ring-odillon-teal/10 transition-all placeholder:text-gray-300"
                         placeholder="Décrivez-nous votre projet ou votre besoin..."
                       />
                     </div>
@@ -317,7 +326,7 @@ export function Contact() {
                         type="submit"
                         size="lg"
                         disabled={isSubmitting}
-                        className="w-full h-14 bg-odillon-teal hover:bg-odillon-teal/90 text-white text-base font-semibold rounded-xl shadow-lg shadow-odillon-teal/20 hover:shadow-odillon-teal/30 transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full h-14 bg-odillon-teal hover:bg-odillon-teal/90 text-white text-base font-semibold rounded-lg shadow-lg shadow-odillon-teal/20 hover:shadow-odillon-teal/30 transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {isSubmitting ? (
                           <>
@@ -354,7 +363,7 @@ export function Contact() {
                 return (
                   <BlurFade key={info.title} delay={0.15 * (idx + 1)}>
                     <div
-                      className={`group relative bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-md hover:border-odillon-teal/20 transition-all duration-300 ${hasLink ? 'cursor-pointer' : ''}`}
+                      className={`group relative bg-white rounded-lg p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-md hover:border-odillon-teal/20 transition-all duration-300 ${hasLink ? 'cursor-pointer' : ''}`}
                       role={info.link ? "button" : undefined}
                       tabIndex={info.link ? 0 : undefined}
                       onClick={() => {
@@ -371,10 +380,10 @@ export function Contact() {
                       aria-label={info.link ? `${info.title} - ouvrir dans un nouvel onglet` : undefined}
                     >
                       {/* Hover gradient overlay */}
-                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-odillon-teal/[0.02] via-transparent to-odillon-lime/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-odillon-teal/[0.02] via-transparent to-odillon-lime/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                       <div className="relative flex items-start gap-4">
-                        <div className="w-11 h-11 rounded-xl bg-odillon-teal/[0.07] flex items-center justify-center flex-shrink-0 group-hover:bg-odillon-teal/[0.12] group-hover:scale-105 transition-all duration-300">
+                        <div className="w-11 h-11 rounded-lg bg-odillon-teal/[0.07] flex items-center justify-center flex-shrink-0 group-hover:bg-odillon-teal/[0.12] group-hover:scale-105 transition-all duration-300">
                           <InfoIcon className="w-5 h-5 text-odillon-teal" />
                         </div>
 
@@ -410,14 +419,14 @@ export function Contact() {
 
               {/* Hours Card (teal background) */}
               <BlurFade delay={0.5}>
-                <div className="relative bg-gradient-to-br from-odillon-teal to-odillon-teal/90 rounded-2xl p-5 sm:p-6 text-white overflow-hidden">
+                <div className="relative bg-gradient-to-br from-odillon-teal to-odillon-teal/90 rounded-lg p-5 sm:p-6 text-white overflow-hidden">
                   {/* Decorative elements */}
                   <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
                   <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/[0.06] rounded-full translate-y-1/2 -translate-x-1/2" />
 
                   <div className="relative">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
                         <Clock className="w-4.5 h-4.5" />
                       </div>
                       <h3 className="font-semibold text-lg">Horaires d'ouverture</h3>
@@ -439,7 +448,7 @@ export function Contact() {
 
               {/* Compact Map */}
               <BlurFade delay={0.6}>
-                <div className="relative rounded-2xl overflow-hidden border border-gray-100 shadow-sm group h-[200px] sm:h-[220px]">
+                <div className="relative rounded-lg overflow-hidden border border-gray-100 shadow-sm group h-[200px] sm:h-[220px]">
                   <iframe
                     title="Localisation Odillon - Libreville, Gabon"
                     width="100%"

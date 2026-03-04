@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { BackgroundSlideshow } from "@/components/ui/background-slideshow"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
@@ -29,7 +28,6 @@ import {
   FileText,
   Users2,
   BarChart3,
-  Briefcase,
   Award,
   Lightbulb,
   Rocket,
@@ -41,9 +39,12 @@ import {
   ClipboardList,
   Ban,
   Quote,
-  ChevronLeft
+  ChevronLeft,
+  PenLine,
+  Landmark,
+  GraduationCap,
+  Megaphone
 } from "lucide-react"
-import Link from "next/link"
 
 // Mapping des noms d'icônes vers les composants
 const iconMap: Record<string, React.ComponentType<any>> = {
@@ -55,7 +56,18 @@ const iconMap: Record<string, React.ComponentType<any>> = {
   Minimize2,
   ShieldCheck,
   ClipboardList,
-  Ban
+  Ban,
+  Shield,
+  Scale,
+  TrendingUp,
+  Users,
+  Users2,
+  Target,
+  FileText,
+  BarChart3,
+  Landmark,
+  GraduationCap,
+  Megaphone
 }
 
 // Transformer les données pour utiliser les composants icons
@@ -238,37 +250,38 @@ export function ServicesDetailed() {
   }, [])
 
   return (
-    <section className="relative overflow-hidden bg-transparent">
-      {/* Hero Section with Background Slideshow */}
-      <div className="relative min-h-[50vh] md:min-h-[55vh] lg:min-h-[60vh] flex items-center overflow-hidden">
-        {/* Background Slideshow */}
-        <div className="absolute inset-0 z-0">
-          <BackgroundSlideshow images={heroImages} interval={6000} />
-          {/* Overlay for readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/40 to-black/65 z-[1]" />
-          <div className="absolute inset-0 bg-gradient-to-br from-odillon-teal/15 via-transparent to-odillon-dark/20 z-[1]" />
+    <section className="relative overflow-x-clip bg-transparent">
+      {/* Hero Section */}
+      <div className="relative pt-6 pb-12 md:pt-10 md:pb-16 lg:pt-12 lg:pb-20 overflow-hidden" role="banner" aria-label="Section héro des services">
+        {/* Background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-odillon-teal/5 via-transparent to-odillon-lime/5" />
+          <div className="absolute -top-24 -right-24 w-96 h-96 border border-odillon-teal/10 rounded-full" />
+          <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] border border-odillon-lime/10 rounded-full" />
+          <div className="absolute top-0 left-[15%] w-px h-full bg-gradient-to-b from-transparent via-odillon-teal/10 to-transparent hidden lg:block" />
+          <div className="absolute top-0 right-[15%] w-px h-full bg-gradient-to-b from-transparent via-odillon-lime/10 to-transparent hidden lg:block" />
         </div>
 
         {/* Content */}
-        <div className="relative z-10 w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24">
-          <div className="text-center max-w-3xl mx-auto">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-4xl mx-auto">
             <FadeIn delay={0.1}>
-              <Badge className="mb-4 md:mb-6 bg-white/10 border border-white/20 text-white backdrop-blur-sm text-xs md:text-sm px-4 py-1.5 font-medium rounded-full">
-                Excellence · Expertise · Innovation
+              <Badge variant="odillon" className="mb-4 md:mb-6 inline-flex items-center gap-1.5">
+                Together we draw <PenLine className="w-3.5 h-3.5 inline" aria-hidden="true" /> the future
               </Badge>
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <h1 className="font-baskvill text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight drop-shadow-lg">
+              <h1 className="font-baskvill text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-900 mb-4 md:mb-6 leading-tight">
                 Des services qui transforment{" "}
-                <span className="text-odillon-lime">
+                <span className="bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
                   votre entreprise
                 </span>
               </h1>
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <p className="text-base md:text-lg lg:text-xl text-white/85 leading-relaxed max-w-2xl mx-auto drop-shadow">
+              <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
                 Solutions complètes en ingénierie d'entreprises pour structurer,
                 développer et pérenniser votre organisation.
               </p>
@@ -284,33 +297,53 @@ export function ServicesDetailed() {
         {/* Tabs Navigation */}
         <BlurFade delay={0.4}>
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3 bg-transparent h-auto p-0 mb-8 md:mb-12">
-              {servicesData.map((service, index) => {
+            {/* Desktop: horizontal bar / Mobile: 2x2 grid */}
+            <TabsList className="flex flex-wrap justify-center lg:inline-flex lg:flex-nowrap w-full bg-white/80 backdrop-blur-sm border border-gray-200/80 rounded-lg h-auto p-1.5 mb-8 md:mb-12 shadow-sm gap-1">
+              {servicesData.map((service) => {
                 const Icon = service.icon
+                const isActive = activeTab === service.id
                 return (
                   <TabsTrigger
                     key={service.id}
                     value={service.id}
-                    className="relative group data-[state=active]:bg-white data-[state=active]:shadow-lg border border-gray-200 data-[state=active]:border-gray-300 rounded-lg md:rounded-xl p-3 md:p-4 h-auto transition-all duration-300 hover:scale-105"
+                    className="relative group flex-1 min-w-[calc(50%-4px)] lg:min-w-0 rounded-lg px-3 py-2.5 md:px-5 md:py-3 h-auto transition-all duration-300 data-[state=active]:bg-white data-[state=active]:shadow-md border border-transparent data-[state=active]:border-gray-200/60 hover:bg-gray-50/80"
                   >
-                    <div className="flex flex-col items-center gap-1.5 md:gap-2 text-center">
+                    <div className="flex items-center justify-center gap-2 md:gap-2.5">
                       <div
-                        className="w-9 h-9 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center transition-all duration-300 group-data-[state=active]:scale-110"
+                        className="w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center transition-all duration-300 flex-shrink-0"
                         style={{
-                          backgroundColor: `${service.color}15`,
-                          color: service.color
+                          backgroundColor: isActive ? `${service.color}18` : 'transparent',
+                          color: isActive ? service.color : '#6b7280'
                         }}
                       >
-                        <Icon className="w-5 h-5 md:w-6 md:h-6" />
+                        <Icon className="w-4 h-4 md:w-[18px] md:h-[18px]" />
                       </div>
-                      <div className="font-semibold text-xs md:text-sm leading-tight">{service.title}</div>
+                      <span
+                        className="font-semibold text-xs md:text-sm leading-tight transition-colors duration-300"
+                        style={{ color: isActive ? service.color : '#374151' }}
+                      >
+                        {service.title}
+                      </span>
                     </div>
 
-                    {/* Active indicator */}
+                    {/* Active indicator - gradient underline */}
                     <div
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 rounded-full transition-all duration-300 group-data-[state=active]:w-3/4"
-                      style={{ backgroundColor: service.color }}
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2.5px] rounded-full transition-all duration-400 ease-out"
+                      style={{
+                        width: isActive ? '60%' : '0%',
+                        background: isActive
+                          ? `linear-gradient(90deg, ${service.color}00, ${service.color}, ${service.color}00)`
+                          : 'transparent'
+                      }}
                     />
+
+                    {/* Subtle glow on active */}
+                    {isActive && (
+                      <div
+                        className="absolute inset-0 rounded-lg opacity-[0.04] pointer-events-none"
+                        style={{ backgroundColor: service.color }}
+                      />
+                    )}
                   </TabsTrigger>
                 )
               })}
@@ -318,85 +351,99 @@ export function ServicesDetailed() {
 
             <div ref={tabsContentRef} className="scroll-mt-[120px]" />
             {servicesData.map((service) => (
-              <TabsContent key={service.id} value={service.id} className="space-y-8 md:space-y-12 mt-0">
-                {/* Service Header */}
+              <TabsContent key={service.id} value={service.id} className="space-y-10 md:space-y-14 mt-0 animate-in fade-in-0 slide-in-from-bottom-2 duration-500">
+                {/* Service Header - Redesigned */}
                 <FadeIn>
-                  <Card className="border-2 relative overflow-hidden" style={{ borderColor: `${service.color}30` }}>
-                    <div
-                      className={`absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l ${service.gradient} pointer-events-none`}
-                    />
-                    <CardHeader className="relative px-4 md:px-6 py-4 md:py-6">
-                      <CardTitle className="text-2xl md:text-3xl mb-2">{service.title}</CardTitle>
-                      <CardDescription className="text-base md:text-lg font-medium" style={{ color: service.color }}>
-                        {service.tagline}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="relative px-4 md:px-6 pb-4 md:pb-6">
-                      <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4 md:mb-6">
+                  <div className="rounded-lg bg-white border border-gray-100 shadow-sm">
+                    <div className="px-5 md:px-8 py-6 md:py-8">
+                      {/* Title row */}
+                      <div className="flex items-start gap-4 mb-4">
+                        <div
+                          className="w-11 h-11 md:w-14 md:h-14 rounded-lg flex items-center justify-center flex-shrink-0"
+                          style={{ backgroundColor: `${service.color}12`, color: service.color }}
+                        >
+                          {(() => { const SIcon = service.icon; return <SIcon className="w-5 h-5 md:w-7 md:h-7" /> })()}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h2 className="font-baskvill text-2xl md:text-3xl text-gray-900 mb-1">{service.title}</h2>
+                          <p className="text-sm md:text-base font-medium" style={{ color: service.color }}>
+                            {service.tagline}
+                          </p>
+                        </div>
+                      </div>
+
+                      <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-6 max-w-3xl">
                         {service.description}
                       </p>
 
-                      {/* Key Benefits */}
-                      <div className="grid sm:grid-cols-3 gap-3 md:gap-4">
+                      {/* Key Benefits - refined pills */}
+                      <div className="flex flex-wrap gap-3">
                         {service.keyBenefits.map((benefit, idx) => {
                           const BenefitIcon = benefit.icon
                           return (
                             <div
                               key={idx}
-                              className="flex items-start gap-2 md:gap-3 p-2.5 md:p-3 rounded-lg border border-gray-200 bg-white/50 backdrop-blur-sm"
+                              className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg bg-gray-50/80 border border-gray-100 hover:border-gray-200 transition-colors duration-200"
                             >
                               <div
-                                className="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                                style={{ backgroundColor: `${service.color}15`, color: service.color }}
+                                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                                style={{ backgroundColor: `${service.color}12`, color: service.color }}
                               >
-                                <BenefitIcon className="w-4 h-4 md:w-5 md:h-5" />
+                                <BenefitIcon className="w-4 h-4" />
                               </div>
                               <div className="min-w-0">
-                                <div className="font-semibold text-xs md:text-sm text-gray-900">{benefit.text}</div>
-                                <div className="text-[10px] md:text-xs text-gray-600 mt-0.5">{benefit.detail}</div>
+                                <div className="font-semibold text-xs md:text-sm text-gray-900 leading-tight">{benefit.text}</div>
+                                <div className="text-[10px] md:text-xs text-gray-500">{benefit.detail}</div>
                               </div>
                             </div>
                           )
                         })}
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 </FadeIn>
 
-                {/* Workflow */}
+                {/* Workflow - Cleaner Marquee */}
                 <FadeIn delay={0.1}>
                   <div>
-                    <div className="text-center mb-6 md:mb-8 px-4">
-                      <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+                    <div className="text-center mb-6 md:mb-8">
+                      <h3 className="font-baskvill text-xl md:text-2xl text-gray-900 mb-2">
                         Notre méthode d'accompagnement
                       </h3>
-                      <p className="text-sm md:text-base text-gray-600">Un processus éprouvé pour sécuriser votre activité</p>
+                      <p className="text-sm md:text-base text-gray-500">Un processus éprouvé pour sécuriser votre activité</p>
                     </div>
 
                     <Marquee className="py-4">
                       <MarqueeFade side="left" />
                       <MarqueeFade side="right" />
-                      <MarqueeContent speed={40} pauseOnHover={true}>
+                      <MarqueeContent speed={35} pauseOnHover={true}>
                         {service.workflow.map((step, idx) => {
                           const StepIcon = step.icon
                           return (
-                            <MarqueeItem key={idx} className="w-80">
-                              <Card className="border-2 border-gray-200 hover:border-gray-300 transition-all duration-300 hover:shadow-lg">
-                                <CardContent className="p-6 text-center">
+                            <MarqueeItem key={idx} className="w-72 md:w-80">
+                              <div className="bg-white rounded-lg border border-gray-100 p-5 md:p-6 hover:shadow-md hover:border-gray-200 transition-all duration-300">
+                                <div className="flex items-center gap-3 mb-3">
                                   <div
-                                    className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold relative z-10 bg-white shadow-lg"
+                                    className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                                     style={{
-                                      color: service.color,
-                                      border: `3px solid ${service.color}30`
+                                      backgroundColor: `${service.color}12`,
+                                      color: service.color
                                     }}
                                   >
-                                    <StepIcon className="w-8 h-8" />
+                                    <StepIcon className="w-5 h-5" />
                                   </div>
-                                  <div className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-widest">{step.title}</div>
-                                  <h4 className="font-bold text-lg text-gray-900 mb-2">{step.title}</h4>
-                                  <p className="text-sm text-gray-600">{step.description}</p>
-                                </CardContent>
-                              </Card>
+                                  <div>
+                                    <span
+                                      className="text-[10px] font-bold uppercase tracking-widest"
+                                      style={{ color: service.color }}
+                                    >
+                                      Étape {step.step}
+                                    </span>
+                                    <h4 className="font-bold text-sm md:text-base text-gray-900 leading-tight">{step.title}</h4>
+                                  </div>
+                                </div>
+                                <p className="text-xs md:text-sm text-gray-500 leading-relaxed">{step.description}</p>
+                              </div>
                             </MarqueeItem>
                           )
                         })}
@@ -405,83 +452,93 @@ export function ServicesDetailed() {
                   </div>
                 </FadeIn>
 
-                {/* Services Details */}
+                {/* Services Details - Refined cards */}
                 <FadeIn delay={0.2}>
                   <div>
-                    <div className="text-center mb-6 md:mb-8 px-4">
-                      <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+                    <div className="text-center mb-6 md:mb-8">
+                      <h3 className="font-baskvill text-xl md:text-2xl text-gray-900 mb-2">
                         Nos prestations en détail
                       </h3>
-                      <p className="text-sm md:text-base text-gray-600">Explorez chaque service pour comprendre comment nous pouvons vous aider</p>
+                      <p className="text-sm md:text-base text-gray-500">Explorez chaque service pour comprendre comment nous pouvons vous aider</p>
                     </div>
 
-                    <div className="grid lg:grid-cols-2 gap-4 md:gap-6">
+                    <div className="grid lg:grid-cols-2 gap-4 md:gap-5">
                       {service.services.map((subService, idx) => {
                         const SubIcon = subService.icon
                         return (
-                          <Card key={idx} className="border-2 border-gray-200 hover:border-gray-300 transition-all duration-300 group">
-                            <CardHeader className="px-4 md:px-6 py-4 md:py-6">
-                              <div className="flex items-start gap-2 md:gap-3 mb-2">
+                          <div key={idx} className="bg-white rounded-lg border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all duration-300 group overflow-hidden">
+                            {/* Card header */}
+                            <div className="px-5 md:px-6 pt-5 md:pt-6 pb-3">
+                              <div className="flex items-start gap-3 mb-2.5">
                                 <div
-                                  className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
-                                  style={{ backgroundColor: `${service.color}15`, color: service.color }}
+                                  className="w-10 h-10 md:w-11 md:h-11 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
+                                  style={{ backgroundColor: `${service.color}12`, color: service.color }}
                                 >
-                                  <SubIcon className="w-5 h-5 md:w-6 md:h-6" />
+                                  <SubIcon className="w-5 h-5" />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <CardTitle className="text-base md:text-xl">{subService.name}</CardTitle>
-                                  <CardDescription className="text-xs md:text-sm font-medium mt-1" style={{ color: service.color }}>
+                                  <h4 className="font-bold text-sm md:text-base text-gray-900 leading-tight">{subService.name}</h4>
+                                  <p className="text-xs font-medium mt-0.5" style={{ color: service.color }}>
                                     {subService.tagline}
-                                  </CardDescription>
+                                  </p>
                                 </div>
                               </div>
-                              <p className="text-xs md:text-sm text-gray-600 leading-relaxed">
+                              <p className="text-xs md:text-sm text-gray-500 leading-relaxed">
                                 {subService.description}
                               </p>
-                            </CardHeader>
-                            <CardContent className="px-4 md:px-6 pb-4 md:pb-6">
+                            </div>
+
+                            {/* Accordion details */}
+                            <div className="px-5 md:px-6 pb-4 md:pb-5">
+                              <Separator className="mb-3" />
                               <Accordion type="multiple" className="w-full">
                                 {subService.details.map((detail, detailIdx) => (
                                   <AccordionItem
                                     key={detailIdx}
                                     value={`item-${detailIdx}`}
-                                    className="border-b border-gray-200 last:border-0"
+                                    className="border-b border-gray-100 last:border-0"
                                   >
-                                    <AccordionTrigger className="hover:no-underline py-2.5 md:py-3 text-left">
-                                      <span className="text-xs md:text-sm font-medium text-gray-900">{detail.title}</span>
+                                    <AccordionTrigger className="hover:no-underline py-2.5 text-left">
+                                      <span className="text-xs md:text-sm font-medium text-gray-800">{detail.title}</span>
                                     </AccordionTrigger>
                                     <AccordionContent>
-                                      <div className="space-y-2 md:space-y-3 pt-2 pb-3">
-                                        <div className="bg-gray-50 p-2.5 md:p-3 border-l-2" style={{ borderColor: service.color }}>
-                                          <p className="text-xs md:text-sm text-gray-700 leading-relaxed">
+                                      <div className="space-y-2.5 pt-1 pb-2">
+                                        <div
+                                          className="bg-gray-50/80 p-3 rounded-lg border-l-2"
+                                          style={{ borderColor: service.color }}
+                                        >
+                                          <p className="text-xs md:text-sm text-gray-600 leading-relaxed">
                                             {detail.content}
                                           </p>
                                         </div>
-                                        <div className="bg-gradient-to-r from-gray-50 to-white p-2.5 md:p-3 border-l-2 border-gray-300">
-                                          <div className="text-[10px] md:text-xs font-semibold text-gray-500 uppercase mb-1">Impact mesurable</div>
-                                          <p className="text-xs md:text-sm font-medium text-gray-900">{detail.impact}</p>
+                                        <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-gray-50/60 to-transparent rounded-lg">
+                                          <ArrowRight className="w-3.5 h-3.5 flex-shrink-0 text-gray-400" />
+                                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Impact</span>
+                                          <p className="text-xs md:text-sm font-medium text-gray-800">{detail.impact}</p>
                                         </div>
                                       </div>
                                     </AccordionContent>
                                   </AccordionItem>
                                 ))}
                               </Accordion>
-                            </CardContent>
-                          </Card>
+                            </div>
+                          </div>
                         )
                       })}
                     </div>
                   </div>
                 </FadeIn>
 
-                {/* CTA Section */}
-                <CtaBanner
-                  title={`Prêt à transformer votre ${service.title.toLowerCase()} ?`}
-                  description="Discutons de vos enjeux et découvrez comment nos solutions peuvent propulser votre organisation vers l'excellence."
-                  buttonText="Discutons de votre projet"
-                  buttonHref="/contact"
-                  badgeText="Excellence"
-                />
+                {/* CTA Section - full width breakout */}
+                <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen">
+                  <CtaBanner
+                    title={`Prêt à transformer votre ${service.title.toLowerCase()} ?`}
+                    description="Discutons de vos enjeux et découvrez comment nos solutions peuvent propulser votre organisation vers l'excellence."
+                    buttonText="Discutons de votre projet"
+                    buttonHref="/contact"
+                    badgeText="Excellence"
+                  />
+                </div>
               </TabsContent>
             ))}
           </Tabs>
@@ -495,84 +552,94 @@ export function ServicesDetailed() {
 
           <Separator className="my-12 md:my-16 lg:my-20" />
 
-          {/* Section Nos Valeurs avec carousel de témoignages */}
+          {/* Section Nos Valeurs */}
           <BlurFade delay={0.7}>
             <div className="mb-12 md:mb-16 lg:mb-20">
-              <div className="text-center mb-8 md:mb-12 px-4">
-                <Badge variant="odillon" className="mb-3 md:mb-4">
+              <div className="text-center mb-8 md:mb-12">
+                <Badge variant="odillon" className="mb-4">
                   Nos Valeurs
                 </Badge>
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4">
+                <h2 className="font-baskvill text-2xl md:text-3xl text-gray-900 mb-3">
                   Les principes qui nous guident
                 </h2>
-                <p className="text-sm md:text-base text-gray-600 max-w-2xl mx-auto">
+                <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
                   Des valeurs fondamentales qui inspirent notre action quotidienne et façonnent notre engagement envers l'excellence.
                 </p>
               </div>
 
-              {/* Testimonials Carousel */}
+              {/* Testimonials Carousel - Refined */}
               {testimonials.length > 0 && (
-                <section className="container mx-auto px-4 py-6">
-                  <div className="mb-6 text-center">
-                    <h1 className="text-3xl font-bold tracking-tight">Ce que les gens disent</h1>
-                  </div>
-                  <div className="mx-auto w-[700px] max-w-full">
-                    <Card className="flex flex-col gap-6 rounded-xl border py-6 shadow-sm">
-                      <CardContent className="p-8">
-                        <div className="mb-6 flex justify-center">
-                          <Quote className="h-10 w-10 text-muted-foreground/30" aria-hidden="true" />
+                <div className="max-w-2xl mx-auto">
+                  <div className="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden" role="region" aria-label="Carousel de témoignages" aria-roledescription="carousel">
+                    <div className="px-6 md:px-10 py-8 md:py-10" aria-live="polite" aria-atomic="true">
+                      {/* Quote icon */}
+                      <div className="flex justify-center mb-6">
+                        <div className="w-10 h-10 rounded-full bg-odillon-teal/8 flex items-center justify-center">
+                          <Quote className="h-5 w-5 text-odillon-teal/40" aria-hidden="true" />
                         </div>
-                        <blockquote className="mb-8 text-center text-xl font-medium leading-relaxed">
-                          "{testimonials[currentTestimonial].quote}"
-                        </blockquote>
-                        <div className="flex flex-col items-center">
-                          <Avatar className="mb-3 h-14 w-14">
-                            <AvatarImage
-                              src={testimonials[currentTestimonial].avatar}
-                              alt={testimonials[currentTestimonial].name}
-                            />
-                            <AvatarFallback>{testimonials[currentTestimonial].name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div className="text-center">
-                            <p className="font-semibold">{testimonials[currentTestimonial].name}</p>
-                            <p className="text-sm text-muted-foreground">{testimonials[currentTestimonial].position}</p>
-                          </div>
-                        </div>
-                        <div className="mt-8 flex items-center justify-center gap-4">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => setCurrentTestimonial((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1))}
-                            className="h-9 w-9"
+                      </div>
+
+                      {/* Quote text */}
+                      <blockquote className="text-center text-base md:text-lg font-medium text-gray-700 leading-relaxed mb-8 italic">
+                        &laquo; {testimonials[currentTestimonial].quote} &raquo;
+                      </blockquote>
+
+                      {/* Author */}
+                      <div className="flex flex-col items-center">
+                        <Avatar className="mb-3 h-12 w-12 ring-2 ring-gray-100">
+                          <AvatarImage
+                            src={testimonials[currentTestimonial].avatar}
+                            alt={testimonials[currentTestimonial].name}
+                          />
+                          <AvatarFallback className="bg-odillon-teal/10 text-odillon-teal font-semibold text-sm">
+                            {testimonials[currentTestimonial].name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <p className="font-semibold text-sm text-gray-900">{testimonials[currentTestimonial].name}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">{testimonials[currentTestimonial].position}</p>
+                      </div>
+                    </div>
+
+                    {/* Navigation - Cleaner */}
+                    <div className="flex items-center justify-center gap-3 pb-6">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setCurrentTestimonial((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1))}
+                        className="h-11 w-11 md:h-8 md:w-8 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100"
+                        aria-label="Témoignage précédent"
+                      >
+                        <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+                      </Button>
+                      <div className="flex items-center gap-1.5" role="tablist" aria-label="Navigation des témoignages">
+                        {testimonials.map((_, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => setCurrentTestimonial(idx)}
+                            role="tab"
+                            aria-selected={idx === currentTestimonial}
+                            className={`relative rounded-full transition-all duration-300 min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 flex items-center justify-center`}
+                            aria-label={`Aller au témoignage ${idx + 1} sur ${testimonials.length}`}
                           >
-                            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-                          </Button>
-                          <div className="flex items-center gap-2">
-                            {testimonials.map((_, idx) => (
-                              <button
-                                key={idx}
-                                onClick={() => setCurrentTestimonial(idx)}
-                                className={`h-2 w-2 rounded-full border transition-colors ${idx === currentTestimonial
-                                  ? "bg-primary border-primary"
-                                  : "bg-background border-border"
-                                  }`}
-                                aria-label={`Aller au témoignage ${idx + 1}`}
-                              />
-                            ))}
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => setCurrentTestimonial((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1))}
-                            className="h-9 w-9"
-                          >
-                            <ChevronRight className="h-4 w-4" aria-hidden="true" />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
+                            <span className={`block rounded-full transition-all duration-300 ${idx === currentTestimonial
+                              ? "w-5 h-1.5 bg-odillon-teal"
+                              : "w-1.5 h-1.5 bg-gray-200 hover:bg-gray-300"
+                              }`} />
+                          </button>
+                        ))}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setCurrentTestimonial((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1))}
+                        className="h-11 w-11 md:h-8 md:w-8 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100"
+                        aria-label="Témoignage suivant"
+                      >
+                        <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                      </Button>
+                    </div>
                   </div>
-                </section>
+                </div>
               )}
             </div>
           </BlurFade>

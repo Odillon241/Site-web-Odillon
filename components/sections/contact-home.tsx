@@ -23,8 +23,8 @@ const contactMethods = [
     title: "Appelez-nous",
     value: (
       <div className="flex flex-col gap-1">
-        <a href="tel:+24111747574" className="hover:text-odillon-teal transition-colors">+241 11747574</a>
-        <a href="tel:+24174759515" className="hover:text-odillon-teal transition-colors">+241 74759515</a>
+        <a href="tel:+24111747574" className="hover:text-odillon-teal transition-colors">+241 11 74 75 74</a>
+        <a href="tel:+24174759515" className="hover:text-odillon-teal transition-colors">+241 74 75 95 15</a>
       </div>
     ),
     description: "Du lundi au vendredi, 8h-16h30"

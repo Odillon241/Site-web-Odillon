@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Phone, Mail, MapPin, ExternalLink, ChevronRight, Briefcase, Scale, PiggyBank, Users } from "lucide-react"
+import { Phone, Mail, MapPin, ExternalLink, ChevronRight, Briefcase, Scale, PiggyBank, Users, GraduationCap, Megaphone } from "lucide-react"
 import { BlurFade } from "@/components/magicui/blur-fade"
 
 
@@ -8,10 +8,12 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   const expertises = [
-    { name: 'Gouvernance', icon: Briefcase, href: '/#services' },
-    { name: 'Juridique', icon: Scale, href: '/#services' },
-    { name: 'Finances', icon: PiggyBank, href: '/#services' },
-    { name: 'Capital Humain', icon: Users, href: '/#services' },
+    { name: 'Gouvernance', icon: Briefcase, href: '/services/gouvernance' },
+    { name: 'Juridique', icon: Scale, href: '/services/juridique' },
+    { name: 'Finances', icon: PiggyBank, href: '/services/finances' },
+    { name: 'Capital Humain', icon: Users, href: '/services/ressources-humaines' },
+    { name: 'Formations', icon: GraduationCap, href: '/services/formations' },
+    { name: 'Communication', icon: Megaphone, href: '/services/communication' },
   ]
 
   const quickLinks = [
@@ -122,7 +124,7 @@ export function Footer() {
               </h3>
               <div className="space-y-4">
                 {/* Phone Card */}
-                <div className="p-3 rounded-xl bg-white/10 border border-white/10">
+                <div className="p-3 rounded-lg bg-white/10 border border-white/10">
                   <div className="flex items-center gap-4 mb-2">
                     <div className="p-2.5 rounded-lg bg-odillon-lime text-odillon-dark shadow-sm">
                       <Phone className="w-4 h-4" />
@@ -146,27 +148,50 @@ export function Footer() {
                 </div>
 
                 {/* Email Card */}
-                <a
-                  href="mailto:contact@odillon.fr"
-                  className="group flex items-center gap-4 p-3 rounded-xl bg-white/10 hover:bg-white/15 transition-all border border-white/10 hover:border-odillon-lime/30"
-                >
-                  <div className="p-2.5 rounded-lg bg-white text-odillon-teal shadow-sm">
-                    <Mail className="w-4 h-4" />
-                  </div>
-                  <div>
+                <div className="p-3 rounded-lg bg-white/10 border border-white/10">
+                  <div className="flex items-center gap-4 mb-2">
+                    <div className="p-2.5 rounded-lg bg-white text-odillon-teal shadow-sm">
+                      <Mail className="w-4 h-4" />
+                    </div>
                     <span className="text-xs text-white/60 block">Email</span>
-                    <span className="text-white font-medium group-hover:text-odillon-lime transition-colors">contact@odillon.fr</span>
                   </div>
-                </a>
+                  <div className="space-y-1 pl-12">
+                    <a
+                      href="mailto:contact@odillon.fr"
+                      className="block text-white font-medium hover:text-odillon-lime transition-colors"
+                    >
+                      contact@odillon.fr
+                    </a>
+                    <a
+                      href="mailto:odillon2017@gmail.com"
+                      className="block text-white font-medium hover:text-odillon-lime transition-colors"
+                    >
+                      odillon2017@gmail.com
+                    </a>
+                  </div>
+                </div>
 
                 {/* Address Card */}
-                <div className="flex items-start gap-4 p-3 rounded-xl bg-white/10 border border-white/10">
+                <div className="flex items-start gap-4 p-3 rounded-lg bg-white/10 border border-white/10">
                   <div className="p-2.5 rounded-lg bg-white/20 text-white">
                     <MapPin className="w-4 h-4" />
                   </div>
                   <div>
                     <span className="text-xs text-white/60 block">Adresse</span>
-                    <span className="text-white font-medium">BP 13262, Libreville, Gabon</span>
+                    <span className="text-white font-medium block">BP: 13 262, Libreville (Gabon)</span>
+                  </div>
+                </div>
+
+                {/* Bureaux Card */}
+                <div className="p-3 rounded-lg bg-white/10 border border-white/10">
+                  <div className="flex items-center gap-4 mb-2">
+                    <div className="p-2.5 rounded-lg bg-white/20 text-white">
+                      <MapPin className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs text-white/60 block">Nos Bureaux</span>
+                  </div>
+                  <div className="space-y-1 pl-12">
+                    <span className="block text-white font-medium">Libreville - Glass (Gabon)</span>
                   </div>
                 </div>
               </div>
@@ -185,7 +210,7 @@ export function Footer() {
 
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/70">
             <p className="flex items-center gap-1">
-              © {currentYear} <span className="font-semibold text-white">Odillon</span>. Tous droits réservés.
+              © {currentYear} Copyright par <span className="font-semibold text-white">ODILLON</span>. Tous les droits sont réservés.
             </p>
             <div className="flex flex-wrap items-center justify-center md:justify-end gap-3 sm:gap-4 md:gap-6">
               <Link

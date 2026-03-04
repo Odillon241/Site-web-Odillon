@@ -1,27 +1,24 @@
 "use client"
 
-import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee"
 import { TiltCard } from "@/components/ui/tilt-card"
 import {
   Landmark,
   Scale,
   TrendingUp,
   Users,
-  ArrowRight
+  ArrowRight,
+  GraduationCap,
+  Megaphone
 } from "lucide-react"
 import Link from "next/link"
-import { SpotlightCard } from "@/components/ui/spotlight-card"
-import { TextReveal } from "@/components/magicui/text-reveal"
 
 const mainServices = [
   {
-    icon: Landmark, // Changed from Shield
+    icon: Landmark,
     title: "Gouvernance",
+    slug: "gouvernance",
     tagline: "Structuration et Restructuration d'Entreprises",
     color: "#39837a",
     highlights: ["Règles de bonne gouvernance", "Conseil d'Administration", "Risques opérationnels"]
@@ -29,6 +26,7 @@ const mainServices = [
   {
     icon: Scale,
     title: "Juridique",
+    slug: "juridique",
     tagline: "Accompagnement Juridique Externalisé",
     color: "#C4D82E",
     highlights: ["Service externalisé", "Contrats", "Négociation"]
@@ -36,16 +34,34 @@ const mainServices = [
   {
     icon: TrendingUp,
     title: "Finances",
-    tagline: "Management des Risques",
+    slug: "finances",
+    tagline: "Conseils Financiers",
     color: "#39837a",
-    highlights: ["Business plan", "Levée de fonds", "Tableaux de bord"]
+    highlights: ["Levée de fonds", "Conseils en investissement", "Tableaux de bord"]
   },
   {
     icon: Users,
     title: "Capital Humain",
-    tagline: "Relations Publiques",
+    slug: "ressources-humaines",
+    tagline: "Administration et Ressources Humaines",
     color: "#C4D82E",
     highlights: ["Développement RH", "Évaluation", "Rémunérations"]
+  },
+  {
+    icon: GraduationCap,
+    title: "Formations",
+    slug: "formations",
+    tagline: "Formation Professionnelle",
+    color: "#39837a",
+    highlights: ["Master Class", "Coaching professionnel", "Formations en ligne"]
+  },
+  {
+    icon: Megaphone,
+    title: "Communication",
+    slug: "communication",
+    tagline: "Stratégie de Communication",
+    color: "#C4D82E",
+    highlights: ["Communication institutionnelle", "Communication digitale", "Communication de crise"]
   }
 ]
 
@@ -62,14 +78,11 @@ export function ServicesHome() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 md:mb-16 gap-6 sm:gap-8">
           <BlurFade delay={0.2} className="max-w-2xl">
-            <TextReveal
-              text="L'expertise stratégique au service de votre transformation."
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-petrov-sans tracking-tight justify-start"
-              delay={0.2}
-            />
-            {/* Keeping the 'votre réussite' highlight logic by custom styling if needed, or accepting the TextReveal style */}
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-baskvill tracking-tight">
+              L&apos;expertise stratégique au service de votre transformation.
+            </h2>
             <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-              Quatre piliers d'expertise pour transformer et structurer votre organisation de manière pérenne.
+              Six piliers d&apos;expertise pour transformer et structurer votre organisation de manière pérenne.
             </p>
           </BlurFade>
 
@@ -77,7 +90,7 @@ export function ServicesHome() {
             <Button
               asChild
               variant="default"
-              className="group bg-odillon-teal hover:bg-odillon-teal/90 text-white font-semibold rounded-md px-8 h-12 shadow-lg hover:shadow-xl transition-all duration-300"
+              className="group bg-odillon-teal hover:bg-odillon-teal/90 text-white font-semibold rounded-lg px-8 h-12 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <Link href="/services">
                 Voir tous nos services
@@ -88,27 +101,29 @@ export function ServicesHome() {
         </div>
 
         {/* Clean Grid Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-14 sm:mb-20 md:mb-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-14 sm:mb-20 md:mb-24">
           {mainServices.map((service, idx) => {
             const ServiceIcon = service.icon
             return (
               <BlurFade key={service.title} delay={0.1 * (idx + 1)} className="h-full">
-                <Link href="/services" className="block h-full cursor-none-target">
+                <Link href={`/services/${service.slug}`} className="block h-full cursor-none-target">
                   <TiltCard containerClassName="h-full" className="h-full">
-                    <div className="relative h-full bg-white rounded-2xl p-8 shadow-lg border border-gray-100/50 overflow-hidden transform-style-3d group">
+                    <div className="relative h-full bg-white rounded-lg p-8 shadow-lg border border-gray-200/80 overflow-hidden transform-style-3d group">
                       {/* Hover Gradient Background */}
                       <div
                         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                         style={{
-                          background: `linear-gradient(135deg, ${service.color}05 0%, transparent 100%)`
+                          background: `linear-gradient(135deg, ${service.color}08 0%, ${service.color}03 50%, transparent 100%)`
                         }}
                       />
 
                       <div className="relative z-10 flex flex-col h-full transform-style-3d">
+                        {/* Icon box with gradient border */}
                         <div
-                          className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 shadow-sm group-hover:shadow-md transition-all duration-300"
+                          className="w-14 h-14 rounded-lg flex items-center justify-center mb-6 border-2 shadow-sm group-hover:shadow-md transition-all duration-300"
                           style={{
-                            backgroundColor: `${service.color}15`,
+                            background: `linear-gradient(135deg, ${service.color}12 0%, ${service.color}08 100%)`,
+                            borderColor: `${service.color}30`,
                             color: service.color,
                             transform: "translateZ(20px)"
                           }}
@@ -117,15 +132,15 @@ export function ServicesHome() {
                         </div>
 
                         <h3
-                          className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-odillon-teal transition-colors"
+                          className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-odillon-teal transition-colors font-baskvill"
                           style={{ transform: "translateZ(30px)" }}
                         >
                           {service.title}
                         </h3>
 
                         <p
-                          className="text-sm font-medium text-gray-500 mb-6 uppercase tracking-wider"
-                          style={{ transform: "translateZ(25px)" }}
+                          className="text-sm font-medium mb-6 uppercase tracking-wider"
+                          style={{ color: `${service.color}cc`, transform: "translateZ(25px)" }}
                         >
                           {service.tagline}
                         </p>
@@ -134,7 +149,7 @@ export function ServicesHome() {
                           {service.highlights.map((highlight, i) => (
                             <li key={i} className="flex items-center text-sm text-gray-600">
                               <span
-                                className="w-1.5 h-1.5 rounded-full mr-3"
+                                className="w-2 h-2 rounded-full mr-3 shrink-0"
                                 style={{ backgroundColor: service.color }}
                               />
                               {highlight}
@@ -157,10 +172,7 @@ export function ServicesHome() {
             )
           })}
         </div>
-
-
-      </div >
-    </section >
+      </div>
+    </section>
   )
 }
-

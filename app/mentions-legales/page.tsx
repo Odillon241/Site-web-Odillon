@@ -54,7 +54,7 @@ export default function MentionsLegalesPage() {
                                             </div>
                                             <div className="space-y-1">
                                                 <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Contact</p>
-                                                <p className="text-slate-800">contact@odillon.fr | +241 11747574</p>
+                                                <p className="text-slate-800">contact@odillon.fr | +241 11 74 75 74</p>
                                             </div>
                                             <div className="space-y-1">
                                                 <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Directeur de publication</p>

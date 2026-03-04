@@ -2,58 +2,42 @@
 
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import {
+  Puzzle,
+  Lightbulb,
   Target,
-  Briefcase,
-  Globe2,
-  TrendingUp,
   CheckCircle,
   ArrowRight
 } from "lucide-react"
-import { NumberTicker } from "@/components/ui/number-ticker"
-import { TextReveal } from "@/components/magicui/text-reveal"
 
 const expertiseDomains = [
   {
+    icon: Puzzle,
+    title: "Cohérence",
+    description: "Adaptation de la gestion et des outils de travail au changement opérationnel.",
+    color: "#39837a",
+    features: ["Gestion du changement", "Outils adaptés", "Opérationnel"]
+  },
+  {
+    icon: Lightbulb,
+    title: "Amélioration",
+    description: "Proposer des solutions idoines.",
+    color: "#C4D82E",
+    features: ["Solutions sur-mesure", "Optimisation", "Performance"]
+  },
+  {
     icon: Target,
-    title: "Structuration & Restructuration",
-    impact: "35%",
-    metric: "d'efficacité en plus",
+    title: "Pertinence",
+    description: "Adapter les besoins du client aux contraintes.",
     color: "#39837a",
-    features: ["Diagnostic complet", "Optimisation", "Accompagnement"]
-  },
-  {
-    icon: Briefcase,
-    title: "Gestion Intégrée",
-    impact: "25%",
-    metric: "de coûts en moins",
-    color: "#C4D82E",
-    features: ["Conformité totale", "Digitalisation", "Pilotage"]
-  },
-  {
-    icon: Globe2,
-    title: "Relations Publiques",
-    impact: "60%",
-    metric: "de visibilité en plus",
-    color: "#39837a",
-    features: ["Communication", "Médias", "Lobbying"]
-  },
-  {
-    icon: TrendingUp,
-    title: "Management des Risques",
-    impact: "50%",
-    metric: "d'incidents en moins",
-    color: "#C4D82E",
-    features: ["Cartographie", "PCA/PRA", "Audit"]
+    features: ["Analyse des besoins", "Adaptation", "Contraintes maîtrisées"]
   }
 ]
 
 export function ExpertiseHome() {
   return (
-    <section id="expertise" className="relative py-14 sm:py-20 lg:py-32 bg-transparent border-t border-gray-100/50">
+    <section id="expertise" className="relative py-14 sm:py-20 lg:py-32 bg-transparent">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         <div className="grid lg:grid-cols-2 gap-10 sm:gap-14 lg:gap-24 items-start">
 
@@ -62,21 +46,19 @@ export function ExpertiseHome() {
             <BlurFade delay={0.1}>
               <div className="inline-flex items-center space-x-3 text-odillon-teal font-medium mb-8">
                 <span className="w-12 h-[1px] bg-odillon-teal"></span>
-                <span className="uppercase tracking-widest text-sm font-semibold">Expertise Reconnue</span>
+                <span className="uppercase tracking-widest text-sm font-semibold">De 2017 à Nos Jours</span>
               </div>
             </BlurFade>
 
             <BlurFade delay={0.2}>
-              <TextReveal
-                text="Des résultats mesurables et durables."
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-6 sm:mb-8 font-petrov-sans leading-[1.1] items-start justify-start"
-                delay={0.2}
-              />
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-6 sm:mb-8 font-baskvill leading-[1.1]">
+                Nos compétences au service de votre réussite.
+              </h2>
             </BlurFade>
 
             <BlurFade delay={0.3}>
               <p className="text-base sm:text-lg text-gray-600 mb-8 sm:mb-12 max-w-md leading-relaxed">
-                Au-delà du conseil, nous nous engageons sur l'impact réel de nos interventions. Notre approche pragmatique garantit un retour sur investissement rapide.
+                Nous partageons notre expérience professionnelle et notre éthique afin que nos clients puissent intégrer les pratiques qui pourraient leur convenir.
               </p>
             </BlurFade>
 
@@ -98,7 +80,7 @@ export function ExpertiseHome() {
               return (
                 <FadeIn key={domain.title} delay={0.1 * (idx + 1)}>
                   <Link href="/services" className="block group perspective-1000">
-                    <div className="relative overflow-hidden bg-white/40 backdrop-blur-md p-5 sm:p-8 md:p-10 rounded-lg border border-white/20 hover:border-odillon-teal/40 hover:bg-white/60 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-odillon-teal/10 hover:-translate-y-2 transition-all duration-500 group">
+                    <div className="relative overflow-hidden bg-white/60 backdrop-blur-md p-5 sm:p-8 md:p-10 rounded-lg border border-gray-200/80 hover:border-odillon-teal/30 shadow-lg shadow-slate-200/30 hover:shadow-xl hover:shadow-odillon-teal/10 hover:-translate-y-1 transition-all duration-500 group">
                       {/* Decorative Background Glow */}
                       <div
                         className="absolute -right-20 -top-20 w-40 h-40 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500"
@@ -108,23 +90,27 @@ export function ExpertiseHome() {
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 relative z-10">
                         <div className="flex items-center gap-5">
                           <div
-                            className="p-4 rounded-lg bg-white shadow-lg border border-slate-100 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300"
-                            style={{ boxShadow: `0 10px 25px -5px ${domain.color}20` }}
+                            className="p-4 rounded-lg border-2 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300"
+                            style={{
+                              background: `linear-gradient(135deg, ${domain.color}12 0%, ${domain.color}06 100%)`,
+                              borderColor: `${domain.color}25`,
+                              boxShadow: `0 8px 20px -4px ${domain.color}15`
+                            }}
                           >
                             <DomainIcon className="w-8 h-8" style={{ color: domain.color }} />
                           </div>
                           <div>
-                            <h3 className="text-2xl font-bold text-slate-900 group-hover:text-odillon-teal transition-colors font-petrov-sans">
+                            <h3 className="text-2xl font-bold text-slate-900 group-hover:text-odillon-teal transition-colors font-baskvill">
                               {domain.title}
                             </h3>
-                            <div className="text-sm text-slate-400 mt-1 font-medium flex items-center group-hover:text-odillon-teal/70 transition-colors">
-                              Explorez notre savoir-faire <ArrowRight className="w-3 h-3 ml-1" />
-                            </div>
+                            <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+                              {domain.description}
+                            </p>
                           </div>
                         </div>
                       </div>
 
-                      <div className="pt-8 border-t border-slate-100 flex flex-wrap gap-x-8 gap-y-3 relative z-10">
+                      <div className="pt-8 border-t border-slate-100/80 flex flex-wrap gap-x-8 gap-y-3 relative z-10">
                         {domain.features.map((feature, i) => (
                           <div key={i} className="flex items-center text-sm font-semibold text-slate-600">
                             <CheckCircle className="w-4 h-4 mr-2.5 text-odillon-teal transition-transform group-hover:scale-110" />
@@ -143,4 +129,3 @@ export function ExpertiseHome() {
     </section>
   )
 }
-

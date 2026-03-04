@@ -12,6 +12,7 @@ const navigation = [
   { name: "Accueil", href: "#accueil" },
   { name: "Services", href: "#services" },
   { name: "À propos", href: "#apropos" },
+  { name: "Blog", href: "/blog" },
   { name: "Contact", href: "#contact" },
 ]
 
@@ -76,7 +77,7 @@ export function Header() {
               className="flex items-center text-sm text-gray-600 hover:text-odillon-teal transition-colors"
             >
               <Phone className="w-4 h-4 mr-2" />
-              +241 11747574
+              +241 11 74 75 74
             </a>
             <Button
               asChild
@@ -132,7 +133,7 @@ export function Header() {
                   className="flex items-center px-4 py-2 text-sm text-gray-600 hover:text-odillon-teal transition-colors rounded-md hover:bg-gray-50"
                 >
                   <Phone className="w-4 h-4 mr-3 flex-shrink-0" />
-                  <span className="break-all">+241 11747574</span>
+                  <span className="break-all">+241 11 74 75 74</span>
                 </a>
                 <a
                   href="mailto:contact@odillon.fr"

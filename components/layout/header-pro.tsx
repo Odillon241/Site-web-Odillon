@@ -5,7 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Phone, Mail, ChevronDown, Home, Briefcase, Users, Send, Menu, X, Image as ImageIcon } from "lucide-react"
+import { Phone, Mail, ChevronDown, Home, Briefcase, Users, Send, Menu, X, Image as ImageIcon, Newspaper } from "lucide-react"
 import { m, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
@@ -24,6 +24,8 @@ const navigation = [
       { name: "Juridique", href: "/services/juridique" },
       { name: "Finances", href: "/services/finances" },
       { name: "Capital Humain", href: "/services/ressources-humaines" },
+      { name: "Formations", href: "/services/formations" },
+      { name: "Communication", href: "/services/communication" },
     ]
   },
   {
@@ -35,6 +37,11 @@ const navigation = [
     name: "À propos",
     href: "/a-propos",
     icon: "Users"
+  },
+  {
+    name: "Blog",
+    href: "/blog",
+    icon: "Newspaper"
   },
 ]
 
@@ -78,7 +85,7 @@ export function HeaderPro() {
               <a href="tel:+24111747574" className="flex items-center text-white/90 hover:text-white transition-colors">
                 <Phone className="w-3 h-3 md:w-3.5 md:h-3.5 mr-1 md:mr-1.5" />
                 <span className="hidden sm:inline">+241 11 74 75 74</span>
-                <span className="sm:hidden">+241 117...</span>
+                <span className="sm:hidden">+241 114...</span>
               </a>
               <a href="tel:+24174759515" className="hidden xl:flex items-center text-white/90 hover:text-white transition-colors">
                 <Phone className="w-3.5 h-3.5 mr-1.5" />
@@ -120,7 +127,7 @@ export function HeaderPro() {
                   case 'Briefcase': return Briefcase
                   case 'Users': return Users
                   case 'Image': return ImageIcon
-                  case 'Newspaper': return null
+                  case 'Newspaper': return Newspaper
                   default: return null
                 }
               }
@@ -230,7 +237,7 @@ export function HeaderPro() {
                     case 'Briefcase': return Briefcase
                     case 'Users': return Users
                     case 'Image': return ImageIcon
-                    case 'Newspaper': return null
+                    case 'Newspaper': return Newspaper
                     default: return null
                   }
                 }

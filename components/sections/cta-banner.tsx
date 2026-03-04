@@ -56,9 +56,8 @@ export function CtaBanner({
 
   return (
     <BlurFade delay={0.4}>
-      <section className={`py-12 w-full ${className}`}>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden w-full rounded-xl shadow-xl">
+      <section className={`w-full ${className}`}>
+          <div className="relative overflow-hidden w-full shadow-xl">
             {/* Image Background */}
             <div className="absolute inset-0">
               <Image
@@ -104,7 +103,6 @@ export function CtaBanner({
               </div>
             </div>
           </div>
-        </div>
       </section>
     </BlurFade>
   )

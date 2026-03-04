@@ -239,8 +239,8 @@ export const servicesData: ServiceData[] = [
     title: "Finances",
     color: "#39837a",
     gradient: "from-[#39837a]/20 via-[#39837a]/10 to-transparent",
-    tagline: "Management des Risques",
-    description: "De l'élaboration du business plan à la levée de fonds, structurez votre stratégie financière pour maximiser vos performances.",
+    tagline: "Conseils Financiers",
+    description: "Conseils Financiers pour les opérations de levée de fonds sous forme de Dette ou d'Actions. Conseils en Investissement.",
     keyBenefits: [
       { icon: "TrendingUp", text: "Croissance accélérée", detail: "Stratégie financière optimale" },
       { icon: "Target", text: "Financement facilité", detail: "Accès aux meilleures sources" },
@@ -301,11 +301,11 @@ export const servicesData: ServiceData[] = [
   {
     id: "ressources-humaines",
     icon: "Users",
-    title: "Administration et Capital Humain",
+    title: "Capital Humain",
     color: "#C4D82E",
     gradient: "from-[#C4D82E]/20 via-[#C4D82E]/10 to-transparent",
-    tagline: "Relations Publiques",
-    description: "De la stratégie RH à la gestion des talents, développez une organisation performante centrée sur l'humain.",
+    tagline: "Administration et Ressources Humaines",
+    description: "Identification des atouts et des handicaps de l'entreprise. Définition des objectifs et des plans d'action.",
     keyBenefits: [
       { icon: "Users2", text: "Talents retenus", detail: "Turnover réduit" },
       { icon: "Award", text: "Performance accrue", detail: "Engagement renforcé" },
@@ -432,6 +432,106 @@ export const servicesData: ServiceData[] = [
             title: "Audit des avantages sociaux et autres avantages",
             content: "Design de packages attractifs au-delà du salaire",
             impact: "Attractivité renforcée"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "formations",
+    icon: "GraduationCap",
+    title: "Formations",
+    color: "#39837a",
+    gradient: "from-[#39837a]/20 via-[#39837a]/10 to-transparent",
+    tagline: "Formation Professionnelle",
+    description: "La formation professionnelle est le processus d'apprentissage qui permet à un individu d'acquérir le savoir, le savoir-faire.",
+    keyBenefits: [
+      { icon: "GraduationCap", text: "Montée en compétences", detail: "Savoir et savoir-faire" },
+      { icon: "Users2", text: "Coaching personnalisé", detail: "Accompagnement individuel" },
+      { icon: "Rocket", text: "Formats flexibles", detail: "Présentiel et en ligne" }
+    ],
+    workflow: [
+      { step: "1", title: "Diagnostic", description: "Identification des besoins en formation et des compétences à développer", icon: "Search" },
+      { step: "2", title: "Conception", description: "Élaboration de programmes de formation sur mesure adaptés à vos enjeux", icon: "Target" },
+      { step: "3", title: "Animation", description: "Déploiement des formations avec des méthodes pédagogiques innovantes", icon: "GraduationCap" },
+      { step: "4", title: "Évaluation", description: "Mesure de l'impact des formations et suivi des acquis", icon: "Award" }
+    ],
+    services: [
+      {
+        icon: "GraduationCap",
+        name: "Programmes de Formation",
+        tagline: "Développez vos talents",
+        description: "Des programmes de formation adaptés à tous les niveaux et formats pour développer les compétences de vos équipes.",
+        details: [
+          {
+            title: "Master Class",
+            content: "Sessions intensives animées par des experts sur des thématiques stratégiques et managériales",
+            impact: "Acquisition rapide de compétences de haut niveau"
+          },
+          {
+            title: "Coaching individuel professionnel",
+            content: "Accompagnement personnalisé pour développer le leadership et les compétences managériales",
+            impact: "Développement ciblé et progression mesurable"
+          },
+          {
+            title: "Formations en ligne",
+            content: "Modules e-learning accessibles à tout moment pour une montée en compétences flexible",
+            impact: "Accessibilité et flexibilité maximales"
+          },
+          {
+            title: "Formations courtes",
+            content: "Sessions ciblées de courte durée sur des compétences spécifiques et opérationnelles",
+            impact: "Application immédiate des acquis"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "communication",
+    icon: "Megaphone",
+    title: "Communication",
+    color: "#C4D82E",
+    gradient: "from-[#C4D82E]/20 via-[#C4D82E]/10 to-transparent",
+    tagline: "Stratégie de Communication",
+    description: "La communication est l'ensemble des interactions avec autrui qui transmettent une quelconque information.",
+    keyBenefits: [
+      { icon: "Megaphone", text: "Visibilité renforcée", detail: "Image institutionnelle forte" },
+      { icon: "Shield", text: "Gestion de crise", detail: "Réactivité et maîtrise" },
+      { icon: "Target", text: "Impact digital", detail: "Présence en ligne optimisée" }
+    ],
+    workflow: [
+      { step: "1", title: "Audit", description: "Analyse de votre communication actuelle et de votre image de marque", icon: "Search" },
+      { step: "2", title: "Stratégie", description: "Définition d'un plan de communication adapté à vos objectifs", icon: "Target" },
+      { step: "3", title: "Déploiement", description: "Mise en œuvre des actions de communication sur tous les canaux", icon: "Megaphone" },
+      { step: "4", title: "Mesure", description: "Suivi des retombées et ajustement de la stratégie", icon: "BarChart3" }
+    ],
+    services: [
+      {
+        icon: "Megaphone",
+        name: "Services de Communication",
+        tagline: "Valorisez votre image",
+        description: "Une offre complète de communication pour renforcer votre positionnement et votre notoriété.",
+        details: [
+          {
+            title: "Communication institutionnelle",
+            content: "Construction et valorisation de votre image d'entreprise auprès de vos parties prenantes",
+            impact: "Crédibilité et confiance renforcées"
+          },
+          {
+            title: "Communication digitale",
+            content: "Stratégie de présence en ligne, réseaux sociaux et contenus numériques",
+            impact: "Visibilité et engagement accrus"
+          },
+          {
+            title: "Communication de crise",
+            content: "Préparation, gestion et accompagnement dans les situations de crise médiatique",
+            impact: "Protection de la réputation"
+          },
+          {
+            title: "Communication médiatique",
+            content: "Relations presse, relations publiques et gestion des médias",
+            impact: "Couverture médiatique positive"
           }
         ]
       }

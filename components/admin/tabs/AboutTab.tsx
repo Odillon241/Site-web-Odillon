@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { Loader2, Plus, Trash2, Save, RefreshCw, Award, Shield, Lightbulb, Heart, Target, Sparkles } from "lucide-react"
+import { Loader2, Plus, Trash2, Save, RefreshCw, Award, Shield, Lightbulb, Heart, Target, Sparkles, Gem, Flame, HeartHandshake } from "lucide-react"
 import { toast } from "sonner"
 import { createClient } from "@/lib/supabase/client"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -20,6 +20,9 @@ interface ValueItem {
 }
 
 const AVAILABLE_ICONS = [
+    { value: "Gem", label: "Gem (Talent)", icon: Gem },
+    { value: "Flame", label: "Flame (Challenge)", icon: Flame },
+    { value: "HeartHandshake", label: "HeartHandshake (Proximité)", icon: HeartHandshake },
     { value: "Award", label: "Award (Récompense)", icon: Award },
     { value: "Shield", label: "Shield (Sécurité)", icon: Shield },
     { value: "Lightbulb", label: "Lightbulb (Innovation)", icon: Lightbulb },
@@ -185,7 +188,7 @@ export function AboutTab() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                     {values.map((item, index) => (
-                        <div key={index} className="flex flex-col md:flex-row gap-4 p-4 border rounded-xl bg-gray-50/50 relative group">
+                        <div key={index} className="flex flex-col md:flex-row gap-4 p-4 border rounded-lg bg-gray-50/50 relative group">
                             <Button
                                 variant="ghost"
                                 size="icon"
@@ -263,7 +266,7 @@ export function AboutTab() {
                     ))}
 
                     {values.length === 0 && (
-                        <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-xl border border-dashed">
+                        <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg border border-dashed">
                             Aucune valeur définie. Cliquez sur "Ajouter une valeur" pour commencer.
                         </div>
                     )}
