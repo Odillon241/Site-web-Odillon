@@ -82,7 +82,7 @@ export function AlbumModal({ album, onClose, onPhotoClick }: AlbumModalProps) {
                   {album.photos.map((photo, idx) => (
                     <BlurFade key={photo.id} delay={0.04 * Math.min(idx, 16)}>
                       <div
-                        className="break-inside-avoid relative group rounded-xl overflow-hidden cursor-zoom-in bg-gray-100 shadow-sm hover:shadow-xl transition-shadow duration-500"
+                        className="break-inside-avoid relative group rounded-lg overflow-hidden cursor-zoom-in bg-gray-100 shadow-sm hover:shadow-xl transition-shadow duration-500"
                         onClick={() => onPhotoClick(photo)}
                       >
                         <img

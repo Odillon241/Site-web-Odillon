@@ -124,7 +124,7 @@ export default function PhotothequePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
               {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
                 <div key={i} className="space-y-3">
-                  <div className="aspect-[7/8] bg-gray-100 rounded-2xl animate-pulse" />
+                  <div className="aspect-[7/8] bg-gray-100 rounded-lg animate-pulse" />
                 </div>
               ))}
             </div>
@@ -142,7 +142,7 @@ export default function PhotothequePage() {
           ) : (
             <FadeIn>
               <div className="text-center py-24">
-                <div className="w-20 h-20 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-5 border border-gray-100">
+                <div className="w-20 h-20 bg-gray-50 rounded-lg flex items-center justify-center mx-auto mb-5 border border-gray-100">
                   <Search className="w-8 h-8 text-gray-300" />
                 </div>
                 <h3 className="font-baskvill text-xl text-gray-900 mb-2">Aucun résultat</h3>

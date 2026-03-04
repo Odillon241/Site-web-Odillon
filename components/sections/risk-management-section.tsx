@@ -58,16 +58,14 @@ const riskManagementSteps = [
 export function RiskManagementSection() {
     const containerRef = useRef<HTMLDivElement>(null)
 
-    // Track scroll progress within this section
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start end", "end start"]
     })
 
-    // Transform scroll progress to width (starts small, expands to full)
-    const imageWidth = useTransform(scrollYProgress, [0, 0.3, 0.5], ["60%", "85%", "100%"])
-    const imageScale = useTransform(scrollYProgress, [0, 0.3, 0.5], [0.9, 0.95, 1])
-    const borderRadius = useTransform(scrollYProgress, [0, 0.3, 0.5], ["24px", "12px", "0px"])
+    const imageWidth = useTransform(scrollYProgress, [0, 0.3, 0.5], ["60%", "80%", "90%"])
+    const imageScale = useTransform(scrollYProgress, [0, 0.3, 0.5], [0.92, 0.96, 1])
+    const borderRadius = useTransform(scrollYProgress, [0, 0.3, 0.5], ["24px", "16px", "12px"])
     const imageOpacity = useTransform(scrollYProgress, [0, 0.15], [0.7, 1])
 
     return (
@@ -82,7 +80,7 @@ export function RiskManagementSection() {
                         <Badge variant="odillon" className="mb-4">
                             Expertise
                         </Badge>
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-petrov-sans">
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-baskvill">
                             Management des <span className="text-odillon-teal">Risques</span>
                         </h2>
                         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -92,10 +90,10 @@ export function RiskManagementSection() {
                 </div>
             </div>
 
-            {/* Animated Full-Width Image Container */}
+            {/* Animated Full-Width Image */}
             <div className="flex justify-center mb-16">
                 <m.div
-                    className="relative overflow-hidden shadow-2xl"
+                    className="relative overflow-hidden shadow-2xl border border-gray-200/80 ring-1 ring-black/5"
                     style={{
                         width: imageWidth,
                         scale: imageScale,
@@ -111,10 +109,7 @@ export function RiskManagementSection() {
                             className="object-cover"
                             priority
                         />
-                        {/* Overlay gradient */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-
-                        {/* Caption on image */}
                         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
                             <p className="text-white text-lg md:text-xl font-medium drop-shadow-lg max-w-2xl">
                                 Une méthodologie éprouvée pour anticiper et maîtriser tous les risques de votre organisation.
@@ -131,17 +126,20 @@ export function RiskManagementSection() {
                         const StepIcon = step.icon
                         return (
                             <BlurFade key={step.title} delay={0.1 * (idx + 1)}>
-                                <div className="group p-6 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-lg hover:border-odillon-teal/30 transition-all duration-300">
+                                <div className="group p-6 bg-white/60 backdrop-blur-md rounded-lg border border-gray-200/80 shadow-lg shadow-slate-200/30 hover:shadow-xl hover:border-odillon-teal/30 hover:-translate-y-1 transition-all duration-300">
                                     <div
-                                        className="w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-transform group-hover:scale-110"
-                                        style={{ backgroundColor: `${step.color}15` }}
+                                        className="w-12 h-12 rounded-lg border-2 flex items-center justify-center mb-4 transition-transform group-hover:scale-110"
+                                        style={{
+                                            background: `linear-gradient(135deg, ${step.color}12 0%, ${step.color}06 100%)`,
+                                            borderColor: `${step.color}25`
+                                        }}
                                     >
                                         <StepIcon
                                             className="w-6 h-6"
                                             style={{ color: step.color }}
                                         />
                                     </div>
-                                    <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-odillon-teal transition-colors">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-odillon-teal transition-colors font-baskvill">
                                         {step.title}
                                     </h3>
                                     <p className="text-sm text-gray-600 leading-relaxed">
@@ -158,7 +156,7 @@ export function RiskManagementSection() {
                     <div className="text-center mt-16">
                         <Link
                             href="/services"
-                            className="inline-flex items-center gap-2 px-8 py-4 bg-odillon-teal text-white font-semibold rounded-xl shadow-lg shadow-odillon-teal/20 hover:shadow-xl hover:bg-odillon-teal/90 transition-all group"
+                            className="inline-flex items-center gap-2 px-8 py-4 bg-odillon-teal text-white font-semibold rounded-lg shadow-lg shadow-odillon-teal/20 hover:shadow-xl hover:bg-odillon-teal/90 transition-all group"
                         >
                             Découvrir notre approche complète
                             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

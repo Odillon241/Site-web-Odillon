@@ -248,16 +248,9 @@ export function NewsTicker({
     }
   }, [])
 
-  // Show placeholder if ticker is disabled (keeps layout consistent)
+  // Hide ticker completely when disabled
   if (settingsLoaded && !settings.show_news_ticker) {
-    return (
-      <div
-        className={cn(
-          "bg-white/95 backdrop-blur-md border-b border-gray-200/50",
-          className
-        )}
-      />
-    )
+    return null
   }
 
   // CSS-based infinite scroll animation - double for seamless loop

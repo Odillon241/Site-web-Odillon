@@ -1,10 +1,9 @@
 "use client"
 
-import { useState, useMemo, useRef } from "react"
-import { m, useScroll, useTransform } from "framer-motion"
+import { useState, useMemo } from "react"
+import { m } from "framer-motion"
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ArrowRight, Calendar, Clock, Newspaper, Search } from "lucide-react"
 import Link from "next/link"
@@ -34,15 +33,6 @@ interface BlogPageClientProps {
 export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
     const [searchTerm, setSearchTerm] = useState("")
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-
-    const containerRef = useRef<HTMLDivElement>(null)
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start start", "end start"]
-    })
-
-    const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"])
-    const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
 
     const hasBanner = settings?.show_blog_banner && settings?.blog_banner_image_url
 
@@ -98,40 +88,22 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
         <>
             {/* Hero Section with Search & Filters */}
             <section
-                ref={containerRef}
-                className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-odillon-teal"
+                className="relative overflow-hidden bg-gradient-to-br from-white via-gray-50/80 to-[#1A9B8E]/5 py-10 sm:py-14 lg:py-20"
             >
-                {/* Background Parallax */}
-                <m.div
-                    style={{ y, opacity }}
-                    className="absolute inset-0 w-full h-full"
-                >
-                    {hasBanner ? (
-                        <>
-                            <img
-                                src={settings!.blog_banner_image_url!}
-                                alt="Fond Blog"
-                                className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-black/50" />
-                        </>
-                    ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-odillon-teal to-[#2a6b63]">
-                            <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-white/5 rounded-full blur-3xl opacity-60" />
-                            <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-odillon-lime/10 rounded-full blur-3xl opacity-60" />
-                        </div>
-                    )}
-                </m.div>
+                {/* Decorative circles */}
+                <div className="absolute top-20 right-20 w-96 h-96 bg-[#1A9B8E]/[0.03] rounded-full blur-3xl" />
+                <div className="absolute bottom-10 left-10 w-80 h-80 bg-odillon-lime/[0.05] rounded-full blur-3xl" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#1A9B8E]/[0.02] rounded-full blur-3xl" />
 
                 {/* Content */}
-                <div className="relative z-10 w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+                <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center">
                         <m.div
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
                         >
-                            <Badge className="bg-white/10 text-white border-white/20 mb-6 backdrop-blur-sm inline-flex">
+                            <Badge variant="odillon" className="mb-6 inline-flex">
                                 <Newspaper className="w-3.5 h-3.5 mr-1.5" />
                                 Blog
                             </Badge>
@@ -149,13 +121,13 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                                     rel="noopener noreferrer"
                                     className="group"
                                 >
-                                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 font-petrov-sans group-hover:opacity-90 transition-opacity">
-                                        Actualités & <span className="text-odillon-lime">Insights</span>
+                                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-7xl font-bold text-gray-900 mb-4 sm:mb-6 font-baskvill group-hover:opacity-90 transition-opacity">
+                                        Actualités & <span className="text-odillon-teal">Insights</span>
                                     </h1>
                                 </a>
                             ) : (
-                                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 font-petrov-sans">
-                                    Actualités & <span className="text-odillon-lime">Insights</span>
+                                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-7xl font-bold text-gray-900 mb-4 sm:mb-6 font-baskvill">
+                                    Actualités & <span className="text-odillon-teal">Insights</span>
                                 </h1>
                             )}
                         </m.div>
@@ -165,7 +137,7 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
                         >
-                            <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto font-light leading-relaxed mb-10">
+                            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto font-light leading-relaxed mb-10">
                                 Restez informés des tendances et bonnes pratiques en stratégie d'entreprise, gouvernance et management.
                             </p>
                         </m.div>
@@ -183,7 +155,7 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                                     placeholder="Rechercher un article..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="pl-12 py-6 text-base bg-white/95 backdrop-blur-sm border-white/20 shadow-lg focus:ring-2 focus:ring-odillon-lime/30 focus:bg-white rounded-full"
+                                    className="pl-12 py-6 text-base bg-white border-gray-200 shadow-lg shadow-slate-200/30 focus:ring-2 focus:ring-odillon-teal/30 focus:border-odillon-teal/30 focus:bg-white rounded-xl"
                                 />
                             </div>
                         </m.div>
@@ -194,31 +166,58 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-                                className="flex flex-wrap gap-2 justify-center"
+                                className="flex flex-wrap gap-3 justify-center"
                             >
-                                <Badge
-                                    variant={selectedCategory === null ? "default" : "outline"}
-                                    className={`cursor-pointer transition-all px-4 py-2 text-sm ${selectedCategory === null
-                                        ? "bg-white text-odillon-teal hover:bg-white/90"
-                                        : "bg-white/10 hover:bg-white/20 text-white border-white/30"
+                                <button
+                                    className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${selectedCategory === null
+                                        ? "bg-odillon-teal text-white shadow-lg shadow-odillon-teal/25"
+                                        : "bg-white text-gray-700 border border-gray-200 hover:border-odillon-teal/30 hover:text-odillon-teal shadow-sm"
                                         }`}
-                                    onClick={() => setSelectedCategory(null)}
+                                    onClick={() => {
+                                        setSelectedCategory(null)
+                                        document.getElementById("articles")?.scrollIntoView({ behavior: "smooth" })
+                                    }}
                                 >
                                     Tous
-                                </Badge>
+                                </button>
                                 {categories.map((cat) => (
-                                    <Badge
+                                    <button
                                         key={cat}
-                                        variant={selectedCategory === cat ? "default" : "outline"}
-                                        className={`cursor-pointer transition-all px-4 py-2 text-sm ${selectedCategory === cat
-                                            ? "bg-white text-odillon-teal hover:bg-white/90"
-                                            : "bg-white/10 hover:bg-white/20 text-white border-white/30"
+                                        className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${selectedCategory === cat
+                                            ? "bg-odillon-teal text-white shadow-lg shadow-odillon-teal/25"
+                                            : "bg-white text-gray-700 border border-gray-200 hover:border-odillon-teal/30 hover:text-odillon-teal shadow-sm"
                                             }`}
-                                        onClick={() => setSelectedCategory(cat)}
+                                        onClick={() => {
+                                            setSelectedCategory(cat)
+                                            document.getElementById("articles")?.scrollIntoView({ behavior: "smooth" })
+                                        }}
                                     >
                                         {cat}
-                                    </Badge>
+                                    </button>
                                 ))}
+                            </m.div>
+                        )}
+
+                        {/* Banner Image (premium framed) */}
+                        {hasBanner && (
+                            <m.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
+                                className="max-w-4xl mx-auto mt-10"
+                            >
+                                <div className="relative">
+                                    <div className="absolute -inset-3 bg-gradient-to-br from-[#1A9B8E]/20 via-[#C4D82E]/10 to-[#1A9B8E]/5 rounded-3xl blur-sm" />
+                                    <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-200/80 ring-1 ring-black/5 aspect-[21/9]">
+                                        <Image
+                                            src={settings!.blog_banner_image_url!}
+                                            alt="Bannière Blog"
+                                            fill
+                                            className="object-cover"
+                                            priority
+                                        />
+                                    </div>
+                                </div>
                             </m.div>
                         )}
                     </div>
@@ -226,7 +225,7 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
             </section>
 
             {/* Articles Grid Section */}
-            <section className="py-16 lg:py-24">
+            <section id="articles" className="py-16 lg:py-24 bg-gray-50/30 scroll-mt-4">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     {/* Results count header */}
                     {(searchTerm || selectedCategory) && (
@@ -235,7 +234,7 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                                 <p className="text-gray-600">
                                     {filteredArticles.length} article{filteredArticles.length > 1 ? "s" : ""} trouvé{filteredArticles.length > 1 ? "s" : ""}
                                     {selectedCategory && <span className="text-odillon-teal font-medium"> dans {selectedCategory}</span>}
-                                    {searchTerm && <span> pour "<span className="text-odillon-teal font-medium">{searchTerm}</span>"</span>}
+                                    {searchTerm && <span> pour &quot;<span className="text-odillon-teal font-medium">{searchTerm}</span>&quot;</span>}
                                 </p>
                             </div>
                         </BlurFade>
@@ -266,9 +265,9 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                             {filteredArticles.map((article) => (
                                 <m.div key={article.id} variants={item}>
                                     <Link href={`/blog/${article.slug}`} className="block h-full">
-                                        <Card className="group h-full overflow-hidden border-none shadow-md hover:shadow-2xl transition-all duration-300 bg-white flex flex-col">
+                                        <div className="group h-full overflow-hidden bg-white/60 backdrop-blur-md rounded-2xl border border-gray-200/80 shadow-lg shadow-slate-200/30 hover:shadow-xl hover:border-odillon-teal/30 hover:-translate-y-1 transition-all duration-300 flex flex-col">
                                             {/* Image */}
-                                            <div className="relative h-56 overflow-hidden bg-gray-100">
+                                            <div className="relative aspect-[16/10] overflow-hidden bg-gray-100 rounded-t-2xl">
                                                 {article.cover_image ? (
                                                     <Image
                                                         src={article.cover_image}
@@ -288,7 +287,7 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                                                 </div>
                                             </div>
 
-                                            <CardContent className="p-6 flex flex-col flex-grow">
+                                            <div className="p-6 flex flex-col flex-grow">
                                                 {/* Meta */}
                                                 <div className="flex items-center gap-4 text-xs text-gray-500 mb-4 font-medium uppercase tracking-wide">
                                                     <span className="flex items-center gap-1.5">
@@ -313,12 +312,12 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                                                 </p>
 
                                                 {/* Link */}
-                                                <div className="flex items-center text-odillon-teal font-semibold text-sm mt-auto pt-4 border-t border-gray-50 group-hover:border-odillon-teal/10 transition-colors">
-                                                    Lire l'article
+                                                <div className="flex items-center text-odillon-teal font-semibold text-sm mt-auto pt-4 border-t border-gray-100 group-hover:border-odillon-teal/10 transition-colors">
+                                                    Lire l&apos;article
                                                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                                                 </div>
-                                            </CardContent>
-                                        </Card>
+                                            </div>
+                                        </div>
                                     </Link>
                                 </m.div>
                             ))}

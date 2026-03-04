@@ -10,7 +10,7 @@
 ### 2. ✅ Header Ultra-Professionnel
 **Nouveau header à 2 niveaux :**
 - **Top Bar** (bande sombre) :
-  - Téléphone : +241 11747574
+  - Téléphone : +241 11 45 54 54
   - Email : contact@odillon.fr
   - Localisation : Libreville, Gabon
   

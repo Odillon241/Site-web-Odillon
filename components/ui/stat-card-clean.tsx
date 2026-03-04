@@ -27,7 +27,7 @@ export function StatCardClean({
     return (
         <div
             className={cn(
-                "relative group overflow-hidden rounded-xl border border-white/20 bg-white/50 p-8 text-center backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1",
+                "relative group overflow-hidden rounded-lg border border-white/20 bg-white/50 p-8 text-center backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1",
                 className
             )}
         >

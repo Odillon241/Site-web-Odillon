@@ -88,14 +88,14 @@ export function AnimatedStatCard({
     >
       {/* Outer container with animated border */}
       <div
-        className="relative w-full h-full rounded-xl p-[2px] overflow-hidden"
+        className="relative w-full h-full rounded-lg p-[2px] overflow-hidden"
         style={{
           background: `linear-gradient(135deg, ${hexToRgba(color, 0.3)}, transparent 50%, ${hexToRgba(color, 0.2)})`,
         }}
       >
         {/* Animated rotating border gradient */}
         <m.div
-          className="absolute inset-0 rounded-xl"
+          className="absolute inset-0 rounded-lg"
           style={{
             background: `conic-gradient(from 0deg, ${color}, transparent 30%, transparent 70%, ${color})`,
             willChange: 'transform',
@@ -117,7 +117,7 @@ export function AnimatedStatCard({
 
         {/* Inner card */}
         <div
-          className="relative w-full h-full rounded-xl backdrop-blur-xl overflow-hidden"
+          className="relative w-full h-full rounded-lg backdrop-blur-xl overflow-hidden"
           style={{
             background: `linear-gradient(145deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85))`,
           }}
@@ -163,7 +163,7 @@ export function AnimatedStatCard({
             >
               {/* Icon glow */}
               <m.div
-                className="absolute inset-0 rounded-xl blur-xl"
+                className="absolute inset-0 rounded-lg blur-xl"
                 style={{ background: hexToRgba(color, 0.4), willChange: 'transform, opacity' }}
                 animate={{
                   scale: [1, 1.2, 1],
@@ -174,7 +174,7 @@ export function AnimatedStatCard({
 
               {/* Icon background */}
               <div
-                className="relative w-14 h-14 md:w-16 md:h-16 rounded-xl flex items-center justify-center"
+                className="relative w-14 h-14 md:w-16 md:h-16 rounded-lg flex items-center justify-center"
                 style={{
                   background: `linear-gradient(135deg, ${hexToRgba(color, 0.2)}, ${hexToRgba(color, 0.1)})`,
                   border: `2px solid ${hexToRgba(color, 0.4)}`,

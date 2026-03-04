@@ -350,7 +350,7 @@ export function ArticlesTab() {
     return (
         <div className="space-y-6">
             {/* HEADER */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100 gap-4">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-4 rounded-lg shadow-sm border border-gray-100 gap-4">
                 <div>
                     <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
                         <Newspaper className="w-5 h-5 text-odillon-teal" />

@@ -63,42 +63,38 @@ export default async function ArticlePage({ params }: Props) {
             <HeaderPro />
             <main className="min-h-screen pt-[88px] md:pt-[104px]">
                 {/* Hero Section */}
-                <section className="relative py-16 lg:py-20 bg-gradient-to-br from-gray-900 to-gray-800 overflow-hidden">
-                    {article.cover_image && (
-                        <div className="absolute inset-0">
-                            <Image
-                                src={article.cover_image}
-                                alt={article.title}
-                                fill
-                                className="object-cover opacity-30"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent" />
-                        </div>
-                    )}
+                <section className="relative py-12 lg:py-16 bg-gray-50/50 border-b border-gray-200/60 overflow-hidden">
+                    {/* Decorative elements */}
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#1A9B8E]/10 to-[#C4D82E]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+                    <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-[#C4D82E]/10 to-[#1A9B8E]/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
 
                     <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 relative">
                         <BlurFade delay={0.1}>
-                            <Link
-                                href="/blog"
-                                className="inline-flex items-center text-white/70 hover:text-white mb-8 transition-colors"
-                            >
-                                <ArrowLeft className="w-4 h-4 mr-2" />
-                                Retour aux articles
-                            </Link>
+                            <div className="mb-6">
+                                <Link
+                                    href="/blog"
+                                    className="inline-flex items-center text-gray-600 hover:text-odillon-teal transition-colors"
+                                >
+                                    <ArrowLeft className="w-4 h-4 mr-2" />
+                                    Retour aux articles
+                                </Link>
+                            </div>
 
-                            <Badge className="bg-odillon-teal text-white mb-6">
-                                {article.category}
-                            </Badge>
+                            <div className="mb-6">
+                                <Badge variant="odillon">
+                                    {article.category}
+                                </Badge>
+                            </div>
 
-                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 font-petrov-sans leading-tight">
+                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 font-baskvill leading-tight">
                                 {article.title}
                             </h1>
 
-                            <p className="text-xl text-white/80 mb-8">
+                            <p className="text-xl text-gray-600 mb-8">
                                 {article.excerpt}
                             </p>
 
-                            <div className="flex flex-wrap items-center gap-6 text-white/70 text-sm">
+                            <div className="flex flex-wrap items-center gap-6 text-gray-500 text-sm">
                                 <span className="flex items-center gap-2">
                                     <User className="w-4 h-4" />
                                     {article.author}
@@ -112,6 +108,21 @@ export default async function ArticlePage({ params }: Props) {
                                     {article.read_time}
                                 </span>
                             </div>
+
+                            {article.cover_image && (
+                                <div className="mt-10 relative">
+                                    <div className="absolute -inset-3 bg-gradient-to-br from-[#1A9B8E]/20 via-[#C4D82E]/10 to-[#1A9B8E]/5 rounded-3xl blur-sm" />
+                                    <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-200/80 ring-1 ring-black/5">
+                                        <Image
+                                            src={article.cover_image}
+                                            alt={article.title}
+                                            width={1200}
+                                            height={630}
+                                            className="w-full object-cover"
+                                        />
+                                    </div>
+                                </div>
+                            )}
                         </BlurFade>
                     </div>
                 </section>

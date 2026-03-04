@@ -121,8 +121,8 @@ export default function AdminPhotosPage() {
   }
 
   const StatCard = ({ title, value, icon: Icon, color }: { title: string, value: number, icon: any, color: string }) => (
-    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color}`}>
+    <div className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm flex items-center gap-4">
+      <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${color}`}>
         <Icon className="w-6 h-6 text-white" />
       </div>
       <div>

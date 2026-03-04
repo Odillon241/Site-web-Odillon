@@ -88,7 +88,7 @@ export function AnimatedTimeline({ events, className }: AnimatedTimelineProps) {
                 {/* Card */}
                 <m.div
                   className={cn(
-                    "relative rounded-2xl border-2 p-6 backdrop-blur-sm transition-all duration-300",
+                    "relative rounded-lg border-2 p-6 backdrop-blur-sm transition-all duration-300",
                     bgColorClass,
                     isActive && "shadow-lg shadow-odillon-teal/10"
                   )}

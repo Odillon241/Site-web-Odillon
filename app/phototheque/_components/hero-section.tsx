@@ -1,7 +1,7 @@
 "use client";
 
 import { m } from "framer-motion";
-import { Camera, Aperture, Film, Focus, ChevronDown } from "lucide-react";
+import { Camera, Aperture, Film, Focus, ChevronDown, PenLine } from "lucide-react";
 import { FadeIn } from "@/components/magicui/fade-in";
 
 interface HeroSectionProps {
@@ -42,7 +42,7 @@ function FloatingElement({
 
 export function HeroSection({ children }: HeroSectionProps) {
   return (
-    <section className="relative pt-24 pb-20 md:pt-36 md:pb-28 overflow-hidden">
+    <section className="relative pt-4 pb-16 md:pt-8 md:pb-20 overflow-hidden">
       {/* ── Aurora gradient background ── */}
       <div className="absolute inset-0 -z-10">
         {/* Primary aurora blob */}
@@ -191,7 +191,7 @@ export function HeroSection({ children }: HeroSectionProps) {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-odillon-teal" />
               </span>
               <span className="text-xs font-semibold text-odillon-teal tracking-widest uppercase">
-                Photothèque
+                Together we draw <PenLine className="inline w-3.5 h-3.5 mx-0.5" /> the future
               </span>
             </m.div>
 
@@ -234,32 +234,29 @@ export function HeroSection({ children }: HeroSectionProps) {
 
           {/* Filter slot */}
           {children}
-        </div>
-      </div>
 
-      {/* Scroll down indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2">
-        <m.span
-          className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-medium"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.6 }}
-        >
-          Découvrir
-        </m.span>
-        <m.div
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: [0, 0.7, 0.7, 0], y: [-5, 4, 8, 12] }}
-          transition={{
-            duration: 2,
-            delay: 1.8,
-            repeat: Infinity,
-            repeatDelay: 0.5,
-            ease: "easeInOut",
-          }}
-        >
-          <ChevronDown className="w-5 h-5 text-odillon-teal/60" strokeWidth={1.5} />
-        </m.div>
+          {/* Scroll down indicator - dans le flux, après les filtres */}
+          <m.div
+            className="flex flex-col items-center gap-1.5 mt-4 md:mt-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, duration: 0.8 }}
+          >
+            <span className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-medium">
+              Découvrir
+            </span>
+            <m.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              <ChevronDown className="w-5 h-5 text-odillon-teal/50" strokeWidth={1.5} />
+            </m.div>
+          </m.div>
+        </div>
       </div>
 
       {/* Bottom gradient transition */}

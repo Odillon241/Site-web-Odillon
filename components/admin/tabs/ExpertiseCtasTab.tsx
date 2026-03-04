@@ -145,7 +145,7 @@ export function ExpertiseCtasTab() {
                     <div className="grid lg:grid-cols-2 gap-8 items-start">
 
                         {/* LEFT COLUMN: TEXT FIELDS */}
-                        <div className="space-y-6 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <div className="space-y-6 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
                             <h3 className="font-semibold text-gray-800 flex items-center gap-2 mb-4">
                                 <SettingsIcon className="w-4 h-4 text-gray-500" />
                                 Contenu Textuel
@@ -222,7 +222,7 @@ export function ExpertiseCtasTab() {
 
                         {/* RIGHT COLUMN: IMAGE & PREVIEW */}
                         <div className="space-y-6">
-                            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-4">
+                            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 space-y-4">
                                 <h3 className="font-semibold text-gray-800 flex items-center gap-2">
                                     <ImageIcon className="w-4 h-4 text-gray-500" />
                                     Image d'Arrière-plan

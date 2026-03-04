@@ -37,7 +37,7 @@ export function TeamCard({
     return (
         <div
             className={cn(
-                "group relative overflow-hidden rounded-xl bg-white border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1",
+                "group relative overflow-hidden rounded-lg bg-white border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1",
                 className
             )}
         >

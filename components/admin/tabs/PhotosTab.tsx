@@ -577,7 +577,7 @@ export function PhotosTab() {
     return (
         <div className="space-y-6">
             {/* HEADER & SECTION TABS */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100 gap-4">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-4 rounded-lg shadow-sm border border-gray-100 gap-4">
                 <div>
                     <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
                         <Camera className="w-5 h-5 text-odillon-teal" />
@@ -981,7 +981,7 @@ export function PhotosTab() {
                                     {filteredPhotos.map((photo) => (
                                         <div
                                             key={photo.id}
-                                            className={`group relative bg-white rounded-xl overflow-hidden shadow-sm border transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${!photo.is_active ? 'opacity-75 grayscale-[0.5]' : ''
+                                            className={`group relative bg-white rounded-lg overflow-hidden shadow-sm border transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${!photo.is_active ? 'opacity-75 grayscale-[0.5]' : ''
                                                 }`}
                                         >
                                             {/* Image Container */}
@@ -1286,7 +1286,7 @@ export function PhotosTab() {
                             </div>
 
                             {/* Info Card */}
-                            <div className="bg-white/10 backdrop-blur-xl rounded-xl p-6 border border-white/20">
+                            <div className="bg-white/10 backdrop-blur-xl rounded-lg p-6 border border-white/20">
                                 <div className="flex items-start justify-between gap-4">
                                     <div className="flex-1 space-y-3">
                                         <div className="flex items-center gap-3">

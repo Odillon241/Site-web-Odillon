@@ -102,7 +102,7 @@ Site web ultra-professionnel et moderne créé avec les **dernières technologie
 
 ### 6. 📬 Section Contact
 - **3 cartes d'information** :
-  - **Téléphone** : +241 11747574
+  - **Téléphone** : +241 11 45 54 54
   - **Email** : contact@odillon.fr
   - **Adresse** : BP- 13262 Libreville, Gabon
 

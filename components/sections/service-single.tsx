@@ -197,7 +197,7 @@ export function ServiceSingle({ service }: ServiceSingleProps) {
                     <CardHeader className="px-4 md:px-6 py-4 md:py-6">
                       <div className="flex items-start gap-2 md:gap-3 mb-2">
                         <div
-                          className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
+                          className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
                           style={{ backgroundColor: `${service.color}15`, color: service.color }}
                         >
                           <SubIcon className="w-5 h-5 md:w-6 md:h-6" />

@@ -83,7 +83,7 @@ export function PhotoFilters({
             ref={searchRef}
             placeholder="Rechercher un événement, un lieu, une formation..."
             className={cn(
-              "pl-12 pr-4 h-12 text-sm rounded-xl transition-all duration-200",
+              "pl-12 pr-4 h-12 text-sm rounded-lg transition-all duration-200",
               "bg-white border-gray-200 shadow-sm",
               isSearchFocused
                 ? "border-odillon-teal/50 shadow-md ring-2 ring-odillon-teal/10"

@@ -64,7 +64,7 @@ export function FaqHome() {
 
                 {/* FAQ Accordion */}
                 <BlurFade delay={0.2}>
-                    <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                    <div className="bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden">
                         <Accordion type="single" collapsible className="divide-y divide-gray-200">
                             {faqItems.map((item, idx) => (
                                 <AccordionItem

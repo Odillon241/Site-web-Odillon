@@ -206,7 +206,7 @@ export function SettingsTab() {
                             </div>
 
                             {/* Preview Image Services Hero */}
-                            <div className="relative aspect-video w-full max-w-md mx-auto bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200">
+                            <div className="relative aspect-video w-full max-w-md mx-auto bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200">
                                 {siteSettings?.services_hero_image_url ? (
                                     <div className="relative w-full h-full group">
                                         <img
@@ -282,7 +282,7 @@ export function SettingsTab() {
                             </div>
 
                             {/* Preview Image À Propos */}
-                            <div className="relative aspect-square md:aspect-video lg:aspect-square w-full max-w-sm mx-auto bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200">
+                            <div className="relative aspect-square md:aspect-video lg:aspect-square w-full max-w-sm mx-auto bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200">
                                 {siteSettings?.expertise_image_url ? (
                                     <div className="relative w-full h-full group">
                                         <img

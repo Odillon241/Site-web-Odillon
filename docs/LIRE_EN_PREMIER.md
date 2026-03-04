@@ -56,7 +56,7 @@ http://localhost:3000
 
 **Odillon - Ingénierie d'Entreprises**
 - 📍 BP- 13262 Libreville, Gabon
-- 📞 +241 11747574
+- 📞 +241 11 45 54 54
 - 📧 contact@odillon.fr
 - 🌐 www.odillon.fr
 

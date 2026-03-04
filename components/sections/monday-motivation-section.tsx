@@ -46,68 +46,82 @@ export function MondayMotivationSection({ video, className }: MondayMotivationSe
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-        {/* Header */}
-        <BlurFade delay={0.1} className="text-center mb-10 md:mb-14">
-          <Badge
-            variant="outline"
-            className="mb-4 bg-odillon-lime/10 text-odillon-teal border-odillon-lime/30 px-4 py-1.5"
-          >
-            <Sparkles className="w-3.5 h-3.5 mr-1.5" aria-hidden="true" />
-            Actualite de la semaine
-          </Badge>
-          <h2
-            id="monday-motivation-title"
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 font-baskvill"
-          >
-            Monday Motivation
-          </h2>
-          <div className="flex items-center justify-center gap-2 text-gray-500">
-            <Calendar className="w-4 h-4" aria-hidden="true" />
-            <span className="text-sm md:text-base">Semaine du {weekInfo}</span>
-          </div>
-        </BlurFade>
+        {/* Split layout : texte gauche + video droite */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+          {/* Colonne gauche - Texte */}
+          <BlurFade delay={0.1}>
+            <div className="space-y-6">
+              <Badge
+                variant="outline"
+                className="bg-odillon-lime/10 text-odillon-teal border-odillon-lime/30 px-4 py-1.5"
+              >
+                <Sparkles className="w-3.5 h-3.5 mr-1.5" aria-hidden="true" />
+                Actualite de la semaine
+              </Badge>
 
-        {/* Video Card */}
-        <FadeIn delay={0.2}>
-          <div className="mx-auto max-w-4xl">
-            <div className="rounded-2xl overflow-hidden shadow-2xl shadow-gray-200/50 border border-gray-100 bg-white">
-              <VideoPlayer
-                url={video.url}
-                type={video.type}
-                thumbnail={video.thumbnail || undefined}
-                title={video.title}
-                className="w-full aspect-video"
-                autoplay={true}
-                muted={true}
-                loop={true}
-              />
-            </div>
+              <h2
+                id="monday-motivation-title"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 font-baskvill leading-tight"
+              >
+                Monday Motivation
+              </h2>
 
-            {/* Video Info */}
-            {(video.title || video.description || video.presenter_name) && (
-              <div className="mt-6 md:mt-8 text-center">
-                {video.title && (
-                  <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-2">
-                    {video.title}
-                  </h3>
-                )}
-                {video.description && (
-                  <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                    {video.description}
-                  </p>
-                )}
-                {video.presenter_name && (
-                  <p className="mt-4 text-sm text-gray-500">
-                    <span className="font-medium text-gray-700">{video.presenter_name}</span>
-                    {video.presenter_position && (
-                      <span className="text-gray-400"> — {video.presenter_position}</span>
-                    )}
-                  </p>
-                )}
+              <div className="flex items-center gap-2 text-gray-500">
+                <Calendar className="w-4 h-4" aria-hidden="true" />
+                <span className="text-sm md:text-base">Semaine du {weekInfo}</span>
               </div>
-            )}
-          </div>
-        </FadeIn>
+
+              {/* Video Info */}
+              {(video.title || video.description || video.presenter_name) && (
+                <div className="pt-4 border-t border-gray-100 space-y-3">
+                  {video.title && (
+                    <h3 className="text-xl md:text-2xl font-semibold text-gray-900">
+                      {video.title}
+                    </h3>
+                  )}
+                  {video.description && (
+                    <p className="text-gray-600 leading-relaxed">
+                      {video.description}
+                    </p>
+                  )}
+                  {video.presenter_name && (
+                    <p className="text-sm text-gray-500">
+                      <span className="font-medium text-gray-700">{video.presenter_name}</span>
+                      {video.presenter_position && (
+                        <span className="text-gray-400"> — {video.presenter_position}</span>
+                      )}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          </BlurFade>
+
+          {/* Colonne droite - Video avec cadre premium */}
+          <FadeIn delay={0.2}>
+            <div className="relative">
+              {/* Gradient frame derriere */}
+              <div
+                className="absolute -inset-3 bg-gradient-to-br from-[#1A9B8E]/20 via-[#C4D82E]/10 to-[#1A9B8E]/5 rounded-lg blur-sm"
+                aria-hidden="true"
+              />
+
+              {/* Container video */}
+              <div className="relative rounded-lg overflow-hidden shadow-2xl border border-gray-200/80 ring-1 ring-black/5 bg-white">
+                <VideoPlayer
+                  url={video.url}
+                  type={video.type}
+                  thumbnail={video.thumbnail || undefined}
+                  title={video.title}
+                  className="w-full aspect-video"
+                  autoplay={true}
+                  muted={true}
+                  loop={true}
+                />
+              </div>
+            </div>
+          </FadeIn>
+        </div>
       </div>
     </section>
   )

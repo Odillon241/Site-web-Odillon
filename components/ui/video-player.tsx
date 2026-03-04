@@ -117,7 +117,7 @@ export function VideoPlayer({
     : null
 
   return (
-    <div className={cn("relative w-full overflow-hidden rounded-xl bg-gray-900", className)}>
+    <div className={cn("relative w-full overflow-hidden rounded-lg bg-gray-900", className)}>
       {/* Thumbnail avec bouton play (avant la lecture) */}
       {!isPlaying && (
         <div

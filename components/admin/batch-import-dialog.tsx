@@ -137,7 +137,7 @@ export function BatchImportDialog({ onArticlesCreated }: BatchImportDialogProps)
 
                 <div className="flex-1 overflow-y-auto py-4">
                     {step === "upload" && (
-                        <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-12 gap-4">
+                        <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-12 gap-4">
                             <Upload className="w-12 h-12 text-gray-400" />
                             <div className="text-center space-y-2">
                                 <Label htmlFor="file-upload" className="cursor-pointer text-odillon-teal hover:underline font-medium text-lg">

@@ -60,7 +60,7 @@ export function GlassmorphismIcon({
 
       {/* Outer glow layer */}
       <m.div
-        className="absolute inset-0 rounded-xl"
+        className="absolute inset-0 rounded-lg"
         style={{
           background: `radial-gradient(circle at 50% 50%, ${hexToRgba(color, 0.4)}, transparent 70%)`,
           filter: "blur(12px)",
@@ -78,7 +78,7 @@ export function GlassmorphismIcon({
 
       {/* Main container */}
       <m.div
-        className="relative w-full h-full rounded-xl overflow-hidden group cursor-pointer"
+        className="relative w-full h-full rounded-lg overflow-hidden group cursor-pointer"
         style={{
           background: `linear-gradient(135deg, ${hexToRgba(color, 0.15)} 0%, ${hexToRgba(color, 0.05)} 100%)`,
           backdropFilter: "blur(16px)",
@@ -105,7 +105,7 @@ export function GlassmorphismIcon({
       >
         {/* Animated border gradient */}
         <m.div
-          className="absolute inset-0 rounded-xl"
+          className="absolute inset-0 rounded-lg"
           style={{
             background: `conic-gradient(from 0deg, transparent, ${color}, transparent, ${color}, transparent)`,
             padding: "1px",
@@ -136,7 +136,7 @@ export function GlassmorphismIcon({
 
         {/* Inner glow ring */}
         <div
-          className="absolute inset-[3px] rounded-xl"
+          className="absolute inset-[3px] rounded-lg"
           style={{
             background: `radial-gradient(ellipse at 50% 0%, ${hexToRgba('#ffffff', 0.15)} 0%, transparent 60%)`,
           }}
@@ -169,7 +169,7 @@ export function GlassmorphismIcon({
         {variant === "electric" && (
           <>
             <m.div
-              className="absolute inset-0 rounded-xl"
+              className="absolute inset-0 rounded-lg"
               style={{
                 border: `2px solid ${color}`,
               }}
@@ -184,7 +184,7 @@ export function GlassmorphismIcon({
               }}
             />
             <m.div
-              className="absolute inset-0 rounded-xl"
+              className="absolute inset-0 rounded-lg"
               style={{
                 border: `1px solid ${color}`,
               }}

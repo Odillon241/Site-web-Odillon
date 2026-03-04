@@ -68,7 +68,7 @@ function OrgBox({
 
     return (
         <div className={`
-            relative bg-white border-2 rounded-xl shadow-md hover:shadow-lg transition-shadow
+            relative bg-white border-2 rounded-lg shadow-md hover:shadow-lg transition-shadow
             ${isDirection ? "border-odillon-teal" : "border-gray-200"}
             ${className}
         `}>

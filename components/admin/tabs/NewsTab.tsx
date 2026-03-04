@@ -152,9 +152,10 @@ export function NewsTab() {
     const fetchSettings = async () => {
         try {
             const supabase = createClient()
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('site_settings')
                 .select('show_news_ticker, news_ticker_speed, news_auto_refresh, news_refresh_interval')
+                .eq('id', 'main')
                 .single()
 
             if (data) {
@@ -194,17 +195,21 @@ export function NewsTab() {
             setSavingSettings(true)
             const supabase = createClient()
 
-            const { error } = await supabase
+            const { data, error } = await supabase
                 .from('site_settings')
-                .upsert({
-                    id: '1',
+                .update({
                     show_news_ticker: settings.show_news_ticker,
                     news_ticker_speed: settings.news_ticker_speed,
                     news_auto_refresh: settings.news_auto_refresh,
                     news_refresh_interval: settings.news_refresh_interval
                 })
+                .eq('id', 'main')
+                .select('show_news_ticker, news_ticker_speed, news_auto_refresh, news_refresh_interval')
+                .single()
 
             if (error) throw error
+            if (!data) throw new Error('Aucune ligne mise à jour')
+            console.log('Settings saved:', data)
             toast.success("Paramètres enregistrés")
         } catch (error) {
             console.error('Error saving settings:', error)

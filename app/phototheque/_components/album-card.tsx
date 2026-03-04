@@ -168,7 +168,7 @@ export function AlbumCard({ album, onClick, index }: AlbumCardProps) {
           }}
           className={cn(
             "relative w-full aspect-[7/8] max-w-[350px] mx-auto group cursor-pointer",
-            "rounded-2xl transition-shadow duration-500 ease-out",
+            "rounded-lg transition-shadow duration-500 ease-out",
             // Ombres dynamiques
             isHovered
               ? "shadow-2xl shadow-black/20 dark:shadow-black/40"
@@ -196,7 +196,7 @@ export function AlbumCard({ album, onClick, index }: AlbumCardProps) {
 
           {/* Gradient overlay on hover */}
           <m.div
-            className="absolute inset-0 z-10 rounded-2xl pointer-events-none"
+            className="absolute inset-0 z-10 rounded-lg pointer-events-none"
             initial={false}
             animate={{
               opacity: isHovered ? 1 : 0,
@@ -244,7 +244,7 @@ export function AlbumCard({ album, onClick, index }: AlbumCardProps) {
 
           {/* Shine effect on hover */}
           <m.div
-            className="absolute inset-0 z-10 rounded-2xl pointer-events-none overflow-hidden"
+            className="absolute inset-0 z-10 rounded-lg pointer-events-none overflow-hidden"
             initial={false}
             animate={{
               opacity: isHovered ? 1 : 0,
