@@ -164,7 +164,7 @@ export function AboutDetailed() {
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
-                  href="/services"
+                  href="/offres"
                   className="inline-flex items-center gap-2 px-7 py-3.5 border border-gray-300 hover:border-odillon-teal/50 hover:bg-odillon-teal/5 text-gray-700 hover:text-odillon-teal font-medium rounded-lg transition-all"
                 >
                   Découvrir nos services
@@ -353,7 +353,7 @@ export function AboutDetailed() {
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
-                href="/services"
+                href="/offres"
                 className="w-full sm:w-auto px-8 py-4 bg-transparent border border-white/20 hover:bg-white/5 text-white font-semibold rounded-lg transition-all flex items-center justify-center"
               >
                 Découvrir nos services

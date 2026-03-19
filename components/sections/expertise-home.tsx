@@ -64,7 +64,7 @@ export function ExpertiseHome() {
 
             <BlurFade delay={0.5}>
               <Link
-                href="/services"
+                href="/offres"
                 className="inline-flex items-center text-odillon-teal font-semibold group"
               >
                 Découvrir notre approche
@@ -79,7 +79,7 @@ export function ExpertiseHome() {
               const DomainIcon = domain.icon
               return (
                 <FadeIn key={domain.title} delay={0.1 * (idx + 1)}>
-                  <Link href="/services" className="block group perspective-1000">
+                  <Link href="/offres" className="block group perspective-1000">
                     <div className="relative overflow-hidden bg-white/60 backdrop-blur-md p-5 sm:p-8 md:p-10 rounded-lg border border-gray-200/80 hover:border-odillon-teal/30 shadow-lg shadow-slate-200/30 hover:shadow-xl hover:shadow-odillon-teal/10 hover:-translate-y-1 transition-all duration-500 group">
                       {/* Decorative Background Glow */}
                       <div

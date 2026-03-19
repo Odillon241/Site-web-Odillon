@@ -10,7 +10,9 @@ import {
   Users,
   ArrowRight,
   GraduationCap,
-  Megaphone
+  Megaphone,
+  Rocket,
+  Banknote
 } from "lucide-react"
 import Link from "next/link"
 
@@ -62,6 +64,22 @@ const mainServices = [
     tagline: "Stratégie de Communication",
     color: "#C4D82E",
     highlights: ["Communication institutionnelle", "Communication digitale", "Communication de crise"]
+  },
+  {
+    icon: Rocket,
+    title: "Entreprenariat",
+    slug: "entreprenariat",
+    tagline: "Accompagnement Entrepreneurial",
+    color: "#39837a",
+    highlights: ["Création d'entreprise", "Business plan", "Développement"]
+  },
+  {
+    icon: Banknote,
+    title: "Paie",
+    slug: "paie",
+    tagline: "Gestion de la Paie",
+    color: "#C4D82E",
+    highlights: ["Bulletins de paie", "Déclarations sociales", "Optimisation"]
   }
 ]
 
@@ -82,7 +100,7 @@ export function ServicesHome() {
               L&apos;expertise stratégique au service de votre transformation.
             </h2>
             <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-              Six piliers d&apos;expertise pour transformer et structurer votre organisation de manière pérenne.
+              Huit piliers d&apos;expertise pour transformer et structurer votre organisation de manière pérenne.
             </p>
           </BlurFade>
 
@@ -92,8 +110,8 @@ export function ServicesHome() {
               variant="default"
               className="group bg-odillon-teal hover:bg-odillon-teal/90 text-white font-semibold rounded-lg px-8 h-12 shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              <Link href="/services">
-                Voir tous nos services
+              <Link href="/offres">
+                Voir toutes nos offres
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
@@ -106,7 +124,7 @@ export function ServicesHome() {
             const ServiceIcon = service.icon
             return (
               <BlurFade key={service.title} delay={0.1 * (idx + 1)} className="h-full">
-                <Link href={`/services/${service.slug}`} className="block h-full cursor-none-target">
+                <Link href={`/offres/${service.slug}`} className="block h-full cursor-none-target">
                   <TiltCard containerClassName="h-full" className="h-full">
                     <div className="relative h-full bg-white rounded-lg p-8 shadow-lg border border-gray-200/80 overflow-hidden transform-style-3d group">
                       {/* Hover Gradient Background */}

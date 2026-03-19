@@ -39,6 +39,9 @@ export const metadata: Metadata = {
       follow: true,
     },
   },
+  other: {
+    "google": "notranslate",
+  },
 }
 
 export default function RootLayout({
@@ -47,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="fr" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="fr" translate="no" className="scroll-smooth" suppressHydrationWarning>
       <body className={cn(airFont.className, airFont.variable, libreBaskerville.variable, "antialiased")} suppressHydrationWarning>
         {/* Grid background pattern */}
         <div className="grid-bg" />

@@ -22,7 +22,7 @@ export async function GET() {
       expertise_cta_title: 'Découvrez notre expertise approfondie et nos méthodologies éprouvées',
       expertise_cta_description: '',
       expertise_cta_button_text: 'En savoir plus sur notre expertise',
-      expertise_cta_button_link: '/services',
+      expertise_cta_button_link: '/offres',
       expertise_cta_badge_text: 'Expertise',
       // Blog Banner Defaults
       show_blog_banner: false,

@@ -25,10 +25,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Validation
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/webm', 'video/quicktime']
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml', 'video/mp4', 'video/webm', 'video/quicktime']
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
-        { error: 'Format non supporté. Utilisez JPG, PNG, WebP, MP4, WebM ou MOV' },
+        { error: 'Format non supporté. Utilisez JPG, PNG, WebP, SVG, MP4, WebM ou MOV' },
         { status: 400 }
       )
     }

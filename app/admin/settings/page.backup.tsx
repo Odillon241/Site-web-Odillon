@@ -219,7 +219,7 @@ export default function AdminPhotosPage() {
   // Pages disponibles
   const availablePages = [
     { value: 'home', label: 'Page d\'accueil', path: '/' },
-    { value: 'services', label: 'Services', path: '/services' },
+    { value: 'offres', label: 'Offres', path: '/offres' },
     { value: 'about', label: 'À propos', path: '/a-propos' },
     { value: 'contact', label: 'Contact', path: '/contact' }
   ]

@@ -16,16 +16,18 @@ const navigation = [
     icon: "Home"
   },
   {
-    name: "Nos services",
-    href: "/services",
+    name: "Nos offres",
+    href: "/offres",
     icon: "Briefcase",
     submenu: [
-      { name: "Gouvernance", href: "/services/gouvernance" },
-      { name: "Juridique", href: "/services/juridique" },
-      { name: "Finances", href: "/services/finances" },
-      { name: "Capital Humain", href: "/services/ressources-humaines" },
-      { name: "Formations", href: "/services/formations" },
-      { name: "Communication", href: "/services/communication" },
+      { name: "Gouvernance", href: "/offres/gouvernance" },
+      { name: "Juridique", href: "/offres/juridique" },
+      { name: "Finances", href: "/offres/finances" },
+      { name: "Capital Humain", href: "/offres/ressources-humaines" },
+      { name: "Formations", href: "/offres/formations" },
+      { name: "Communication", href: "/offres/communication" },
+      { name: "Entreprenariat", href: "/offres/entreprenariat" },
+      { name: "Paie", href: "/offres/paie" },
     ]
   },
   {

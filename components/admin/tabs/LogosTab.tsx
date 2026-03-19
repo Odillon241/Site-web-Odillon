@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -26,14 +26,215 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Loader2, Plus, RefreshCw, Trash2, Eye, EyeOff, Building2, Upload } from "lucide-react"
+import { Loader2, Plus, Trash2, Eye, EyeOff, Building2, Upload, Pencil, ImageIcon, X } from "lucide-react"
 import { CompanyLogo } from "@/types/admin"
 import { toast } from "sonner"
+
+// Extraction de la couleur dominante d'une image via Canvas
+function extractDominantColor(imageUrl: string): Promise<string> {
+    return new Promise((resolve) => {
+        const img = new Image()
+        img.crossOrigin = "anonymous"
+        img.onload = () => {
+            const canvas = document.createElement("canvas")
+            const size = 50
+            canvas.width = size
+            canvas.height = size
+            const ctx = canvas.getContext("2d")
+            if (!ctx) { resolve("#39837a"); return }
+
+            ctx.drawImage(img, 0, 0, size, size)
+            const data = ctx.getImageData(0, 0, size, size).data
+
+            // Compter les couleurs en les regroupant par buckets (tolérance de 24)
+            const buckets: Record<string, { r: number; g: number; b: number; count: number }> = {}
+
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3]
+                // Ignorer les pixels transparents
+                if (a < 128) continue
+                // Ignorer les blancs, quasi-blancs, noirs, quasi-noirs et gris
+                const max = Math.max(r, g, b)
+                const min = Math.min(r, g, b)
+                const saturation = max === 0 ? 0 : (max - min) / max
+                const brightness = max / 255
+                // Garder seulement les couleurs avec un minimum de saturation et pas trop sombres/claires
+                if (saturation < 0.15 || brightness < 0.1 || brightness > 0.95) continue
+
+                const kr = Math.round(r / 24) * 24
+                const kg = Math.round(g / 24) * 24
+                const kb = Math.round(b / 24) * 24
+                const key = `${kr},${kg},${kb}`
+
+                if (!buckets[key]) {
+                    buckets[key] = { r: 0, g: 0, b: 0, count: 0 }
+                }
+                buckets[key].r += r
+                buckets[key].g += g
+                buckets[key].b += b
+                buckets[key].count++
+            }
+
+            // Trouver le bucket le plus fréquent
+            let best = { r: 57, g: 131, b: 122, count: 0 } // fallback odillon-teal
+            for (const bucket of Object.values(buckets)) {
+                if (bucket.count > best.count) {
+                    best = bucket
+                }
+            }
+
+            if (best.count > 0) {
+                const r = Math.round(best.r / best.count)
+                const g = Math.round(best.g / best.count)
+                const b = Math.round(best.b / best.count)
+                resolve(`#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`)
+            } else {
+                resolve("#39837a")
+            }
+        }
+        img.onerror = () => resolve("#39837a")
+        img.src = imageUrl
+    })
+}
+
+// Composant zone d'upload avec aperçu
+function LogoUploadZone({
+    currentUrl,
+    onUploaded,
+    onColorExtracted,
+    uploading,
+    setUploading
+}: {
+    currentUrl: string
+    onUploaded: (url: string) => void
+    onColorExtracted?: (color: string) => void
+    uploading: boolean
+    setUploading: (v: boolean) => void
+}) {
+    const fileInputRef = useRef<HTMLInputElement>(null)
+
+    const handleFileSelect = async (file: File) => {
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml']
+        if (!allowedTypes.includes(file.type)) {
+            toast.error("Format non supporté. Utilisez PNG, JPG, WEBP ou SVG")
+            return
+        }
+
+        setUploading(true)
+        try {
+            const formData = new FormData()
+            formData.append('file', file)
+            formData.append('bucket', 'logos')
+
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            })
+
+            if (!res.ok) {
+                const err = await res.json()
+                throw new Error(err.error || "Erreur upload")
+            }
+
+            const data = await res.json()
+            onUploaded(data.url)
+            // Extraire la couleur dominante
+            if (onColorExtracted) {
+                extractDominantColor(data.url).then(onColorExtracted)
+            }
+            toast.success("Logo téléversé")
+        } catch (error) {
+            console.error("Upload error:", error)
+            toast.error(error instanceof Error ? error.message : "Erreur lors du téléversement")
+        } finally {
+            setUploading(false)
+        }
+    }
+
+    return (
+        <div className="space-y-2">
+            <label className="text-sm font-medium">Logo</label>
+
+            {/* Aperçu */}
+            {currentUrl && (
+                <div className="relative w-full flex items-center justify-center bg-gray-50 border border-gray-200 rounded-md p-4">
+                    <img
+                        src={currentUrl}
+                        alt="Aperçu du logo"
+                        className="max-h-24 max-w-full object-contain"
+                    />
+                    <button
+                        type="button"
+                        onClick={() => onUploaded("")}
+                        className="absolute top-2 right-2 p-1 bg-white rounded-full shadow hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"
+                    >
+                        <X className="w-3.5 h-3.5" />
+                    </button>
+                </div>
+            )}
+
+            {/* Zone d'upload cliquable */}
+            <div
+                onClick={() => fileInputRef.current?.click()}
+                onDragOver={(e) => { e.preventDefault(); e.stopPropagation() }}
+                onDrop={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    const file = e.dataTransfer.files?.[0]
+                    if (file) handleFileSelect(file)
+                }}
+                className="border-2 border-dashed border-gray-300 hover:border-green-400 rounded-md p-6 text-center cursor-pointer transition-colors hover:bg-green-50/30"
+            >
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    className="hidden"
+                    accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                    onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) handleFileSelect(file)
+                        e.target.value = ""
+                    }}
+                />
+                {uploading ? (
+                    <div className="flex flex-col items-center gap-2">
+                        <Loader2 className="w-8 h-8 text-green-600 animate-spin" />
+                        <p className="text-sm text-gray-500">Téléversement en cours...</p>
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center gap-2">
+                        {currentUrl ? (
+                            <Upload className="w-6 h-6 text-gray-400" />
+                        ) : (
+                            <ImageIcon className="w-8 h-8 text-gray-400" />
+                        )}
+                        <p className="text-sm text-gray-600">
+                            {currentUrl ? "Changer le logo" : "Cliquez ou glissez un fichier ici"}
+                        </p>
+                        <p className="text-[10px] text-gray-400">
+                            PNG, JPG, WEBP, SVG
+                        </p>
+                    </div>
+                )}
+            </div>
+        </div>
+    )
+}
 
 export function LogosTab() {
     const [logos, setLogos] = useState<CompanyLogo[]>([])
     const [loading, setLoading] = useState(false)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+    const [uploading, setUploading] = useState(false)
+    const [editingLogo, setEditingLogo] = useState<{
+        id: string
+        name: string
+        full_name: string
+        logo_path: string
+        fallback: string
+        color: string
+    } | null>(null)
 
     const [newLogo, setNewLogo] = useState({
         name: "",
@@ -63,9 +264,13 @@ export function LogosTab() {
         }
     }
 
+    const resetNewLogo = () => {
+        setNewLogo({ name: "", full_name: "", logo_path: "", fallback: "", color: "#39837a" })
+    }
+
     const handleAddLogo = async () => {
         if (!newLogo.name.trim() || !newLogo.full_name.trim() || !newLogo.logo_path.trim()) {
-            toast.error("Veuillez remplir les champs obligatoires")
+            toast.error("Veuillez remplir le nom, le nom complet et téléverser un logo")
             return
         }
 
@@ -79,13 +284,7 @@ export function LogosTab() {
             if (!res.ok) throw new Error("Erreur lors de l'ajout")
 
             toast.success("Logo ajouté avec succès")
-            setNewLogo({
-                name: "",
-                full_name: "",
-                logo_path: "",
-                fallback: "",
-                color: "#39837a"
-            })
+            resetNewLogo()
             setIsDialogOpen(false)
             loadLogos()
         } catch (error: unknown) {
@@ -117,6 +316,45 @@ export function LogosTab() {
         }
     }
 
+    const openEditDialog = (logo: CompanyLogo) => {
+        setEditingLogo({
+            id: logo.id,
+            name: logo.name,
+            full_name: logo.full_name,
+            logo_path: logo.logo_path,
+            fallback: logo.fallback,
+            color: logo.color
+        })
+        setIsEditDialogOpen(true)
+    }
+
+    const handleEditLogo = async () => {
+        if (!editingLogo) return
+        if (!editingLogo.name.trim() || !editingLogo.full_name.trim() || !editingLogo.logo_path.trim()) {
+            toast.error("Veuillez remplir le nom, le nom complet et téléverser un logo")
+            return
+        }
+
+        try {
+            const { id, ...updates } = editingLogo
+            const res = await fetch(`/api/logos/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updates)
+            })
+
+            if (!res.ok) throw new Error("Erreur lors de la modification")
+
+            toast.success("Logo modifié avec succès")
+            setIsEditDialogOpen(false)
+            setEditingLogo(null)
+            loadLogos()
+        } catch (error: unknown) {
+            console.error("Erreur modification logo:", error)
+            toast.error("Erreur lors de la modification du logo")
+        }
+    }
+
     const deleteLogo = async (logoId: string) => {
         try {
             const res = await fetch(`/api/logos/${logoId}`, {
@@ -143,7 +381,10 @@ export function LogosTab() {
                     </Badge>
                 </div>
 
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <Dialog open={isDialogOpen} onOpenChange={(open) => {
+                    setIsDialogOpen(open)
+                    if (!open) { resetNewLogo(); setUploading(false) }
+                }}>
                     <DialogTrigger asChild>
                         <Button className="bg-green-600 hover:bg-green-700 text-white shadow-sm gap-2">
                             <Plus className="w-4 h-4" />
@@ -154,106 +395,37 @@ export function LogosTab() {
                         <DialogHeader>
                             <DialogTitle>Nouveau Partenaire</DialogTitle>
                             <DialogDescription>
-                                Ajoutez les logos des entreprises partenaires qui défileront sur la page d'accueil.
+                                Ajoutez les logos des entreprises partenaires qui défileront sur la page d&apos;accueil.
                             </DialogDescription>
                         </DialogHeader>
 
                         <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Nom Court (ex: ACME)</label>
-                                    <Input
-                                        value={newLogo.name}
-                                        onChange={(e) => setNewLogo({ ...newLogo, name: e.target.value })}
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Initiales (ex: A)</label>
-                                    <Input
-                                        value={newLogo.fallback}
-                                        placeholder="Pour le placeholder"
-                                        onChange={(e) => setNewLogo({ ...newLogo, fallback: e.target.value })}
-                                    />
-                                </div>
-                            </div>
+                            {/* Zone d'upload avec aperçu */}
+                            <LogoUploadZone
+                                currentUrl={newLogo.logo_path}
+                                onUploaded={(url) => setNewLogo(prev => ({ ...prev, logo_path: url }))}
+                                onColorExtracted={(color) => setNewLogo(prev => ({ ...prev, color }))}
+                                uploading={uploading}
+                                setUploading={setUploading}
+                            />
 
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Nom Complet</label>
+                                <label className="text-sm font-medium">Nom Complet *</label>
                                 <Input
+                                    placeholder="ex: Société ACME International"
                                     value={newLogo.full_name}
                                     onChange={(e) => setNewLogo({ ...newLogo, full_name: e.target.value })}
                                 />
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Logo</label>
-                                <div className="flex gap-2">
-                                    <Input
-                                        placeholder="https://..."
-                                        value={newLogo.logo_path}
-                                        onChange={(e) => setNewLogo({ ...newLogo, logo_path: e.target.value })}
-                                        className="flex-1"
-                                    />
-                                    <div className="relative">
-                                        <Input
-                                            type="file"
-                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                            onChange={async (e) => {
-                                                const file = e.target.files?.[0]
-                                                if (!file) return
-
-                                                try {
-                                                    const formData = new FormData()
-                                                    formData.append('file', file)
-                                                    formData.append('bucket', 'logos') // Using 'logos' bucket, fallback to 'hero-photos' if needed in future
-
-                                                    toast.promise(
-                                                        fetch('/api/upload', {
-                                                            method: 'POST',
-                                                            body: formData
-                                                        }).then(async (res) => {
-                                                            if (!res.ok) throw new Error("Upload failed")
-                                                            const data = await res.json()
-                                                            setNewLogo(prev => ({ ...prev, logo_path: data.url }))
-                                                            return data
-                                                        }),
-                                                        {
-                                                            loading: 'Téléchargement...',
-                                                            success: 'Logo téléchargé',
-                                                            error: 'Erreur de téléchargement'
-                                                        }
-                                                    )
-                                                } catch (error) {
-                                                    console.error("Upload error:", error)
-                                                }
-                                            }}
-                                            accept="image/png,image/jpeg,image/webp,image/svg+xml"
-                                        />
-                                        <Button variant="outline" size="icon" className="shrink-0 pointer-events-none">
-                                            <Upload className="w-4 h-4" />
-                                        </Button>
-                                    </div>
-                                </div>
-                                <p className="text-[10px] text-gray-500">
-                                    Formats acceptés: PNG, JPG, WEBP, SVG
-                                </p>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Couleur de fond (Placeholder)</label>
-                                <div className="flex gap-2">
-                                    <Input
-                                        type="color"
-                                        value={newLogo.color}
-                                        onChange={(e) => setNewLogo({ ...newLogo, color: e.target.value })}
-                                        className="w-12 p-1 h-9 cursor-pointer"
-                                    />
-                                    <Input
-                                        value={newLogo.color}
-                                        onChange={(e) => setNewLogo({ ...newLogo, color: e.target.value })}
-                                        className="font-mono uppercase"
-                                    />
-                                </div>
+                                <label className="text-sm font-medium">Abréviation *</label>
+                                <Input
+                                    placeholder="ex: ACME"
+                                    value={newLogo.name}
+                                    onChange={(e) => setNewLogo({ ...newLogo, name: e.target.value, fallback: e.target.value.slice(0, 3).toUpperCase() })}
+                                />
+                                <p className="text-[10px] text-gray-400">Sigle ou acronyme affiché sous le nom complet</p>
                             </div>
                         </div>
 
@@ -261,7 +433,13 @@ export function LogosTab() {
                             <DialogClose asChild>
                                 <Button variant="outline">Annuler</Button>
                             </DialogClose>
-                            <Button onClick={handleAddLogo} className="bg-green-600 hover:bg-green-700">Enregistrer</Button>
+                            <Button
+                                onClick={handleAddLogo}
+                                disabled={uploading}
+                                className="bg-green-600 hover:bg-green-700"
+                            >
+                                Enregistrer
+                            </Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
@@ -324,6 +502,15 @@ export function LogosTab() {
                                             )}
                                         </Button>
 
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            onClick={() => openEditDialog(logo)}
+                                            className="h-8 w-8 p-0 text-blue-500 hover:text-blue-600 hover:bg-blue-50"
+                                        >
+                                            <Pencil className="w-3.5 h-3.5" />
+                                        </Button>
+
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
                                                 <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50">
@@ -352,6 +539,65 @@ export function LogosTab() {
                     </div>
                 )}
             </CardContent>
+
+            {/* Dialog d'édition */}
+            <Dialog open={isEditDialogOpen} onOpenChange={(open) => {
+                setIsEditDialogOpen(open)
+                if (!open) { setEditingLogo(null); setUploading(false) }
+            }}>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Modifier le partenaire</DialogTitle>
+                        <DialogDescription>
+                            Modifiez les informations du logo partenaire.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    {editingLogo && (
+                        <div className="grid gap-4 py-4">
+                            {/* Zone d'upload avec aperçu */}
+                            <LogoUploadZone
+                                currentUrl={editingLogo.logo_path}
+                                onUploaded={(url) => setEditingLogo(prev => prev ? { ...prev, logo_path: url } : prev)}
+                                onColorExtracted={(color) => setEditingLogo(prev => prev ? { ...prev, color } : prev)}
+                                uploading={uploading}
+                                setUploading={setUploading}
+                            />
+
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Nom Complet *</label>
+                                <Input
+                                    value={editingLogo.full_name}
+                                    onChange={(e) => setEditingLogo({ ...editingLogo, full_name: e.target.value })}
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Abréviation *</label>
+                                <Input
+                                    placeholder="ex: ACME"
+                                    value={editingLogo.name}
+                                    onChange={(e) => setEditingLogo({ ...editingLogo, name: e.target.value, fallback: e.target.value.slice(0, 3).toUpperCase() })}
+                                />
+                                <p className="text-[10px] text-gray-400">Sigle ou acronyme affiché sous le nom complet</p>
+                            </div>
+                        </div>
+                    )}
+
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button variant="outline">Annuler</Button>
+                        </DialogClose>
+                        <Button
+                            onClick={handleEditLogo}
+                            disabled={uploading}
+                            className="bg-blue-600 hover:bg-blue-700"
+                        >
+                            Enregistrer
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </Card>
     )
 }

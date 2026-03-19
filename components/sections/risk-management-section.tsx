@@ -155,7 +155,7 @@ export function RiskManagementSection() {
                 <BlurFade delay={0.6}>
                     <div className="text-center mt-16">
                         <Link
-                            href="/services"
+                            href="/offres"
                             className="inline-flex items-center gap-2 px-8 py-4 bg-odillon-teal text-white font-semibold rounded-lg shadow-lg shadow-odillon-teal/20 hover:shadow-xl hover:bg-odillon-teal/90 transition-all group"
                         >
                             Découvrir notre approche complète

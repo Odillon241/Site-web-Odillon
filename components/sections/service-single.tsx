@@ -4,7 +4,6 @@ import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/shadcn-io/marquee"
 import {
   ArrowLeft,
@@ -22,7 +21,10 @@ import {
   Scale,
   TrendingUp,
   Users,
-  Search
+  Search,
+  Banknote,
+  ExternalLink,
+  FileDown
 } from "lucide-react"
 import Link from "next/link"
 import { ServiceData } from "@/lib/services-data"
@@ -42,6 +44,7 @@ const iconMap: Record<string, React.ComponentType<any>> = {
   Lightbulb,
   Rocket,
   Search,
+  Banknote,
 }
 
 type ServiceSingleProps = {
@@ -64,12 +67,12 @@ export function ServiceSingle({ service }: ServiceSingleProps) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         {/* Back Button */}
         <Link
-          href="/services"
+          href="/offres"
           className="inline-flex items-center gap-2 text-sm font-medium transition-colors mb-8 opacity-70 hover:opacity-100"
           style={{ color: service.color }}
         >
           <ArrowLeft className="w-4 h-4" />
-          Retour aux services
+          Retour aux offres
         </Link>
 
         {/* Header */}
@@ -86,11 +89,13 @@ export function ServiceSingle({ service }: ServiceSingleProps) {
             </h1>
           </BlurFade>
 
+          {service.description && (
           <BlurFade delay={0.3}>
             <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed px-4">
               {service.description}
             </p>
           </BlurFade>
+          )}
         </div>
 
         {/* Service Header */}
@@ -179,77 +184,125 @@ export function ServiceSingle({ service }: ServiceSingleProps) {
           </div>
         </FadeIn>
 
-        {/* Services Details */}
+        {/* Services - Cards linking to dedicated pages */}
         <FadeIn delay={0.2}>
           <div className="mt-8 md:mt-12">
             <div className="text-center mb-6 md:mb-8 px-4">
               <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
                 Nos prestations en détail
               </h3>
-              <p className="text-sm md:text-base text-gray-600">Explorez chaque service pour comprendre comment nous pouvons vous aider</p>
+              <p className="text-sm md:text-base text-gray-600">Cliquez sur une prestation pour découvrir tous les détails</p>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-4 md:gap-6">
               {service.services.map((subService, idx) => {
                 const SubIcon = iconMap[subService.icon] || FileText
                 return (
-                  <Card key={idx} className="border-2 border-gray-200 hover:border-gray-300 transition-all duration-300 group">
-                    <CardHeader className="px-4 md:px-6 py-4 md:py-6">
-                      <div className="flex items-start gap-2 md:gap-3 mb-2">
-                        <div
-                          className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
-                          style={{ backgroundColor: `${service.color}15`, color: service.color }}
-                        >
-                          <SubIcon className="w-5 h-5 md:w-6 md:h-6" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <CardTitle className="text-base md:text-xl">{subService.name}</CardTitle>
-                          <CardDescription className="text-xs md:text-sm font-medium mt-1" style={{ color: service.color }}>
-                            {subService.tagline}
-                          </CardDescription>
-                        </div>
-                      </div>
-                      <p className="text-xs md:text-sm text-gray-600 leading-relaxed">
-                        {subService.description}
-                      </p>
-                    </CardHeader>
-                    <CardContent className="px-4 md:px-6 pb-4 md:pb-6">
-                      <Accordion type="multiple" className="w-full">
-                        {subService.details.map((detail, detailIdx) => (
-                          <AccordionItem
-                            key={detailIdx}
-                            value={`item-${detailIdx}`}
-                            className="border-b border-gray-200 last:border-0"
+                  <Link
+                    key={idx}
+                    href={`/offres/${service.id}/${subService.slug}`}
+                    className="block"
+                  >
+                    <Card className="border-2 border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-300 group h-full">
+                      <CardHeader className="px-4 md:px-6 py-4 md:py-6">
+                        <div className="flex items-start gap-2 md:gap-3 mb-2">
+                          <div
+                            className="w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
+                            style={{ backgroundColor: `${service.color}15`, color: service.color }}
                           >
-                            <AccordionTrigger className="hover:no-underline py-2.5 md:py-3 text-left">
-                              <span className="text-xs md:text-sm font-medium text-gray-900">{detail.title}</span>
-                            </AccordionTrigger>
-                            <AccordionContent>
-                              <div className="space-y-2 md:space-y-3 pt-2 pb-3">
-                                <div className="bg-gray-50 p-2.5 md:p-3 border-l-2" style={{ borderColor: service.color }}>
-                                  <p className="text-xs md:text-sm text-gray-700 leading-relaxed">
-                                    {detail.content}
-                                  </p>
-                                </div>
-                                <div className="bg-gradient-to-r from-gray-50 to-white p-2.5 md:p-3 border-l-2 border-gray-300">
-                                  <div className="text-[10px] md:text-xs font-semibold text-gray-500 uppercase mb-1">Impact mesurable</div>
-                                  <p className="text-xs md:text-sm font-medium text-gray-900">{detail.impact}</p>
-                                </div>
-                              </div>
-                            </AccordionContent>
-                          </AccordionItem>
-                        ))}
-                      </Accordion>
-                    </CardContent>
-                  </Card>
+                            <SubIcon className="w-5 h-5 md:w-6 md:h-6" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <CardTitle className="text-base md:text-xl group-hover:text-gray-700 transition-colors">{subService.name}</CardTitle>
+                            <CardDescription className="text-xs md:text-sm font-medium mt-1" style={{ color: service.color }}>
+                              {subService.tagline}
+                            </CardDescription>
+                          </div>
+                        </div>
+                        <p className="text-xs md:text-sm text-gray-600 leading-relaxed">
+                          {subService.description}
+                        </p>
+                      </CardHeader>
+                      <CardContent className="px-4 md:px-6 pb-4 md:pb-6">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-500">{subService.details.length} points détaillés</span>
+                          <span
+                            className="inline-flex items-center gap-1 text-xs font-medium group-hover:gap-2 transition-all"
+                            style={{ color: service.color }}
+                          >
+                            Lire en détail
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 )
               })}
             </div>
           </div>
         </FadeIn>
 
+        {/* Legal References Section */}
+        {service.legalReferences && service.legalReferences.length > 0 && (
+          <FadeIn delay={0.3}>
+            <div className="mt-8 md:mt-12">
+              <div className="text-center mb-6 md:mb-8 px-4">
+                <Badge variant="odillon" className="mb-3">
+                  Ressources
+                </Badge>
+                <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+                  Documents et textes de référence
+                </h3>
+                <p className="text-sm md:text-base text-gray-600">
+                  Accédez aux textes législatifs et réglementaires applicables
+                </p>
+              </div>
+
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+                {service.legalReferences.map((ref, idx) => (
+                  <a
+                    key={idx}
+                    href={ref.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-start gap-3 p-4 bg-white border-2 border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-300"
+                    style={{ ['--ref-color' as string]: service.color }}
+                  >
+                    <div
+                      className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform"
+                      style={{ backgroundColor: `${service.color}15`, color: service.color }}
+                    >
+                      {ref.type === "pdf" ? (
+                        <FileDown className="w-5 h-5" />
+                      ) : (
+                        <ExternalLink className="w-5 h-5" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-gray-900 group-hover:text-gray-700 transition-colors line-clamp-2">
+                        {ref.title}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1 line-clamp-2">
+                        {ref.description}
+                      </div>
+                      <div
+                        className="text-xs font-medium mt-2 flex items-center gap-1"
+                        style={{ color: service.color }}
+                      >
+                        {ref.type === "pdf" ? "Télécharger le PDF" : "Consulter"}
+                        <ExternalLink className="w-3 h-3" />
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </FadeIn>
+        )}
+
         {/* CTA Section */}
-        <FadeIn delay={0.3}>
+        <FadeIn delay={0.4}>
           <Card className="border-2 bg-gradient-to-br from-gray-50 to-white mt-8 md:mt-12" style={{ borderColor: `${service.color}30` }}>
             <CardContent className="p-6 md:p-8 text-center">
               <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 px-4">
