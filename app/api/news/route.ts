@@ -6,7 +6,7 @@ interface NewsItem {
   id: string
   title: string
   source: string
-  category: 'juridique' | 'finance' | 'rh' | 'gouvernance' | 'economie' | 'afrique'
+  category: 'juridique' | 'finance' | 'rh' | 'gouvernance' | 'economie' | 'afrique' | 'evenement' | 'jour-ferie'
   url?: string
   publishedAt: string
   summary?: string
@@ -47,7 +47,9 @@ const RELEVANCE_KEYWORDS = {
   rh: ['rh', 'ressources humaines', 'emploi', 'travail', 'recrutement', 'formation', 'salaire', 'social', 'personnel'],
   gouvernance: ['gouvernance', 'conseil', 'administration', 'compliance', 'conformité', 'éthique', 'transparence', 'direction'],
   economie: ['économie', 'croissance', 'pib', 'inflation', 'développement', 'marché', 'commerce', 'export', 'import'],
-  afrique: ['gabon', 'cemac', 'afrique centrale', 'libreville', 'cameroun', 'congo', 'guinée équatoriale', 'tchad', 'rca']
+  afrique: ['gabon', 'cemac', 'afrique centrale', 'libreville', 'cameroun', 'congo', 'guinée équatoriale', 'tchad', 'rca'],
+  evenement: ['événement', 'conférence', 'séminaire', 'forum', 'salon', 'sommet', 'cérémonie', 'inauguration', 'anniversaire', 'fête'],
+  'jour-ferie': ['férié', 'jour férié', 'fête nationale', 'commémoration', 'indépendance', 'noël', 'pâques', 'ramadan', 'aïd', 'assomption', 'toussaint']
 }
 
 // Simple XML parser for RSS feeds (no external dependency)
@@ -261,15 +263,17 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get('limit') || '20', 10)
 
     // Try to get cached news from Supabase first
+    // Manual news (id starts with 'manual-') never expire, RSS news expire after 15 min
     const supabase = await createClient()
+    const cacheThreshold = new Date(Date.now() - 15 * 60 * 1000).toISOString()
     const { data: cachedNews, error: cacheError } = await supabase
       .from('news_cache')
       .select('*')
-      .gte('cached_at', new Date(Date.now() - 15 * 60 * 1000).toISOString()) // 15 min cache
+      .or(`cached_at.gte.${cacheThreshold},id.like.manual-%`)
       .order('published_at', { ascending: false })
       .limit(limit)
 
-    // If we have fresh cached news, return them
+    // If we have fresh cached news or manual news, return them
     if (!cacheError && cachedNews && cachedNews.length > 0) {
       let news = cachedNews.map(item => ({
         id: item.id,

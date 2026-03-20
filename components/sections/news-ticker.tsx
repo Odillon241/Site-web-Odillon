@@ -15,7 +15,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Pause,
-  Play
+  Play,
+  CalendarDays,
+  PartyPopper
 } from 'lucide-react'
 
 // Types
@@ -23,7 +25,7 @@ export interface NewsItem {
   id: string
   title: string
   source: string
-  category: 'juridique' | 'finance' | 'rh' | 'gouvernance' | 'economie' | 'afrique'
+  category: 'juridique' | 'finance' | 'rh' | 'gouvernance' | 'economie' | 'afrique' | 'evenement' | 'jour-ferie'
   url?: string
   publishedAt: string
   summary?: string
@@ -80,6 +82,18 @@ const categoryConfig = {
     label: 'Afrique',
     color: 'bg-odillon-lime/10 text-odillon-dark border-odillon-lime/30',
     accentColor: 'text-odillon-lime'
+  },
+  evenement: {
+    icon: CalendarDays,
+    label: 'Événement',
+    color: 'bg-rose-500/10 text-rose-600 border-rose-500/20',
+    accentColor: 'text-rose-500'
+  },
+  'jour-ferie': {
+    icon: PartyPopper,
+    label: 'Jour férié',
+    color: 'bg-orange-500/10 text-orange-600 border-orange-500/20',
+    accentColor: 'text-orange-500'
   }
 }
 
@@ -131,14 +145,24 @@ const NewsItemCard = memo(function NewsItemCard({
       {/* News Content */}
       <div className="flex items-center gap-3">
         <h3 className={cn(
-          "text-sm font-medium text-odillon-dark/90 max-w-[180px] sm:max-w-[280px] md:max-w-[400px] truncate",
+          "text-base font-medium text-odillon-dark/90 whitespace-nowrap",
           "group-hover:text-odillon-teal transition-colors duration-200"
         )}>
           {item.title}
         </h3>
 
+        {/* Summary */}
+        {item.summary && (
+          <>
+            <span className="text-gray-300">—</span>
+            <span className="text-sm text-gray-600 whitespace-nowrap">
+              {item.summary}
+            </span>
+          </>
+        )}
+
         {/* Source & Time */}
-        <div className="flex items-center gap-2 text-xs text-gray-500">
+        <div className="flex items-center gap-2 text-sm text-gray-500 whitespace-nowrap">
           <span className="font-medium">{item.source}</span>
           <span className="w-1 h-1 rounded-full bg-gray-300" />
           <span>{formatRelativeTime(item.publishedAt)}</span>
@@ -185,6 +209,7 @@ export function NewsTicker({
       const { data } = await supabase
         .from('site_settings')
         .select('show_news_ticker, news_ticker_speed, news_auto_refresh, news_refresh_interval')
+        .eq('id', 'main')
         .single()
 
       if (data) {
@@ -323,6 +348,7 @@ export function NewsTicker({
         aria-live="polite"
       >
         <m.div
+          key={`ticker-${settings.news_ticker_speed}-${news.length}`}
           className="flex whitespace-nowrap"
           animate={{
             x: isPaused ? undefined : [0, "-50%"]
@@ -331,7 +357,7 @@ export function NewsTicker({
             x: {
               repeat: Infinity,
               repeatType: "loop",
-              duration: news.length * (600 / settings.news_ticker_speed), // Ultra slow scroll - ~6 minutes for full cycle
+              duration: news.length * (600 / settings.news_ticker_speed),
               ease: "linear"
             }
           }}

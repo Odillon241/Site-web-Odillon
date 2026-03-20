@@ -1,28 +1,33 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { FadeIn } from "@/components/magicui/fade-in"
-import { BackgroundSlideshow } from "@/components/ui/background-slideshow"
-import { AnimatedSlogan } from "@/components/magicui/animated-slogan"
-import { FlipWords } from "@/components/magicui/flip-words"
-import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from "@/components/ui/marquee"
-import Image from "next/image"
-import Link from "next/link"
-import { CompanyLogo, Video } from "@/types/admin"
-import { VideoPlayer } from "@/components/ui/video-player"
-import { ArrowRight, Phone } from "lucide-react"
-import { GridPattern } from "@/components/ui/grid-pattern"
-import { NewsTicker } from "@/components/sections/news-ticker"
+import { useState } from "react";
+import { FadeIn } from "@/components/magicui/fade-in";
+import { BackgroundSlideshow } from "@/components/ui/background-slideshow";
+import { AnimatedSlogan } from "@/components/magicui/animated-slogan";
+import { FlipWords } from "@/components/magicui/flip-words";
+import {
+  Marquee,
+  MarqueeContent,
+  MarqueeFade,
+  MarqueeItem,
+} from "@/components/ui/marquee";
+import Image from "next/image";
+import Link from "next/link";
+import { CompanyLogo, Video } from "@/types/admin";
+import { VideoPlayer } from "@/components/ui/video-player";
+import { ArrowRight, Phone } from "lucide-react";
+import { GridPattern } from "@/components/ui/grid-pattern";
+import { NewsTicker } from "@/components/sections/news-ticker";
 
 interface HeroClientProps {
-  images: Array<{ src: string; alt: string }>
-  logos: CompanyLogo[]
-  video?: Video | null
+  images: Array<{ src: string; alt: string }>;
+  logos: CompanyLogo[];
+  video?: Video | null;
 }
 
 // Composant pour afficher un logo avec fallback
 function LogoItem({ company }: { company: CompanyLogo }) {
-  const [imageError, setImageError] = useState(false)
+  const [imageError, setImageError] = useState(false);
 
   return (
     <div className="group relative flex items-center justify-center w-20 h-14 sm:w-28 sm:h-18 md:w-36 md:h-22 lg:w-40 lg:h-24 transition-all duration-300">
@@ -40,9 +45,7 @@ function LogoItem({ company }: { company: CompanyLogo }) {
         </div>
       ) : (
         <div className="text-center w-full group-hover:scale-105 transition-transform">
-          <div
-            className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-1 text-odillon-teal/60 group-hover:text-odillon-teal transition-colors duration-300"
-          >
+          <div className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-1 text-odillon-teal/60 group-hover:text-odillon-teal transition-colors duration-300">
             {company.fallback}
           </div>
           <div className="text-[10px] sm:text-xs text-gray-500 font-medium group-hover:text-gray-700 transition-colors">
@@ -51,12 +54,15 @@ function LogoItem({ company }: { company: CompanyLogo }) {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 export function HeroClient({ images, logos, video }: HeroClientProps) {
   return (
-    <section id="accueil" className="relative min-h-[85vh] flex flex-col overflow-hidden bg-gradient-to-br from-white via-gray-50/80 to-[#1A9B8E]/5">
+    <section
+      id="accueil"
+      className="relative min-h-[85vh] flex flex-col overflow-hidden bg-gradient-to-br from-white via-gray-50/80 to-[#1A9B8E]/5"
+    >
       {/* Subtle grid background pattern */}
       <GridPattern
         width={50}
@@ -72,13 +78,15 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
 
       {/* News Ticker / Saline */}
       <div className="relative z-10 w-full">
-        <NewsTicker className="h-[50px] border-b border-gray-200/50" showControls={true} />
+        <NewsTicker
+          className="h-[50px] border-b border-gray-200/50"
+          showControls={true}
+        />
       </div>
 
       {/* Main Content - Split Layout */}
       <div className="relative z-10 flex-1 flex items-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center w-full">
-
           {/* Left Column - Text Content */}
           <div className="order-1 flex flex-col gap-5 sm:gap-6">
             {/* Main Headline */}
@@ -91,7 +99,11 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
               </h1>
               <p className="mt-3 sm:mt-4 font-baskvill text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl text-gray-600">
                 <FlipWords
-                  words={["Trouvez une solution adaptée", "Respect de nos délais", "Votre succès, notre priorité"]}
+                  words={[
+                    "Trouvez une solution adaptée",
+                    "Respect de nos délais",
+                    "Votre succès, notre priorité",
+                  ]}
                   duration={3500}
                   className="text-odillon-teal"
                 />
@@ -101,7 +113,9 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
             {/* Subtitle */}
             <FadeIn delay={0.25} direction="up">
               <p className="text-base sm:text-lg text-gray-600 max-w-lg leading-relaxed">
-                La Société ODILLON, spécialisée en Ingénierie d&apos;Entreprises, propose des solutions robustes, pertinentes, durables, adaptées aux besoins de nos clients.
+                La Société ODILLON, spécialisée en Ingénierie
+                d&apos;Entreprises, propose des solutions robustes, pertinentes,
+                durables, adaptées aux besoins de nos clients.
               </p>
             </FadeIn>
 
@@ -148,25 +162,29 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
                     />
                   ) : images.length > 0 ? (
                     <div className="relative w-full aspect-[4/3]">
-                      <BackgroundSlideshow
-                        images={images}
-                        interval={6000}
-                      />
+                      <BackgroundSlideshow images={images} interval={6000} />
                     </div>
                   ) : (
                     <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-[#1A9B8E] to-[#0A1F2C] flex items-center justify-center">
-                      <span className="text-white/40 text-lg font-baskvill">Odillon</span>
+                      <span className="text-white/40 text-lg font-baskvill">
+                        Odillon
+                      </span>
                     </div>
                   )}
                 </div>
 
                 {/* Video presenter info */}
-                {video && (video.presenter_name || video.presenter_position) && (
-                  <div className="mt-4 text-center">
-                    <p className="font-semibold text-odillon-dark text-base md:text-lg">{video.presenter_name}</p>
-                    <p className="text-[#1A9B8E] font-medium text-sm uppercase tracking-wide">{video.presenter_position}</p>
-                  </div>
-                )}
+                {video &&
+                  (video.presenter_name || video.presenter_position) && (
+                    <div className="mt-4 text-center">
+                      <p className="font-semibold text-odillon-dark text-base md:text-lg">
+                        {video.presenter_name}
+                      </p>
+                      <p className="text-[#1A9B8E] font-medium text-sm uppercase tracking-wide">
+                        {video.presenter_position}
+                      </p>
+                    </div>
+                  )}
               </div>
             </FadeIn>
           </div>
@@ -176,13 +194,22 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
       {/* Footer Section - Slogan + Logos */}
       <div className="relative z-10 w-full">
         <FadeIn delay={0.6}>
-          {/* Slogan band - dark background for contrast with AnimatedSlogan's white text */}
-          <div className="w-full bg-odillon-dark/95 py-6 sm:py-8 md:py-10">
-            <div className="relative w-full flex items-center justify-center min-h-[60px] sm:min-h-[75px] md:min-h-[90px]">
-              <AnimatedSlogan
-                text="Together we the future"
-                iconPosition={2}
-              />
+          {/* Slogan band - dark background with decorative pattern */}
+          <div className="w-full bg-odillon-dark/95 py-6 sm:py-8 md:py-10 relative overflow-hidden">
+            {/* Dot grid pattern */}
+            <div
+              className="absolute inset-0 opacity-[0.07]"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle, rgba(26,155,142,0.8) 1px, transparent 1px)",
+                backgroundSize: "24px 24px",
+              }}
+            />
+            {/* Soft glow accents */}
+            <div className="absolute -left-32 top-1/2 -translate-y-1/2 w-[400px] h-[200px] bg-odillon-teal/[0.06] rounded-full blur-3xl" />
+            <div className="absolute -right-32 top-1/2 -translate-y-1/2 w-[350px] h-[180px] bg-odillon-lime/[0.04] rounded-full blur-3xl" />
+            <div className="relative z-10 w-full flex items-center justify-center min-h-[60px] sm:min-h-[75px] md:min-h-[90px]">
+              <AnimatedSlogan text="Together we the future" iconPosition={2} />
             </div>
           </div>
 
@@ -204,8 +231,14 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
                       </MarqueeItem>
                     ))}
                   </MarqueeContent>
-                  <MarqueeFade side="left" className="from-white/60 !w-6 sm:!w-12 md:!w-24" />
-                  <MarqueeFade side="right" className="from-white/60 !w-6 sm:!w-12 md:!w-24" />
+                  <MarqueeFade
+                    side="left"
+                    className="from-white/60 !w-6 sm:!w-12 md:!w-24"
+                  />
+                  <MarqueeFade
+                    side="right"
+                    className="from-white/60 !w-6 sm:!w-12 md:!w-24"
+                  />
                 </Marquee>
               </div>
             )}
@@ -213,5 +246,5 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
         </FadeIn>
       </div>
     </section>
-  )
+  );
 }

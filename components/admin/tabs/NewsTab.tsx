@@ -45,7 +45,9 @@ import {
     Building2,
     Globe,
     Clock,
-    Settings2
+    Settings2,
+    CalendarDays,
+    PartyPopper
 } from "lucide-react"
 import { toast } from "sonner"
 import { createClient } from "@/lib/supabase/client"
@@ -55,7 +57,7 @@ interface NewsItem {
     id: string
     title: string
     source: string
-    category: 'juridique' | 'finance' | 'rh' | 'gouvernance' | 'economie' | 'afrique'
+    category: 'juridique' | 'finance' | 'rh' | 'gouvernance' | 'economie' | 'afrique' | 'evenement' | 'jour-ferie'
     url: string | null
     published_at: string
     summary: string | null
@@ -79,6 +81,8 @@ const CATEGORIES = [
     { value: 'gouvernance', label: 'Gouvernance', icon: Building2, color: 'bg-purple-500' },
     { value: 'economie', label: 'Économie', icon: TrendingUp, color: 'bg-teal-500' },
     { value: 'afrique', label: 'Afrique', icon: Globe, color: 'bg-lime-500' },
+    { value: 'evenement', label: 'Événement', icon: CalendarDays, color: 'bg-rose-500' },
+    { value: 'jour-ferie', label: 'Jour férié', icon: PartyPopper, color: 'bg-orange-500' },
 ]
 
 // Format relative time
@@ -105,6 +109,17 @@ export function NewsTab() {
     const [editingNews, setEditingNews] = useState<NewsItem | null>(null)
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
     const [newsToDelete, setNewsToDelete] = useState<NewsItem | null>(null)
+
+    // Auth check helper - verifies session before mutations
+    const checkAuth = async (supabase: ReturnType<typeof createClient>): Promise<boolean> => {
+        const { data: { user }, error } = await supabase.auth.getUser()
+        if (error || !user) {
+            console.error('Auth check failed:', error?.message || 'No user')
+            toast.error("Session expirée. Veuillez vous reconnecter.")
+            return false
+        }
+        return true
+    }
 
     // Filters
     const [searchTerm, setSearchTerm] = useState("")
@@ -189,11 +204,37 @@ export function NewsTab() {
         }
     }
 
-    // Save settings
+    // Save a single setting immediately (for toggles)
+    const saveSetting = async (key: keyof NewsSettings, value: boolean | number) => {
+        try {
+            const supabase = createClient()
+            if (!await checkAuth(supabase)) return
+
+            const { error } = await supabase
+                .from('site_settings')
+                .update({ [key]: value })
+                .eq('id', 'main')
+
+            if (error) {
+                console.error('Supabase update error:', error.message, error.code, error.details)
+                throw error
+            }
+            toast.success("Paramètre enregistré")
+        } catch (error: any) {
+            console.error('Error saving setting:', error)
+            // Revert local state on failure
+            setSettings(prev => ({ ...prev, [key]: !value }))
+            toast.error("Erreur lors de l'enregistrement")
+        }
+    }
+
+    // Save all settings
     const saveSettings = async () => {
         try {
             setSavingSettings(true)
             const supabase = createClient()
+
+            if (!await checkAuth(supabase)) return
 
             const { data, error } = await supabase
                 .from('site_settings')
@@ -207,13 +248,18 @@ export function NewsTab() {
                 .select('show_news_ticker, news_ticker_speed, news_auto_refresh, news_refresh_interval')
                 .single()
 
-            if (error) throw error
+            if (error) {
+                console.error('Supabase update error:', error.message, error.code, error.details)
+                throw error
+            }
             if (!data) throw new Error('Aucune ligne mise à jour')
             console.log('Settings saved:', data)
             toast.success("Paramètres enregistrés")
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error saving settings:', error)
-            toast.error("Erreur lors de l'enregistrement")
+            toast.error(error?.message === "Session expirée. Veuillez vous reconnecter."
+                ? error.message
+                : "Erreur lors de l'enregistrement des paramètres")
         } finally {
             setSavingSettings(false)
         }
@@ -230,6 +276,8 @@ export function NewsTab() {
             setSaving(true)
             const supabase = createClient()
 
+            if (!await checkAuth(supabase)) return
+
             const newsItem = {
                 id: `manual-${Date.now()}`,
                 title: newNews.title,
@@ -241,12 +289,18 @@ export function NewsTab() {
                 cached_at: new Date().toISOString()
             }
 
-            const { error } = await supabase
+            const { data, error } = await supabase
                 .from('news_cache')
                 .insert(newsItem)
+                .select()
+                .single()
 
-            if (error) throw error
+            if (error) {
+                console.error('Supabase insert error:', error.message, error.code, error.details)
+                throw error
+            }
 
+            console.log('News added:', data)
             toast.success("Actualité ajoutée")
             setIsSheetOpen(false)
             setNewNews({
@@ -257,9 +311,11 @@ export function NewsTab() {
                 summary: ""
             })
             await fetchNews()
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error adding news:', error)
-            toast.error("Erreur lors de l'ajout")
+            toast.error(error?.code === '42501'
+                ? "Permission refusée. Vérifiez vos droits d'accès."
+                : "Erreur lors de l'ajout de l'actualité")
         } finally {
             setSaving(false)
         }
@@ -273,6 +329,8 @@ export function NewsTab() {
             setSaving(true)
             const supabase = createClient()
 
+            if (!await checkAuth(supabase)) return
+
             const { error } = await supabase
                 .from('news_cache')
                 .update({
@@ -284,14 +342,19 @@ export function NewsTab() {
                 })
                 .eq('id', editingNews.id)
 
-            if (error) throw error
+            if (error) {
+                console.error('Supabase update error:', error.message, error.code, error.details)
+                throw error
+            }
 
             toast.success("Actualité modifiée")
             setEditingNews(null)
             await fetchNews()
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error updating news:', error)
-            toast.error("Erreur lors de la modification")
+            toast.error(error?.code === '42501'
+                ? "Permission refusée. Vérifiez vos droits d'accès."
+                : "Erreur lors de la modification")
         } finally {
             setSaving(false)
         }
@@ -303,20 +366,28 @@ export function NewsTab() {
 
         try {
             const supabase = createClient()
+
+            if (!await checkAuth(supabase)) return
+
             const { error } = await supabase
                 .from('news_cache')
                 .delete()
                 .eq('id', newsToDelete.id)
 
-            if (error) throw error
+            if (error) {
+                console.error('Supabase delete error:', error.message, error.code, error.details)
+                throw error
+            }
 
             toast.success("Actualité supprimée")
             setDeleteDialogOpen(false)
             setNewsToDelete(null)
             await fetchNews()
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error deleting news:', error)
-            toast.error("Erreur lors de la suppression")
+            toast.error(error?.code === '42501'
+                ? "Permission refusée. Vérifiez vos droits d'accès."
+                : "Erreur lors de la suppression")
         }
     }
 
@@ -324,18 +395,26 @@ export function NewsTab() {
     const clearCache = async () => {
         try {
             const supabase = createClient()
+
+            if (!await checkAuth(supabase)) return
+
             const { error } = await supabase
                 .from('news_cache')
                 .delete()
                 .neq('id', 'placeholder')
 
-            if (error) throw error
+            if (error) {
+                console.error('Supabase delete error:', error.message, error.code, error.details)
+                throw error
+            }
 
             toast.success("Cache vidé")
             setNews([])
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error clearing cache:', error)
-            toast.error("Erreur lors du vidage du cache")
+            toast.error(error?.code === '42501'
+                ? "Permission refusée. Vérifiez vos droits d'accès."
+                : "Erreur lors du vidage du cache")
         }
     }
 
@@ -402,9 +481,10 @@ export function NewsTab() {
                             </div>
                             <Switch
                                 checked={settings.show_news_ticker}
-                                onCheckedChange={(checked) =>
+                                onCheckedChange={(checked) => {
                                     setSettings(prev => ({ ...prev, show_news_ticker: checked }))
-                                }
+                                    saveSetting('show_news_ticker', checked)
+                                }}
                             />
                         </div>
 
@@ -417,9 +497,10 @@ export function NewsTab() {
                             </div>
                             <Switch
                                 checked={settings.news_auto_refresh}
-                                onCheckedChange={(checked) =>
+                                onCheckedChange={(checked) => {
                                     setSettings(prev => ({ ...prev, news_auto_refresh: checked }))
-                                }
+                                    saveSetting('news_auto_refresh', checked)
+                                }}
                             />
                         </div>
 
@@ -434,6 +515,8 @@ export function NewsTab() {
                                     onChange={(e) =>
                                         setSettings(prev => ({ ...prev, news_ticker_speed: parseInt(e.target.value) }))
                                     }
+                                    onMouseUp={(e) => saveSetting('news_ticker_speed', parseInt((e.target as HTMLInputElement).value))}
+                                    onTouchEnd={(e) => saveSetting('news_ticker_speed', parseInt((e.target as HTMLInputElement).value))}
                                     className="flex-1"
                                 />
                                 <span className="text-sm font-medium w-16">{settings.news_ticker_speed} px/s</span>
@@ -444,9 +527,10 @@ export function NewsTab() {
                             <Label>Intervalle de rafraîchissement (minutes)</Label>
                             <Select
                                 value={String(settings.news_refresh_interval)}
-                                onValueChange={(value) =>
+                                onValueChange={(value) => {
                                     setSettings(prev => ({ ...prev, news_refresh_interval: parseInt(value) }))
-                                }
+                                    saveSetting('news_refresh_interval', parseInt(value))
+                                }}
                             >
                                 <SelectTrigger>
                                     <SelectValue />
@@ -462,16 +546,6 @@ export function NewsTab() {
                         </div>
                     </div>
 
-                    <div className="flex justify-end mt-6">
-                        <Button onClick={saveSettings} disabled={savingSettings}>
-                            {savingSettings ? (
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            ) : (
-                                <Save className="w-4 h-4 mr-2" />
-                            )}
-                            Enregistrer les paramètres
-                        </Button>
-                    </div>
                 </CardContent>
             </Card>
 
