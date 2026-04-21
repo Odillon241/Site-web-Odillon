@@ -44,11 +44,12 @@ export function Header() {
             <Link href="/" className="flex items-center space-x-3">
               <Image
                 src="/logo-odillon.png"
-                alt="Odillon"
+                alt="Odillon — Cabinet de conseil en ingénierie d'entreprises au Gabon"
                 width={240}
                 height={70}
                 className="h-12 md:h-14 lg:h-16 w-auto"
                 priority
+                sizes="(max-width: 768px) 160px, 240px"
               />
             </Link>
           </div>

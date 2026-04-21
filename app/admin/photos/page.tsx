@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar as CalendarComponent } from "@/components/ui/calendar"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Upload, Trash2, Eye, EyeOff, Plus, Calendar, Loader2, LogOut, CalendarDays, Search, Filter, X } from "lucide-react"
+import Image from "next/image"
 import { MONTHLY_THEMES } from "@/lib/photo-themes"
 import { createClient } from "@/lib/supabase/client"
 import { getEventForDate, hasEvent, getUpcomingEvents, getEventsForMonth, type GabonEvent } from "@/lib/gabon-events"
@@ -851,10 +852,13 @@ export default function AdminPhotosPage() {
                   >
                     {/* Image */}
                     <div className="relative aspect-video bg-gray-200">
-                      <img
+                      <Image
                         src={photo.url}
                         alt={photo.description}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 50vw, 33vw"
+                        loading="lazy"
                       />
                       
                       {/* Overlay */}

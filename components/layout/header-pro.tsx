@@ -104,11 +104,12 @@ export function HeaderPro() {
           <Link href="/" className="flex items-center">
             <Image
               src="/logo-odillon.png"
-              alt="Odillon - Ingénierie d'Entreprises"
+              alt="Odillon — Cabinet de conseil en ingénierie d'entreprises au Gabon"
               width={350}
               height={100}
               className="h-14 md:h-16 lg:h-20 w-auto"
               priority
+              sizes="(max-width: 768px) 240px, 350px"
             />
           </Link>
 

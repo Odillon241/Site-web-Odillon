@@ -13,7 +13,7 @@ function getLogoPath(basePath: string): string[] {
 }
 
 // Composant pour afficher un logo avec fallback
-function LogoItem({ company }: { company: { name: string; logo: string; fallback: string; color: string } }) {
+function LogoItem({ company }: { company: { name: string; fullName: string; logo: string; fallback: string; color: string } }) {
   const [imageError, setImageError] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const logoPaths = getLogoPath(company.logo)
@@ -34,12 +34,13 @@ function LogoItem({ company }: { company: { name: string; logo: string; fallback
         <div className="relative w-full h-full flex items-center justify-center">
           <Image
             src={logoPaths[currentImageIndex]}
-            alt={`${company.name} logo`}
+            alt={`Logo ${company.name} — ${company.fullName}`}
             width={120}
             height={80}
             className="object-contain max-w-full max-h-full"
             onError={handleImageError}
-            unoptimized
+            sizes="(max-width: 768px) 128px, 160px"
+            loading="lazy"
           />
         </div>
       ) : (

@@ -4,5 +4,7 @@ export const baskvill = localFont({
   src: '../public/fonts/BASKVILL.ttf',
   variable: '--font-baskvill',
   display: 'swap',
+  preload: true,
+  fallback: ['Georgia', 'serif'],
 })
 

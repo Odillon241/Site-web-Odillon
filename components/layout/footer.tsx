@@ -12,10 +12,12 @@ export function Footer() {
           <div className="space-y-3 md:space-y-4 sm:col-span-2 lg:col-span-1">
             <Image
               src="/logo-odillon.png"
-              alt="Odillon"
+              alt="Odillon — Cabinet de conseil en ingénierie d'entreprises au Gabon"
               width={200}
               height={60}
               className="h-12 md:h-14 w-auto"
+              loading="lazy"
+              sizes="200px"
             />
             <p className="text-xs md:text-sm text-gray-300 leading-relaxed max-w-xs">
               Cabinet de conseil en ingénierie d'entreprises, 
