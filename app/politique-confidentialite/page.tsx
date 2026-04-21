@@ -1,5 +1,13 @@
+import type { Metadata } from "next"
 import { Footer } from "@/components/layout/footer"
 import { HeaderPro } from "@/components/layout/header-pro"
+
+export const metadata: Metadata = {
+  title: "Politique de Confidentialité | Odillon - Ingénierie d'Entreprises",
+  description:
+    "Politique de confidentialité d'Odillon. Découvrez comment nous collectons, utilisons et protégeons vos données personnelles conformément à la législation gabonaise.",
+  robots: { index: false, follow: false },
+}
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { Card, CardContent } from "@/components/ui/card"

@@ -1,5 +1,13 @@
+import type { Metadata } from "next"
 import { Footer } from "@/components/layout/footer"
 import { HeaderPro } from "@/components/layout/header-pro"
+
+export const metadata: Metadata = {
+  title: "Mentions Légales | Odillon - Ingénierie d'Entreprises",
+  description:
+    "Mentions légales du site odillon.fr : informations sur l'éditeur, l'hébergeur, la propriété intellectuelle et le cadre juridique applicable (droit gabonais).",
+  robots: { index: false, follow: false },
+}
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { Card, CardContent } from "@/components/ui/card"
