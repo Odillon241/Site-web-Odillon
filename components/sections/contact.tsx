@@ -21,7 +21,9 @@ import {
   User,
   AtSign,
   MessageSquare,
-  FileText
+  FileText,
+  ShieldCheck,
+  ShieldAlert
 } from "lucide-react"
 
 type ContactItem = {
@@ -469,6 +471,118 @@ export function Contact() {
             </div>
 
           </div>
+        </div>
+      </div>
+
+      {/* ===== SÉCURITÉ & AUTHENTICITÉ ===== */}
+      <div className="relative z-10 pb-20 md:pb-24 lg:pb-28">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <BlurFade delay={0.2}>
+            <div className="relative bg-white rounded-lg border border-amber-200/60 shadow-sm overflow-hidden">
+              {/* Accent latéral ambre */}
+              <div className="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b from-amber-400 to-amber-500" />
+
+              <div className="p-6 sm:p-8 md:p-10">
+                <div className="flex items-start gap-4 sm:gap-5 mb-6">
+                  <div className="w-12 h-12 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center flex-shrink-0">
+                    <ShieldAlert className="w-6 h-6 text-amber-600" />
+                  </div>
+                  <div>
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 rounded-full mb-2">
+                      <span className="text-[10px] font-semibold text-amber-700 uppercase tracking-wider">Vigilance</span>
+                    </div>
+                    <h2 className="font-baskvill text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
+                      Vérifiez l'authenticité de nos contacts
+                    </h2>
+                  </div>
+                </div>
+
+                <div className="space-y-4 text-gray-600 text-sm sm:text-base leading-relaxed">
+                  <p>
+                    Des personnes mal intentionnées peuvent tenter d'usurper l'identité du cabinet Odillon en utilisant
+                    des adresses e-mail ressemblantes, des numéros de téléphone frauduleux ou des messages se réclamant
+                    faussement de nos équipes.
+                  </p>
+                  <p>
+                    <span className="font-semibold text-gray-900">Avant toute transmission d'informations sensibles,
+                    virement ou engagement contractuel</span>, nous vous invitons à vérifier scrupuleusement l'origine
+                    des communications reçues.
+                  </p>
+                </div>
+
+                {/* Canaux officiels */}
+                <div className="mt-7 pt-7 border-t border-gray-100">
+                  <div className="flex items-center gap-2 mb-4">
+                    <ShieldCheck className="w-4 h-4 text-odillon-teal" />
+                    <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                      Nos seuls canaux officiels
+                    </h3>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div className="flex items-start gap-3 p-3.5 bg-gray-50/60 rounded-lg border border-gray-100">
+                      <Mail className="w-4 h-4 text-odillon-teal mt-0.5 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-xs text-gray-500 mb-1">E-mails officiels</p>
+                        <a href="mailto:contact@odillon.fr" className="block text-sm font-medium text-gray-800 hover:text-odillon-teal transition-colors truncate">
+                          contact@odillon.fr
+                        </a>
+                        <a href="mailto:odillon2017@gmail.com" className="block text-sm font-medium text-gray-800 hover:text-odillon-teal transition-colors truncate">
+                          odillon2017@gmail.com
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3 p-3.5 bg-gray-50/60 rounded-lg border border-gray-100">
+                      <Phone className="w-4 h-4 text-odillon-teal mt-0.5 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-xs text-gray-500 mb-1">Numéros officiels</p>
+                        <a href="tel:+24111747574" className="block text-sm font-medium text-gray-800 hover:text-odillon-teal transition-colors">
+                          +241 11 74 75 74
+                        </a>
+                        <a href="tel:+24174759515" className="block text-sm font-medium text-gray-800 hover:text-odillon-teal transition-colors">
+                          +241 74 75 95 15
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Points de vigilance */}
+                <div className="mt-6 space-y-2.5">
+                  <p className="text-xs font-semibold text-gray-700 uppercase tracking-wider mb-3">Points de vigilance</p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-start gap-2.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0" />
+                      <span>Contrôlez l'orthographe exacte du domaine e-mail (ex : <span className="font-mono text-gray-900">odillon.fr</span>) — méfiez-vous des variantes trompeuses.</span>
+                    </li>
+                    <li className="flex items-start gap-2.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0" />
+                      <span>Ne communiquez jamais de données bancaires ou confidentielles sans avoir confirmé l'identité de votre interlocuteur.</span>
+                    </li>
+                    <li className="flex items-start gap-2.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0" />
+                      <span>En cas de doute, contactez-nous directement via les coordonnées officielles ci-dessus avant toute action.</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* CTA Signaler */}
+                <div className="mt-7 pt-6 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
+                  <p className="text-sm text-gray-600">
+                    Vous avez reçu un message suspect se réclamant d'Odillon ?
+                  </p>
+                  <a
+                    href="mailto:contact@odillon.fr?subject=Signalement%20-%20Message%20suspect"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-odillon-teal hover:bg-odillon-teal/90 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm shadow-odillon-teal/20"
+                  >
+                    <AlertCircle className="w-4 h-4" />
+                    Nous le signaler
+                  </a>
+                </div>
+              </div>
+            </div>
+          </BlurFade>
         </div>
       </div>
     </section>
