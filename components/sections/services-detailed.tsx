@@ -340,10 +340,17 @@ export function ServicesDetailed() {
             const subCount = service.services.length
             const detailCount = service.services.reduce((acc, s) => acc + s.details.length, 0)
             const spanClass = bentoConfig[service.id] || "lg:col-span-1"
+            const isLarge = spanClass.includes("col-span-2")
+
             return (
               <BlurFade key={service.id} delay={0.1 + idx * 0.05} className={spanClass}>
                 <Link href={`/offres/${service.id}`} className="block h-full group/card">
                   <div className="relative bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 overflow-hidden h-full flex flex-col rounded-xl hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
+                    {/* Background Number (Editorial style) */}
+                    <span className="absolute bottom-4 right-6 text-8xl font-black text-gray-900/[0.03] select-none pointer-events-none group-hover/card:text-gray-900/[0.05] transition-colors duration-500 font-sans">
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
+
                     {/* Background Hover Glow */}
                     <div 
                       className="absolute -right-16 -top-16 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover/card:opacity-20 transition-opacity duration-500"
@@ -356,7 +363,7 @@ export function ServicesDetailed() {
                       style={{ backgroundColor: service.color }}
                     />
 
-                    <div className="p-6 md:p-8 flex flex-col flex-1">
+                    <div className={isLarge ? "p-8 md:p-10 flex flex-col flex-1" : "p-6 md:p-8 flex flex-col flex-1"}>
                       {/* Icon + Title */}
                       <div className="flex items-start gap-4 mb-4">
                         <div
@@ -366,7 +373,7 @@ export function ServicesDetailed() {
                           <Icon className="w-7 h-7" />
                         </div>
                         <div className="flex-1 min-w-0 pt-1">
-                          <h3 className="font-bold text-base md:text-lg text-gray-900 leading-tight group-hover/card:text-gray-800 transition-colors">
+                          <h3 className="font-baskvill text-xl md:text-2xl text-gray-900 leading-tight group-hover/card:text-gray-800 transition-colors">
                             {service.title}
                           </h3>
                           <p className="text-xs font-semibold uppercase tracking-wider mt-1" style={{ color: service.color }}>
@@ -377,13 +384,13 @@ export function ServicesDetailed() {
 
                       {/* Description */}
                       {service.description && (
-                        <p className="text-sm text-gray-500 leading-relaxed mb-6 line-clamp-3 flex-1 group-hover/card:text-gray-600 transition-colors">
+                        <p className={`text-gray-500 leading-relaxed mb-6 group-hover/card:text-gray-600 transition-colors ${isLarge ? "text-base line-clamp-4" : "text-sm line-clamp-3"} flex-1`}>
                           {service.description}
                         </p>
                       )}
 
                       {/* Footer */}
-                      <div className="mt-auto pt-4 border-t border-gray-50">
+                      <div className="mt-auto pt-4 border-t border-gray-50 relative z-10">
                         <div className="flex items-center justify-between">
                           <div className="flex flex-col">
                             <span className="text-[10px] uppercase tracking-widest text-gray-400 font-medium">
