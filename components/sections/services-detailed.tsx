@@ -334,13 +334,14 @@ export function ServicesDetailed() {
         </BlurFade>
 
         {/* Grille des 8 offres */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 mb-16 md:mb-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[300px] gap-6 md:gap-8 mb-16 md:mb-24">
           {servicesData.map((service, idx) => {
             const Icon = service.iconComponent
             const subCount = service.services.length
             const detailCount = service.services.reduce((acc, s) => acc + s.details.length, 0)
+            const spanClass = bentoConfig[service.id] || "lg:col-span-1"
             return (
-              <BlurFade key={service.id} delay={0.1 + idx * 0.05}>
+              <BlurFade key={service.id} delay={0.1 + idx * 0.05} className={spanClass}>
                 <Link href={`/offres/${service.id}`} className="block h-full group/card">
                   <div className="relative bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 overflow-hidden h-full flex flex-col rounded-xl hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
                     {/* Background Hover Glow */}
