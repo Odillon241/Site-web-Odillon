@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { m } from "framer-motion"
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { Badge } from "@/components/ui/badge"
@@ -12,6 +13,8 @@ import type { VideoItem } from "@/components/sections/videos-section"
 import { Video } from "@/types/admin"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
+import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern"
+import { DottedMap } from "@/components/ui/dotted-map"
 import Link from "next/link"
 import { servicesData as rawServicesData } from "@/lib/services-data"
 import {
@@ -50,6 +53,42 @@ const servicesData = rawServicesData.map(service => ({
   ...service,
   iconComponent: iconMap[service.icon] || Shield,
 }))
+
+// Petit composant pour les icônes flottantes décoratives
+function FloatingIcon({ icon: Icon, delay, x, y, size = 24, color }: { icon: any, delay: number, x: string, y: string, size?: number, color: string }) {
+  return (
+    <m.div
+      className="absolute pointer-events-none z-0"
+      style={{ left: x, top: y }}
+      initial={{ y: 0, opacity: 0 }}
+      animate={{ 
+        y: [0, -30, 0],
+        rotate: [0, 10, -10, 0],
+        opacity: [0.03, 0.1, 0.03]
+      }}
+      transition={{
+        duration: 15,
+        delay,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+    >
+      <Icon size={size} style={{ color }} strokeWidth={1} />
+    </m.div>
+  )
+}
+
+// Mapping des configurations Bento Grid pour chaque service
+const bentoConfig: Record<string, string> = {
+  "gouvernance": "lg:col-span-2 lg:row-span-2",
+  "juridique": "lg:col-span-2",
+  "finances": "lg:col-span-1",
+  "ressources-humaines": "lg:col-span-1",
+  "formations": "lg:col-span-1",
+  "communication": "lg:col-span-1",
+  "entreprenariat": "lg:col-span-2",
+  "paie": "lg:col-span-2",
+}
 
 export function ServicesDetailed() {
   const [video, setVideo] = useState<Video | null>(null)
@@ -158,45 +197,124 @@ export function ServicesDetailed() {
   return (
     <section className="relative overflow-x-clip bg-transparent">
       {/* Hero Section */}
-      <div className="relative pt-6 pb-12 md:pt-10 md:pb-16 lg:pt-12 lg:pb-20 overflow-hidden" role="banner" aria-label="Section héro des offres">
-        {/* Background */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-odillon-teal/5 via-transparent to-odillon-lime/5" />
-          <div className="absolute -top-24 -right-24 w-96 h-96 border border-odillon-teal/10 rounded-full" />
-          <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] border border-odillon-lime/10 rounded-full" />
-          <div className="absolute top-0 left-[15%] w-px h-full bg-gradient-to-b from-transparent via-odillon-teal/10 to-transparent hidden lg:block" />
-          <div className="absolute top-0 right-[15%] w-px h-full bg-gradient-to-b from-transparent via-odillon-lime/10 to-transparent hidden lg:block" />
+      <div className="relative pt-12 pb-20 md:pt-16 md:pb-24 lg:pt-20 lg:pb-32 overflow-hidden" role="banner" aria-label="Section héro des offres">
+        {/* Background enrichi */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Base Grid */}
+          <InteractiveGridPattern
+            width={60}
+            height={60}
+            squares={[20, 20]}
+            className="opacity-[0.12] stroke-gray-300"
+          />
+
+          {/* Dotted Map of Gabon (Rooting) */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] opacity-[0.05] rotate-6 scale-110 pointer-events-none">
+            <DottedMap dotColor="#1A9B8E" dotRadius={0.4} stagger={true} />
+          </div>
+
+          {/* Decorative Glowing Orbs */}
+          <div className="absolute -top-[10%] -right-[5%] w-[40%] h-[40%] bg-odillon-teal/10 rounded-full blur-[100px] animate-pulse" />
+          <div className="absolute -bottom-[10%] -left-[5%] w-[40%] h-[40%] bg-odillon-lime/10 rounded-full blur-[100px] animate-pulse" />
+
+          {/* Floating Icons for Engineering feel */}
+          <FloatingIcon icon={Rocket} delay={0} x="10%" y="20%" color="#1A9B8E" size={32} />
+          <FloatingIcon icon={Target} delay={2} x="85%" y="15%" color="#C4D82E" size={40} />
+          <FloatingIcon icon={Lightbulb} delay={4} x="15%" y="70%" color="#C4D82E" size={36} />
+          <FloatingIcon icon={TrendingUp} delay={6} x="80%" y="75%" color="#1A9B8E" size={44} />
+
+          {/* Decorative SVG Lines (Simulating drawing/sketching) */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.1] pointer-events-none">
+            <m.path
+              d="M-50,300 Q200,50 600,400 T1200,200"
+              fill="none"
+              stroke="#1A9B8E"
+              strokeWidth="1"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ duration: 4, delay: 0.5, ease: "easeInOut" }}
+            />
+            <m.path
+              d="M1400,100 Q1000,500 500,200 S-100,600"
+              fill="none"
+              stroke="#C4D82E"
+              strokeWidth="1"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ duration: 5, delay: 1, ease: "easeInOut" }}
+            />
+          </svg>
         </div>
 
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
             <FadeIn delay={0.1}>
-              <Badge variant="odillon" className="mb-4 md:mb-6 inline-flex items-center gap-1.5">
-                Together we draw <PenLine className="w-3.5 h-3.5 inline" aria-hidden="true" /> the future
+              <Badge 
+                variant="odillon" 
+                className="mb-6 md:mb-8 inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium shadow-sm backdrop-blur-sm bg-white/50 border-odillon-teal/20"
+              >
+                Together we draw <PenLine className="w-4 h-4 text-odillon-teal animate-bounce" aria-hidden="true" /> the future
               </Badge>
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <h1 className="font-baskvill text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-900 mb-4 md:mb-6 leading-tight">
+              <h1 className="font-baskvill text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-gray-900 mb-6 md:mb-8 leading-[1.1] tracking-tight">
                 Des offres qui transforment{" "}
-                <span className="bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
-                  votre entreprise
+                <span className="relative inline-block mt-2">
+                  <span className="relative z-10 bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
+                    votre entreprise
+                  </span>
+                  <m.span 
+                    className="absolute -bottom-2 left-0 w-full h-1.5 bg-odillon-lime/20 rounded-full -z-0"
+                    initial={{ width: 0 }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 1, delay: 1 }}
+                  />
                 </span>
               </h1>
             </FadeIn>
 
-            <FadeIn delay={0.3}>
-              <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
-                Solutions adaptées en accompagnement pour structurer,
-                développer et pérenniser votre organisation.
+            <FadeIn delay={0.4}>
+              <p className="text-lg md:text-xl lg:text-2xl text-gray-600 leading-relaxed max-w-3xl mx-auto font-light">
+                Solutions d&apos;accompagnement stratégique pour structurer,
+                développer et pérenniser votre organisation dans un monde en mutation.
               </p>
+            </FadeIn>
+
+            <FadeIn delay={0.6} className="mt-10 md:mt-12">
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                <Button size="lg" className="rounded-full bg-odillon-teal hover:bg-odillon-teal/90 text-white px-8 h-12 text-base" asChild>
+                  <Link href="/contact">Démarrer un projet</Link>
+                </Button>
+                <Button variant="outline" size="lg" className="rounded-full border-gray-200 hover:bg-gray-50 px-8 h-12 text-base group" asChild>
+                  <a href="#expertises">
+                    Explorer nos pôles
+                    <ChevronRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </Button>
+              </div>
             </FadeIn>
           </div>
         </div>
+
+        {/* Decorative Scroll Indicator */}
+        <div className="absolute bottom-8 left-0 w-full hidden md:flex justify-center pointer-events-none z-20">
+          <m.div 
+            className="flex flex-col items-center gap-2"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.5, duration: 1 }}
+          >
+            <span className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-semibold mr-[-0.2em]">Découvrir</span>
+            <div className="w-px h-12 bg-gradient-to-b from-odillon-teal/50 to-transparent shadow-[0_0_8px_rgba(26,155,142,0.1)]" />
+          </m.div>
+        </div>
       </div>
 
-      <VideoSection video={video} />
+      <div id="expertises" className="scroll-mt-20">
+        <VideoSection video={video} />
+      </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 pt-8 md:pt-12">
 
@@ -216,35 +334,41 @@ export function ServicesDetailed() {
         </BlurFade>
 
         {/* Grille des 8 offres */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5 mb-12 md:mb-16">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 mb-16 md:mb-24">
           {servicesData.map((service, idx) => {
             const Icon = service.iconComponent
             const subCount = service.services.length
             const detailCount = service.services.reduce((acc, s) => acc + s.details.length, 0)
             return (
               <BlurFade key={service.id} delay={0.1 + idx * 0.05}>
-                <Link href={`/offres/${service.id}`} className="block h-full">
-                  <div className="group relative bg-white border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300 overflow-hidden h-full flex flex-col">
+                <Link href={`/offres/${service.id}`} className="block h-full group/card">
+                  <div className="relative bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 overflow-hidden h-full flex flex-col rounded-xl hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
+                    {/* Background Hover Glow */}
+                    <div 
+                      className="absolute -right-16 -top-16 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover/card:opacity-20 transition-opacity duration-500"
+                      style={{ backgroundColor: service.color }}
+                    />
+                    
                     {/* Color accent bar */}
                     <div
-                      className="h-1 w-full"
+                      className="h-1.5 w-full"
                       style={{ backgroundColor: service.color }}
                     />
 
-                    <div className="p-5 md:p-6 flex flex-col flex-1">
+                    <div className="p-6 md:p-8 flex flex-col flex-1">
                       {/* Icon + Title */}
-                      <div className="flex items-start gap-3 mb-3">
+                      <div className="flex items-start gap-4 mb-4">
                         <div
-                          className="w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
-                          style={{ backgroundColor: `${service.color}12`, color: service.color }}
+                          className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover/card:scale-110 group-hover/card:rotate-3 transition-all duration-500 shadow-sm"
+                          style={{ backgroundColor: `${service.color}15`, color: service.color }}
                         >
-                          <Icon className="w-5 h-5" />
+                          <Icon className="w-7 h-7" />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-sm md:text-base text-gray-900 leading-tight group-hover:text-gray-700 transition-colors">
+                        <div className="flex-1 min-w-0 pt-1">
+                          <h3 className="font-bold text-base md:text-lg text-gray-900 leading-tight group-hover/card:text-gray-800 transition-colors">
                             {service.title}
                           </h3>
-                          <p className="text-[11px] md:text-xs font-medium mt-0.5" style={{ color: service.color }}>
+                          <p className="text-xs font-semibold uppercase tracking-wider mt-1" style={{ color: service.color }}>
                             {service.tagline}
                           </p>
                         </div>
@@ -252,24 +376,28 @@ export function ServicesDetailed() {
 
                       {/* Description */}
                       {service.description && (
-                        <p className="text-xs text-gray-500 leading-relaxed mb-4 line-clamp-3 flex-1">
+                        <p className="text-sm text-gray-500 leading-relaxed mb-6 line-clamp-3 flex-1 group-hover/card:text-gray-600 transition-colors">
                           {service.description}
                         </p>
                       )}
 
                       {/* Footer */}
-                      <div className="mt-auto pt-3 border-t border-gray-100">
+                      <div className="mt-auto pt-4 border-t border-gray-50">
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] md:text-xs text-gray-400">
-                            {subCount} prestation{subCount > 1 ? "s" : ""} · {detailCount} points
-                          </span>
-                          <span
-                            className="inline-flex items-center gap-1 text-xs font-medium group-hover:gap-2 transition-all duration-300"
-                            style={{ color: service.color }}
+                          <div className="flex flex-col">
+                            <span className="text-[10px] uppercase tracking-widest text-gray-400 font-medium">
+                              {subCount} prestation{subCount > 1 ? "s" : ""}
+                            </span>
+                            <span className="text-[10px] text-gray-300">
+                               {detailCount} points d&apos;expertise
+                            </span>
+                          </div>
+                          <div
+                            className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 group-hover/card:bg-gray-900 group-hover/card:text-white"
+                            style={{ color: service.color, backgroundColor: `${service.color}10` }}
                           >
-                            Explorer
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </span>
+                            <ArrowRight className="w-4 h-4" />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -297,100 +425,6 @@ export function ServicesDetailed() {
           badge="Témoignages"
           videos={testimonialVideos}
         />
-
-        <Separator className="my-12 md:my-16 lg:my-20" />
-
-        {/* Section Nos Valeurs */}
-        <BlurFade delay={0.7}>
-          <div className="mb-12 md:mb-16 lg:mb-20">
-            <div className="text-center mb-8 md:mb-12">
-              <Badge variant="odillon" className="mb-4">
-                Nos Valeurs
-              </Badge>
-              <h2 className="font-baskvill text-2xl md:text-3xl text-gray-900 mb-3">
-                Les principes qui nous guident
-              </h2>
-              <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
-                Des valeurs fondamentales qui inspirent notre action quotidienne et façonnent notre engagement envers l'excellence.
-              </p>
-            </div>
-
-            {/* Testimonials Carousel */}
-            {testimonials.length > 0 && (
-              <div className="max-w-2xl mx-auto">
-                <div className="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden" role="region" aria-label="Carousel de témoignages" aria-roledescription="carousel">
-                  <div className="px-6 md:px-10 py-8 md:py-10" aria-live="polite" aria-atomic="true">
-                    {/* Quote icon */}
-                    <div className="flex justify-center mb-6">
-                      <div className="w-10 h-10 rounded-full bg-odillon-teal/8 flex items-center justify-center">
-                        <Quote className="h-5 w-5 text-odillon-teal/40" aria-hidden="true" />
-                      </div>
-                    </div>
-
-                    {/* Quote text */}
-                    <blockquote className="text-center text-base md:text-lg font-medium text-gray-700 leading-relaxed mb-8 italic">
-                      &laquo; {testimonials[currentTestimonial].quote} &raquo;
-                    </blockquote>
-
-                    {/* Author */}
-                    <div className="flex flex-col items-center">
-                      <Avatar className="mb-3 h-12 w-12 ring-2 ring-gray-100">
-                        <AvatarImage
-                          src={testimonials[currentTestimonial].avatar}
-                          alt={testimonials[currentTestimonial].name}
-                        />
-                        <AvatarFallback className="bg-odillon-teal/10 text-odillon-teal font-semibold text-sm">
-                          {testimonials[currentTestimonial].name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <p className="font-semibold text-sm text-gray-900">{testimonials[currentTestimonial].name}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">{testimonials[currentTestimonial].position}</p>
-                    </div>
-                  </div>
-
-                  {/* Navigation */}
-                  <div className="flex items-center justify-center gap-3 pb-6">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setCurrentTestimonial((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1))}
-                      className="h-11 w-11 md:h-8 md:w-8 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100"
-                      aria-label="Témoignage précédent"
-                    >
-                      <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-                    </Button>
-                    <div className="flex items-center gap-1.5" role="tablist" aria-label="Navigation des témoignages">
-                      {testimonials.map((_, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setCurrentTestimonial(idx)}
-                          role="tab"
-                          aria-selected={idx === currentTestimonial}
-                          className={`relative rounded-full transition-all duration-300 min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 flex items-center justify-center`}
-                          aria-label={`Aller au témoignage ${idx + 1} sur ${testimonials.length}`}
-                        >
-                          <span className={`block rounded-full transition-all duration-300 ${idx === currentTestimonial
-                            ? "w-5 h-1.5 bg-odillon-teal"
-                            : "w-1.5 h-1.5 bg-gray-200 hover:bg-gray-300"
-                            }`} />
-                        </button>
-                      ))}
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setCurrentTestimonial((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1))}
-                      className="h-11 w-11 md:h-8 md:w-8 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100"
-                      aria-label="Témoignage suivant"
-                    >
-                      <ChevronRight className="h-4 w-4" aria-hidden="true" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </BlurFade>
       </div>
     </section>
   )
