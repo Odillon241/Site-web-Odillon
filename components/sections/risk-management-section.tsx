@@ -10,9 +10,11 @@ import {
     TrendingDown,
     ClipboardList,
     Eye,
-    ArrowRight
+    ArrowRight,
+    Check
 } from "lucide-react"
 import Link from "next/link"
+import { cn } from "@/lib/utils"
 
 const riskManagementSteps = [
     {
@@ -61,119 +63,115 @@ const riskManagementSteps = [
 
 export function RiskManagementSection() {
     return (
-        <section className="relative py-14 sm:py-20 lg:py-32 overflow-hidden">
-            {/* Background Decor - aligné avec ServicesHome */}
-            <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-odillon-teal/5 rounded-full blur-[100px]" />
-                <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-odillon-lime/5 rounded-full blur-[100px]" />
-            </div>
-
+        <section id="risques" className="relative py-20 sm:py-28 lg:py-36 overflow-hidden bg-white">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-                {/* Header flex - pattern ServicesHome */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 md:mb-16 gap-6 sm:gap-8">
-                    <BlurFade delay={0.2} className="max-w-2xl">
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-baskvill tracking-tight">
-                            Management des <span className="text-odillon-teal">Risques</span>
-                        </h2>
-                        <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-                            Notre approche structurée en 6 étapes vous permet d&apos;anticiper, maîtriser et transformer les risques en opportunités de croissance.
-                        </p>
-                    </BlurFade>
-
-                    <BlurFade delay={0.3}>
-                        <Button
-                            asChild
-                            variant="default"
-                            className="group bg-odillon-teal hover:bg-odillon-teal/90 text-white font-semibold rounded-lg px-8 h-12 shadow-lg hover:shadow-xl transition-all duration-300"
-                        >
-                            <Link href="/offres">
-                                Découvrir notre approche
-                                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                            </Link>
-                        </Button>
-                    </BlurFade>
-                </div>
-
-                {/* Image bannière contenue - même traitement visuel que les cards */}
-                <BlurFade delay={0.4}>
-                    <div className="relative overflow-hidden rounded-lg border border-gray-200/80 shadow-lg mb-10 sm:mb-14 md:mb-16">
-                        <div className="relative aspect-[21/9] w-full">
-                            <Image
-                                src="/images/management-risques.jpg"
-                                alt="Management des Risques - Les 6 étapes clés : Analyser, Transférer, Éviter, Réduire, Préparer, Contrôler"
-                                fill
-                                className="object-cover"
-                                sizes="(max-width: 1280px) 100vw, 1280px"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-                            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
-                                <p className="text-white text-base md:text-lg font-medium drop-shadow-lg max-w-2xl">
-                                    Une méthodologie éprouvée pour anticiper et maîtriser tous les risques de votre organisation.
+                
+                {/* Top Section: Split Layout with Image */}
+                <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-24 sm:mb-32">
+                    <BlurFade delay={0.1}>
+                        <div className="relative group">
+                            <div className="absolute -inset-4 bg-odillon-teal/5 rounded-[2rem] -rotate-1 group-hover:rotate-0 transition-transform duration-500" />
+                            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 shadow-2xl">
+                                <Image
+                                    src="/images/management-risques.jpg"
+                                    alt="Management des Risques"
+                                    fill
+                                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    sizes="(max-width: 1024px) 100vw, 600px"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-60" />
+                            </div>
+                            
+                            {/* Floating Badge on Image */}
+                            <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-2xl shadow-xl border border-slate-100 hidden md:block max-w-[200px]">
+                                <p className="text-xs font-bold text-odillon-teal uppercase tracking-widest mb-2">Objectif</p>
+                                <p className="text-sm font-medium text-slate-600 leading-snug">
+                                    Transformer vos vulnérabilités en leviers de performance.
                                 </p>
                             </div>
                         </div>
+                    </BlurFade>
+
+                    <div className="flex flex-col">
+                        <BlurFade delay={0.2}>
+                            <div className="inline-flex items-center space-x-2 mb-6">
+                                <span className="w-8 h-px bg-odillon-teal"></span>
+                                <span className="text-odillon-teal text-xs font-bold uppercase tracking-[0.2em]">
+                                    Management Stratégique
+                                </span>
+                            </div>
+                            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 font-baskvill tracking-tight leading-[1.1]">
+                                Anticiper pour mieux <span className="italic text-odillon-teal underline decoration-odillon-lime/30 underline-offset-8">maîtriser</span>.
+                            </h2>
+                            <p className="text-lg text-slate-600 leading-relaxed mb-10">
+                                Notre approche structurée en 6 étapes clés vous permet non seulement de protéger vos actifs, mais aussi d&apos;asseoir une gouvernance solide face aux incertitudes du marché.
+                            </p>
+                            
+                            <div className="flex flex-wrap gap-4">
+                                <Button
+                                    asChild
+                                    className="bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg px-8 h-12 transition-all"
+                                >
+                                    <Link href="/offres">
+                                        Découvrir notre approche
+                                        <ArrowRight className="ml-2 w-4 h-4" />
+                                    </Link>
+                                </Button>
+                            </div>
+                        </BlurFade>
                     </div>
-                </BlurFade>
+                </div>
 
-                {/* Steps Grid - pattern ServicesHome */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                    {riskManagementSteps.map((step, idx) => {
-                        const StepIcon = step.icon
-                        const stepNumber = String(idx + 1).padStart(2, "0")
-                        return (
-                            <BlurFade key={step.title} delay={0.1 * (idx + 1)} className="h-full">
-                                <div className="relative h-full bg-white rounded-lg p-8 shadow-lg border border-gray-200/80 overflow-hidden group hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-                                    {/* Hover Gradient Background */}
-                                    <div
-                                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                                        style={{
-                                            background: `linear-gradient(135deg, ${step.color}08 0%, ${step.color}03 50%, transparent 100%)`
-                                        }}
-                                    />
+                {/* Bottom Section: Methodology Grid */}
+                <div className="relative">
+                    <BlurFade delay={0.3} className="mb-12">
+                        <h3 className="text-xl font-bold text-slate-900 font-baskvill flex items-center gap-4">
+                            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-odillon-teal text-white text-xs">6</span>
+                            Étapes de notre méthodologie
+                        </h3>
+                    </BlurFade>
 
-                                    <div className="relative z-10 flex flex-col h-full">
-                                        <div
-                                            className="w-14 h-14 rounded-lg flex items-center justify-center mb-6 border-2 shadow-sm group-hover:shadow-md transition-all duration-300"
-                                            style={{
-                                                background: `linear-gradient(135deg, ${step.color}12 0%, ${step.color}08 100%)`,
-                                                borderColor: `${step.color}30`,
-                                                color: step.color
-                                            }}
-                                        >
-                                            <StepIcon className="w-7 h-7" strokeWidth={1.5} />
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {riskManagementSteps.map((step, idx) => {
+                            const Icon = step.icon
+                            return (
+                                <BlurFade
+                                    key={step.title}
+                                    delay={0.1 + (0.05 * idx)}
+                                >
+                                    <div className="group relative bg-slate-50/50 hover:bg-white border border-slate-100 hover:border-slate-200 p-8 rounded-2xl transition-all duration-300">
+                                        <div className="flex items-start justify-between mb-6">
+                                            <div 
+                                                className="w-10 h-10 rounded-lg flex items-center justify-center transition-colors"
+                                                style={{ backgroundColor: `${step.color}10`, color: step.color }}
+                                            >
+                                                <Icon className="w-5 h-5" strokeWidth={1.5} />
+                                            </div>
+                                            <span className="text-[10px] font-black text-slate-200 group-hover:text-odillon-teal/20 transition-colors uppercase tracking-widest">
+                                                Étape 0{idx + 1}
+                                            </span>
                                         </div>
 
-                                        <p
-                                            className="text-xs font-semibold mb-2 uppercase tracking-wider"
-                                            style={{ color: `${step.color}cc` }}
-                                        >
-                                            Étape {stepNumber}
-                                        </p>
-
-                                        <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-odillon-teal transition-colors font-baskvill">
+                                        <h4 className="text-lg font-bold text-slate-900 mb-3 font-baskvill group-hover:text-odillon-teal transition-colors">
                                             {step.title}
-                                        </h3>
-
-                                        <p className="text-sm text-gray-600 leading-relaxed mb-6">
+                                        </h4>
+                                        <p className="text-sm text-slate-500 leading-relaxed mb-6">
                                             {step.description}
                                         </p>
 
-                                        <ul className="space-y-3 mt-auto">
+                                        <ul className="space-y-2.5">
                                             {step.features.map((feature, i) => (
-                                                <li key={i} className="flex items-center text-sm text-gray-600">
-                                                    <span
-                                                        className="w-2 h-2 rounded-full mr-3 shrink-0"
-                                                        style={{ backgroundColor: step.color }}
-                                                    />
+                                                <li key={i} className="flex items-center text-xs font-medium text-slate-600">
+                                                    <div className="w-1 h-1 rounded-full mr-3 shrink-0" style={{ backgroundColor: step.color }} />
                                                     {feature}
                                                 </li>
                                             ))}
                                         </ul>
                                     </div>
-                                </div>
-                            </BlurFade>
-                        )
-                    })}
+                                </BlurFade>
+                            )
+                        })}
+                    </div>
                 </div>
             </div>
         </section>

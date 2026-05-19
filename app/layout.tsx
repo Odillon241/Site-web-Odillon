@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import { cn } from "@/lib/utils"
-import { airFont, libreBaskerville } from "./fonts"
+import { satoshiFont, libreBaskerville } from "./fonts"
 import { MotionProvider } from "@/components/providers/motion-provider"
 import { Toaster } from "@/components/ui/sonner"
 
@@ -51,7 +51,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" translate="no" className="scroll-smooth" suppressHydrationWarning>
-      <body className={cn(airFont.className, airFont.variable, libreBaskerville.variable, "antialiased")} suppressHydrationWarning>
+      <body className={cn(satoshiFont.className, satoshiFont.variable, libreBaskerville.variable, "antialiased")} suppressHydrationWarning>
         {/* Grid background pattern */}
         <div className="grid-bg" />
         {/* Lightweight CSS gradient background - replaces heavy THREE.js LiquidEther */}

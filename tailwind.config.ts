@@ -77,11 +77,11 @@ const config = {
 			},
 			fontFamily: {
 				air: [
-					'var(--font-air)',
+					'var(--font-satoshi)',
 					'sans-serif'
 				],
 				'petrov-sans': [
-					'var(--font-air)',
+					'var(--font-satoshi)',
 					'sans-serif'
 				],
 				baskvill: [

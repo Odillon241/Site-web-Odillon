@@ -344,10 +344,14 @@ export function ServicesDetailed() {
 
             return (
               <BlurFade key={service.id} delay={0.1 + idx * 0.05} className={spanClass}>
-                <Link href={`/offres/${service.id}`} className="block h-full group/card">
+                <Link 
+                  href={`/offres/${service.id}`} 
+                  className="block h-full group/card"
+                  aria-label={`Découvrir notre pôle d'expertise : ${service.title}`}
+                >
                   <div className="relative bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 overflow-hidden h-full flex flex-col rounded-xl hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
                     {/* Background Number (Editorial style) */}
-                    <span className="absolute bottom-4 right-6 text-8xl font-black text-gray-900/[0.03] select-none pointer-events-none group-hover/card:text-gray-900/[0.05] transition-colors duration-500 font-sans">
+                    <span className="absolute bottom-4 right-6 text-8xl font-black text-gray-900/[0.03] select-none pointer-events-none group-hover/card:text-gray-900/[0.05] transition-colors duration-500 font-sans" aria-hidden="true">
                       {String(idx + 1).padStart(2, '0')}
                     </span>
 
@@ -355,12 +359,14 @@ export function ServicesDetailed() {
                     <div 
                       className="absolute -right-16 -top-16 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover/card:opacity-20 transition-opacity duration-500"
                       style={{ backgroundColor: service.color }}
+                      aria-hidden="true"
                     />
                     
                     {/* Color accent bar */}
                     <div
                       className="h-1.5 w-full"
                       style={{ backgroundColor: service.color }}
+                      aria-hidden="true"
                     />
 
                     <div className={isLarge ? "p-8 md:p-10 flex flex-col flex-1" : "p-6 md:p-8 flex flex-col flex-1"}>
@@ -370,7 +376,7 @@ export function ServicesDetailed() {
                           className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover/card:scale-110 group-hover/card:rotate-3 transition-all duration-500 shadow-sm"
                           style={{ backgroundColor: `${service.color}15`, color: service.color }}
                         >
-                          <Icon className="w-7 h-7" />
+                          <Icon className="w-7 h-7" aria-hidden="true" />
                         </div>
                         <div className="flex-1 min-w-0 pt-1">
                           <h3 className="font-baskvill text-xl md:text-2xl text-gray-900 leading-tight group-hover/card:text-gray-800 transition-colors">
@@ -403,6 +409,7 @@ export function ServicesDetailed() {
                           <div
                             className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 group-hover/card:bg-gray-900 group-hover/card:text-white"
                             style={{ color: service.color, backgroundColor: `${service.color}10` }}
+                            aria-hidden="true"
                           >
                             <ArrowRight className="w-4 h-4" />
                           </div>

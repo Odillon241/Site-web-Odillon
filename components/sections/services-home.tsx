@@ -2,7 +2,6 @@
 
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { Button } from "@/components/ui/button"
-import { TiltCard } from "@/components/ui/tilt-card"
 import {
   Landmark,
   Scale,
@@ -12,9 +11,11 @@ import {
   GraduationCap,
   Megaphone,
   Rocket,
-  Banknote
+  Banknote,
+  Check
 } from "lucide-react"
 import Link from "next/link"
+import { cn } from "@/lib/utils"
 
 const mainServices = [
   {
@@ -23,7 +24,8 @@ const mainServices = [
     slug: "gouvernance",
     tagline: "Structuration et Restructuration d'Entreprises",
     color: "#39837a",
-    highlights: ["Règles de bonne gouvernance", "Conseil d'Administration", "Risques opérationnels"]
+    highlights: ["Règles de bonne gouvernance", "Conseil d'Administration", "Risques opérationnels"],
+    span: "lg:col-span-4"
   },
   {
     icon: Scale,
@@ -31,7 +33,8 @@ const mainServices = [
     slug: "juridique",
     tagline: "Accompagnement Juridique Externalisé",
     color: "#C4D82E",
-    highlights: ["Service externalisé", "Contrats", "Négociation"]
+    highlights: ["Service externalisé", "Contrats", "Négociation"],
+    span: "lg:col-span-4"
   },
   {
     icon: TrendingUp,
@@ -39,7 +42,8 @@ const mainServices = [
     slug: "finances",
     tagline: "Conseils Financiers",
     color: "#39837a",
-    highlights: ["Levée de fonds", "Conseils en investissement", "Tableaux de bord"]
+    highlights: ["Levée de fonds", "Conseils en investissement", "Tableaux de bord"],
+    span: "lg:col-span-4"
   },
   {
     icon: Users,
@@ -47,7 +51,8 @@ const mainServices = [
     slug: "ressources-humaines",
     tagline: "Administration et Ressources Humaines",
     color: "#C4D82E",
-    highlights: ["Développement RH", "Évaluation", "Rémunérations"]
+    highlights: ["Développement RH", "Évaluation", "Rémunérations"],
+    span: "lg:col-span-6"
   },
   {
     icon: GraduationCap,
@@ -55,7 +60,8 @@ const mainServices = [
     slug: "formations",
     tagline: "Formation Professionnelle",
     color: "#39837a",
-    highlights: ["Master Class", "Coaching professionnel", "Formations en ligne"]
+    highlights: ["Master Class", "Coaching professionnel", "Formations en ligne"],
+    span: "lg:col-span-6"
   },
   {
     icon: Megaphone,
@@ -63,7 +69,8 @@ const mainServices = [
     slug: "communication",
     tagline: "Stratégie de Communication",
     color: "#C4D82E",
-    highlights: ["Communication institutionnelle", "Communication digitale", "Communication de crise"]
+    highlights: ["Communication institutionnelle", "Communication digitale", "Communication de crise"],
+    span: "lg:col-span-4"
   },
   {
     icon: Rocket,
@@ -71,7 +78,8 @@ const mainServices = [
     slug: "entreprenariat",
     tagline: "Accompagnement Entrepreneurial",
     color: "#39837a",
-    highlights: ["Création d'entreprise", "Business plan", "Développement"]
+    highlights: ["Création d'entreprise", "Business plan", "Développement"],
+    span: "lg:col-span-4"
   },
   {
     icon: Banknote,
@@ -79,36 +87,42 @@ const mainServices = [
     slug: "paie",
     tagline: "Gestion de la Paie",
     color: "#C4D82E",
-    highlights: ["Bulletins de paie", "Déclarations sociales", "Optimisation"]
+    highlights: ["Bulletins de paie", "Déclarations sociales", "Optimisation"],
+    span: "lg:col-span-4"
   }
 ]
 
 export function ServicesHome() {
   return (
-    <section id="services" className="relative py-14 sm:py-20 lg:py-32 overflow-hidden">
-      {/* Background Decor */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-odillon-teal/5 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-blue-500/5 rounded-full blur-[100px]" />
-      </div>
-
+    <section id="services" className="relative py-20 sm:py-28 lg:py-36 overflow-hidden bg-white">
+      {/* Background Decor - Minimalist */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+      
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 md:mb-16 gap-6 sm:gap-8">
-          <BlurFade delay={0.2} className="max-w-2xl">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-baskvill tracking-tight">
-              L&apos;expertise stratégique au service de votre transformation.
-            </h2>
-            <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-              Huit piliers d&apos;expertise pour transformer et structurer votre organisation de manière pérenne.
-            </p>
-          </BlurFade>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 sm:mb-20 gap-8">
+          <div className="max-w-3xl">
+            <BlurFade delay={0.1}>
+              <div className="inline-flex items-center space-x-2 mb-6">
+                <span className="w-8 h-px bg-odillon-teal"></span>
+                <span className="text-odillon-teal text-xs font-bold uppercase tracking-[0.2em]">
+                  Nos Piliers d&apos;Expertise
+                </span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-baskvill tracking-tight leading-[1.2]">
+                L&apos;expertise stratégique au service de votre transformation.
+              </h2>
+              <p className="text-lg text-slate-600 leading-relaxed max-w-2xl">
+                Huit domaines d&apos;intervention pour structurer votre organisation et sécuriser votre croissance de manière pérenne.
+              </p>
+            </BlurFade>
+          </div>
 
-          <BlurFade delay={0.3}>
+          <BlurFade delay={0.2}>
             <Button
               asChild
-              variant="default"
-              className="group bg-odillon-teal hover:bg-odillon-teal/90 text-white font-semibold rounded-lg px-8 h-12 shadow-lg hover:shadow-xl transition-all duration-300"
+              variant="outline"
+              className="group border-slate-200 hover:border-odillon-teal hover:bg-odillon-teal/5 text-slate-900 font-bold rounded-lg px-8 h-12 transition-all duration-300"
             >
               <Link href="/offres">
                 Voir toutes nos offres
@@ -118,73 +132,61 @@ export function ServicesHome() {
           </BlurFade>
         </div>
 
-        {/* Clean Grid Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-14 sm:mb-20 md:mb-24">
+        {/* Bento Grid Layout - Clean & Structured */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 mb-16 sm:mb-24">
           {mainServices.map((service, idx) => {
-            const ServiceIcon = service.icon
+            const Icon = service.icon
             return (
-              <BlurFade key={service.title} delay={0.1 * (idx + 1)} className="h-full">
-                <Link href={`/offres/${service.slug}`} className="block h-full cursor-none-target">
-                  <TiltCard containerClassName="h-full" className="h-full">
-                    <div className="relative h-full bg-white rounded-lg p-8 shadow-lg border border-gray-200/80 overflow-hidden transform-style-3d group">
-                      {/* Hover Gradient Background */}
-                      <div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                        style={{
-                          background: `linear-gradient(135deg, ${service.color}08 0%, ${service.color}03 50%, transparent 100%)`
-                        }}
-                      />
+              <BlurFade
+                key={service.title}
+                delay={0.05 * (idx + 1)}
+                className={cn("h-full", service.span)}
+              >
+                <Link href={`/offres/${service.slug}`} className="block h-full group">
+                  <div className="relative h-full bg-slate-50/50 hover:bg-white border border-slate-100 hover:border-slate-200 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500 rounded-2xl p-8 sm:p-10 flex flex-col overflow-hidden">
+                    {/* Discret Accent Color Top */}
+                    <div 
+                      className="absolute top-0 left-0 w-full h-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      style={{ backgroundColor: service.color }}
+                    />
 
-                      <div className="relative z-10 flex flex-col h-full transform-style-3d">
-                        {/* Icon box with gradient border */}
-                        <div
-                          className="w-14 h-14 rounded-lg flex items-center justify-center mb-6 border-2 shadow-sm group-hover:shadow-md transition-all duration-300"
-                          style={{
-                            background: `linear-gradient(135deg, ${service.color}12 0%, ${service.color}08 100%)`,
-                            borderColor: `${service.color}30`,
-                            color: service.color,
-                            transform: "translateZ(20px)"
-                          }}
-                        >
-                          <ServiceIcon className="w-7 h-7" strokeWidth={1.5} />
-                        </div>
-
-                        <h3
-                          className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-odillon-teal transition-colors font-baskvill"
-                          style={{ transform: "translateZ(30px)" }}
-                        >
-                          {service.title}
-                        </h3>
-
-                        <p
-                          className="text-sm font-medium mb-6 uppercase tracking-wider"
-                          style={{ color: `${service.color}cc`, transform: "translateZ(25px)" }}
-                        >
-                          {service.tagline}
-                        </p>
-
-                        <ul className="space-y-3 mb-8 flex-grow" style={{ transform: "translateZ(15px)" }}>
-                          {service.highlights.map((highlight, i) => (
-                            <li key={i} className="flex items-center text-sm text-gray-600">
-                              <span
-                                className="w-2 h-2 rounded-full mr-3 shrink-0"
-                                style={{ backgroundColor: service.color }}
-                              />
-                              {highlight}
-                            </li>
-                          ))}
-                        </ul>
-
-                        <div
-                          className="flex items-center text-sm font-semibold mt-auto"
-                          style={{ color: service.color, transform: "translateZ(10px)" }}
-                        >
-                          En savoir plus
-                          <ArrowRight className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </div>
+                    {/* Icon - Static & Clean */}
+                    <div 
+                      className="w-12 h-12 rounded-lg flex items-center justify-center mb-8 transition-transform group-hover:scale-110"
+                      style={{ backgroundColor: `${service.color}10`, color: service.color }}
+                    >
+                      <Icon className="w-6 h-6" strokeWidth={1.5} />
                     </div>
-                  </TiltCard>
+
+                    {/* Content */}
+                    <div className="flex-grow">
+                      <p
+                        className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3"
+                        style={{ color: service.color }}
+                      >
+                        {service.tagline}
+                      </p>
+                      
+                      <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-6 font-baskvill">
+                        {service.title}
+                      </h3>
+
+                      <ul className="space-y-3 mb-8">
+                        {service.highlights.map((highlight, i) => (
+                          <li key={i} className="flex items-start text-sm text-slate-600 leading-tight">
+                            <Check className="w-4 h-4 mr-3 mt-0.5 shrink-0" style={{ color: service.color }} />
+                            <span>{highlight}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Footer link */}
+                    <div className="mt-auto pt-6 border-t border-slate-100 flex items-center text-xs font-bold uppercase tracking-widest text-slate-400 group-hover:text-odillon-teal transition-colors">
+                      En savoir plus
+                      <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-2" />
+                    </div>
+                  </div>
                 </Link>
               </BlurFade>
             )
