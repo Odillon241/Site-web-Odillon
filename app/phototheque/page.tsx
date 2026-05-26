@@ -112,7 +112,7 @@ export default function PhotothequePage() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <Images className="w-5 h-5 text-odillon-teal" />
-                <h2 className="font-baskvill text-2xl md:text-3xl text-gray-900">Albums</h2>
+                <h2 className="font-baskvill italic text-2xl md:text-3xl text-gray-900">Albums</h2>
               </div>
               <p className="text-sm text-gray-500">
                 {sortedFilteredAlbums.length} événement{sortedFilteredAlbums.length > 1 ? 's' : ''} trouvé{sortedFilteredAlbums.length > 1 ? 's' : ''}
@@ -145,7 +145,7 @@ export default function PhotothequePage() {
                 <div className="w-20 h-20 bg-gray-50 rounded-lg flex items-center justify-center mx-auto mb-5 border border-gray-100">
                   <Search className="w-8 h-8 text-gray-300" />
                 </div>
-                <h3 className="font-baskvill text-xl text-gray-900 mb-2">Aucun résultat</h3>
+                <h3 className="font-baskvill italic text-xl text-gray-900 mb-2">Aucun résultat</h3>
                 <p className="text-gray-500 text-sm max-w-sm mx-auto">
                   Aucun album ne correspond à vos critères. Essayez d&apos;autres termes de recherche ou filtres.
                 </p>

@@ -51,7 +51,7 @@ export function ExpertiseHome() {
             </BlurFade>
 
             <BlurFade delay={0.2}>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-6 sm:mb-8 font-baskvill leading-[1.1]">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-6 sm:mb-8 font-baskvill italic leading-[1.1]">
                 Nos compétences au service de votre réussite.
               </h2>
             </BlurFade>
@@ -100,7 +100,7 @@ export function ExpertiseHome() {
                             <DomainIcon className="w-8 h-8" style={{ color: domain.color }} />
                           </div>
                           <div>
-                            <h3 className="text-2xl font-bold text-slate-900 group-hover:text-odillon-teal transition-colors font-baskvill">
+                            <h3 className="text-2xl font-bold text-slate-900 group-hover:text-odillon-teal transition-colors font-baskvill italic">
                               {domain.title}
                             </h3>
                             <p className="text-sm text-slate-500 mt-1 leading-relaxed">

@@ -259,7 +259,7 @@ export function ServicesDetailed() {
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <h1 className="font-baskvill text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-gray-900 mb-6 md:mb-8 leading-[1.1] tracking-tight">
+              <h1 className="font-baskvill italic text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-gray-900 mb-6 md:mb-8 leading-[1.1] tracking-tight">
                 Des offres qui transforment{" "}
                 <span className="relative inline-block mt-2">
                   <span className="relative z-10 bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
@@ -324,7 +324,7 @@ export function ServicesDetailed() {
             <Badge variant="odillon" className="mb-3">
               Nos domaines d'expertise
             </Badge>
-            <h2 className="font-baskvill text-2xl md:text-3xl text-gray-900 mb-3">
+            <h2 className="font-baskvill italic text-2xl md:text-3xl text-gray-900 mb-3">
               8 pôles d'accompagnement
             </h2>
             <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
@@ -334,7 +334,7 @@ export function ServicesDetailed() {
         </BlurFade>
 
         {/* Grille des 8 offres */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[300px] gap-6 md:gap-8 mb-16 md:mb-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-auto lg:auto-rows-[320px] gap-6 md:gap-8 mb-16 md:mb-24">
           {servicesData.map((service, idx) => {
             const Icon = service.iconComponent
             const subCount = service.services.length
@@ -349,7 +349,7 @@ export function ServicesDetailed() {
                   className="block h-full group/card"
                   aria-label={`Découvrir notre pôle d'expertise : ${service.title}`}
                 >
-                  <div className="relative bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 overflow-hidden h-full flex flex-col rounded-xl hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
+                  <div className="relative bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 overflow-hidden h-full min-h-[280px] sm:min-h-[300px] lg:min-h-0 flex flex-col rounded-xl hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
                     {/* Background Number (Editorial style) */}
                     <span className="absolute bottom-4 right-6 text-8xl font-black text-gray-900/[0.03] select-none pointer-events-none group-hover/card:text-gray-900/[0.05] transition-colors duration-500 font-sans" aria-hidden="true">
                       {String(idx + 1).padStart(2, '0')}
@@ -369,20 +369,26 @@ export function ServicesDetailed() {
                       aria-hidden="true"
                     />
 
-                    <div className={isLarge ? "p-8 md:p-10 flex flex-col flex-1" : "p-6 md:p-8 flex flex-col flex-1"}>
+                    <div className={isLarge ? "p-8 md:p-10 flex flex-col flex-1" : "p-5 md:p-6 flex flex-col flex-1"}>
                       {/* Icon + Title */}
-                      <div className="flex items-start gap-4 mb-4">
+                      <div className={isLarge ? "flex items-start gap-4 mb-4" : "flex items-start gap-3 mb-3"}>
                         <div
-                          className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover/card:scale-110 group-hover/card:rotate-3 transition-all duration-500 shadow-sm"
+                          className={isLarge 
+                            ? "w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover/card:scale-110 group-hover/card:rotate-3 transition-all duration-500 shadow-sm"
+                            : "w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 group-hover/card:scale-110 group-hover/card:rotate-3 transition-all duration-500 shadow-sm"
+                          }
                           style={{ backgroundColor: `${service.color}15`, color: service.color }}
                         >
-                          <Icon className="w-7 h-7" aria-hidden="true" />
+                          <Icon className={isLarge ? "w-7 h-7" : "w-5 h-5"} aria-hidden="true" />
                         </div>
-                        <div className="flex-1 min-w-0 pt-1">
-                          <h3 className="font-baskvill text-xl md:text-2xl text-gray-900 leading-tight group-hover/card:text-gray-800 transition-colors">
+                        <div className="flex-1 min-w-0 pt-0.5">
+                          <h3 className={isLarge 
+                            ? "font-baskvill italic text-xl md:text-2xl text-gray-900 leading-tight group-hover/card:text-gray-800 transition-colors"
+                            : "font-baskvill italic text-lg md:text-xl text-gray-900 leading-tight group-hover/card:text-gray-800 transition-colors"
+                          }>
                             {service.title}
                           </h3>
-                          <p className="text-xs font-semibold uppercase tracking-wider mt-1" style={{ color: service.color }}>
+                          <p className="text-xs font-semibold uppercase tracking-wider mt-0.5" style={{ color: service.color }}>
                             {service.tagline}
                           </p>
                         </div>
@@ -390,7 +396,7 @@ export function ServicesDetailed() {
 
                       {/* Description */}
                       {service.description && (
-                        <p className={`text-gray-500 leading-relaxed mb-6 group-hover/card:text-gray-600 transition-colors ${isLarge ? "text-base line-clamp-4" : "text-sm line-clamp-3"} flex-1`}>
+                        <p className={`text-gray-500 leading-relaxed mb-3 group-hover/card:text-gray-600 transition-colors ${isLarge ? "text-base mb-4 line-clamp-4" : "text-xs md:text-sm line-clamp-3"} flex-1`}>
                           {service.description}
                         </p>
                       )}

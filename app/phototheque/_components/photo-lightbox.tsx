@@ -225,7 +225,7 @@ export function PhotoLightbox({ photo, photos, currentIndex, onClose, onNavigate
                         {/* Title section */}
                         <div className="space-y-4">
                           <div className="w-8 h-[2px] bg-gradient-to-r from-odillon-teal to-odillon-teal/40 rounded-full" />
-                          <h3 className="text-white font-baskvill text-2xl leading-tight tracking-tight">
+                          <h3 className="text-white font-baskvill italic text-2xl leading-tight tracking-tight">
                             {photo.description}
                           </h3>
                           {photo.location && (
@@ -294,7 +294,7 @@ export function PhotoLightbox({ photo, photos, currentIndex, onClose, onNavigate
 
               {/* Mobile Info Bar */}
               <div className="md:hidden flex-shrink-0 bg-gradient-to-t from-black via-black/90 to-transparent px-5 py-4 border-t border-white/5">
-                <h3 className="text-white font-baskvill text-lg leading-tight truncate">
+                <h3 className="text-white font-baskvill italic text-lg leading-tight truncate">
                   {photo.description}
                 </h3>
                 {photo.location && (

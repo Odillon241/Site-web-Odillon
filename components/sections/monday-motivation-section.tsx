@@ -61,7 +61,7 @@ export function MondayMotivationSection({ video, className }: MondayMotivationSe
 
               <h2
                 id="monday-motivation-title"
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 font-baskvill leading-tight"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 font-baskvill italic leading-tight"
               >
                 Monday Motivation
               </h2>

@@ -196,7 +196,7 @@ export function HeroSection({ children }: HeroSectionProps) {
             </m.div>
 
             {/* Title */}
-            <h1 className="font-baskvill text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] xl:text-[6.5rem] tracking-tight text-gray-900 mb-8 leading-[1.05]">
+            <h1 className="font-baskvill italic text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] xl:text-[6.5rem] tracking-tight text-gray-900 mb-8 leading-[1.05]">
               Revivez nos{" "}
               <span className="relative inline-block">
                 <span className="text-odillon-teal">moments</span>

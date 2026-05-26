@@ -132,7 +132,7 @@ export function AboutDetailed() {
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <h1 className="font-baskvill text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-900 mb-4 md:mb-6 leading-tight">
+              <h1 className="font-baskvill italic text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-900 mb-4 md:mb-6 leading-tight">
                 Bâtir l'avenir des{" "}
                 <span className="bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
                   entreprises africaines
@@ -149,7 +149,7 @@ export function AboutDetailed() {
               </p>
               <div className="inline-flex items-center gap-2 text-odillon-teal font-semibold mb-8 md:mb-10">
                 <span className="uppercase tracking-widest text-sm">Vision :</span>
-                <span className="font-baskvill text-lg">Entreprise Compétitive</span>
+                <span className="font-baskvill italic text-lg">Entreprise Compétitive</span>
               </div>
             </FadeIn>
 
@@ -256,7 +256,7 @@ export function AboutDetailed() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <FadeIn delay={0.2}>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-baskvill">Nos Valeurs</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-baskvill italic">Nos Valeurs</h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-lg leading-relaxed">
                 Les piliers fondamentaux qui structurent notre approche et garantissent l'impact de nos actions.
               </p>
@@ -289,7 +289,7 @@ export function AboutDetailed() {
                       </div>
 
                       <div className="mt-auto">
-                        <h3 className="text-xl font-bold text-gray-900 mb-2 font-baskvill">
+                        <h3 className="text-xl font-bold text-gray-900 mb-2 font-baskvill italic">
                           {valeur.title}
                         </h3>
 
@@ -319,7 +319,7 @@ export function AboutDetailed() {
         <div className="py-24">
           <div className="text-center mb-16">
             <BlurFade delay={0.1}>
-              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 font-baskvill">
+              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 font-baskvill italic">
                 Notre Histoire
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-lg">

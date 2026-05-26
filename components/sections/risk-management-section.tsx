@@ -100,7 +100,7 @@ export function RiskManagementSection() {
                                     Management Stratégique
                                 </span>
                             </div>
-                            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 font-baskvill tracking-tight leading-[1.1]">
+                            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 font-baskvill italic tracking-tight leading-[1.1]">
                                 Anticiper pour mieux <span className="italic text-odillon-teal underline decoration-odillon-lime/30 underline-offset-8">maîtriser</span>.
                             </h2>
                             <p className="text-lg text-slate-600 leading-relaxed mb-10">
@@ -125,7 +125,7 @@ export function RiskManagementSection() {
                 {/* Bottom Section: Methodology Grid */}
                 <div className="relative">
                     <BlurFade delay={0.3} className="mb-12">
-                        <h3 className="text-xl font-bold text-slate-900 font-baskvill flex items-center gap-4">
+                        <h3 className="text-xl font-bold text-slate-900 font-baskvill italic flex items-center gap-4">
                             <span className="flex items-center justify-center w-8 h-8 rounded-full bg-odillon-teal text-white text-xs">6</span>
                             Étapes de notre méthodologie
                         </h3>
@@ -152,7 +152,7 @@ export function RiskManagementSection() {
                                             </span>
                                         </div>
 
-                                        <h4 className="text-lg font-bold text-slate-900 mb-3 font-baskvill group-hover:text-odillon-teal transition-colors">
+                                        <h4 className="text-lg font-bold text-slate-900 mb-3 font-baskvill italic group-hover:text-odillon-teal transition-colors">
                                             {step.title}
                                         </h4>
                                         <p className="text-sm text-slate-500 leading-relaxed mb-6">

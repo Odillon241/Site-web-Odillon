@@ -82,7 +82,7 @@ export function NewsletterSection() {
                     <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-odillon-lime/10 rounded-full blur-3xl" />
 
                     <div className="relative z-10 mx-auto max-w-2xl text-center">
-                        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-gray-900 mb-4 font-baskvill">
+                        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-gray-900 mb-4 font-baskvill italic">
                             Envie de conseil ?
                         </h2>
                         <p className="mx-auto mt-4 mb-8 max-w-xl text-lg text-gray-600 font-light">

@@ -86,7 +86,7 @@ export default async function ArticlePage({ params }: Props) {
                                 </Badge>
                             </div>
 
-                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 font-baskvill leading-tight">
+                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 font-baskvill italic leading-tight">
                                 {article.title}
                             </h1>
 

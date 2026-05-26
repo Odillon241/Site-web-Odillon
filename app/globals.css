@@ -134,6 +134,7 @@
 
   h1 {
     font-family: var(--font-libre-baskerville), 'Libre Baskerville', Georgia, serif;
+    font-style: italic;
     letter-spacing: 0.05em;
   }
 

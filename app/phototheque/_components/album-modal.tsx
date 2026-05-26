@@ -41,7 +41,7 @@ export function AlbumModal({ album, onClose, onPhotoClick }: AlbumModalProps) {
 
                   {/* Title and meta */}
                   <div className="min-w-0">
-                    <DialogTitle className="font-baskvill text-xl sm:text-2xl truncate text-gray-900">
+                    <DialogTitle className="font-baskvill italic text-xl sm:text-2xl truncate text-gray-900">
                       {album.title}
                     </DialogTitle>
                     <div className="flex items-center gap-3 text-xs sm:text-sm text-gray-400 mt-1">

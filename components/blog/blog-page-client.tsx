@@ -107,7 +107,7 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                                 Le Journal d'Odillon
                             </div>
 
-                            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 tracking-tight mb-6 font-baskvill leading-[1.05]">
+                            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 tracking-tight mb-6 font-baskvill italic leading-[1.05]">
                                 Pensées,<br />
                                 <span className="text-odillon-teal italic">analyses</span> &amp;<br />
                                 perspectives.
@@ -182,7 +182,7 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                                                 {featuredArticle.read_time}
                                             </span>
                                         </div>
-                                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight mb-3 font-baskvill group-hover:text-odillon-lime transition-colors duration-500 max-w-2xl">
+                                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight mb-3 font-baskvill italic group-hover:text-odillon-lime transition-colors duration-500 max-w-2xl">
                                             {featuredArticle.title}
                                         </h2>
                                         <p className="text-sm sm:text-base text-white/85 line-clamp-2 max-w-xl mb-5 leading-relaxed">
@@ -289,7 +289,7 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                                     ? "Résultats"
                                     : "Édition courante"}
                             </div>
-                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight font-baskvill leading-tight">
+                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight font-baskvill italic leading-tight">
                                 {selectedCategory
                                     ? selectedCategory
                                     : searchTerm
@@ -320,7 +320,7 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                             className="py-20 lg:py-28 text-center max-w-2xl mx-auto"
                         >
                             <div className="text-7xl lg:text-8xl font-baskvill italic text-odillon-teal/30 mb-6 leading-none">«&nbsp;»</div>
-                            <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4 font-baskvill">
+                            <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4 font-baskvill italic">
                                 Aucun article ne correspond.
                             </h3>
                             <p className="text-gray-500 text-base lg:text-lg leading-relaxed mb-8">
@@ -377,7 +377,7 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                                             </div>
 
                                             {/* Titre */}
-                                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 leading-snug font-baskvill group-hover:text-odillon-teal transition-colors duration-300 line-clamp-2">
+                                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 leading-snug font-baskvill italic group-hover:text-odillon-teal transition-colors duration-300 line-clamp-2">
                                                 {article.title}
                                             </h3>
 

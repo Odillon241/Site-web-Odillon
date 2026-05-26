@@ -92,12 +92,12 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
             {/* Main Headline */}
             <FadeIn delay={0.1} direction="up">
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-odillon-dark leading-[1.1]">
-                <span className="font-baskvill">Ingénierie</span>{" "}
-                <span className="text-odillon-teal font-baskvill">
+                <span className="font-baskvill italic">Ingénierie</span>{" "}
+                <span className="text-odillon-teal font-baskvill italic">
                   d&apos;Entreprises
                 </span>
               </h1>
-              <p className="mt-3 sm:mt-4 font-baskvill text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl text-gray-600">
+              <p className="mt-3 sm:mt-4 font-baskvill italic text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl text-gray-600">
                 <FlipWords
                   words={[
                     "Trouvez une solution adaptée",
@@ -166,7 +166,7 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
                     </div>
                   ) : (
                     <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-[#1A9B8E] to-[#0A1F2C] flex items-center justify-center">
-                      <span className="text-white/40 text-lg font-baskvill">
+                      <span className="text-white/40 text-lg font-baskvill italic">
                         Odillon
                       </span>
                     </div>

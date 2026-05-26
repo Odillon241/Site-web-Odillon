@@ -159,7 +159,7 @@ export function Contact() {
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <h1 className="font-baskvill text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-5 tracking-tight leading-[1.1]">
+              <h1 className="font-baskvill italic text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-5 tracking-tight leading-[1.1]">
                 Échangeons sur{" "}
                 <span className="relative">
                   <span className="text-odillon-teal">vos ambitions</span>
@@ -197,7 +197,7 @@ export function Contact() {
                       <Send className="w-3.5 h-3.5 text-odillon-teal" />
                       <span className="text-xs font-semibold text-odillon-teal uppercase tracking-wider">Formulaire</span>
                     </div>
-                    <h2 className="font-baskvill text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+                    <h2 className="font-baskvill italic text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                       Envoyez-nous un message
                     </h2>
                     <p className="text-gray-500 text-sm leading-relaxed">
@@ -491,7 +491,7 @@ export function Contact() {
                     <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 rounded-full mb-2">
                       <span className="text-[10px] font-semibold text-amber-700 uppercase tracking-wider">Vigilance</span>
                     </div>
-                    <h2 className="font-baskvill text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
+                    <h2 className="font-baskvill italic text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
                       Vérifiez l'authenticité de nos contacts
                     </h2>
                   </div>

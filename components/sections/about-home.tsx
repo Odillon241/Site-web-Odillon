@@ -73,7 +73,7 @@ export function AboutHome() {
                 <span className="w-12 h-[1px] bg-odillon-teal"></span>
                 <span className="uppercase tracking-widest text-sm font-semibold">À propos</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-odillon-dark mb-4 sm:mb-6 font-baskvill leading-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-odillon-dark mb-4 sm:mb-6 font-baskvill italic leading-tight">
                 Votre partenaire <br />
                 <span className="text-odillon-teal">de confiance</span>.
               </h2>
@@ -87,7 +87,7 @@ export function AboutHome() {
               </p>
               <div className="inline-flex items-center gap-2 text-odillon-teal font-semibold mb-8">
                 <span className="uppercase tracking-widest text-sm">Vision :</span>
-                <span className="font-baskvill text-lg">Entreprise Compétitive</span>
+                <span className="font-baskvill italic text-lg">Entreprise Compétitive</span>
               </div>
               <div className="flex gap-4">
                 <Button asChild size="lg" className="bg-odillon-teal text-white hover:bg-odillon-teal/90 rounded-lg shadow-lg shadow-odillon-teal/25 hover:shadow-xl transition-all duration-300">
@@ -112,7 +112,7 @@ export function AboutHome() {
                     />
                   ) : (
                     <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center">
-                      <span className="text-gray-300 text-lg font-baskvill">Odillon</span>
+                      <span className="text-gray-300 text-lg font-baskvill italic">Odillon</span>
                     </div>
                   )}
                 </div>
@@ -129,7 +129,7 @@ export function AboutHome() {
         {/* Core Values - Clean Grid */}
         <BlurFade delay={0.5}>
           <div className="text-center mb-8 sm:mb-12">
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 font-baskvill">Nos Valeurs Fondamentales</h3>
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 font-baskvill italic">Nos Valeurs Fondamentales</h3>
             <p className="text-gray-500 max-w-2xl mx-auto">Les principes qui guident chaque action et façonnent notre engagement.</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
