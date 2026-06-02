@@ -73,6 +73,26 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
   },
+  async redirects() {
+    return [
+      { source: '/offres/gouvernance', destination: '/offres#gouvernance', permanent: false },
+      { source: '/offres/gouvernance/:path*', destination: '/offres#gouvernance', permanent: false },
+      { source: '/offres/juridique', destination: '/offres#juridique', permanent: false },
+      { source: '/offres/juridique/:path*', destination: '/offres#juridique', permanent: false },
+      { source: '/offres/ressources-humaines', destination: '/offres#ressources-humaines', permanent: false },
+      { source: '/offres/ressources-humaines/:path*', destination: '/offres#ressources-humaines', permanent: false },
+      { source: '/offres/formations', destination: '/offres#formations', permanent: false },
+      { source: '/offres/formations/:path*', destination: '/offres#formations', permanent: false },
+      { source: '/offres/finances', destination: '/offres', permanent: false },
+      { source: '/offres/finances/:path*', destination: '/offres', permanent: false },
+      { source: '/offres/communication', destination: '/offres', permanent: false },
+      { source: '/offres/communication/:path*', destination: '/offres', permanent: false },
+      { source: '/offres/entreprenariat', destination: '/offres', permanent: false },
+      { source: '/offres/entreprenariat/:path*', destination: '/offres', permanent: false },
+      { source: '/offres/paie', destination: '/offres', permanent: false },
+      { source: '/offres/paie/:path*', destination: '/offres', permanent: false },
+    ]
+  },
   // Configuration pour supporter les sous-domaines
   // Le proxy (proxy.ts) gère le routage admin.odillon.fr
   async headers() {

@@ -5,13 +5,9 @@ import { Button } from "@/components/ui/button"
 import {
   Landmark,
   Scale,
-  TrendingUp,
   Users,
   ArrowRight,
   GraduationCap,
-  Megaphone,
-  Rocket,
-  Banknote,
   Check
 } from "lucide-react"
 import Link from "next/link"
@@ -37,15 +33,6 @@ const mainServices = [
     span: "lg:col-span-4"
   },
   {
-    icon: TrendingUp,
-    title: "Finances",
-    slug: "finances",
-    tagline: "Conseils Financiers",
-    color: "#39837a",
-    highlights: ["Levée de fonds", "Conseils en investissement", "Tableaux de bord"],
-    span: "lg:col-span-4"
-  },
-  {
     icon: Users,
     title: "Capital Humain",
     slug: "ressources-humaines",
@@ -56,39 +43,12 @@ const mainServices = [
   },
   {
     icon: GraduationCap,
-    title: "Formations",
+    title: "Formation",
     slug: "formations",
     tagline: "Formation Professionnelle",
     color: "#39837a",
     highlights: ["Master Class", "Coaching professionnel", "Formations en ligne"],
     span: "lg:col-span-6"
-  },
-  {
-    icon: Megaphone,
-    title: "Communication",
-    slug: "communication",
-    tagline: "Stratégie de Communication",
-    color: "#C4D82E",
-    highlights: ["Communication institutionnelle", "Communication digitale", "Communication de crise"],
-    span: "lg:col-span-4"
-  },
-  {
-    icon: Rocket,
-    title: "Entreprenariat",
-    slug: "entreprenariat",
-    tagline: "Accompagnement Entrepreneurial",
-    color: "#39837a",
-    highlights: ["Création d'entreprise", "Business plan", "Développement"],
-    span: "lg:col-span-4"
-  },
-  {
-    icon: Banknote,
-    title: "Paie",
-    slug: "paie",
-    tagline: "Gestion de la Paie",
-    color: "#C4D82E",
-    highlights: ["Bulletins de paie", "Déclarations sociales", "Optimisation"],
-    span: "lg:col-span-4"
   }
 ]
 
@@ -113,7 +73,7 @@ export function ServicesHome() {
                 L&apos;expertise stratégique au service de votre transformation.
               </h2>
               <p className="text-lg text-slate-600 leading-relaxed max-w-2xl">
-                Huit domaines d&apos;intervention pour structurer votre organisation et sécuriser votre croissance de manière pérenne.
+                Quatre domaines d&apos;intervention pour structurer votre organisation et sécuriser votre croissance de manière pérenne.
               </p>
             </BlurFade>
           </div>
@@ -142,7 +102,7 @@ export function ServicesHome() {
                 delay={0.05 * (idx + 1)}
                 className={cn("h-full", service.span)}
               >
-                <Link href={`/offres/${service.slug}`} className="block h-full group">
+                <Link href={`/offres#${service.slug}`} className="block h-full group">
                   <div className="relative h-full bg-slate-50/50 hover:bg-white border border-slate-100 hover:border-slate-200 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500 rounded-2xl p-8 sm:p-10 flex flex-col overflow-hidden">
                     {/* Discret Accent Color Top */}
                     <div 

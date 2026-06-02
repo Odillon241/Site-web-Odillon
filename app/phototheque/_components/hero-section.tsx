@@ -1,7 +1,8 @@
 "use client";
 
 import { m } from "framer-motion";
-import { Camera, Aperture, Film, Focus, ChevronDown, PenLine } from "lucide-react";
+import { Camera, Aperture, Film, Focus, ChevronDown } from "lucide-react";
+import { AnimatedSlogan } from "@/components/magicui/animated-slogan";
 import { FadeIn } from "@/components/magicui/fade-in";
 
 interface HeroSectionProps {
@@ -179,20 +180,18 @@ export function HeroSection({ children }: HeroSectionProps) {
       <div className="container mx-auto px-4 relative">
         <div className="max-w-5xl mx-auto text-center">
           <FadeIn>
-            {/* Badge */}
+            {/* Slogan */}
             <m.div
-              className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-odillon-teal/8 border border-odillon-teal/15 backdrop-blur-sm mb-8"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
+              className="flex justify-center"
             >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-odillon-teal/60" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-odillon-teal" />
-              </span>
-              <span className="text-xs font-semibold text-odillon-teal tracking-widest uppercase">
-                Together we draw <PenLine className="inline w-3.5 h-3.5 mx-0.5" /> the future
-              </span>
+              <AnimatedSlogan
+                text="Together we the future"
+                iconPosition={2}
+                className="mb-8 text-odillon-teal"
+              />
             </m.div>
 
             {/* Title */}

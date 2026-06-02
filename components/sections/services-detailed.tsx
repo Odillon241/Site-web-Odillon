@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { m } from "framer-motion"
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
+import { AnimatedSlogan } from "@/components/magicui/animated-slogan"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { CtaBanner } from "@/components/sections/cta-banner"
@@ -22,7 +23,6 @@ import {
   Scale,
   TrendingUp,
   Users,
-  ArrowRight,
   Target,
   FileText,
   Users2,
@@ -34,7 +34,6 @@ import {
   Search,
   Quote,
   ChevronLeft,
-  PenLine,
   Landmark,
   GraduationCap,
   Megaphone,
@@ -80,14 +79,10 @@ function FloatingIcon({ icon: Icon, delay, x, y, size = 24, color }: { icon: any
 
 // Mapping des configurations Bento Grid pour chaque service
 const bentoConfig: Record<string, string> = {
-  "gouvernance": "lg:col-span-2 lg:row-span-2",
+  "gouvernance": "lg:col-span-2",
   "juridique": "lg:col-span-2",
-  "finances": "lg:col-span-1",
-  "ressources-humaines": "lg:col-span-1",
-  "formations": "lg:col-span-1",
-  "communication": "lg:col-span-1",
-  "entreprenariat": "lg:col-span-2",
-  "paie": "lg:col-span-2",
+  "ressources-humaines": "lg:col-span-2",
+  "formations": "lg:col-span-2",
 }
 
 export function ServicesDetailed() {
@@ -249,17 +244,16 @@ export function ServicesDetailed() {
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
-            <FadeIn delay={0.1}>
-              <Badge 
-                variant="odillon" 
-                className="mb-6 md:mb-8 inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium shadow-sm backdrop-blur-sm bg-white/50 border-odillon-teal/20"
-              >
-                Together we draw <PenLine className="w-4 h-4 text-odillon-teal animate-bounce" aria-hidden="true" /> the future
-              </Badge>
+            <FadeIn delay={0.1} className="flex justify-center">
+              <AnimatedSlogan
+                text="Together we the future"
+                iconPosition={2}
+                className="mb-6 md:mb-8 text-odillon-teal"
+              />
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <h1 className="font-baskvill italic text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-gray-900 mb-6 md:mb-8 leading-[1.1] tracking-tight">
+              <h1 className="font-baskvill not-italic font-bold text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl text-gray-900 mb-6 md:mb-8 leading-[1.1] tracking-tight">
                 Des offres qui transforment{" "}
                 <span className="relative inline-block mt-2">
                   <span className="relative z-10 bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
@@ -325,7 +319,7 @@ export function ServicesDetailed() {
               Nos domaines d'expertise
             </Badge>
             <h2 className="font-baskvill italic text-2xl md:text-3xl text-gray-900 mb-3">
-              8 pôles d'accompagnement
+              4 pôles d'accompagnement
             </h2>
             <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
               Chaque offre est conçue pour répondre aux enjeux spécifiques des entreprises gabonaises, avec un ancrage fort dans la législation locale et le droit OHADA.
@@ -333,23 +327,22 @@ export function ServicesDetailed() {
           </div>
         </BlurFade>
 
-        {/* Grille des 8 offres */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-auto lg:auto-rows-[320px] gap-6 md:gap-8 mb-16 md:mb-24">
+        {/* Grille des 4 offres */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8 mb-16 md:mb-24">
           {servicesData.map((service, idx) => {
             const Icon = service.iconComponent
             const subCount = service.services.length
-            const detailCount = service.services.reduce((acc, s) => acc + s.details.length, 0)
             const spanClass = bentoConfig[service.id] || "lg:col-span-1"
             const isLarge = spanClass.includes("col-span-2")
 
             return (
               <BlurFade key={service.id} delay={0.1 + idx * 0.05} className={spanClass}>
-                <Link 
-                  href={`/offres/${service.id}`} 
-                  className="block h-full group/card"
-                  aria-label={`Découvrir notre pôle d'expertise : ${service.title}`}
+                <article
+                  id={service.id}
+                  className="h-full scroll-mt-28 group/card"
+                  aria-labelledby={`offre-${service.id}`}
                 >
-                  <div className="relative bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 overflow-hidden h-full min-h-[280px] sm:min-h-[300px] lg:min-h-0 flex flex-col rounded-xl hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
+                  <div className="relative bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 overflow-hidden h-full min-h-[360px] flex flex-col rounded-xl hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
                     {/* Background Number (Editorial style) */}
                     <span className="absolute bottom-4 right-6 text-8xl font-black text-gray-900/[0.03] select-none pointer-events-none group-hover/card:text-gray-900/[0.05] transition-colors duration-500 font-sans" aria-hidden="true">
                       {String(idx + 1).padStart(2, '0')}
@@ -385,7 +378,7 @@ export function ServicesDetailed() {
                           <h3 className={isLarge 
                             ? "font-baskvill italic text-xl md:text-2xl text-gray-900 leading-tight group-hover/card:text-gray-800 transition-colors"
                             : "font-baskvill italic text-lg md:text-xl text-gray-900 leading-tight group-hover/card:text-gray-800 transition-colors"
-                          }>
+                          } id={`offre-${service.id}`}>
                             {service.title}
                           </h3>
                           <p className="text-xs font-semibold uppercase tracking-wider mt-0.5" style={{ color: service.color }}>
@@ -394,36 +387,28 @@ export function ServicesDetailed() {
                         </div>
                       </div>
 
-                      {/* Description */}
-                      {service.description && (
-                        <p className={`text-gray-500 leading-relaxed mb-3 group-hover/card:text-gray-600 transition-colors ${isLarge ? "text-base mb-4 line-clamp-4" : "text-xs md:text-sm line-clamp-3"} flex-1`}>
-                          {service.description}
-                        </p>
-                      )}
+                      <ul className="space-y-2.5 mb-5 relative z-10">
+                        {service.services.map((item) => (
+                          <li key={item.slug} className="flex gap-2.5 text-sm text-gray-700 leading-relaxed">
+                            <span
+                              className="mt-2 h-1.5 w-1.5 rounded-full flex-shrink-0"
+                              style={{ backgroundColor: service.color }}
+                              aria-hidden="true"
+                            />
+                            <span>{item.name}</span>
+                          </li>
+                        ))}
+                      </ul>
 
                       {/* Footer */}
                       <div className="mt-auto pt-4 border-t border-gray-50 relative z-10">
-                        <div className="flex items-center justify-between">
-                          <div className="flex flex-col">
-                            <span className="text-[10px] uppercase tracking-widest text-gray-400 font-medium">
-                              {subCount} prestation{subCount > 1 ? "s" : ""}
-                            </span>
-                            <span className="text-[10px] text-gray-300">
-                               {detailCount} points d&apos;expertise
-                            </span>
-                          </div>
-                          <div
-                            className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 group-hover/card:bg-gray-900 group-hover/card:text-white"
-                            style={{ color: service.color, backgroundColor: `${service.color}10` }}
-                            aria-hidden="true"
-                          >
-                            <ArrowRight className="w-4 h-4" />
-                          </div>
-                        </div>
+                        <span className="text-[10px] uppercase tracking-widest text-gray-400 font-medium">
+                          {subCount} prestation{subCount > 1 ? "s" : ""} listée{subCount > 1 ? "s" : ""}
+                        </span>
                       </div>
                     </div>
                   </div>
-                </Link>
+                </article>
               </BlurFade>
             )
           })}

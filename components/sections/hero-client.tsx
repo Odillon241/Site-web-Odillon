@@ -15,7 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CompanyLogo, Video } from "@/types/admin";
 import { VideoPlayer } from "@/components/ui/video-player";
-import { ArrowRight, Phone } from "lucide-react";
+import { ArrowRight, MapPin, Phone, ShieldCheck } from "lucide-react";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { NewsTicker } from "@/components/sections/news-ticker";
 
@@ -24,6 +24,21 @@ interface HeroClientProps {
   logos: CompanyLogo[];
   video?: Video | null;
 }
+
+const heroHighlights = [
+  {
+    value: "Depuis 2017",
+    label: "Expertise en ingénierie d'entreprises",
+  },
+  {
+    value: "Libreville",
+    label: "Ancrage local, vision régionale",
+  },
+  {
+    value: "Sur-mesure",
+    label: "Solutions adaptées à vos enjeux",
+  },
+];
 
 // Composant pour afficher un logo avec fallback
 function LogoItem({ company }: { company: CompanyLogo }) {
@@ -72,6 +87,12 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
       {/* Fade out grid at edges */}
       <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white pointer-events-none" />
 
+      {/* Subtle background illustration */}
+      <div
+        className="absolute inset-0 w-full h-full opacity-[0.06] pointer-events-none bg-cover bg-center bg-no-repeat mix-blend-multiply"
+        style={{ backgroundImage: 'url("/images/hero-bg-subtle.png")' }}
+      />
+
       {/* Decorative elements */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#1A9B8E]/[0.03] rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#C4D82E]/[0.04] rounded-full translate-y-1/2 -translate-x-1/3 blur-3xl" />
@@ -92,17 +113,19 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
             {/* Main Headline */}
             <FadeIn delay={0.1} direction="up">
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-odillon-dark leading-[1.1]">
-                <span className="font-baskvill italic">Ingénierie</span>{" "}
+                <span className="font-baskvill italic">
+                  ODILLON vous accompagne
+                </span>{" "}
                 <span className="text-odillon-teal font-baskvill italic">
-                  d&apos;Entreprises
+                  en Afrique francophone
                 </span>
               </h1>
               <p className="mt-3 sm:mt-4 font-baskvill italic text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl text-gray-600">
                 <FlipWords
                   words={[
-                    "Trouvez une solution adaptée",
-                    "Respect de nos délais",
-                    "Votre succès, notre priorité",
+                    "Accompagnement de proximité",
+                    "Solutions adaptées à vos enjeux",
+                    "Stratégies robustes et durables",
                   ]}
                   duration={3500}
                   className="text-odillon-teal"
@@ -113,20 +136,36 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
             {/* Subtitle */}
             <FadeIn delay={0.25} direction="up">
               <p className="text-base sm:text-lg text-gray-600 max-w-lg leading-relaxed">
-                La Société ODILLON, spécialisée en Ingénierie
-                d&apos;Entreprises, propose des solutions robustes, pertinentes,
-                durables, adaptées aux besoins de nos clients.
+                Fondée en mai 2017, ODILLON accompagne les entreprises dans leurs projets de conseil, d’ingénierie organisationnelle et d’optimisation de la performance. Nous concevons et déployons des solutions fiables, innovantes et durables, adaptées aux réalités, aux enjeux et aux ambitions de chaque organisation.
               </p>
             </FadeIn>
 
+            <FadeIn delay={0.3} direction="up">
+              <div className="grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
+                {heroHighlights.map((highlight) => (
+                  <div
+                    key={highlight.value}
+                    className="rounded-lg border border-[#1A9B8E]/15 bg-white/75 p-3.5 shadow-sm shadow-slate-200/70 backdrop-blur"
+                  >
+                    <p className="text-sm font-bold text-odillon-dark">
+                      {highlight.value}
+                    </p>
+                    <p className="mt-1 text-xs leading-snug text-gray-500">
+                      {highlight.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </FadeIn>
+
             {/* CTA Buttons */}
-            <FadeIn delay={0.35} direction="up">
+            <FadeIn delay={0.4} direction="up">
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Link
-                  href="#services"
+                  href="#apropos"
                   className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-[#1A9B8E] text-white font-semibold text-sm sm:text-base shadow-lg shadow-[#1A9B8E]/25 hover:bg-[#178578] hover:shadow-xl hover:shadow-[#1A9B8E]/30 transition-all duration-300 group"
                 >
-                  Découvrir nos services
+                  Découvrir notre approche
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
@@ -144,6 +183,17 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
           <div className="order-2">
             <FadeIn delay={0.3} direction="right">
               <div className="relative">
+                <div className="absolute -left-4 top-6 z-20 hidden max-w-[210px] rounded-lg border border-white/70 bg-white/90 p-4 shadow-xl shadow-[#0A1F2C]/10 backdrop-blur lg:block">
+                  <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#1A9B8E]">
+                    <MapPin className="h-4 w-4" />
+                    Proximité
+                  </div>
+                  <p className="text-sm font-semibold leading-snug text-odillon-dark">
+                    Basés à Libreville, nous accompagnons vos enjeux avec une
+                    lecture locale et opérationnelle.
+                  </p>
+                </div>
+
                 {/* Decorative frame behind */}
                 <div className="absolute -inset-3 bg-gradient-to-br from-[#1A9B8E]/20 via-[#C4D82E]/10 to-[#1A9B8E]/5 rounded-lg blur-sm" />
 

@@ -20,14 +20,10 @@ const navigation = [
     href: "/offres",
     icon: "Briefcase",
     submenu: [
-      { name: "Gouvernance", href: "/offres/gouvernance" },
-      { name: "Juridique", href: "/offres/juridique" },
-      { name: "Finances", href: "/offres/finances" },
-      { name: "Capital Humain", href: "/offres/ressources-humaines" },
-      { name: "Formations", href: "/offres/formations" },
-      { name: "Communication", href: "/offres/communication" },
-      { name: "Entreprenariat", href: "/offres/entreprenariat" },
-      { name: "Paie", href: "/offres/paie" },
+      { name: "Gouvernance", href: "/offres#gouvernance" },
+      { name: "Juridique", href: "/offres#juridique" },
+      { name: "Capital Humain", href: "/offres#ressources-humaines" },
+      { name: "Formation", href: "/offres#formations" },
     ]
   },
   {

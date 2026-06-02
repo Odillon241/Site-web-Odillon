@@ -75,19 +75,23 @@ export function AboutHome() {
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-odillon-dark mb-4 sm:mb-6 font-baskvill italic leading-tight">
                 Votre partenaire <br />
-                <span className="text-odillon-teal">de confiance</span>.
+                <span className="text-odillon-teal">stratégique de confiance</span>.
               </h2>
             </BlurFade>
             <BlurFade delay={0.2}>
               <p className="text-lg text-gray-600 leading-relaxed mb-4">
-                Crée en mai 2017, la Société ODILLON, spécialisée en Ingénierie d'Entreprises propose des solutions robustes, pertinentes, durables, adaptées aux besoins de nos clients. Le profil transversal de notre équipe fait de nous le partenaire idéal pour relever vos défis.
+                Fondée en mai 2017, ODILLON accompagne les entreprises dans leurs projets de conseil, d’ingénierie organisationnelle et d’optimisation de la performance.
               </p>
               <p className="text-lg text-gray-600 leading-relaxed mb-4">
-                Nous partageons notre expérience professionnelle et notre éthique afin que nos clients puissent intégrer les pratiques qui pourraient leur convenir. Nous les encourageons à implémenter la diversité, respecter les normes environnementales et celles relatives à la vie privée des collaborateurs. Nous les accompagnons dans la mise en place des outils de mesure et d'analyse de la performance de leur stratégie.
+                Nous concevons et déployons des solutions fiables, innovantes et durables, adaptées aux réalités, aux enjeux et aux ambitions de chaque organisation. Notre mission est d&apos;aider les entreprises à renforcer leur efficacité opérationnelle, améliorer leur gouvernance et atteindre leurs objectifs stratégiques.
               </p>
-              <div className="inline-flex items-center gap-2 text-odillon-teal font-semibold mb-8">
-                <span className="uppercase tracking-widest text-sm">Vision :</span>
-                <span className="font-baskvill italic text-lg">Entreprise Compétitive</span>
+              <div className="flex flex-col gap-2 mb-8">
+                <div className="inline-flex items-center gap-2 text-odillon-teal font-semibold">
+                  <span className="uppercase tracking-widest text-sm font-bold">Notre vision :</span>
+                </div>
+                <p className="text-gray-600 font-baskvill italic text-base sm:text-lg leading-relaxed pl-4 border-l-2 border-odillon-lime">
+                  « Construire des entreprises compétitives, responsables et performantes, capables de relever durablement les défis de leur environnement. »
+                </p>
               </div>
               <div className="flex gap-4">
                 <Button asChild size="lg" className="bg-odillon-teal text-white hover:bg-odillon-teal/90 rounded-lg shadow-lg shadow-odillon-teal/25 hover:shadow-xl transition-all duration-300">

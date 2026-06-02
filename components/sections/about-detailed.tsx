@@ -2,6 +2,7 @@
 
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
+import { AnimatedSlogan } from "@/components/magicui/animated-slogan"
 import { Badge } from "@/components/ui/badge"
 import {
   Gem,
@@ -9,7 +10,6 @@ import {
   HeartHandshake,
   ArrowRight,
   CheckCircle,
-  PenLine,
   Target,
   Sparkles
 } from "lucide-react"
@@ -57,7 +57,7 @@ const ICON_MAP: Record<string, any> = {
 
 export function AboutDetailed() {
   const [missionTitle, setMissionTitle] = useState("Notre Mission")
-  const [missionDescription, setMissionDescription] = useState("Fondée sur la conviction que chaque entreprise possède un potentiel inexploité, Odillon s'est donné pour mission de révéler cette valeur cachée.")
+  const [missionDescription, setMissionDescription] = useState("Notre mission est d'aider les entreprises à renforcer leur efficacité opérationnelle, améliorer leur gouvernance et atteindre leurs objectifs stratégiques.")
   const [values, setValues] = useState<any[]>(initialValues)
   const [video, setVideo] = useState<Video | null>(null)
   const [heroVideo, setHeroVideo] = useState<Video | null>(null)
@@ -125,31 +125,50 @@ export function AboutDetailed() {
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
-            <FadeIn delay={0.1}>
-              <Badge variant="odillon" className="mb-4 md:mb-6">
-                Together we draw <PenLine className="inline w-3.5 h-3.5 mx-1" /> the future
-              </Badge>
+            <FadeIn delay={0.1} className="flex justify-center">
+              <AnimatedSlogan
+                text="Together we the future"
+                iconPosition={2}
+                className="mb-4 md:mb-6 text-odillon-teal"
+              />
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <h1 className="font-baskvill italic text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-900 mb-4 md:mb-6 leading-tight">
-                Bâtir l'avenir des{" "}
+              <h1 className="font-baskvill not-italic font-bold text-lg sm:text-xl md:text-2xl text-gray-900 mb-2 leading-tight">
+                À propos d&apos;{" "}
                 <span className="bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
-                  entreprises africaines
+                  ODILLON
                 </span>
               </h1>
+              <p className="text-base sm:text-lg md:text-xl font-semibold text-odillon-teal mb-6">
+                Votre partenaire stratégique de confiance
+              </p>
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto mb-4 md:mb-6">
-                Crée en mai 2017, la Société ODILLON, spécialisée en Ingénierie d'Entreprises propose des solutions robustes, pertinentes, durables, adaptées aux besoins de nos clients. Le profil transversal de notre équipe fait de nous le partenaire idéal pour relever vos défis.
-              </p>
-              <p className="text-base md:text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto mb-4">
-                Nous partageons notre expérience professionnelle et notre éthique afin que nos clients puissent intégrer les pratiques qui pourraient leur convenir. Nous les encourageons à implémenter la diversité, respecter les normes environnementales et celles relatives à la vie privée des collaborateurs. Nous les accompagnons dans la mise en place des outils de mesure et d'analyse de la performance de leur stratégie.
-              </p>
-              <div className="inline-flex items-center gap-2 text-odillon-teal font-semibold mb-8 md:mb-10">
-                <span className="uppercase tracking-widest text-sm">Vision :</span>
-                <span className="font-baskvill italic text-lg">Entreprise Compétitive</span>
+              <div className="space-y-6 text-left max-w-3xl mx-auto mb-10">
+                <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+                  Fondée en mai 2017, ODILLON accompagne les entreprises dans leurs projets de conseil, d’ingénierie organisationnelle et d’optimisation de la performance.
+                </p>
+                <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+                  Nous concevons et déployons des solutions fiables, innovantes et durables, adaptées aux réalités, aux enjeux et aux ambitions de chaque organisation. Notre mission est d&apos;aider les entreprises à renforcer leur efficacité opérationnelle, améliorer leur gouvernance et atteindre leurs objectifs stratégiques.
+                </p>
+                <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+                  Grâce à l’expertise multidisciplinaire de nos consultants, nous accompagnons nos clients dans l’identification de leurs défis, la mise en œuvre de solutions performantes et le développement de pratiques de gestion responsables.
+                </p>
+                <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+                  Notre approche repose sur des valeurs fortes : l’éthique professionnelle, le partage d’expérience, l’excellence opérationnelle et l’amélioration continue. Nous favorisons l’intégration de pratiques durables, la valorisation de la diversité, le respect des normes environnementales ainsi que la protection de la vie privée et du bien-être des collaborateurs.
+                </p>
+                <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+                  Afin de soutenir la prise de décision et la croissance des entreprises, nous mettons également en place des outils de pilotage, de mesure et d’analyse permettant d’optimiser les performances et de renforcer la compétitivité des organisations.
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center gap-3 mb-10 max-w-3xl mx-auto p-6 rounded-lg bg-gray-50/50 border border-gray-100 backdrop-blur-sm">
+                <span className="uppercase tracking-widest text-xs font-bold text-odillon-teal">Notre vision</span>
+                <span className="font-baskvill italic text-base md:text-lg text-gray-700 text-center leading-relaxed">
+                  « Construire des entreprises compétitives, responsables et performantes, capables de relever durablement les défis de leur environnement. »
+                </span>
               </div>
             </FadeIn>
 

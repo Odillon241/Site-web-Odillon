@@ -194,6 +194,12 @@ export function AlbumCard({ album, onClick, index }: AlbumCardProps) {
             rotationAngle={5}
           />
 
+          <div className="absolute inset-x-2 bottom-2 z-20 pointer-events-none rounded-md bg-gradient-to-t from-black/85 via-black/58 to-transparent px-4 pb-4 pt-14">
+            <h2 className="font-baskvill italic text-[1.45rem] leading-[1.05] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.65)] line-clamp-2">
+              {album.title}
+            </h2>
+          </div>
+
           {/* Gradient overlay on hover */}
           <m.div
             className="absolute inset-0 z-10 rounded-lg pointer-events-none"
@@ -209,7 +215,7 @@ export function AlbumCard({ album, onClick, index }: AlbumCardProps) {
           />
 
           {/* Date and Location Badges - redesign intégré */}
-          <div className="absolute bottom-3 left-3 right-3 z-20 flex flex-wrap gap-1.5 pointer-events-none">
+          <div className="absolute left-3 right-3 bottom-[6.4rem] z-30 flex flex-wrap gap-1.5 pointer-events-none">
             {album.date && (
               <m.div
                 initial={false}
@@ -219,7 +225,7 @@ export function AlbumCard({ album, onClick, index }: AlbumCardProps) {
                 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
-                <Badge className="bg-white/95 text-gray-700 border border-white/60 shadow-md backdrop-blur-xl text-[11px] rounded-full px-2.5 py-0.5">
+                <Badge className="bg-white/95 text-gray-800 border border-white/60 shadow-md backdrop-blur-xl text-[11px] rounded-full px-2.5 py-0.5">
                   <Calendar className="w-3 h-3 mr-1 text-odillon-teal" />
                   {album.date}
                 </Badge>
@@ -234,7 +240,7 @@ export function AlbumCard({ album, onClick, index }: AlbumCardProps) {
                 }}
                 transition={{ duration: 0.3, ease: "easeOut", delay: 0.05 }}
               >
-                <Badge className="bg-white/95 text-gray-700 border border-white/60 shadow-md backdrop-blur-xl text-[11px] rounded-full px-2.5 py-0.5">
+                <Badge className="bg-white/95 text-gray-800 border border-white/60 shadow-md backdrop-blur-xl text-[11px] rounded-full px-2.5 py-0.5">
                   <MapPin className="w-3 h-3 mr-1 text-odillon-teal" />
                   {album.location}
                 </Badge>

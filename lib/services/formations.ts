@@ -3,7 +3,7 @@ import { ServiceData } from "./types"
 export const formationsService: ServiceData = {
     id: "formations",
     icon: "GraduationCap",
-    title: "Formations",
+    title: "Formation",
     color: "#39837a",
     gradient: "from-[#39837a]/20 via-[#39837a]/10 to-transparent",
     tagline: "Formation Professionnelle",
