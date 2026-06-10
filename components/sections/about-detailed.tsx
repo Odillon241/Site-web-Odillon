@@ -2,8 +2,8 @@
 
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
-import { AnimatedSlogan } from "@/components/magicui/animated-slogan"
 import { Badge } from "@/components/ui/badge"
+import { m, AnimatePresence } from "framer-motion"
 import {
   Gem,
   Flame,
@@ -11,7 +11,8 @@ import {
   ArrowRight,
   CheckCircle,
   Target,
-  Sparkles
+  Sparkles,
+  ChevronDown
 } from "lucide-react"
 import Link from "next/link"
 import { TeamGrid } from "@/components/sections/team-grid"
@@ -61,6 +62,7 @@ export function AboutDetailed() {
   const [values, setValues] = useState<any[]>(initialValues)
   const [video, setVideo] = useState<Video | null>(null)
   const [heroVideo, setHeroVideo] = useState<Video | null>(null)
+  const [showMore, setShowMore] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -112,69 +114,136 @@ export function AboutDetailed() {
   return (
     <section className="relative overflow-hidden bg-transparent">
       {/* Hero Section */}
-      <div className="relative pt-6 pb-12 md:pt-10 md:pb-16 lg:pt-12 lg:pb-20 overflow-hidden bg-transparent">
-        {/* Background */}
+      <div className="relative pt-6 pb-12 md:pt-8 md:pb-16 lg:pt-10 lg:pb-20 overflow-hidden bg-transparent">
+        {/* Background décoratif (surtout visible en fallback) */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-odillon-teal/5 via-transparent to-odillon-lime/5" />
           <div className="absolute -top-24 -right-24 w-96 h-96 border border-odillon-teal/10 rounded-full" />
           <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] border border-odillon-lime/10 rounded-full" />
-          <div className="absolute top-0 left-[15%] w-px h-full bg-gradient-to-b from-transparent via-odillon-teal/10 to-transparent hidden lg:block" />
-          <div className="absolute top-0 right-[15%] w-px h-full bg-gradient-to-b from-transparent via-odillon-lime/10 to-transparent hidden lg:block" />
         </div>
 
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto">
-            <FadeIn delay={0.1} className="flex justify-center">
-              <AnimatedSlogan
-                text="Together we the future"
-                iconPosition={2}
-                className="mb-4 md:mb-6 text-odillon-teal"
-              />
+          {heroVideo ? (
+            /* ----- Vidéo plein cadre immersive ----- */
+            <FadeIn delay={0.1}>
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-black/5">
+                <VideoPlayer
+                  url={heroVideo.url}
+                  type={heroVideo.type}
+                  thumbnail={heroVideo.thumbnail || undefined}
+                  title={heroVideo.title}
+                  className="w-full aspect-video"
+                  autoplay={true}
+                  muted={true}
+                  loop={true}
+                />
+                {/* Overlay dégradé + titre */}
+                <div className="pointer-events-none absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/25 to-transparent p-6 sm:p-10 lg:p-14">
+                  <span className="mb-3 inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-odillon-lime">
+                    <Sparkles className="w-4 h-4" /> Together we the future
+                  </span>
+                  <h1 className="font-baskvill not-italic font-bold text-2xl sm:text-4xl lg:text-5xl text-white mb-2 leading-tight drop-shadow">
+                    À propos d&apos;{" "}
+                    <span className="bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
+                      ODILLON
+                    </span>
+                  </h1>
+                  <p className="text-base sm:text-lg lg:text-xl font-semibold text-white/90">
+                    Votre partenaire stratégique de confiance
+                  </p>
+                  {(heroVideo.presenter_name || heroVideo.presenter_position) && (
+                    <p className="text-sm text-white/70 mt-2">
+                      <span className="font-semibold text-white">{heroVideo.presenter_name}</span>
+                      {heroVideo.presenter_name && heroVideo.presenter_position && " · "}
+                      {heroVideo.presenter_position}
+                    </p>
+                  )}
+                </div>
+              </div>
             </FadeIn>
-
-            <FadeIn delay={0.2}>
-              <h1 className="font-baskvill not-italic font-bold text-lg sm:text-xl md:text-2xl text-gray-900 mb-2 leading-tight">
-                À propos d&apos;{" "}
-                <span className="bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
-                  ODILLON
+          ) : (
+            /* ----- Fallback : hero dégradé sans vidéo ----- */
+            <FadeIn delay={0.1}>
+              <div className="text-center max-w-4xl mx-auto py-10 md:py-16">
+                <span className="mb-4 inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-odillon-teal">
+                  <Sparkles className="w-4 h-4" /> Together we the future
                 </span>
-              </h1>
-              <p className="text-base sm:text-lg md:text-xl font-semibold text-odillon-teal mb-6">
-                Votre partenaire stratégique de confiance
-              </p>
-            </FadeIn>
-
-            <FadeIn delay={0.3}>
-              <div className="space-y-6 text-left max-w-3xl mx-auto mb-10">
-                <p className="text-base md:text-lg text-gray-600 leading-relaxed">
-                  Fondée en mai 2017, ODILLON accompagne les entreprises dans leurs projets de conseil, d’ingénierie organisationnelle et d’optimisation de la performance.
-                </p>
-                <p className="text-base md:text-lg text-gray-600 leading-relaxed">
-                  Nous concevons et déployons des solutions fiables, innovantes et durables, adaptées aux réalités, aux enjeux et aux ambitions de chaque organisation. Notre mission est d&apos;aider les entreprises à renforcer leur efficacité opérationnelle, améliorer leur gouvernance et atteindre leurs objectifs stratégiques.
-                </p>
-                <p className="text-base md:text-lg text-gray-600 leading-relaxed">
-                  Grâce à l’expertise multidisciplinaire de nos consultants, nous accompagnons nos clients dans l’identification de leurs défis, la mise en œuvre de solutions performantes et le développement de pratiques de gestion responsables.
-                </p>
-                <p className="text-base md:text-lg text-gray-600 leading-relaxed">
-                  Notre approche repose sur des valeurs fortes : l’éthique professionnelle, le partage d’expérience, l’excellence opérationnelle et l’amélioration continue. Nous favorisons l’intégration de pratiques durables, la valorisation de la diversité, le respect des normes environnementales ainsi que la protection de la vie privée et du bien-être des collaborateurs.
-                </p>
-                <p className="text-base md:text-lg text-gray-600 leading-relaxed">
-                  Afin de soutenir la prise de décision et la croissance des entreprises, nous mettons également en place des outils de pilotage, de mesure et d’analyse permettant d’optimiser les performances et de renforcer la compétitivité des organisations.
+                <h1 className="font-baskvill not-italic font-bold text-3xl sm:text-4xl lg:text-5xl text-gray-900 mb-3 leading-tight">
+                  À propos d&apos;{" "}
+                  <span className="bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
+                    ODILLON
+                  </span>
+                </h1>
+                <p className="text-lg sm:text-xl font-semibold text-odillon-teal">
+                  Votre partenaire stratégique de confiance
                 </p>
               </div>
+            </FadeIn>
+          )}
 
-              <div className="flex flex-col items-center gap-3 mb-10 max-w-3xl mx-auto p-6 rounded-lg bg-gray-50/50 border border-gray-100 backdrop-blur-sm">
+          {/* ----- Présentation épurée et repliable ----- */}
+          <FadeIn delay={0.25}>
+            <div className="mt-12 md:mt-16 max-w-3xl mx-auto">
+              {/* Accroche */}
+              <p className="text-lg md:text-2xl text-gray-800 leading-relaxed text-center font-medium mb-8">
+                Fondée en mai 2017, ODILLON accompagne les entreprises dans leurs projets de conseil, d’ingénierie organisationnelle et d’optimisation de la performance.
+              </p>
+
+              {/* Paragraphe clé visible */}
+              <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+                Nous concevons et déployons des solutions fiables, innovantes et durables, adaptées aux réalités, aux enjeux et aux ambitions de chaque organisation. Notre mission est d&apos;aider les entreprises à renforcer leur efficacité opérationnelle, améliorer leur gouvernance et atteindre leurs objectifs stratégiques.
+              </p>
+
+              {/* Contenu repliable */}
+              <AnimatePresence initial={false}>
+                {showMore && (
+                  <m.div
+                    key="more"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                    className="overflow-hidden"
+                  >
+                    <div className="space-y-6 pt-6">
+                      <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+                        Grâce à l’expertise multidisciplinaire de nos consultants, nous accompagnons nos clients dans l’identification de leurs défis, la mise en œuvre de solutions performantes et le développement de pratiques de gestion responsables.
+                      </p>
+                      <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+                        Notre approche repose sur des valeurs fortes : l’éthique professionnelle, le partage d’expérience, l’excellence opérationnelle et l’amélioration continue. Nous favorisons l’intégration de pratiques durables, la valorisation de la diversité, le respect des normes environnementales ainsi que la protection de la vie privée et du bien-être des collaborateurs.
+                      </p>
+                      <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+                        Afin de soutenir la prise de décision et la croissance des entreprises, nous mettons également en place des outils de pilotage, de mesure et d’analyse permettant d’optimiser les performances et de renforcer la compétitivité des organisations.
+                      </p>
+                    </div>
+                  </m.div>
+                )}
+              </AnimatePresence>
+
+              {/* Bouton Lire la suite */}
+              <div className="flex justify-center mt-8">
+                <button
+                  type="button"
+                  onClick={() => setShowMore((v) => !v)}
+                  aria-expanded={showMore}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-odillon-teal border border-odillon-teal/30 hover:bg-odillon-teal/5 rounded-full transition-all"
+                >
+                  {showMore ? "Réduire" : "Lire la suite"}
+                  <ChevronDown className={`w-4 h-4 transition-transform ${showMore ? "rotate-180" : ""}`} />
+                </button>
+              </div>
+
+              {/* Encart Vision */}
+              <div className="flex flex-col items-center gap-3 mt-12 p-6 rounded-lg bg-gray-50/70 border border-gray-100 backdrop-blur-sm">
                 <span className="uppercase tracking-widest text-xs font-bold text-odillon-teal">Notre vision</span>
                 <span className="font-baskvill italic text-base md:text-lg text-gray-700 text-center leading-relaxed">
                   « Construire des entreprises compétitives, responsables et performantes, capables de relever durablement les défis de leur environnement. »
                 </span>
               </div>
-            </FadeIn>
 
-            {/* CTA buttons */}
-            <FadeIn delay={0.4}>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              {/* CTA buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
                 <Link
                   href="/contact"
                   className="inline-flex items-center gap-2 px-7 py-3.5 bg-odillon-teal hover:bg-odillon-teal/90 text-white font-semibold rounded-lg transition-all shadow-lg shadow-odillon-teal/20 hover:shadow-odillon-teal/30"
@@ -189,32 +258,8 @@ export function AboutDetailed() {
                   Découvrir nos services
                 </Link>
               </div>
-            </FadeIn>
-
-            {/* Hero Video */}
-            {heroVideo && (
-              <FadeIn delay={0.5}>
-                <div className="mx-auto max-w-4xl rounded-lg overflow-hidden shadow-xl border border-gray-200 mt-10">
-                  <VideoPlayer
-                    url={heroVideo.url}
-                    type={heroVideo.type}
-                    thumbnail={heroVideo.thumbnail || undefined}
-                    title={heroVideo.title}
-                    className="w-full aspect-video"
-                    autoplay={true}
-                    muted={true}
-                    loop={true}
-                  />
-                  {(heroVideo.presenter_name || heroVideo.presenter_position) && (
-                    <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
-                      <p className="font-bold text-gray-900 text-base md:text-lg">{heroVideo.presenter_name}</p>
-                      <p className="text-odillon-teal font-medium text-sm uppercase tracking-wide">{heroVideo.presenter_position}</p>
-                    </div>
-                  )}
-                </div>
-              </FadeIn>
-            )}
-          </div>
+            </div>
+          </FadeIn>
         </div>
       </div>
 
