@@ -221,38 +221,36 @@ export function MessagesTab() {
     const repliedCount = messages.filter(m => m.status === 'replied').length
     const archivedCount = messages.filter(m => m.status === 'archived').length
 
+    const stats = [
+        { label: 'Nouveaux', count: newCount, icon: Mail, iconBg: 'bg-odillon-teal/10', iconColor: 'text-odillon-teal' },
+        { label: 'Lus', count: readCount, icon: MailOpen, iconBg: 'bg-amber-50', iconColor: 'text-amber-600' },
+        { label: 'Répondus', count: repliedCount, icon: CheckCircle2, iconBg: 'bg-emerald-50', iconColor: 'text-emerald-600' },
+        { label: 'Archivés', count: archivedCount, icon: Archive, iconBg: 'bg-gray-100', iconColor: 'text-gray-400' },
+    ]
+
     return (
         <div className="space-y-6">
             {/* Header Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
-                        <Mail className="w-4 h-4 text-blue-500" />
-                        <span>Nouveaux</span>
-                    </div>
-                    <div className="text-2xl font-bold text-blue-600">{newCount}</div>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
-                        <MailOpen className="w-4 h-4 text-yellow-500" />
-                        <span>Lus</span>
-                    </div>
-                    <div className="text-2xl font-bold text-yellow-600">{readCount}</div>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
-                        <CheckCircle2 className="w-4 h-4 text-green-500" />
-                        <span>Répondus</span>
-                    </div>
-                    <div className="text-2xl font-bold text-green-600">{repliedCount}</div>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
-                        <Archive className="w-4 h-4 text-gray-400" />
-                        <span>Archivés</span>
-                    </div>
-                    <div className="text-2xl font-bold text-gray-500">{archivedCount}</div>
-                </div>
+                {stats.map((stat) => {
+                    const StatIcon = stat.icon
+                    return (
+                        <div
+                            key={stat.label}
+                            className="group bg-white border border-gray-200/80 rounded-xl p-5 transition-all duration-200 hover:border-gray-300 hover:shadow-sm"
+                        >
+                            <div className="flex items-center justify-between">
+                                <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${stat.iconBg}`}>
+                                    <StatIcon className={`h-5 w-5 ${stat.iconColor}`} />
+                                </div>
+                                <span className="text-3xl font-semibold tracking-tight text-gray-900 tabular-nums">
+                                    {stat.count}
+                                </span>
+                            </div>
+                            <p className="mt-3 text-sm font-medium text-gray-500">{stat.label}</p>
+                        </div>
+                    )
+                })}
             </div>
 
             {/* Actions Bar */}
