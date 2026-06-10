@@ -19,6 +19,7 @@ export function Footer() {
     { name: 'Offres', href: '/offres' },
     { name: 'Photothèque', href: '/phototheque' },
     { name: 'Blog', href: '/blog' },
+    { name: 'Formations', href: '/calendrier-formations' },
     { name: 'À Propos', href: '/#apropos' },
     { name: 'Contact', href: '/#contact' },
   ]

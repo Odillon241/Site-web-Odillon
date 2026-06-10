@@ -26,7 +26,8 @@ import {
     Newspaper,
     Mail,
     MessageSquare,
-    Rss
+    Rss,
+    GraduationCap
 } from "lucide-react"
 
 import {
@@ -79,6 +80,7 @@ export function AdminSidebar({
                 { title: "Articles", icon: Newspaper, value: "articles" },
                 { title: "Témoignages", icon: Quote, value: "testimonials" },
                 { title: "Logos Partenaires", icon: Building2, value: "logos" },
+                { title: "Formations", icon: GraduationCap, value: "formations" },
             ]
         },
         {

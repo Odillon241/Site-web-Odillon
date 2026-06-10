@@ -1,5 +1,6 @@
 import { use } from "react"
 import dynamic from "next/dynamic"
+import Link from "next/link"
 const HeaderPro = dynamic(() => import("@/components/layout/header-pro").then(mod => mod.HeaderPro), { ssr: true })
 import { Footer } from "@/components/layout/footer"
 import { ServiceSingle } from "@/components/sections/service-single"
@@ -32,6 +33,20 @@ export default function FormationsPage({
       <HeaderPro />
       <main className="min-h-screen pt-[88px] md:pt-[104px]">
         <ServiceSingle service={service} />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
+          <div className="rounded-2xl bg-gradient-to-r from-odillon-teal to-teal-700 text-white p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h2 className="text-2xl font-bold mb-1">Consultez nos prochaines sessions</h2>
+              <p className="text-teal-100">Dates, lieux et modalités de nos formations professionnelles.</p>
+            </div>
+            <Link
+              href="/calendrier-formations"
+              className="shrink-0 inline-flex items-center gap-2 bg-white text-odillon-teal font-medium px-6 py-3 rounded-full hover:bg-teal-50 transition-colors shadow-lg"
+            >
+              Voir le calendrier des formations
+            </Link>
+          </div>
+        </div>
       </main>
       <Footer />
     </>
