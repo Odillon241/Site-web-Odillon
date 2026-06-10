@@ -5,7 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Phone, Mail, ChevronDown, Home, Briefcase, Users, Send, Menu, X, Image as ImageIcon, Newspaper } from "lucide-react"
+import { Phone, Mail, ChevronDown, Home, Briefcase, Users, Send, Menu, X, Image as ImageIcon, Newspaper, GraduationCap } from "lucide-react"
 import { m, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
@@ -25,6 +25,11 @@ const navigation = [
       { name: "Capital Humain", href: "/offres#ressources-humaines" },
       { name: "Formation", href: "/offres#formations" },
     ]
+  },
+  {
+    name: "Formations",
+    href: "/calendrier-formations",
+    icon: "GraduationCap"
   },
   {
     name: "Nos événements",
@@ -126,6 +131,7 @@ export function HeaderPro() {
                   case 'Users': return Users
                   case 'Image': return ImageIcon
                   case 'Newspaper': return Newspaper
+                  case 'GraduationCap': return GraduationCap
                   default: return null
                 }
               }
@@ -236,6 +242,7 @@ export function HeaderPro() {
                     case 'Users': return Users
                     case 'Image': return ImageIcon
                     case 'Newspaper': return Newspaper
+                    case 'GraduationCap': return GraduationCap
                     default: return null
                   }
                 }
