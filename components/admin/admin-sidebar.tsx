@@ -2,16 +2,6 @@
 
 import * as React from "react"
 import {
-    AudioWaveform,
-    BookOpen,
-    Bot,
-    Command,
-    Frame,
-    GalleryVerticalEnd,
-    Map,
-    PieChart,
-    Settings2,
-    SquareTerminal,
     ImageIcon,
     Users,
     Quote,
@@ -109,23 +99,23 @@ export function AdminSidebar({
     ]
 
     return (
-        <Sidebar collapsible="icon" {...props}>
-            <SidebarHeader>
-                <div className="flex items-center gap-2 px-2 py-2 text-sidebar-accent-foreground">
-                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-gradient-to-br from-odillon-teal to-odillon-lime text-sidebar-primary-foreground">
-                        <SettingsIcon className="size-4 text-white" />
+        <Sidebar collapsible="icon" className="border-r border-slate-200/80 bg-white" {...props}>
+            <SidebarHeader className="border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-3 px-2 py-2 text-slate-900">
+                    <div className="flex aspect-square size-8 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.08] text-odillon-teal">
+                        <SettingsIcon className="size-4" />
                     </div>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                        <span className="truncate font-semibold">Odillon Admin</span>
-                        <span className="truncate text-xs">v1.2.0</span>
+                        <span className="truncate font-semibold tracking-tight">Odillon Admin</span>
+                        <span className="truncate text-xs text-slate-500">v1.2.0</span>
                     </div>
                 </div>
             </SidebarHeader>
 
-            <SidebarContent>
+            <SidebarContent className="gap-1 py-2">
                 {navItems.map((group) => (
                     <SidebarGroup key={group.label}>
-                        <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+                        <SidebarGroupLabel className="px-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400">{group.label}</SidebarGroupLabel>
                         <SidebarMenu>
                             {group.items.map((item) => (
                                 <SidebarMenuItem key={item.value}>
@@ -133,7 +123,10 @@ export function AdminSidebar({
                                         tooltip={item.title}
                                         onClick={() => setActiveTab(item.value)}
                                         isActive={activeTab === item.value}
-                                        className={activeTab === item.value ? "!bg-odillon-teal/10 !text-odillon-teal" : ""}
+                                        className={activeTab === item.value
+                                            ? "!bg-odillon-teal/[0.08] !text-odillon-teal"
+                                            : "text-slate-600 hover:bg-slate-100/80 hover:text-slate-950"
+                                        }
                                     >
                                         {item.icon && <item.icon />}
                                         <span>{item.title}</span>
@@ -145,12 +138,12 @@ export function AdminSidebar({
                 ))}
             </SidebarContent>
 
-            <SidebarFooter>
+            <SidebarFooter className="border-t border-slate-100 pt-3">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton
                             onClick={handleLogout}
-                            className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                            className="text-slate-500 hover:bg-red-50 hover:text-red-600"
                         >
                             <LogOut />
                             <span>Déconnexion</span>

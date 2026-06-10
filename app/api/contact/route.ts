@@ -86,7 +86,7 @@ function generateNotificationEmailHTML(data: ContactFormData, messageId: string)
                     <td style="padding: 8px 0;">
                       <strong style="font-size: 13px; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px;">Email :</strong>
                       <p style="font-size: 15px; color: #0A1F2C; margin: 4px 0 0; font-weight: 500;">
-                        <a href="mailto:${safeEmail}" style="color: #1A9B8E; text-decoration: none;">${safeEmail}</a>
+                        <a href="mailto:${safeEmail}" style="color: #00a795; text-decoration: none;">${safeEmail}</a>
                       </p>
                     </td>
                   </tr>
@@ -95,7 +95,7 @@ function generateNotificationEmailHTML(data: ContactFormData, messageId: string)
                     <td style="padding: 8px 0;">
                       <strong style="font-size: 13px; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px;">Téléphone :</strong>
                       <p style="font-size: 15px; color: #0A1F2C; margin: 4px 0 0; font-weight: 500;">
-                        <a href="tel:${safePhone}" style="color: #1A9B8E; text-decoration: none;">${safePhone}</a>
+                        <a href="tel:${safePhone}" style="color: #00a795; text-decoration: none;">${safePhone}</a>
                       </p>
                     </td>
                   </tr>
@@ -128,7 +128,7 @@ function generateNotificationEmailHTML(data: ContactFormData, messageId: string)
                 <tr>
                   <td align="center" style="padding: 16px 0;">
                     <a href="mailto:${safeEmail}?subject=${encodeURIComponent('Re: ' + data.subject)}"
-                       style="display: inline-block; background-color: #1A9B8E; color: #FFFFFF; padding: 12px 32px; text-decoration: none; border-radius: 4px; font-size: 15px; font-weight: 500; letter-spacing: -0.01em;">
+                       style="display: inline-block; background-color: #00a795; color: #FFFFFF; padding: 12px 32px; text-decoration: none; border-radius: 4px; font-size: 15px; font-weight: 500; letter-spacing: -0.01em;">
                       Répondre à ${safeName}
                     </a>
                   </td>
@@ -139,7 +139,7 @@ function generateNotificationEmailHTML(data: ContactFormData, messageId: string)
               <div style="background-color: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 4px; padding: 16px; margin: 24px 0 0;">
                 <p style="font-size: 13px; color: #1E40AF; margin: 0; line-height: 1.5;">
                   <strong>Info :</strong> Vous pouvez également consulter et gérer ce message depuis votre
-                  <a href="https://odillon.fr/admin/settings" style="color: #1A9B8E; text-decoration: none; font-weight: 500;">panneau d'administration</a>.
+                  <a href="https://odillon.fr/admin/settings" style="color: #00a795; text-decoration: none; font-weight: 500;">panneau d'administration</a>.
                 </p>
               </div>
             </td>
@@ -254,10 +254,10 @@ function generateConfirmationEmailHTML(data: ContactFormData): string {
                   <strong>Besoin d'une réponse urgente ?</strong>
                 </p>
                 <p style="font-size: 14px; color: #6B7280; margin: 0 0 8px;">
-                  Téléphone : <a href="tel:+24111747574" style="color: #1A9B8E; text-decoration: none;">+241 11 74 75 74</a>
+                  Téléphone : <a href="tel:+24111747574" style="color: #00a795; text-decoration: none;">+241 11 74 75 74</a>
                 </p>
                 <p style="font-size: 14px; color: #6B7280; margin: 0 0 8px;">
-                  Email : <a href="mailto:contact@odillon.fr" style="color: #1A9B8E; text-decoration: none;">contact@odillon.fr</a>
+                  Email : <a href="mailto:contact@odillon.fr" style="color: #00a795; text-decoration: none;">contact@odillon.fr</a>
                 </p>
                 <p style="font-size: 14px; color: #6B7280; margin: 0;">
                   Horaires : Lundi - Vendredi, 8h00 - 16h30
@@ -279,7 +279,7 @@ function generateConfirmationEmailHTML(data: ContactFormData): string {
                 Cabinet Odillon - Ingénierie d'entreprise, Gouvernance, Juridique, Financier et RH
               </p>
               <p style="font-size: 12px; color: #9CA3AF; margin: 0; text-align: center;">
-                <a href="https://odillon.fr" style="color: #1A9B8E; text-decoration: none;">odillon.fr</a>
+                <a href="https://odillon.fr" style="color: #00a795; text-decoration: none;">odillon.fr</a>
               </p>
             </td>
           </tr>

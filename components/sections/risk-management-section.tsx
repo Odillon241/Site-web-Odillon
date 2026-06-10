@@ -21,7 +21,7 @@ const riskManagementSteps = [
         icon: Search,
         title: "Analyser",
         description: "Identification et évaluation des risques potentiels pour votre organisation.",
-        color: "#39837a",
+        color: "#00a795",
         features: ["Cartographie des risques", "Évaluation d'impact", "Matrice de probabilité"]
     },
     {
@@ -35,7 +35,7 @@ const riskManagementSteps = [
         icon: ShieldOff,
         title: "Éviter",
         description: "Élimination des activités ou processus générateurs de risques majeurs.",
-        color: "#39837a",
+        color: "#00a795",
         features: ["Revue des processus", "Arbitrages stratégiques", "Élimination ciblée"]
     },
     {
@@ -49,7 +49,7 @@ const riskManagementSteps = [
         icon: ClipboardList,
         title: "Préparer",
         description: "Élaboration de plans de continuité et de gestion de crise (PCA/PRA).",
-        color: "#39837a",
+        color: "#00a795",
         features: ["Plan de continuité (PCA)", "Plan de reprise (PRA)", "Gestion de crise"]
     },
     {

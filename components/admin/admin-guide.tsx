@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -16,8 +15,93 @@ import {
   ChevronRight,
   Users,
   Sparkles,
-  Target
+  Target,
+  type LucideIcon,
 } from "lucide-react"
+
+type GuideSection = {
+  title: string
+  icon: LucideIcon
+  badge?: string
+  items: string[]
+}
+
+const guideSections: GuideSection[] = [
+  {
+    title: "Photos Hero",
+    icon: Image,
+    badge: "Principal",
+    items: [
+      "Gérez les images du carrousel en haut de page",
+      "Filtrez par mois/thème pour les campagnes (Octobre Rose, etc.)",
+      "Activez/désactivez pour contrôler la visibilité",
+    ],
+  },
+  {
+    title: "Logos Partenaires",
+    icon: Building2,
+    items: [
+      "Ajoutez les logos des entreprises partenaires",
+      "Ordre d'affichage modifiable par glisser-déposer",
+    ],
+  },
+  {
+    title: "Vidéos",
+    icon: Video,
+    items: [
+      "Supporté: YouTube, Vimeo, vidéos directes",
+      "Catégories: Présentation ou Témoignage",
+    ],
+  },
+  {
+    title: "Témoignages",
+    icon: Quote,
+    items: [
+      "Citations de clients satisfaits",
+      "Affichez photo, nom et poste du client",
+    ],
+  },
+  {
+    title: "Équipe",
+    icon: Users,
+    items: [
+      "Gérez les membres de l'équipe et la direction",
+      "Ordre modifiable par glisser-déposer",
+    ],
+  },
+  {
+    title: "À Propos",
+    icon: Target,
+    items: [
+      "Définissez la mission et la description",
+      "Gérez les valeurs (icônes, couleurs)",
+    ],
+  },
+  {
+    title: "Expertise CTA",
+    icon: Sparkles,
+    items: [
+      "Personnalisez la bannière d'appel à l'action",
+      "Modifiez titre, bouton et image de fond",
+    ],
+  },
+  {
+    title: "Calendrier Gabon",
+    icon: CalendarDays,
+    items: [
+      "Visualisez les jours fériés et événements",
+      "Utile pour planifier les campagnes thématiques",
+    ],
+  },
+  {
+    title: "Paramètres Site",
+    icon: Settings,
+    items: [
+      "Activez/désactivez sections entières",
+      "Configuration globale du site",
+    ],
+  },
+]
 
 export function AdminGuide() {
   const [isOpen, setIsOpen] = useState(true)
@@ -27,228 +111,72 @@ export function AdminGuide() {
       <Button
         onClick={() => setIsOpen(true)}
         variant="outline"
-        className="fixed bottom-4 right-4 z-50 shadow-lg"
+        className="fixed bottom-4 right-4 z-50 border-slate-200 bg-white shadow-lg hover:bg-slate-50"
       >
-        <BookOpen className="w-4 h-4 mr-2" />
+        <BookOpen className="mr-2 h-4 w-4 text-odillon-teal" />
         Guide d'utilisation
       </Button>
     )
   }
 
   return (
-    <Card className="mb-6 border-blue-200 bg-blue-50/50">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-blue-900">
-            <BookOpen className="w-5 h-5" />
-            Guide d'utilisation du panneau d'administration
-          </CardTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsOpen(false)}
-            className="text-blue-700 hover:text-blue-900"
-          >
-            <X className="w-4 h-4" />
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid md:grid-cols-2 gap-4">
-          {/* Photos Hero */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-blue-500 text-white">
-                <Image className="w-4 h-4" />
-              </div>
-              <h3 className="font-semibold text-blue-900">Photos Hero</h3>
-              <Badge variant="secondary" className="text-xs">Principal</Badge>
-            </div>
-            <ul className="text-sm text-blue-800 space-y-1 ml-7">
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Gérez les images du carrousel en haut de page</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Filtrez par mois/thème pour les campagnes (Octobre Rose, etc.)</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Activez/désactivez pour contrôler la visibilité</span>
-              </li>
-            </ul>
+    <div className="rounded-lg border border-slate-200/80 bg-slate-50/60">
+      <div className="flex items-start justify-between gap-4 border-b border-slate-200/70 px-5 py-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+            <BookOpen className="h-4 w-4" />
           </div>
-
-          {/* Logos */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-green-500 text-white">
-                <Building2 className="w-4 h-4" />
-              </div>
-              <h3 className="font-semibold text-blue-900">Logos Partenaires</h3>
-            </div>
-            <ul className="text-sm text-blue-800 space-y-1 ml-7">
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Ajoutez les logos des entreprises partenaires</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Ordre d'affichage modifiable par glisser-déposer</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Vidéos */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-purple-500 text-white">
-                <Video className="w-4 h-4" />
-              </div>
-              <h3 className="font-semibold text-blue-900">Vidéos</h3>
-            </div>
-            <ul className="text-sm text-blue-800 space-y-1 ml-7">
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Supporté: YouTube, Vimeo, vidéos directes</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Catégories: Présentation ou Témoignage</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Témoignages */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-orange-500 text-white">
-                <Quote className="w-4 h-4" />
-              </div>
-              <h3 className="font-semibold text-blue-900">Témoignages</h3>
-            </div>
-            <ul className="text-sm text-blue-800 space-y-1 ml-7">
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Citations de clients satisfaits</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Affichez photo, nom et poste du client</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Equipe */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-teal-500 text-white">
-                <Users className="w-4 h-4" />
-              </div>
-              <h3 className="font-semibold text-blue-900">Équipe</h3>
-            </div>
-            <ul className="text-sm text-blue-800 space-y-1 ml-7">
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Gérez les membres de l'équipe et la direction</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Ordre modifiable par glisser-déposer</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* À Propos */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-indigo-500 text-white">
-                <Target className="w-4 h-4" />
-              </div>
-              <h3 className="font-semibold text-blue-900">À Propos</h3>
-            </div>
-            <ul className="text-sm text-blue-800 space-y-1 ml-7">
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Définissez la mission et la description</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Gérez les valeurs (icônes, couleurs)</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Expertise CTA */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-amber-500 text-white">
-                <Sparkles className="w-4 h-4" />
-              </div>
-              <h3 className="font-semibold text-blue-900">Expertise CTA</h3>
-            </div>
-            <ul className="text-sm text-blue-800 space-y-1 ml-7">
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Personnalisez la bannière d'appel à l'action</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Modifiez titre, bouton et image de fond</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Calendrier */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-pink-500 text-white">
-                <CalendarDays className="w-4 h-4" />
-              </div>
-              <h3 className="font-semibold text-blue-900">Calendrier Gabon</h3>
-            </div>
-            <ul className="text-sm text-blue-800 space-y-1 ml-7">
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Visualisez les jours fériés et événements</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Utile pour planifier les campagnes thématiques</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Paramètres */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-gray-500 text-white">
-                <Settings className="w-4 h-4" />
-              </div>
-              <h3 className="font-semibold text-blue-900">Paramètres Site</h3>
-            </div>
-            <ul className="text-sm text-blue-800 space-y-1 ml-7">
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Activez/désactivez sections entières</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span>Configuration globale du site</span>
-              </li>
-            </ul>
+          <div>
+            <h4 className="text-sm font-semibold text-slate-950">Guide d'utilisation du panneau d'administration</h4>
+            <p className="text-xs text-slate-500">Repères rapides pour les sections les plus utilisées.</p>
           </div>
         </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setIsOpen(false)}
+          className="h-8 w-8 text-slate-400 hover:bg-white hover:text-slate-700"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      </div>
 
-        <div className="bg-blue-100 border border-blue-300 rounded-lg p-3 mt-4">
-          <p className="text-sm text-blue-900 font-medium mb-1">💡 Conseil</p>
-          <p className="text-sm text-blue-800">
-            Utilisez les onglets ci-dessous pour naviguer entre les différentes sections.
-            Les changements sont sauvegardés automatiquement. Pensez à vérifier l'aperçu en direct sur le site.
-          </p>
-        </div>
-      </CardContent>
-    </Card>
+      <div className="grid gap-4 p-5 md:grid-cols-2">
+        {guideSections.map((section) => {
+          const Icon = section.icon
+
+          return (
+            <div key={section.title} className="rounded-md border border-slate-200/80 bg-white p-4">
+              <div className="mb-3 flex items-center gap-2">
+                <div className="flex h-7 w-7 items-center justify-center rounded-md bg-odillon-teal/[0.08] text-odillon-teal">
+                  <Icon className="h-4 w-4" />
+                </div>
+                <h5 className="font-semibold text-slate-900">{section.title}</h5>
+                {section.badge && (
+                  <Badge variant="outline" className="border-odillon-lime/40 bg-odillon-lime/10 text-[10px] font-medium text-slate-700">
+                    {section.badge}
+                  </Badge>
+                )}
+              </div>
+              <ul className="ml-9 space-y-1.5 text-sm text-slate-600">
+                {section.items.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <ChevronRight className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-odillon-teal" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        })}
+      </div>
+
+      <div className="mx-5 mb-5 rounded-md border border-odillon-lime/30 bg-odillon-lime/[0.08] p-3">
+        <p className="mb-1 text-sm font-medium text-slate-900">Conseil</p>
+        <p className="text-sm leading-relaxed text-slate-600">
+          Utilisez les onglets ci-dessous pour naviguer entre les différentes sections. Les changements sont sauvegardés automatiquement. Pensez à vérifier l'aperçu en direct sur le site.
+        </p>
+      </div>
+    </div>
   )
 }

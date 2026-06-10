@@ -36,7 +36,7 @@ export default async function Image() {
               width: '80px',
               height: '80px',
               borderRadius: '50%',
-              background: '#1A9B8E',
+              background: '#00a795',
               marginRight: '30px',
             }}
           />
@@ -44,7 +44,7 @@ export default async function Image() {
             style={{
               fontSize: '72px',
               fontWeight: 'bold',
-              color: '#1A9B8E',
+              color: '#00a795',
             }}
           >
             ODILLON

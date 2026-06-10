@@ -4,8 +4,8 @@ export const formationsService: ServiceData = {
     id: "formations",
     icon: "GraduationCap",
     title: "Formation",
-    color: "#39837a",
-    gradient: "from-[#39837a]/20 via-[#39837a]/10 to-transparent",
+    color: "#00a795",
+    gradient: "from-[#00a795]/20 via-[#00a795]/10 to-transparent",
     tagline: "Formation Professionnelle",
     description: "L'employeur est tenu de veiller au maintien et au développement des compétences de ses salariés (Code du Travail 2021). La Contribution à la Formation Professionnelle (CFP) de 0,50% de la masse salariale brute (Art. 95-96 CGI) finance ce dispositif.",
     keyBenefits: [

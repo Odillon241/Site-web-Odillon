@@ -19,7 +19,7 @@ const mainServices = [
     title: "Gouvernance",
     slug: "gouvernance",
     tagline: "Structuration et Restructuration d'Entreprises",
-    color: "#39837a",
+    color: "#00a795",
     highlights: ["Règles de bonne gouvernance", "Conseil d'Administration", "Risques opérationnels"],
     span: "lg:col-span-4"
   },
@@ -46,7 +46,7 @@ const mainServices = [
     title: "Formation",
     slug: "formations",
     tagline: "Formation Professionnelle",
-    color: "#39837a",
+    color: "#00a795",
     highlights: ["Master Class", "Coaching professionnel", "Formations en ligne"],
     span: "lg:col-span-6"
   }

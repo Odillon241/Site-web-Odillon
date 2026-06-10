@@ -22,7 +22,7 @@ export function ParticleEffect({
   className = "absolute inset-0",
   quantity = 30,
   staticity = 40,
-  color = "rgba(57, 131, 122, 0.3)"
+  color = "rgba(0, 167, 149, 0.3)"
 }: ParticleEffectProps = {}) {
   const [particles, setParticles] = useState<Particle[]>([])
   const [mounted, setMounted] = useState(false)

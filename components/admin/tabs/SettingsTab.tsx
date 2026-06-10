@@ -4,10 +4,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-import { Loader2, Upload, Settings as SettingsIcon, Image as ImageIcon, Newspaper, Trash2 } from "lucide-react"
+import { Loader2, Upload, Settings as SettingsIcon, Image as ImageIcon, Trash2 } from "lucide-react"
 import { SiteSettings } from "@/types/admin"
 import { toast } from "sonner"
 
@@ -119,14 +116,16 @@ export function SettingsTab() {
 
 
     return (
-        <Card className="border-none shadow-md">
-            <CardHeader className="bg-gray-50/50 border-b border-gray-100">
-                <CardTitle className="flex items-center gap-2 text-gray-900">
-                    <SettingsIcon className="w-5 h-5 text-gray-500" />
+        <Card className="overflow-hidden border border-slate-200/80 bg-white shadow-sm">
+            <CardHeader className="border-b border-slate-200/80 bg-white">
+                <CardTitle className="flex items-center gap-3 text-lg font-semibold tracking-tight text-slate-950">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                        <SettingsIcon className="h-4 w-4" />
+                    </span>
                     Paramètres du Site
                 </CardTitle>
             </CardHeader>
-            <CardContent className="pt-6 space-y-8 bg-gray-50/30 min-h-[400px]">
+            <CardContent className="min-h-[400px] space-y-6 bg-[#f7f9f8] p-6">
                 {loadingSettings ? (
                     <div className="flex justify-center py-12">
                         <Loader2 className="w-8 h-8 animate-spin text-odillon-teal" />
@@ -134,13 +133,13 @@ export function SettingsTab() {
                 ) : (
                     <>
                         {/* Section Image de Fond - Page Services */}
-                        <div className="grid md:grid-cols-2 gap-8 items-start">
+                        <div className="grid items-start gap-8 rounded-lg border border-slate-200/80 bg-white p-5 shadow-sm md:grid-cols-2">
                             <div className="space-y-4">
-                                <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                                    <ImageIcon className="w-5 h-5 text-odillon-teal" />
+                                <h3 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                                    <ImageIcon className="h-5 w-5 text-odillon-teal" />
                                     Image de Fond - Page Services
                                 </h3>
-                                <p className="text-sm text-gray-600 leading-relaxed">
+                                <p className="text-sm leading-relaxed text-slate-600">
                                     Cette image apparaît en arrière-plan du héros de la page Services.
                                     Choisissez une image qui reflète l'ensemble des activités du cabinet.
                                     <br />Format recommandé : Paysage large (ex: 1920x1080px).
@@ -148,7 +147,7 @@ export function SettingsTab() {
 
                                 <div className="flex flex-col gap-4">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">
+                                        <label className="text-sm font-medium text-slate-700">
                                             {siteSettings?.services_hero_image_url ? "Changer l'image" : "Ajouter une image"}
                                         </label>
                                         <div className="flex gap-2">
@@ -156,7 +155,7 @@ export function SettingsTab() {
                                                 type="file"
                                                 accept="image/*"
                                                 id="services-hero-image-input"
-                                                className="bg-white cursor-pointer"
+                                                className="cursor-pointer border-slate-200 bg-slate-50/80"
                                             />
                                         </div>
                                     </div>
@@ -172,7 +171,7 @@ export function SettingsTab() {
                                                 }
                                             }}
                                             disabled={uploadingServicesHeroImage}
-                                            className="bg-gray-900 hover:bg-black text-white"
+                                            className="bg-odillon-teal text-white shadow-sm hover:bg-odillon-teal/90"
                                         >
                                             {uploadingServicesHeroImage ? (
                                                 <>
@@ -206,7 +205,7 @@ export function SettingsTab() {
                             </div>
 
                             {/* Preview Image Services Hero */}
-                            <div className="relative aspect-video w-full max-w-md mx-auto bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200">
+                            <div className="relative mx-auto aspect-video w-full max-w-md overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
                                 {siteSettings?.services_hero_image_url ? (
                                     <div className="relative w-full h-full group">
                                         <img
@@ -219,37 +218,37 @@ export function SettingsTab() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 p-6 text-center">
-                                        <ImageIcon className="w-12 h-12 mb-2 opacity-50" />
+                                    <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center text-slate-400">
+                                        <ImageIcon className="mb-2 h-12 w-12 opacity-50" />
                                         <span className="text-sm">Aucune image définie<br />(Fond décoratif par défaut)</span>
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        <div className="border-t border-gray-200 my-6"></div>
+                        <div className="h-px bg-slate-200/80"></div>
 
                         {/* Section Image À Propos */}
-                        <div className="grid md:grid-cols-2 gap-8 items-start">
+                        <div className="grid items-start gap-8 rounded-lg border border-slate-200/80 bg-white p-5 shadow-sm md:grid-cols-2">
                             <div className="space-y-4">
-                                <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                                    <ImageIcon className="w-5 h-5 text-odillon-teal" />
+                                <h3 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                                    <ImageIcon className="h-5 w-5 text-odillon-teal" />
                                     Section À Propos (Accueil)
                                 </h3>
-                                <p className="text-sm text-gray-600 leading-relaxed">
+                                <p className="text-sm leading-relaxed text-slate-600">
                                     Cette image apparaît dans la section "À Propos" de la page d'accueil, à côté du texte de présentation.
                                     <br />Format recommandé : Carré (ex: 800x800px) ou Portrait.
                                 </p>
 
                                 <div className="flex flex-col gap-4">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">Changer l'image</label>
+                                        <label className="text-sm font-medium text-slate-700">Changer l'image</label>
                                         <div className="flex gap-2">
                                             <Input
                                                 type="file"
                                                 accept="image/*"
                                                 id="expertise-image-input" // Unique ID
-                                                className="bg-white cursor-pointer"
+                                                className="cursor-pointer border-slate-200 bg-slate-50/80"
                                             />
                                         </div>
                                     </div>
@@ -264,7 +263,7 @@ export function SettingsTab() {
                                             }
                                         }}
                                         disabled={uploadingExpertiseImage}
-                                        className="w-full sm:w-auto bg-gray-900 hover:bg-black text-white"
+                                        className="w-full bg-odillon-teal text-white shadow-sm hover:bg-odillon-teal/90 sm:w-auto"
                                     >
                                         {uploadingExpertiseImage ? (
                                             <>
@@ -282,7 +281,7 @@ export function SettingsTab() {
                             </div>
 
                             {/* Preview Image À Propos */}
-                            <div className="relative aspect-square md:aspect-video lg:aspect-square w-full max-w-sm mx-auto bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200">
+                            <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm md:aspect-video lg:aspect-square">
                                 {siteSettings?.expertise_image_url ? (
                                     <div className="relative w-full h-full group">
                                         <img
@@ -295,15 +294,15 @@ export function SettingsTab() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 p-6 text-center">
-                                        <ImageIcon className="w-12 h-12 mb-2 opacity-50" />
+                                    <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center text-slate-400">
+                                        <ImageIcon className="mb-2 h-12 w-12 opacity-50" />
                                         <span className="text-sm">Aucune image définie<br />(Image par défaut affichée sur le site)</span>
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        <div className="border-t border-gray-200 my-6"></div>
+                        <div className="h-px bg-slate-200/80"></div>
                     </>
                 )}
             </CardContent>

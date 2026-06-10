@@ -102,7 +102,7 @@ export function MondayMotivationSection({ video, className }: MondayMotivationSe
             <div className="relative">
               {/* Gradient frame derriere */}
               <div
-                className="absolute -inset-3 bg-gradient-to-br from-[#1A9B8E]/20 via-[#C4D82E]/10 to-[#1A9B8E]/5 rounded-lg blur-sm"
+                className="absolute -inset-3 bg-gradient-to-br from-[#00a795]/20 via-[#C4D82E]/10 to-[#00a795]/5 rounded-lg blur-sm"
                 aria-hidden="true"
               />
 

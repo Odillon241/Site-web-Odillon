@@ -20,7 +20,7 @@ export function AnimatedGradient({ children, className }: AnimatedGradientProps)
         repeat: Infinity,
       }}
       style={{
-        background: "linear-gradient(90deg, rgba(57, 131, 122, 0.1), rgba(196, 216, 46, 0.1), rgba(57, 131, 122, 0.1))",
+        background: "linear-gradient(90deg, rgba(0, 167, 149, 0.1), rgba(196, 216, 46, 0.1), rgba(0, 167, 149, 0.1))",
         backgroundSize: "200% 200%",
       }}
     >

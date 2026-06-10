@@ -17,10 +17,10 @@ export function Logo({
   priority = true,
   alt = "Odillon - Ingénierie d'Entreprises"
 }: LogoProps) {
-  // Utiliser le nouveau logo SVG
+  // Utiliser le nouveau logo SVG (plein format)
   return (
     <Image
-      src="/images/logos/odillon-logo-new.svg"
+      src="/images/logos/odillon-logo-full.svg"
       alt={alt}
       width={width}
       height={height}

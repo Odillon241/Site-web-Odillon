@@ -15,7 +15,7 @@ export function GradientText({
   children,
   className,
   animate = true,
-  from = "#39837a", // odillon-teal
+  from = "#00a795", // odillon-teal
   to = "#C4D82E", // odillon-lime
 }: GradientTextProps) {
   return (

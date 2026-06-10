@@ -79,7 +79,7 @@ export function AnimatedTimeline({ events, className }: AnimatedTimelineProps) {
                   initial={{ scale: 0, borderColor: "#e5e7eb" }}
                   animate={isActive ? {
                     scale: 1,
-                    borderColor: event.color === "lime" ? "#C4D82E" : "#39837A"
+                    borderColor: event.color === "lime" ? "#C4D82E" : "#00a795"
                   } : { scale: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.1 + 0.3 }}
                   style={{ willChange: 'transform, border-color' }}

@@ -52,7 +52,7 @@ const config = {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				'odillon-teal': '#39837a',
+				'odillon-teal': '#00a795',
 				'odillon-lime': '#C4D82E',
 				'odillon-dark': '#0A1F2C',
 				sidebar: {
@@ -69,11 +69,11 @@ const config = {
 			borderRadius: {
 				DEFAULT: 'var(--radius)',
 				lg: 'var(--radius)',
-				md: 'var(--radius)',
-				sm: 'var(--radius)',
-				xl: 'var(--radius)',
-				'2xl': 'var(--radius)',
-				'3xl': 'var(--radius)'
+				md: 'calc(var(--radius) - 2px)',
+				sm: 'calc(var(--radius) - 4px)',
+				xl: 'calc(var(--radius) + 4px)',
+				'2xl': 'calc(var(--radius) + 8px)',
+				'3xl': 'calc(var(--radius) + 16px)'
 			},
 			fontFamily: {
 				air: [
@@ -158,4 +158,3 @@ const config = {
 } satisfies Config
 
 export default config
-

@@ -4,8 +4,8 @@ export const gouvernanceService: ServiceData = {
     id: "gouvernance",
     icon: "Landmark",
     title: "Gouvernance",
-    color: "#39837a",
-    gradient: "from-[#39837a]/20 via-[#39837a]/10 to-transparent",
+    color: "#00a795",
+    gradient: "from-[#00a795]/20 via-[#00a795]/10 to-transparent",
     tagline: "Structuration et Restructuration d'Entreprises",
     description: "Nous accompagnons les entreprises dans la mise en place d'une gouvernance conforme aux standards OHADA (AUSCGIE 2014) et aux principes internationaux, pour des décisions transparentes et une performance durable.",
     keyBenefits: [

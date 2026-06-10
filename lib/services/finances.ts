@@ -4,8 +4,8 @@ export const financesService: ServiceData = {
     id: "finances",
     icon: "TrendingUp",
     title: "Finances",
-    color: "#39837a",
-    gradient: "from-[#39837a]/20 via-[#39837a]/10 to-transparent",
+    color: "#00a795",
+    gradient: "from-[#00a795]/20 via-[#00a795]/10 to-transparent",
     tagline: "Conseils Financiers",
     description: "Nos conseillers financiers sont à l'écoute de vos besoins en investissements et en accompagnement comptable.",
     keyBenefits: [

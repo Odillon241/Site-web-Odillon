@@ -13,7 +13,7 @@ export function SectionDivider({
 }: SectionDividerProps) {
   const variants = {
     default: "h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent",
-    gradient: "h-px bg-gradient-to-r from-transparent via-[#39837a]/30 via-[#C4D82E]/30 to-transparent",
+    gradient: "h-px bg-gradient-to-r from-transparent via-[#00a795]/30 via-[#C4D82E]/30 to-transparent",
     dotted: "h-px bg-gradient-to-r from-transparent via-gray-300/50 to-transparent border-dotted border-t border-gray-300",
     minimal: "h-[1px] bg-gray-200/50"
   }

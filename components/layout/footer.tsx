@@ -25,7 +25,7 @@ export function Footer() {
   ]
 
   return (
-    <footer className="relative bg-gradient-to-b from-[#2a6b63] to-[#1f524c]" role="contentinfo">
+    <footer className="relative bg-gradient-to-b from-[#008f80] to-[#006f65]" role="contentinfo">
 
       {/* Decorative Accents */}
       <div className="absolute top-20 right-10 w-40 md:w-72 h-40 md:h-72 bg-white/5 rounded-full blur-3xl pointer-events-none" />

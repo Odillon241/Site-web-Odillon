@@ -34,7 +34,7 @@ export function GlassmorphismIcon({
   icon: Icon,
   className,
   size = 64,
-  color = "#39837a",
+  color = "#00a795",
   variant = "default"
 }: GlassmorphismIconProps) {
   // Unique ID for SVG filters

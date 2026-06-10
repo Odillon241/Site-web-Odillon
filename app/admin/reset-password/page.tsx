@@ -58,9 +58,9 @@ export default function ResetPasswordPage() {
           <div className="text-center mb-8">
             <div className="inline-block mb-6">
               <Logo
-                width={400}
-                height={120}
-                className="h-24 md:h-28 w-auto"
+                width={348}
+                height={104}
+                className="h-16 md:h-20 w-auto"
                 priority
               />
             </div>
@@ -121,9 +121,9 @@ export default function ResetPasswordPage() {
         <div className="text-center mb-8">
           <div className="inline-block mb-6">
             <Logo
-              width={400}
-              height={120}
-              className="h-24 md:h-28 w-auto"
+              width={348}
+              height={104}
+              className="h-16 md:h-20 w-auto"
               priority
             />
           </div>

@@ -124,15 +124,17 @@ export default function PhotothequePage() {
   return (
     <>
       <HeaderPro />
-      <main className="min-h-screen bg-white pt-[88px] md:pt-[104px]">
-        <section className="container mx-auto px-4 pt-6 md:pt-10 pb-16 scroll-mt-24">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 mb-10">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <Images className="w-5 h-5 text-odillon-teal" />
-                <h1 className="font-baskvill italic text-3xl md:text-4xl text-gray-950">Albums</h1>
+      <main className="od-page pt-[88px] md:pt-[104px]">
+        <section className="od-section scroll-mt-24 border-t-0 py-12 md:py-16">
+          <div className="od-container">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 mb-10 md:mb-12">
+            <div className="max-w-2xl">
+              <div className="od-eyebrow mb-3">
+                <Images className="w-4 h-4" />
+                Photothèque
               </div>
-              <p className="text-sm text-gray-500">
+              <h1 className="od-heading-display text-4xl md:text-5xl">Albums</h1>
+              <p className="mt-3 text-sm md:text-base text-gray-600">
                 Les albums les plus récents apparaissent en premier.
               </p>
             </div>
@@ -148,15 +150,15 @@ export default function PhotothequePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
                 <div key={i} className="space-y-3">
-                  <div className="aspect-[7/8] bg-gray-100 rounded-lg animate-pulse" />
+                  <div className="aspect-[7/8] bg-gray-100 rounded-xl animate-pulse" />
                 </div>
               ))}
             </div>
           ) : groupedAlbumsByYear.length > 0 ? (
-            <div className="space-y-16">
+            <div className="space-y-14 md:space-y-16">
               {groupedAlbumsByYear.map((yearGroup) => (
-                <div key={yearGroup.year} className="space-y-10">
-                  <h2 className="text-4xl font-baskvill text-gray-900 border-b border-gray-100 pb-2">
+                <div key={yearGroup.year} className="space-y-8 md:space-y-10">
+                  <h2 className="od-heading-display text-3xl md:text-4xl border-b border-odillon-teal/10 pb-3">
                     {yearGroup.year}
                   </h2>
                   
@@ -164,7 +166,7 @@ export default function PhotothequePage() {
                     {yearGroup.months.map((monthGroup) => (
                       <div key={`${yearGroup.year}-${monthGroup.month}`}>
                         {monthGroup.month && (
-                          <h3 className="text-xl text-gray-400 capitalize mb-6">
+                          <h3 className="text-sm font-semibold uppercase text-gray-500 mb-6 tracking-[0.14em]">
                             {new Date(2000, monthGroup.month - 1, 1).toLocaleDateString('fr-FR', { month: 'long' })}
                           </h3>
                         )}
@@ -186,17 +188,18 @@ export default function PhotothequePage() {
             </div>
           ) : (
             <FadeIn>
-              <div className="text-center py-24">
-                <div className="w-20 h-20 bg-gray-50 rounded-lg flex items-center justify-center mx-auto mb-5 border border-gray-100">
-                  <Search className="w-8 h-8 text-gray-300" />
+              <div className="od-surface-muted text-center py-20 md:py-24">
+                <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center mx-auto mb-5 border border-[#00a795]/10">
+                  <Search className="w-7 h-7 text-gray-300" />
                 </div>
-                <h3 className="font-baskvill italic text-xl text-gray-900 mb-2">Aucun album</h3>
+                <h3 className="od-heading-display text-2xl mb-2">Aucun album</h3>
                 <p className="text-gray-500 text-sm max-w-sm mx-auto">
                   Aucun album n&apos;est disponible pour le moment.
                 </p>
               </div>
             </FadeIn>
           )}
+          </div>
         </section>
 
         <VideoSection video={video} />

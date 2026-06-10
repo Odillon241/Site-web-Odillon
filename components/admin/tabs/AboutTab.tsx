@@ -32,7 +32,7 @@ const AVAILABLE_ICONS = [
 ]
 
 const DEFAULT_COLORS = [
-    { value: "#39837a", label: "Odillon Teal" },
+    { value: "#00a795", label: "Odillon Teal" },
     { value: "#C4D82E", label: "Odillon Lime" },
     { value: "#0A1F2C", label: "Odillon Dark" },
 ]
@@ -110,7 +110,7 @@ export function AboutTab() {
             value: "Slogan court",
             description: "Description de la valeur...",
             icon: "Award",
-            color: "#39837a"
+            color: "#00a795"
         }])
     }
 

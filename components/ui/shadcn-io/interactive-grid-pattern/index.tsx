@@ -58,16 +58,16 @@ export function InteractiveGridPattern({
             y={y}
             width={width}
             height={height}
-            fill={isHovered ? "rgba(57, 131, 122, 0.2)" : "transparent"}
-            stroke="rgba(57, 131, 122, 0.3)"
+            fill={isHovered ? "rgba(0, 167, 149, 0.2)" : "transparent"}
+            stroke="rgba(0, 167, 149, 0.3)"
             strokeWidth="1"
             className={cn(
               "transition-all duration-300 ease-in-out",
               squaresClassName,
             )}
             style={{
-              fill: isHovered ? "rgba(57, 131, 122, 0.2)" : "transparent",
-              stroke: isHovered ? "rgba(57, 131, 122, 0.6)" : "rgba(57, 131, 122, 0.3)",
+              fill: isHovered ? "rgba(0, 167, 149, 0.2)" : "transparent",
+              stroke: isHovered ? "rgba(0, 167, 149, 0.6)" : "rgba(0, 167, 149, 0.3)",
             }}
             onMouseEnter={() => setHoveredSquare(index)}
             onMouseLeave={() => setHoveredSquare(null)}

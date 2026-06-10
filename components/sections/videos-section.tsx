@@ -87,7 +87,7 @@ export function VideosSection({
                 </div>
                 
                 <CardHeader className="px-4 md:px-6 py-4 md:py-5 flex-grow">
-                  <CardTitle className="text-lg md:text-xl mb-2 group-hover:text-[#39837a] transition-colors">
+                  <CardTitle className="text-lg md:text-xl mb-2 group-hover:text-[#00a795] transition-colors">
                     {video.title}
                   </CardTitle>
                   {video.description && (

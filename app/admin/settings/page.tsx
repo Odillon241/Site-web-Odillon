@@ -7,17 +7,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
   Loader2,
-  CalendarDays,
   Search,
   Building2,
-  Video,
-  Settings as SettingsIcon,
   Image as ImageIcon,
   Quote,
   Sparkles,
   Users,
-  Target,
-  LayoutDashboard,
   Mail
 } from "lucide-react"
 import { AdminSidebar } from "@/components/admin/admin-sidebar"
@@ -121,14 +116,17 @@ export default function AdminPhotosPage() {
     )
   }
 
-  const StatCard = ({ title, value, icon: Icon, color }: { title: string, value: number, icon: any, color: string }) => (
-    <div className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm flex items-center gap-4">
-      <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${color}`}>
-        <Icon className="w-6 h-6 text-white" />
-      </div>
-      <div>
-        <h3 className="text-sm font-medium text-gray-500">{title}</h3>
-        <p className="text-2xl font-bold text-gray-900">{value}</p>
+  const StatCard = ({ title, value, icon: Icon }: { title: string, value: number, icon: any }) => (
+    <div className="group relative overflow-hidden rounded-lg border border-slate-200/80 bg-white p-5 shadow-sm transition-colors hover:border-odillon-teal/25">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-odillon-teal/25 to-transparent" />
+      <div className="flex items-center gap-4">
+        <div className="flex h-11 w-11 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal transition-colors group-hover:bg-odillon-teal/[0.1]">
+          <Icon className="h-5 w-5" />
+        </div>
+        <div>
+          <h3 className="text-sm font-medium text-slate-500">{title}</h3>
+          <p className="text-2xl font-semibold tracking-tight text-slate-950">{value}</p>
+        </div>
       </div>
     </div>
   )
@@ -155,10 +153,10 @@ export default function AdminPhotosPage() {
   }
 
   return (
-    <SidebarProvider>
+    <SidebarProvider className="bg-[#f7f9f8]">
       <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 border-b bg-white px-4 sticky top-0 z-10">
+        <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b border-slate-200/80 bg-white/90 px-4 backdrop-blur transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
@@ -181,7 +179,7 @@ export default function AdminPhotosPage() {
               <Input
                 type="search"
                 placeholder="Rechercher..."
-                className="w-full bg-gray-50/50 pl-8 md:w-[200px] lg:w-[300px] border-none focus-visible:ring-1"
+                className="h-9 w-full border-slate-200 bg-slate-50/80 pl-8 shadow-none md:w-[200px] lg:w-[300px] focus-visible:ring-1 focus-visible:ring-odillon-teal"
                 value={commandSearch}
                 onChange={(e) => setCommandSearch(e.target.value)}
               />
@@ -189,40 +187,41 @@ export default function AdminPhotosPage() {
           </div>
         </header>
 
-        <div className="flex flex-1 flex-col gap-4 p-4 md:p-8 bg-gray-50/50 min-h-full">
+        <div className="flex min-h-full flex-1 flex-col gap-4 bg-[#f7f9f8] p-4 md:p-8">
           {activeTab === 'dashboard' && (
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Tableau de Bord</h2>
-                <p className="text-gray-500">Aperçu rapide de l'activité du site.</p>
+                <h2 className="mb-2 text-2xl font-semibold tracking-tight text-slate-950">Tableau de Bord</h2>
+                <p className="text-slate-500">Aperçu rapide de l'activité du site.</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-                <StatCard title="Messages non lus" value={dashboardStats.messages} icon={Mail} color="bg-red-500" />
-                <StatCard title="Photos en ligne" value={dashboardStats.photos} icon={ImageIcon} color="bg-blue-500" />
-                <StatCard title="Membres de l'équipe" value={dashboardStats.team} icon={Users} color="bg-teal-500" />
-                <StatCard title="Témoignages" value={dashboardStats.testimonials} icon={Quote} color="bg-orange-500" />
-                <StatCard title="Logos Partenaires" value={dashboardStats.logos} icon={Building2} color="bg-indigo-500" />
+                <StatCard title="Messages non lus" value={dashboardStats.messages} icon={Mail} />
+                <StatCard title="Photos en ligne" value={dashboardStats.photos} icon={ImageIcon} />
+                <StatCard title="Membres de l'équipe" value={dashboardStats.team} icon={Users} />
+                <StatCard title="Témoignages" value={dashboardStats.testimonials} icon={Quote} />
+                <StatCard title="Logos Partenaires" value={dashboardStats.logos} icon={Building2} />
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <Card className="border-none shadow-sm">
+                <Card className="border border-slate-200/80 bg-white shadow-sm">
                   <CardContent className="p-6">
-                    <h3 className="font-semibold text-gray-900 mb-4">Guide Rapide</h3>
+                    <h3 className="mb-4 font-semibold text-slate-950">Guide Rapide</h3>
                     <AdminGuide />
                   </CardContent>
                 </Card>
 
-                <Card className="border-none shadow-sm bg-gradient-to-br from-odillon-teal to-teal-700 text-white overflow-hidden relative">
-                  <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
-                  <div className="absolute bottom-0 left-0 -ml-8 -mb-8 w-24 h-24 bg-black/10 rounded-full blur-xl"></div>
-                  <CardContent className="p-8 flex flex-col items-start justify-center h-full relative z-10">
-                    <Sparkles className="w-10 h-10 mb-4 opacity-90" />
-                    <h3 className="text-2xl font-bold mb-2">Besoin d'aide ?</h3>
-                    <p className="text-teal-100 mb-6 max-w-md text-sm leading-relaxed">
+                <Card className="relative overflow-hidden border border-slate-200/80 bg-white shadow-sm">
+                  <div className="absolute inset-y-0 left-0 w-1 bg-odillon-teal" />
+                  <CardContent className="relative z-10 flex h-full flex-col items-start justify-center p-8">
+                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                      <Sparkles className="h-5 w-5" />
+                    </div>
+                    <h3 className="mb-2 text-2xl font-semibold tracking-tight text-slate-950">Besoin d'aide ?</h3>
+                    <p className="mb-6 max-w-md text-sm leading-relaxed text-slate-600">
                       Consultez la documentation ou contactez le support technique pour toute assistance sur la gestion de votre site.
                     </p>
-                    <Button className="bg-white text-teal-700 hover:bg-teal-50 border-none shadow-lg font-medium">
+                    <Button className="border border-odillon-teal/20 bg-odillon-teal text-white shadow-sm hover:bg-odillon-teal/90">
                       Contacter le support
                     </Button>
                   </CardContent>

@@ -178,7 +178,7 @@ export default function AdminPhotosPage() {
     full_name: "",
     logo_path: "",
     fallback: "",
-    color: "#39837a"
+    color: "#00a795"
   })
 
   // Formulaire d'ajout de vidéo
@@ -596,7 +596,7 @@ export default function AdminPhotosPage() {
         full_name: "",
         logo_path: "",
         fallback: "",
-        color: "#39837a"
+        color: "#00a795"
       })
       loadLogos()
     } catch (error: unknown) {
@@ -2478,7 +2478,7 @@ export default function AdminPhotosPage() {
                       className="w-20 h-10"
                     />
                     <Input
-                      placeholder="#39837a"
+                      placeholder="#00a795"
                       value={newLogo.color}
                       onChange={(e) => setNewLogo({ ...newLogo, color: e.target.value })}
                       className="flex-1"

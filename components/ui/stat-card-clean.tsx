@@ -21,7 +21,7 @@ export function StatCardClean({
     suffix = "",
     label,
     description,
-    color = "#39837a",
+    color = "#00a795",
     className,
 }: StatCardCleanProps) {
     return (

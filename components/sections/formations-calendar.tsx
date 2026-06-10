@@ -48,7 +48,7 @@ function formatDateRange(debut: string, fin?: string | null) {
 
 function FormationCard({ f }: { f: Formation }) {
     return (
-        <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div className="od-surface p-5 md:p-6 transition-colors hover:border-[#00a795]/24">
             <div className="flex flex-wrap items-center gap-2 mb-3">
                 <Badge className="bg-odillon-teal/10 text-odillon-teal hover:bg-odillon-teal/20 border-none">
                     <CalendarDays className="w-3.5 h-3.5 mr-1" />
@@ -61,7 +61,7 @@ function FormationCard({ f }: { f: Formation }) {
                 )}
             </div>
 
-            <h3 className="text-xl font-bold text-odillon-dark mb-2">{f.titre}</h3>
+            <h3 className="text-xl font-semibold text-odillon-dark mb-2">{f.titre}</h3>
             <p className="text-gray-600 leading-relaxed mb-4">{f.description}</p>
 
             <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500 mb-5">
@@ -110,17 +110,17 @@ export function FormationsCalendar({ formations }: { formations: Formation[] }) 
     }, [formations, selectedDate])
 
     return (
-        <section className="bg-gradient-to-b from-white to-gray-50/50 py-16 md:py-24">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="od-section py-16 md:py-24">
+            <div className="od-container">
                 <div className="text-center max-w-3xl mx-auto mb-12">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-odillon-teal/10 text-odillon-teal text-sm font-medium mb-4">
+                    <div className="od-eyebrow justify-center mb-4">
                         <GraduationCap className="w-4 h-4" />
                         Formations professionnelles
                     </div>
-                    <h1 className="text-3xl md:text-5xl font-bold text-odillon-dark mb-4">
+                    <h1 className="od-heading-display text-4xl md:text-5xl mb-4">
                         Calendrier des formations
                     </h1>
-                    <p className="text-lg text-gray-600">
+                    <p className="text-base md:text-lg text-gray-600">
                         Découvrez nos prochaines sessions de formation et inscrivez-vous pour développer
                         les compétences de votre entreprise.
                     </p>
@@ -128,7 +128,7 @@ export function FormationsCalendar({ formations }: { formations: Formation[] }) 
 
                 <div className="grid lg:grid-cols-[minmax(0,360px)_1fr] gap-8 lg:gap-12 items-start">
                     <div className="lg:sticky lg:top-28">
-                        <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm flex justify-center">
+                        <div className="od-surface mx-auto flex w-fit max-w-full justify-center p-4 lg:mx-0">
                             <Calendar
                                 mode="single"
                                 selected={selectedDate}
@@ -154,7 +154,7 @@ export function FormationsCalendar({ formations }: { formations: Formation[] }) 
 
                     <div className="space-y-5">
                         {visible.length === 0 ? (
-                            <div className="text-center py-16 rounded-2xl border border-dashed border-gray-200 bg-white">
+                            <div className="od-surface-muted text-center py-16 border-dashed">
                                 <GraduationCap className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                                 <p className="text-gray-500">
                                     {selectedDate

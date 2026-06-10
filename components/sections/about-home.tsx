@@ -19,7 +19,7 @@ const coreValues = [
     icon: Gem,
     title: "Talent",
     description: "Notre équipe se définit par l'expression de ses compétences transversales matérialisées par le professionnalisme, la rigueur et la discipline.",
-    color: "#39837a"
+    color: "#00a795"
   },
   {
     icon: Flame,
@@ -31,7 +31,7 @@ const coreValues = [
     icon: HeartHandshake,
     title: "Proximité",
     description: "Notre implication à fournir des services de qualité exceptionnelle aux clients.",
-    color: "#39837a"
+    color: "#00a795"
   }
 ]
 
@@ -105,7 +105,7 @@ export function AboutHome() {
             <BlurFade delay={0.3}>
               <div className="relative">
                 {/* Decorative frame */}
-                <div className="absolute -inset-3 bg-gradient-to-br from-[#1A9B8E]/20 via-[#C4D82E]/10 to-[#1A9B8E]/5 rounded-lg blur-sm" />
+                <div className="absolute -inset-3 bg-gradient-to-br from-[#00a795]/20 via-[#C4D82E]/10 to-[#00a795]/5 rounded-lg blur-sm" />
                 <div className="relative aspect-[4/3] rounded-lg overflow-hidden shadow-2xl border border-gray-200/80 ring-1 ring-black/5">
                   {expertiseImageUrl ? (
                     <Image

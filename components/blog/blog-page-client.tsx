@@ -357,7 +357,7 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                                                     className="object-cover transition-transform duration-[900ms] group-hover:scale-[1.04]"
                                                 />
                                             ) : (
-                                                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-odillon-teal/8 to-odillon-lime/8">
+                                                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-odillon-teal/10 to-odillon-lime/10">
                                                     <Newspaper className="w-12 h-12 text-odillon-teal/30" />
                                                 </div>
                                             )}

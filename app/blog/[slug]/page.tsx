@@ -65,8 +65,8 @@ export default async function ArticlePage({ params }: Props) {
                 {/* Hero Section */}
                 <section className="relative py-12 lg:py-16 bg-gray-50/50 border-b border-gray-200/60 overflow-hidden">
                     {/* Decorative elements */}
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#1A9B8E]/10 to-[#C4D82E]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-                    <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-[#C4D82E]/10 to-[#1A9B8E]/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#00a795]/10 to-[#C4D82E]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+                    <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-[#C4D82E]/10 to-[#00a795]/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
 
                     <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 relative">
                         <BlurFade delay={0.1}>
@@ -111,7 +111,7 @@ export default async function ArticlePage({ params }: Props) {
 
                             {article.cover_image && (
                                 <div className="mt-10 relative">
-                                    <div className="absolute -inset-3 bg-gradient-to-br from-[#1A9B8E]/20 via-[#C4D82E]/10 to-[#1A9B8E]/5 rounded-3xl blur-sm" />
+                                    <div className="absolute -inset-3 bg-gradient-to-br from-[#00a795]/20 via-[#C4D82E]/10 to-[#00a795]/5 rounded-3xl blur-sm" />
                                     <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-200/80 ring-1 ring-black/5">
                                         <Image
                                             src={article.cover_image}

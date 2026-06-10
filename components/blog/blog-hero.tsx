@@ -45,7 +45,7 @@ export function BlogHero({ settings }: BlogHeroProps) {
                         <div className="absolute inset-0 bg-black/50" />
                     </>
                 ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-odillon-teal to-[#2a6b63]">
+                    <div className="w-full h-full bg-gradient-to-br from-odillon-teal to-[#008f80]">
                         <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-white/5 rounded-full blur-3xl opacity-60" />
                         <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-odillon-lime/10 rounded-full blur-3xl opacity-60" />
                     </div>

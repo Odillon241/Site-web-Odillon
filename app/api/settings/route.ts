@@ -32,9 +32,9 @@ export async function GET() {
       about_mission_title: 'Notre Mission',
       about_mission_description: "Fondée sur la conviction que chaque entreprise possède un potentiel inexploité, Odillon s'est donné pour mission de révéler cette valeur cachée.",
       about_values_json: [
-        { title: "Talent", value: "Compétences", description: "Notre équipe se définit par l'expression de ses compétences transversales matérialisées par le professionnalisme, la rigueur et la discipline.", icon: "Gem", color: "#39837a" },
+        { title: "Talent", value: "Compétences", description: "Notre équipe se définit par l'expression de ses compétences transversales matérialisées par le professionnalisme, la rigueur et la discipline.", icon: "Gem", color: "#00a795" },
         { title: "Challenge", value: "Détermination", description: "Notre détermination et notre motivation à toujours proposer des solutions innovantes mieux adaptées aux besoins de nos clients.", icon: "Flame", color: "#C4D82E" },
-        { title: "Proximité", value: "Qualité", description: "Notre implication à fournir des services de qualité exceptionnelle aux clients.", icon: "HeartHandshake", color: "#39837a" }
+        { title: "Proximité", value: "Qualité", description: "Notre implication à fournir des services de qualité exceptionnelle aux clients.", icon: "HeartHandshake", color: "#00a795" }
       ]
     }
 

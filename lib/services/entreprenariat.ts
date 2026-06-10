@@ -4,8 +4,8 @@ export const entreprenariatService: ServiceData = {
     id: "entreprenariat",
     icon: "Rocket",
     title: "Entreprenariat",
-    color: "#39837a",
-    gradient: "from-[#39837a]/20 via-[#39837a]/10 to-transparent",
+    color: "#00a795",
+    gradient: "from-[#00a795]/20 via-[#00a795]/10 to-transparent",
     tagline: "Accompagnement Entrepreneurial",
     description: "Création d'entreprise en moins de 48h au Gabon via le Guichet National de l'Investissement (ANPI-Gabon). Nous vous guidons dans le choix de la forme juridique OHADA et les formalités, de l'idée au lancement.",
     keyBenefits: [

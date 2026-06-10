@@ -106,7 +106,7 @@ export function HeroSection({ children }: HeroSectionProps) {
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage: "radial-gradient(circle, #39837a 0.8px, transparent 0.8px)",
+            backgroundImage: "radial-gradient(circle, #00a795 0.8px, transparent 0.8px)",
             backgroundSize: "40px 40px",
           }}
         />
@@ -202,7 +202,7 @@ export function HeroSection({ children }: HeroSectionProps) {
                 <m.span
                   className="absolute -bottom-1.5 left-0 w-full h-[3px] rounded-full origin-left"
                   style={{
-                    background: "linear-gradient(90deg, #39837a, #C4D82E)",
+                    background: "linear-gradient(90deg, #00a795, #C4D82E)",
                   }}
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
@@ -215,7 +215,7 @@ export function HeroSection({ children }: HeroSectionProps) {
                 <m.span
                   className="absolute -bottom-1.5 left-0 w-full h-[3px] rounded-full origin-left"
                   style={{
-                    background: "linear-gradient(90deg, #C4D82E, #39837a)",
+                    background: "linear-gradient(90deg, #C4D82E, #00a795)",
                   }}
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}

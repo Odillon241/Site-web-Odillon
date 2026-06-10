@@ -72,8 +72,8 @@ export function HeaderPro() {
       className={cn(
         "fixed top-0 left-0 right-0 z-[60] transition-all duration-300",
         isScrolled
-          ? "bg-background/60 backdrop-blur-2xl border-b border-gray-200/30"
-          : "bg-background/70 backdrop-blur-xl border-b border-white/10"
+          ? "bg-white/88 backdrop-blur-xl border-b border-odillon-teal/10 shadow-sm shadow-[#0A1F2C]/[0.03]"
+          : "bg-white/80 backdrop-blur-xl border-b border-odillon-teal/10"
       )}
       style={{
         backdropFilter: 'blur(40px)',
@@ -81,20 +81,20 @@ export function HeaderPro() {
       }}
     >
       {/* Top Bar */}
-      <div className="bg-[#39837a]/95 backdrop-blur-lg border-t-2 border-[#39837a] text-white">
+      <div className="bg-odillon-dark text-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-8 md:h-10 items-center justify-between text-xs md:text-sm">
             <div className="flex items-center space-x-3 md:space-x-6">
-              <a href="tel:+24111747574" className="flex items-center text-white/90 hover:text-white transition-colors">
+              <a href="tel:+24111747574" className="flex items-center text-white/80 hover:text-white transition-colors">
                 <Phone className="w-3 h-3 md:w-3.5 md:h-3.5 mr-1 md:mr-1.5" />
                 <span className="hidden sm:inline">+241 11 74 75 74</span>
                 <span className="sm:hidden">+241 114...</span>
               </a>
-              <a href="tel:+24174759515" className="hidden xl:flex items-center text-white/90 hover:text-white transition-colors">
+              <a href="tel:+24174759515" className="hidden xl:flex items-center text-white/80 hover:text-white transition-colors">
                 <Phone className="w-3.5 h-3.5 mr-1.5" />
                 +241 74 75 95 15
               </a>
-              <a href="mailto:contact@odillon.fr" className="hidden md:flex items-center text-white/90 hover:text-white transition-colors">
+              <a href="mailto:contact@odillon.fr" className="hidden md:flex items-center text-white/80 hover:text-white transition-colors">
                 <Mail className="w-3.5 h-3.5 mr-1.5" />
                 contact@odillon.fr
               </a>
@@ -112,7 +112,7 @@ export function HeaderPro() {
           {/* Logo */}
           <Link href="/" className="flex items-center min-w-0">
             <Image
-              src="/images/logos/odillon-logo-new.svg"
+              src="/images/logos/odillon-logo-full.svg"
               alt="Odillon - Ingénierie d'Entreprises"
               width={200}
               height={60}
@@ -148,11 +148,11 @@ export function HeaderPro() {
                   <Link
                     href={item.href}
                     className={cn(
-                      "px-4 py-2 text-sm font-bold uppercase tracking-wide transition-all relative group flex items-center gap-2 rounded border",
+                      "px-3 py-2 text-sm font-semibold transition-all relative group flex items-center gap-2 rounded-md",
                       isActive
-                        ? "text-odillon-teal bg-odillon-teal/5 border-odillon-teal"
-                        : "text-gray-700 hover:text-odillon-teal border-transparent hover:border-gray-200",
-                      activeSubmenu === item.name && "text-odillon-teal"
+                        ? "text-odillon-teal bg-odillon-teal/10"
+                        : "text-gray-700 hover:text-odillon-teal hover:bg-odillon-teal/5",
+                      activeSubmenu === item.name && "text-odillon-teal bg-odillon-teal/5"
                     )}
                   >
                     {Icon && <Icon className="w-4 h-4" />}
@@ -161,7 +161,7 @@ export function HeaderPro() {
                       <ChevronDown className="ml-1 w-4 h-4" />
                     )}
                     {!isActive && (
-                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-odillon-teal transition-all duration-300 group-hover:w-full" />
+                      <span className="absolute bottom-1 left-3 right-3 h-px origin-left scale-x-0 bg-odillon-teal transition-transform duration-300 group-hover:scale-x-100" />
                     )}
                   </Link>
 
@@ -171,7 +171,7 @@ export function HeaderPro() {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-100 py-2"
+                      className="absolute top-full left-0 mt-2 w-64 rounded-xl border border-odillon-teal/10 bg-white py-2 shadow-lg shadow-[#0A1F2C]/10"
                     >
                       {item.submenu.map((subitem) => (
                         <Link
@@ -191,13 +191,7 @@ export function HeaderPro() {
 
           {/* CTA Button - Desktop */}
           <div className="hidden xl:flex">
-            <Button
-              asChild
-              className="bg-odillon-teal hover:bg-black text-white transition-colors"
-              style={{
-                boxShadow: 'inset 0 0 0 2px rgba(10, 31, 44, 0.5)',
-              }}
-            >
+            <Button asChild>
               <Link href="/contact" className="flex items-center gap-2">
                 <Send className="w-4 h-4" />
                 Nous contacter
@@ -255,7 +249,7 @@ export function HeaderPro() {
                       href={item.href}
                       onClick={() => !item.submenu && setMobileMenuOpen(false)}
                       className={cn(
-                        "flex items-center gap-3 px-4 py-3 rounded-lg text-base font-bold uppercase tracking-wide transition-colors",
+                        "flex items-center gap-3 px-4 py-3 rounded-md text-base font-semibold transition-colors",
                         isActive
                           ? "bg-odillon-teal/10 text-odillon-teal"
                           : "text-gray-700 hover:bg-gray-100 hover:text-odillon-teal"

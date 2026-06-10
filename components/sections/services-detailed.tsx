@@ -12,10 +12,6 @@ import { VideoSection } from "@/components/sections/video-section"
 import { VideosSection } from "@/components/sections/videos-section"
 import type { VideoItem } from "@/components/sections/videos-section"
 import { Video } from "@/types/admin"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Separator } from "@/components/ui/separator"
-import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern"
-import { DottedMap } from "@/components/ui/dotted-map"
 import Link from "next/link"
 import { servicesData as rawServicesData } from "@/lib/services-data"
 import {
@@ -32,8 +28,6 @@ import {
   Rocket,
   ChevronRight,
   Search,
-  Quote,
-  ChevronLeft,
   Landmark,
   GraduationCap,
   Megaphone,
@@ -52,30 +46,6 @@ const servicesData = rawServicesData.map(service => ({
   ...service,
   iconComponent: iconMap[service.icon] || Shield,
 }))
-
-// Petit composant pour les icônes flottantes décoratives
-function FloatingIcon({ icon: Icon, delay, x, y, size = 24, color }: { icon: any, delay: number, x: string, y: string, size?: number, color: string }) {
-  return (
-    <m.div
-      className="absolute pointer-events-none z-0"
-      style={{ left: x, top: y }}
-      initial={{ y: 0, opacity: 0 }}
-      animate={{ 
-        y: [0, -30, 0],
-        rotate: [0, 10, -10, 0],
-        opacity: [0.03, 0.1, 0.03]
-      }}
-      transition={{
-        duration: 15,
-        delay,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }}
-    >
-      <Icon size={size} style={{ color }} strokeWidth={1} />
-    </m.div>
-  )
-}
 
 // Mapping des configurations Bento Grid pour chaque service
 const bentoConfig: Record<string, string> = {
@@ -190,59 +160,17 @@ export function ServicesDetailed() {
   }, [])
 
   return (
-    <section className="relative overflow-x-clip bg-transparent">
+    <section className="od-page relative overflow-x-clip">
       {/* Hero Section */}
-      <div className="relative pt-12 pb-20 md:pt-16 md:pb-24 lg:pt-20 lg:pb-32 overflow-hidden" role="banner" aria-label="Section héro des offres">
+      <div className="od-section relative overflow-hidden py-16 md:py-20 lg:py-24" role="banner" aria-label="Section héro des offres">
         {/* Background enrichi */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Base Grid */}
-          <InteractiveGridPattern
-            width={60}
-            height={60}
-            squares={[20, 20]}
-            className="opacity-[0.12] stroke-gray-300"
-          />
-
-          {/* Dotted Map of Gabon (Rooting) */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] opacity-[0.05] rotate-6 scale-110 pointer-events-none">
-            <DottedMap dotColor="#1A9B8E" dotRadius={0.4} stagger={true} />
-          </div>
-
-          {/* Decorative Glowing Orbs */}
-          <div className="absolute -top-[10%] -right-[5%] w-[40%] h-[40%] bg-odillon-teal/10 rounded-full blur-[100px] animate-pulse" />
-          <div className="absolute -bottom-[10%] -left-[5%] w-[40%] h-[40%] bg-odillon-lime/10 rounded-full blur-[100px] animate-pulse" />
-
-          {/* Floating Icons for Engineering feel */}
-          <FloatingIcon icon={Rocket} delay={0} x="10%" y="20%" color="#1A9B8E" size={32} />
-          <FloatingIcon icon={Target} delay={2} x="85%" y="15%" color="#C4D82E" size={40} />
-          <FloatingIcon icon={Lightbulb} delay={4} x="15%" y="70%" color="#C4D82E" size={36} />
-          <FloatingIcon icon={TrendingUp} delay={6} x="80%" y="75%" color="#1A9B8E" size={44} />
-
-          {/* Decorative SVG Lines (Simulating drawing/sketching) */}
-          <svg className="absolute inset-0 w-full h-full opacity-[0.1] pointer-events-none">
-            <m.path
-              d="M-50,300 Q200,50 600,400 T1200,200"
-              fill="none"
-              stroke="#1A9B8E"
-              strokeWidth="1"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 1 }}
-              transition={{ duration: 4, delay: 0.5, ease: "easeInOut" }}
-            />
-            <m.path
-              d="M1400,100 Q1000,500 500,200 S-100,600"
-              fill="none"
-              stroke="#C4D82E"
-              strokeWidth="1"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 1 }}
-              transition={{ duration: 5, delay: 1, ease: "easeInOut" }}
-            />
-          </svg>
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(57,131,122,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(57,131,122,0.045)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:linear-gradient(to_bottom,black,transparent_78%)]" />
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-odillon-teal/25 to-transparent" />
         </div>
 
         {/* Content */}
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="od-container relative z-10">
           <div className="text-center max-w-4xl mx-auto">
             <FadeIn delay={0.1} className="flex justify-center">
               <AnimatedSlogan
@@ -253,7 +181,7 @@ export function ServicesDetailed() {
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <h1 className="font-baskvill not-italic font-bold text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl text-gray-900 mb-6 md:mb-8 leading-[1.1] tracking-tight">
+              <h1 className="od-heading-display mb-6 text-4xl sm:text-5xl lg:text-6xl">
                 Des offres qui transforment{" "}
                 <span className="relative inline-block mt-2">
                   <span className="relative z-10 bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
@@ -278,10 +206,10 @@ export function ServicesDetailed() {
 
             <FadeIn delay={0.6} className="mt-10 md:mt-12">
               <div className="flex flex-wrap items-center justify-center gap-4">
-                <Button size="lg" className="rounded-full bg-odillon-teal hover:bg-odillon-teal/90 text-white px-8 h-12 text-base" asChild>
+                <Button size="lg" className="h-12 px-8 text-base" asChild>
                   <Link href="/contact">Démarrer un projet</Link>
                 </Button>
-                <Button variant="outline" size="lg" className="rounded-full border-gray-200 hover:bg-gray-50 px-8 h-12 text-base group" asChild>
+                <Button variant="outline" size="lg" className="h-12 px-8 text-base group" asChild>
                   <a href="#expertises">
                     Explorer nos pôles
                     <ChevronRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -291,26 +219,13 @@ export function ServicesDetailed() {
             </FadeIn>
           </div>
         </div>
-
-        {/* Decorative Scroll Indicator */}
-        <div className="absolute bottom-8 left-0 w-full hidden md:flex justify-center pointer-events-none z-20">
-          <m.div 
-            className="flex flex-col items-center gap-2"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.5, duration: 1 }}
-          >
-            <span className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-semibold mr-[-0.2em]">Découvrir</span>
-            <div className="w-px h-12 bg-gradient-to-b from-odillon-teal/50 to-transparent shadow-[0_0_8px_rgba(26,155,142,0.1)]" />
-          </m.div>
-        </div>
       </div>
 
       <div id="expertises" className="scroll-mt-20">
         <VideoSection video={video} />
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 pt-8 md:pt-12">
+      <div className="od-container relative z-10 pt-8 md:pt-12">
 
         {/* Section titre */}
         <BlurFade delay={0.4}>
@@ -342,12 +257,7 @@ export function ServicesDetailed() {
                   className="h-full scroll-mt-28 group/card"
                   aria-labelledby={`offre-${service.id}`}
                 >
-                  <div className="relative bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 overflow-hidden h-full min-h-[360px] flex flex-col rounded-xl hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
-                    {/* Background Number (Editorial style) */}
-                    <span className="absolute bottom-4 right-6 text-8xl font-black text-gray-900/[0.03] select-none pointer-events-none group-hover/card:text-gray-900/[0.05] transition-colors duration-500 font-sans" aria-hidden="true">
-                      {String(idx + 1).padStart(2, '0')}
-                    </span>
-
+                  <div className="od-surface relative flex h-full min-h-[360px] flex-col overflow-hidden transition-all duration-500 hover:border-odillon-teal/20 hover:shadow-md hover:shadow-[#0A1F2C]/[0.05]">
                     {/* Background Hover Glow */}
                     <div 
                       className="absolute -right-16 -top-16 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover/card:opacity-20 transition-opacity duration-500"
@@ -367,8 +277,8 @@ export function ServicesDetailed() {
                       <div className={isLarge ? "flex items-start gap-4 mb-4" : "flex items-start gap-3 mb-3"}>
                         <div
                           className={isLarge 
-                            ? "w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover/card:scale-110 group-hover/card:rotate-3 transition-all duration-500 shadow-sm"
-                            : "w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 group-hover/card:scale-110 group-hover/card:rotate-3 transition-all duration-500 shadow-sm"
+                            ? "w-14 h-14 rounded-lg flex items-center justify-center flex-shrink-0 group-hover/card:scale-105 transition-all duration-500 shadow-sm"
+                            : "w-11 h-11 rounded-md flex items-center justify-center flex-shrink-0 group-hover/card:scale-105 transition-all duration-500 shadow-sm"
                           }
                           style={{ backgroundColor: `${service.color}15`, color: service.color }}
                         >
@@ -400,12 +310,44 @@ export function ServicesDetailed() {
                         ))}
                       </ul>
 
-                      {/* Footer */}
+                      {/* Footer CTA */}
                       <div className="mt-auto pt-4 border-t border-gray-50 relative z-10">
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="sm"
+                          className="mb-3 w-full group/cta border transition-all hover:brightness-95"
+                          style={{
+                            backgroundColor: `${service.color}15`,
+                            borderColor: `${service.color}80`,
+                            color: service.color,
+                          }}
+                        >
+                          <Link href="/contact">
+                            Discutons de votre projet
+                            <ChevronRight className="ml-2 w-4 h-4 group-hover/cta:translate-x-0.5 transition-transform" aria-hidden="true" />
+                          </Link>
+                        </Button>
                         <span className="text-[10px] uppercase tracking-widest text-gray-400 font-medium">
                           {subCount} prestation{subCount > 1 ? "s" : ""} listée{subCount > 1 ? "s" : ""}
                         </span>
                       </div>
+                    </div>
+
+                    {/* Numéro décoratif — sous le contenu et le CTA */}
+                    <div
+                      className={`flex items-end justify-end shrink-0 pointer-events-none select-none ${
+                        isLarge ? "h-14 md:h-16 px-6 md:px-8 pb-3 md:pb-4" : "h-12 md:h-14 px-5 md:px-6 pb-2 md:pb-3"
+                      }`}
+                      aria-hidden="true"
+                    >
+                      <span
+                        className={`font-black text-gray-900/[0.03] group-hover/card:text-gray-900/[0.05] transition-colors duration-500 font-sans leading-none ${
+                          isLarge ? "text-6xl md:text-7xl" : "text-5xl md:text-6xl"
+                        }`}
+                      >
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
                     </div>
                   </div>
                 </article>

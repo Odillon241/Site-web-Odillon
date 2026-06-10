@@ -109,7 +109,7 @@ export function Services() {
                   <CardHeader className="px-4 md:px-6 py-4 md:py-6">
                     <div className={`w-10 h-10 md:w-12 md:h-12 bg-${service.color}/10 rounded flex items-center justify-center mb-3 md:mb-4 group-hover:scale-105 transition-transform duration-300`}>
                       <Icon className={`w-5 h-5 md:w-6 md:h-6 text-${service.color}`} style={{
-                        color: service.color === 'odillon-teal' ? '#39837a' : '#C4D82E'
+                        color: service.color === 'odillon-teal' ? '#00a795' : '#C4D82E'
                       }} />
                     </div>
                     <CardTitle className="text-lg md:text-xl text-gray-900">{service.title}</CardTitle>
@@ -121,7 +121,7 @@ export function Services() {
                         <li key={feature} className="flex items-start">
                           <CheckCircle2
                             className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 flex-shrink-0 mt-0.5"
-                            style={{ color: service.color === 'odillon-teal' ? '#39837a' : '#C4D82E' }}
+                            style={{ color: service.color === 'odillon-teal' ? '#00a795' : '#C4D82E' }}
                           />
                           <span className="text-xs md:text-sm text-gray-700">{feature}</span>
                         </li>

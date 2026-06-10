@@ -16,7 +16,7 @@ const expertiseDomains = [
     icon: Puzzle,
     title: "Cohérence",
     description: "Adaptation de la gestion et des outils de travail au changement opérationnel.",
-    color: "#39837a",
+    color: "#00a795",
     features: ["Gestion du changement", "Outils adaptés", "Opérationnel"]
   },
   {
@@ -30,7 +30,7 @@ const expertiseDomains = [
     icon: Target,
     title: "Pertinence",
     description: "Adapter les besoins du client aux contraintes.",
-    color: "#39837a",
+    color: "#00a795",
     features: ["Analyse des besoins", "Adaptation", "Contraintes maîtrisées"]
   }
 ]

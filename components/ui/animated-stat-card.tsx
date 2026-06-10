@@ -39,7 +39,7 @@ export function AnimatedStatCard({
   suffix = "",
   label,
   description,
-  color = "#39837a",
+  color = "#00a795",
   delay = 0,
   className,
 }: AnimatedStatCardProps) {

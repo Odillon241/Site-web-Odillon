@@ -12,7 +12,7 @@ interface SpotlightCardProps {
 export function SpotlightCard({
     children,
     className,
-    spotlightColor = "rgba(57, 131, 122, 0.15)",
+    spotlightColor = "rgba(0, 167, 149, 0.15)",
 }: SpotlightCardProps) {
     const divRef = useRef<HTMLDivElement>(null);
     const [isFocused, setIsFocused] = useState(false);

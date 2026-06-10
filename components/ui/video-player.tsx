@@ -142,7 +142,7 @@ export function VideoPlayer({
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-[#39837a] to-[#0A1F2C]" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#00a795] to-[#0A1F2C]" />
           )}
 
           {/* Overlay sombre */}
@@ -153,7 +153,7 @@ export function VideoPlayer({
             <div className="relative">
               <div className="absolute inset-0 bg-white/20 rounded-full blur-xl group-hover:bg-white/30 transition-colors" />
               <div className="relative w-16 h-16 md:w-20 md:h-20 bg-white/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                <Play className="w-6 h-6 md:w-8 md:h-8 text-[#39837a] ml-1" fill="currentColor" />
+                <Play className="w-6 h-6 md:w-8 md:h-8 text-[#00a795] ml-1" fill="currentColor" />
               </div>
             </div>
           </div>

@@ -30,7 +30,7 @@ const initialValues = [
     title: "Talent",
     value: "Compétences",
     description: "Notre équipe se définit par l'expression de ses compétences transversales matérialisées par le professionnalisme, la rigueur et la discipline.",
-    gradient: "from-[#39837a]/20 to-[#39837a]/5"
+    gradient: "from-[#00a795]/20 to-[#00a795]/5"
   },
   {
     icon: Flame,
@@ -44,7 +44,7 @@ const initialValues = [
     title: "Proximité",
     value: "Qualité",
     description: "Notre implication à fournir des services de qualité exceptionnelle aux clients.",
-    gradient: "from-[#39837a]/20 to-[#39837a]/5"
+    gradient: "from-[#00a795]/20 to-[#00a795]/5"
   }
 ]
 
@@ -76,7 +76,7 @@ export function AboutDetailed() {
             const mappedValues = s.about_values_json.map((v: any, idx: number) => ({
               ...v,
               icon: ICON_MAP[v.icon] || Gem,
-              gradient: idx % 2 === 0 ? "from-[#39837a]/20 to-[#39837a]/5" : "from-[#C4D82E]/20 to-[#C4D82E]/5"
+              gradient: idx % 2 === 0 ? "from-[#00a795]/20 to-[#00a795]/5" : "from-[#C4D82E]/20 to-[#C4D82E]/5"
             }))
             setValues(mappedValues)
           }
@@ -293,7 +293,7 @@ export function AboutDetailed() {
                 <BlurFade key={valeur.title} delay={0.1 * (idx + 1)} className={spanClass}>
                   <SpotlightCard
                     className="h-full w-full bg-white border border-gray-100 shadow-sm rounded-lg p-8 overflow-hidden group"
-                    spotlightColor={isEven ? "rgba(57, 131, 122, 0.05)" : "rgba(196, 216, 46, 0.05)"}
+                    spotlightColor={isEven ? "rgba(0, 167, 149, 0.05)" : "rgba(196, 216, 46, 0.05)"}
                   >
                     <div className="relative z-10 flex flex-col h-full">
                       <div className="flex items-start justify-between mb-6">

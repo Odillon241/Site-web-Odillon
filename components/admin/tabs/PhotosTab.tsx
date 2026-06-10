@@ -32,14 +32,13 @@ import {
 import { StackedCardsInteraction } from "@/components/ui/stacked-cards-interaction"
 import { BlurFade } from "@/components/magicui/blur-fade"
 
-import { Loader2, Plus, Search, Trash2, Eye, EyeOff, Camera, Filter, ImageIcon, CalendarDays, RefreshCw, UploadCloud, X, ArrowLeft, Edit, FolderEdit, Save, Crop, MapPin } from "lucide-react"
+import { Loader2, Plus, Search, Trash2, Eye, EyeOff, Camera, ImageIcon, CalendarDays, RefreshCw, UploadCloud, X, ArrowLeft, Edit, FolderEdit, Save, Crop, MapPin, FolderInput, ListChecks, CheckCircle2 } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Photo } from "@/types/admin"
 import { MONTHLY_THEMES } from "@/lib/photo-themes"
 import { toast } from "sonner"
 import { ImageCropper } from "../ImageCropper"
-import getCroppedImg from "@/lib/image"
 
 
 import {
@@ -107,6 +106,21 @@ export function PhotosTab() {
     const [newAlbumName, setNewAlbumName] = useState("")
     const [newAlbumDetails, setNewAlbumDetails] = useState("")
     const [isSaving, setIsSaving] = useState(false)
+    const [editIsNewAlbum, setEditIsNewAlbum] = useState(false)
+
+    // Album deletion
+    const [isDeleteAlbumOpen, setIsDeleteAlbumOpen] = useState(false)
+    const [albumToDelete, setAlbumToDelete] = useState<string | null>(null)
+
+    // Bulk selection
+    const [selectionMode, setSelectionMode] = useState(false)
+    const [selectedIds, setSelectedIds] = useState<string[]>([])
+    const [isBulkMoveOpen, setIsBulkMoveOpen] = useState(false)
+    const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false)
+    const [bulkMoveTarget, setBulkMoveTarget] = useState<string>("")
+    const [bulkMoveIsNew, setBulkMoveIsNew] = useState(false)
+    const [bulkMoveNewName, setBulkMoveNewName] = useState("")
+    const [bulkBusy, setBulkBusy] = useState(false)
 
     // Filters
     const [searchTerm, setSearchTerm] = useState("")
@@ -146,7 +160,16 @@ export function PhotosTab() {
         loadPhotos()
         // Reset albumOrder when switching sections
         setAlbumOrder([])
+        // Reset selection
+        setSelectionMode(false)
+        setSelectedIds([])
     }, [activeSection])
+
+    // Reset selection when entering/leaving an album
+    useEffect(() => {
+        setSelectionMode(false)
+        setSelectedIds([])
+    }, [selectedAlbum])
 
     // Initialize albumOrder from photos on first load or when changed
     useEffect(() => {
@@ -454,11 +477,141 @@ export function PhotosTab() {
     }
 
     // ─────────────────────────────────────────────────────────────────────────
+    // BULK ACTIONS & ALBUM DELETION
+    // ─────────────────────────────────────────────────────────────────────────
+
+    const toggleSelected = (photoId: string) => {
+        setSelectedIds(prev =>
+            prev.includes(photoId) ? prev.filter(id => id !== photoId) : [...prev, photoId]
+        )
+    }
+
+    const exitSelectionMode = () => {
+        setSelectionMode(false)
+        setSelectedIds([])
+    }
+
+    const selectAllVisible = () => {
+        const visibleIds = filteredPhotos.map(p => p.id)
+        const allSelected = visibleIds.every(id => selectedIds.includes(id))
+        setSelectedIds(allSelected ? [] : visibleIds)
+    }
+
+    // Generic bulk call against /api/photos/bulk
+    const runBulk = async (
+        action: "move" | "setActive" | "delete",
+        ids: string[],
+        payload?: Record<string, unknown>
+    ) => {
+        const res = await fetch("/api/photos/bulk", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action, ids, payload }),
+        })
+        if (!res.ok) {
+            const data = await res.json().catch(() => ({}))
+            throw new Error(data.error || "Erreur lors de l'opération")
+        }
+        return res.json()
+    }
+
+    const handleBulkSetActive = async (isActive: boolean) => {
+        if (selectedIds.length === 0) return
+        try {
+            setBulkBusy(true)
+            await runBulk("setActive", selectedIds, { is_active: isActive })
+            toast.success(`${selectedIds.length} photo(s) ${isActive ? "affichée(s)" : "masquée(s)"}`)
+            exitSelectionMode()
+            loadPhotos()
+        } catch (error) {
+            console.error(error)
+            toast.error(error instanceof Error ? error.message : "Erreur")
+        } finally {
+            setBulkBusy(false)
+        }
+    }
+
+    const handleBulkDelete = async () => {
+        if (selectedIds.length === 0) return
+        try {
+            setBulkBusy(true)
+            await runBulk("delete", selectedIds)
+            toast.success(`${selectedIds.length} photo(s) supprimée(s)`)
+            setIsBulkDeleteOpen(false)
+            exitSelectionMode()
+            loadPhotos()
+        } catch (error) {
+            console.error(error)
+            toast.error(error instanceof Error ? error.message : "Erreur")
+        } finally {
+            setBulkBusy(false)
+        }
+    }
+
+    const openBulkMove = () => {
+        setBulkMoveTarget("")
+        setBulkMoveIsNew(false)
+        setBulkMoveNewName("")
+        setIsBulkMoveOpen(true)
+    }
+
+    const handleBulkMove = async () => {
+        if (selectedIds.length === 0) return
+        const target = bulkMoveIsNew ? bulkMoveNewName.trim() : bulkMoveTarget
+        if (!target) {
+            toast.error("Choisissez ou nommez un album de destination")
+            return
+        }
+        try {
+            setBulkBusy(true)
+            await runBulk("move", selectedIds, { description: target })
+            toast.success(`${selectedIds.length} photo(s) déplacée(s) vers « ${target} »`)
+            setIsBulkMoveOpen(false)
+            exitSelectionMode()
+            loadPhotos()
+        } catch (error) {
+            console.error(error)
+            toast.error(error instanceof Error ? error.message : "Erreur")
+        } finally {
+            setBulkBusy(false)
+        }
+    }
+
+    const openDeleteAlbum = (albumName: string) => {
+        setAlbumToDelete(albumName)
+        setIsDeleteAlbumOpen(true)
+    }
+
+    const handleDeleteAlbum = async () => {
+        if (!albumToDelete) return
+        const ids = photos.filter(p => p.description === albumToDelete).map(p => p.id)
+        if (ids.length === 0) {
+            setIsDeleteAlbumOpen(false)
+            return
+        }
+        try {
+            setBulkBusy(true)
+            await runBulk("delete", ids)
+            toast.success(`Album « ${albumToDelete} » supprimé (${ids.length} photo(s))`)
+            setIsDeleteAlbumOpen(false)
+            if (selectedAlbum === albumToDelete) setSelectedAlbum(null)
+            setAlbumToDelete(null)
+            loadPhotos()
+        } catch (error) {
+            console.error(error)
+            toast.error(error instanceof Error ? error.message : "Erreur")
+        } finally {
+            setBulkBusy(false)
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
     // EDIT & RENAME LOGIC
     // ─────────────────────────────────────────────────────────────────────────
 
     const openEditDialog = (photo: Photo) => {
         setEditingPhoto({ ...photo })
+        setEditIsNewAlbum(false)
         setIsEditDialogOpen(true)
     }
 
@@ -513,36 +666,22 @@ export function PhotosTab() {
 
         // Find all photos in this album
         const albumPhotos = photos.filter(p => p.description === selectedAlbum)
-        let successCount = 0
+        const ids = albumPhotos.map(p => p.id)
 
         try {
-            // We have to update them one by one as we don't have a bulk update endpoint yet
-            // Could be optimized by adding a bulk endpoint later
-            await Promise.all(albumPhotos.map(async (photo) => {
-                const response = await fetch(`/api/photos/${photo.id}`, {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        description: newAlbumName,
-                        details: newAlbumDetails
-                    }),
-                })
-                if (response.ok) successCount++
-            }))
+            await runBulk("move", ids, {
+                description: newAlbumName.trim(),
+                details: newAlbumDetails,
+            })
 
-            if (successCount > 0) {
-                // Update local state
-                setPhotos(prev => prev.map(p => p.description === selectedAlbum ? { ...p, description: newAlbumName, details: newAlbumDetails } : p))
-                setSelectedAlbum(newAlbumName) // Switch view to new name
-                toast.success(`Album renommé (${successCount} photos mises à jour)`)
-                setIsRenameAlbumDialogOpen(false)
-            } else {
-                toast.error("Aucune photo n'a pu être mise à jour")
-            }
-
+            // Update local state
+            setPhotos(prev => prev.map(p => p.description === selectedAlbum ? { ...p, description: newAlbumName.trim(), details: newAlbumDetails } : p))
+            setSelectedAlbum(newAlbumName.trim()) // Switch view to new name
+            toast.success(`Album renommé (${ids.length} photo(s) mise(s) à jour)`)
+            setIsRenameAlbumDialogOpen(false)
         } catch (error) {
             console.error("Error renaming album:", error)
-            toast.error("Erreur lors du renommage de l'album")
+            toast.error(error instanceof Error ? error.message : "Erreur lors du renommage de l'album")
         } finally {
             setIsSaving(false)
         }
@@ -574,23 +713,26 @@ export function PhotosTab() {
     // Use albumOrder as the source of truth for album display order
     // This gives admin control instead of adapting to database order
 
+    // "Album list" view = stacked album cards (no individual-photo selection here)
+    const isAlbumListView = activeSection === 'phototheque' && !selectedAlbum && !searchTerm && !filterMonth && filterStatus === 'all'
+
     return (
         <div className="space-y-6">
             {/* HEADER & SECTION TABS */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-4 rounded-lg shadow-sm border border-gray-100 gap-4">
+            <div className="flex flex-col items-start justify-between gap-4 rounded-lg border border-slate-200/80 bg-white p-4 shadow-sm md:flex-row md:items-center">
                 <div>
-                    <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                        <Camera className="w-5 h-5 text-odillon-teal" />
+                    <h2 className="flex items-center gap-2 text-xl font-semibold tracking-tight text-slate-950">
+                        <Camera className="h-5 w-5 text-odillon-teal" />
                         Médiathèque
                     </h2>
-                    <p className="text-sm text-gray-500">Gérez les images du carrousel et de la photothèque</p>
+                    <p className="text-sm text-slate-500">Gérez les images du carrousel et de la photothèque</p>
                 </div>
 
-                <div className="flex bg-gray-100/50 p-1 rounded-lg">
+                <div className="flex rounded-lg border border-slate-200 bg-slate-100/70 p-1">
                     <Button
                         variant="ghost"
                         size="sm"
-                        className={`rounded-md transition-all ${activeSection === 'hero' ? 'bg-white shadow-sm text-odillon-teal' : 'text-gray-500 hover:text-gray-900'}`}
+                        className={`rounded-md transition-all ${activeSection === 'hero' ? 'bg-white text-odillon-teal shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
                         onClick={() => setActiveSection('hero')}
                     >
                         <Camera className="w-4 h-4 mr-2" />
@@ -599,7 +741,7 @@ export function PhotosTab() {
                     <Button
                         variant="ghost"
                         size="sm"
-                        className={`rounded-md transition-all ${activeSection === 'phototheque' ? 'bg-white shadow-sm text-odillon-teal' : 'text-gray-500 hover:text-gray-900'}`}
+                        className={`rounded-md transition-all ${activeSection === 'phototheque' ? 'bg-white text-odillon-teal shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
                         onClick={() => setActiveSection('phototheque')}
                     >
                         <ImageIcon className="w-4 h-4 mr-2" />
@@ -609,29 +751,32 @@ export function PhotosTab() {
             </div>
 
             {/* MAIN CONTENT CARD */}
-            <Card className="border-none shadow-md overflow-hidden">
-                <CardHeader className="bg-gray-50/50 border-b border-gray-100 flex flex-row items-center justify-between py-4">
+            <Card className="overflow-hidden border border-slate-200/80 bg-white shadow-sm">
+                <CardHeader className="flex flex-row items-center justify-between border-b border-slate-200/80 bg-white py-4">
                     <div className="flex items-center gap-2">
                         {activeSection === 'phototheque' && selectedAlbum && (
                             <Button variant="ghost" size="icon" onClick={() => setSelectedAlbum(null)} className="mr-2">
                                 <ArrowLeft className="w-5 h-5" />
                             </Button>
                         )}
-                        <CardTitle className="text-lg font-medium text-gray-700">
+                        <CardTitle className="text-lg font-semibold tracking-tight text-slate-900">
                             {activeSection === 'hero'
                                 ? "Photos du Carrousel"
                                 : selectedAlbum
                                     ? (
                                         <div className="flex items-center gap-2">
                                             <span>Album : {selectedAlbum}</span>
-                                            <Button variant="ghost" size="icon" onClick={openRenameAlbumDialog} className="h-6 w-6 ml-1 text-gray-400 hover:text-odillon-teal">
+                                            <Button variant="ghost" size="icon" onClick={openRenameAlbumDialog} className="ml-1 h-6 w-6 text-slate-400 hover:text-odillon-teal" title="Renommer l'album">
                                                 <FolderEdit className="w-4 h-4" />
+                                            </Button>
+                                            <Button variant="ghost" size="icon" onClick={() => openDeleteAlbum(selectedAlbum)} className="h-6 w-6 text-slate-400 hover:text-red-500" title="Supprimer l'album">
+                                                <Trash2 className="w-4 h-4" />
                                             </Button>
                                         </div>
                                     )
                                     : "Albums de la Photothèque"}
                         </CardTitle>
-                        <Badge variant="secondary" className="bg-white border shadow-sm text-xs font-normal">
+                        <Badge variant="secondary" className="border border-slate-200 bg-slate-50 text-xs font-normal text-slate-600 shadow-none">
                             {activeSection === 'hero' || selectedAlbum ? filteredPhotos.length : albumOrder.length}
                         </Badge>
                     </div>
@@ -639,7 +784,7 @@ export function PhotosTab() {
                     {/* ADD PHOTO BUTTON (SHEET TRIGGER) */}
                     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                         <SheetTrigger asChild>
-                            <Button className="bg-odillon-teal hover:bg-odillon-teal/90 text-white shadow-sm transition-all hover:scale-105 active:scale-95">
+                            <Button className="bg-odillon-teal text-white shadow-sm transition-colors hover:bg-odillon-teal/90">
                                 <Plus className="w-4 h-4 mr-2" />
                                 Ajouter des photos
                             </Button>
@@ -660,9 +805,9 @@ export function PhotosTab() {
 
                                     {/* DRAG & DROP ZONE */}
                                     <div
-                                        className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer relative transition-colors ${isDragging
-                                            ? "border-odillon-teal bg-odillon-teal/5"
-                                            : "border-gray-200 hover:bg-gray-50"
+                                        className={`relative cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors ${isDragging
+                                            ? "border-odillon-teal bg-odillon-teal/[0.06]"
+                                            : "border-slate-200 hover:bg-slate-50"
                                             }`}
                                         onDragOver={onDragOver}
                                         onDragLeave={onDragLeave}
@@ -677,8 +822,8 @@ export function PhotosTab() {
                                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                         />
                                         <div className="flex flex-col items-center gap-2 pointer-events-none">
-                                            <div className="bg-blue-50 p-3 rounded-full">
-                                                <UploadCloud className={`w-6 h-6 ${isDragging ? 'text-odillon-teal' : 'text-blue-500'}`} />
+                                            <div className="rounded-md bg-odillon-teal/[0.07] p-3">
+                                                <UploadCloud className="h-6 w-6 text-odillon-teal" />
                                             </div>
                                             <span className="text-sm text-gray-600 font-medium">
                                                 {isDragging ? "Déposez les fichiers ici" : "Cliquez ou glissez vos images"}
@@ -694,8 +839,8 @@ export function PhotosTab() {
                                                 {selectedFiles.length} fichier(s) sélectionné(s)
                                             </p>
                                             {selectedFiles.map((file, idx) => (
-                                                <div key={idx} className="flex items-center justify-between bg-gray-50 p-2 rounded-md border border-gray-100 text-sm">
-                                                    <span className="truncate max-w-[200px] text-gray-700">{file.name}</span>
+                                                <div key={idx} className="flex items-center justify-between rounded-md border border-slate-200 bg-slate-50 p-2 text-sm">
+                                                    <span className="max-w-[200px] truncate text-slate-700">{file.name}</span>
                                                     <div className="flex items-center gap-1">
                                                         <Button
                                                             size="sm"
@@ -843,19 +988,19 @@ export function PhotosTab() {
 
                 <CardContent className="p-0">
                     {/* FILTERS BAR */}
-                    <div className="p-4 border-b border-gray-100 flex flex-wrap gap-3 bg-white">
+                    <div className="flex flex-wrap gap-3 border-b border-slate-200/80 bg-white p-4">
                         <div className="relative flex-1 min-w-[200px]">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                             <Input
                                 placeholder="Rechercher..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-9 bg-gray-50 border-gray-200 focus-visible:ring-odillon-teal"
+                                className="border-slate-200 bg-slate-50/80 pl-9 shadow-none focus-visible:ring-odillon-teal"
                             />
                         </div>
 
                         <Select value={filterMonth?.toString() || "all"} onValueChange={(val) => setFilterMonth(val === "all" ? null : parseInt(val))}>
-                            <SelectTrigger className="w-[140px] bg-gray-50 border-gray-200">
+                            <SelectTrigger className="w-[140px] border-slate-200 bg-slate-50/80">
                                 <SelectValue placeholder="Mois" />
                             </SelectTrigger>
                             <SelectContent>
@@ -867,7 +1012,7 @@ export function PhotosTab() {
                         </Select>
 
                         <Select value={filterStatus} onValueChange={setFilterStatus}>
-                            <SelectTrigger className="w-[140px] bg-gray-50 border-gray-200">
+                            <SelectTrigger className="w-[140px] border-slate-200 bg-slate-50/80">
                                 <SelectValue placeholder="Statut" />
                             </SelectTrigger>
                             <SelectContent>
@@ -891,16 +1036,73 @@ export function PhotosTab() {
                                 <RefreshCw className="w-4 h-4 text-gray-500" />
                             </Button>
                         )}
+
+                        {!isAlbumListView && (
+                            selectionMode ? (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={exitSelectionMode}
+                                    className="border-slate-200"
+                                >
+                                    <X className="w-4 h-4 mr-2" />
+                                    Quitter la sélection
+                                </Button>
+                            ) : (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setSelectionMode(true)}
+                                    className="border-slate-200"
+                                >
+                                    <ListChecks className="w-4 h-4 mr-2 text-odillon-teal" />
+                                    Sélectionner
+                                </Button>
+                            )
+                        )}
                     </div>
 
+                    {/* BULK ACTION BAR */}
+                    {selectionMode && !isAlbumListView && (
+                        <div className="flex flex-wrap items-center gap-2 border-b border-odillon-teal/20 bg-odillon-teal/[0.06] px-4 py-3">
+                            <button
+                                type="button"
+                                onClick={selectAllVisible}
+                                className="text-sm font-medium text-odillon-teal hover:underline"
+                            >
+                                {filteredPhotos.length > 0 && filteredPhotos.every(p => selectedIds.includes(p.id))
+                                    ? "Tout désélectionner"
+                                    : "Tout sélectionner"}
+                            </button>
+                            <Badge variant="secondary" className="bg-white text-slate-700">
+                                {selectedIds.length} sélectionnée(s)
+                            </Badge>
+
+                            <div className="ml-auto flex flex-wrap items-center gap-2">
+                                <Button size="sm" variant="outline" disabled={selectedIds.length === 0 || bulkBusy} onClick={() => handleBulkSetActive(true)} className="border-slate-200 bg-white">
+                                    <Eye className="w-4 h-4 mr-1.5" /> Afficher
+                                </Button>
+                                <Button size="sm" variant="outline" disabled={selectedIds.length === 0 || bulkBusy} onClick={() => handleBulkSetActive(false)} className="border-slate-200 bg-white">
+                                    <EyeOff className="w-4 h-4 mr-1.5" /> Masquer
+                                </Button>
+                                <Button size="sm" variant="outline" disabled={selectedIds.length === 0 || bulkBusy} onClick={openBulkMove} className="border-slate-200 bg-white">
+                                    <FolderInput className="w-4 h-4 mr-1.5" /> Déplacer
+                                </Button>
+                                <Button size="sm" variant="destructive" disabled={selectedIds.length === 0 || bulkBusy} onClick={() => setIsBulkDeleteOpen(true)}>
+                                    <Trash2 className="w-4 h-4 mr-1.5" /> Supprimer
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+
                     {/* PHOTOS GRID */}
-                    <div className="p-6 bg-gray-50/30 min-h-[400px]">
+                    <div className="min-h-[400px] bg-[#f7f9f8] p-6">
                         {loading ? (
                             <div className="flex flex-col items-center justify-center py-20">
                                 <Loader2 className="w-10 h-10 animate-spin text-odillon-teal mb-4" />
                                 <p className="text-gray-500">Chargement de la galerie...</p>
                             </div>
-                        ) : activeSection === 'phototheque' && !selectedAlbum && !searchTerm && !filterMonth && filterStatus === 'all' ? (
+                        ) : isAlbumListView ? (
                             // ALBUM VIEW (STACKED CARDS) - Only when no specific filters active (or discuss if filters should apply to albums)
                             // Let's apply filters to the grid view of albums if wanted, but simpler to just show albums.
                             // For now, let's assume if I filter, I might want to see individual photos, or I filter albums.
@@ -917,8 +1119,8 @@ export function PhotosTab() {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                                         {albumOrder.length === 0 ? (
                                             <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
-                                                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                                                    <ImageIcon className="w-10 h-10 text-gray-300" />
+                                                <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-md border border-slate-200 bg-white">
+                                                    <ImageIcon className="h-10 w-10 text-slate-300" />
                                                 </div>
                                                 <h3 className="text-lg font-medium text-gray-900">Aucun album</h3>
                                                 <p className="text-gray-500">Ajoutez des photos pour créer des albums.</p>
@@ -943,6 +1145,16 @@ export function PhotosTab() {
                                                                 className="relative w-full aspect-[7/8] max-w-[300px] mx-auto group perspective-1000 cursor-pointer"
                                                                 onClick={() => setSelectedAlbum(albumName)}
                                                             >
+                                                                <Button
+                                                                    size="icon"
+                                                                    variant="destructive"
+                                                                    className="absolute top-2 right-2 z-30 h-8 w-8 rounded-full opacity-0 shadow-md transition-opacity duration-200 group-hover:opacity-100"
+                                                                    title="Supprimer l'album"
+                                                                    onPointerDown={(e) => e.stopPropagation()}
+                                                                    onClick={(e) => { e.stopPropagation(); openDeleteAlbum(albumName) }}
+                                                                >
+                                                                    <Trash2 className="w-4 h-4" />
+                                                                </Button>
                                                                 <StackedCardsInteraction
                                                                     cards={cardsData}
                                                                     spreadDistance={15}
@@ -961,8 +1173,8 @@ export function PhotosTab() {
                             // STANDARD GRID VIEW (Detail view or Hero or Filtered)
                             filteredPhotos.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center py-20 text-center">
-                                    <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                                        <ImageIcon className="w-10 h-10 text-gray-300" />
+                                    <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-md border border-slate-200 bg-white">
+                                        <ImageIcon className="h-10 w-10 text-slate-300" />
                                     </div>
                                     <h3 className="text-lg font-medium text-gray-900">Aucune photo</h3>
                                     <p className="text-gray-500 max-w-sm mt-1">
@@ -978,16 +1190,18 @@ export function PhotosTab() {
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                                    {filteredPhotos.map((photo) => (
+                                    {filteredPhotos.map((photo) => {
+                                        const isSelected = selectedIds.includes(photo.id)
+                                        return (
                                         <div
                                             key={photo.id}
-                                            className={`group relative bg-white rounded-lg overflow-hidden shadow-sm border transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${!photo.is_active ? 'opacity-75 grayscale-[0.5]' : ''
+                                            className={`group relative overflow-hidden rounded-lg border bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${isSelected ? 'border-odillon-teal ring-2 ring-odillon-teal' : 'border-slate-200/80 hover:border-odillon-teal/25'} ${!photo.is_active ? 'opacity-75 grayscale-[0.5]' : ''
                                                 }`}
                                         >
                                             {/* Image Container */}
                                             <div
-                                                className="aspect-[4/3] relative overflow-hidden bg-gray-200 cursor-pointer"
-                                                onClick={() => setSelectedPhotoForPreview(photo)}
+                                                className="relative aspect-[4/3] cursor-pointer overflow-hidden bg-slate-100"
+                                                onClick={() => selectionMode ? toggleSelected(photo.id) : setSelectedPhotoForPreview(photo)}
                                             >
                                                 <img
                                                     src={photo.url}
@@ -1000,19 +1214,28 @@ export function PhotosTab() {
                                                 {/* Status Badge */}
                                                 <div className="absolute top-3 left-3 z-10">
                                                     {photo.is_active ? (
-                                                        <Badge className="bg-green-500/90 hover:bg-green-600 backdrop-blur-sm border-none shadow-sm text-[10px] px-2">Active</Badge>
+                                                        <Badge className="border border-odillon-teal/20 bg-odillon-teal/90 px-2 text-[10px] text-white shadow-sm hover:bg-odillon-teal">Active</Badge>
                                                     ) : (
-                                                        <Badge variant="secondary" className="bg-gray-800/80 text-white backdrop-blur-sm border-none shadow-sm text-[10px] px-2">Masquée</Badge>
+                                                        <Badge variant="secondary" className="border border-slate-200 bg-slate-900/80 px-2 text-[10px] text-white shadow-sm">Masquée</Badge>
                                                     )}
                                                 </div>
 
+                                                {/* Selection Checkbox */}
+                                                {selectionMode && (
+                                                    <div className="absolute top-3 right-3 z-20">
+                                                        <div className={`flex h-6 w-6 items-center justify-center rounded-full border-2 shadow-sm transition-colors ${isSelected ? 'border-odillon-teal bg-odillon-teal text-white' : 'border-white bg-white/80 text-transparent'}`}>
+                                                            <CheckCircle2 className="h-4 w-4" />
+                                                        </div>
+                                                    </div>
+                                                )}
+
                                                 {/* Actions Overlay */}
-                                                <div className="absolute bottom-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 flex gap-2">
+                                                <div className={`absolute bottom-3 right-3 z-10 ${selectionMode ? 'hidden' : 'opacity-0 group-hover:opacity-100'} transition-all duration-300 translate-y-2 group-hover:translate-y-0 flex gap-2`}>
                                                     <Button
                                                         size="icon"
                                                         variant="secondary"
-                                                        className="h-8 w-8 rounded-full bg-white/90 hover:bg-white text-gray-700 shadow-sm"
-                                                        onClick={() => openEditDialog(photo)}
+                                                        className="h-8 w-8 rounded-full bg-white/90 text-slate-700 shadow-sm hover:bg-white hover:text-odillon-teal"
+                                                        onClick={(e) => { e.stopPropagation(); openEditDialog(photo) }}
                                                         title="Modifier"
                                                     >
                                                         <Edit className="w-4 h-4" />
@@ -1021,8 +1244,8 @@ export function PhotosTab() {
                                                     <Button
                                                         size="icon"
                                                         variant="secondary"
-                                                        className="h-8 w-8 rounded-full bg-white/90 hover:bg-white text-gray-700 shadow-sm"
-                                                        onClick={() => togglePhotoActive(photo.id)}
+                                                        className="h-8 w-8 rounded-full bg-white/90 text-slate-700 shadow-sm hover:bg-white hover:text-odillon-teal"
+                                                        onClick={(e) => { e.stopPropagation(); togglePhotoActive(photo.id) }}
                                                         title={photo.is_active ? "Masquer" : "Afficher"}
                                                     >
                                                         {photo.is_active ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -1035,11 +1258,12 @@ export function PhotosTab() {
                                                                 variant="destructive"
                                                                 className="h-8 w-8 rounded-full shadow-sm"
                                                                 title="Supprimer"
+                                                                onClick={(e) => e.stopPropagation()}
                                                             >
                                                                 <Trash2 className="w-4 h-4" />
                                                             </Button>
                                                         </AlertDialogTrigger>
-                                                        <AlertDialogContent>
+                                                        <AlertDialogContent onClick={(e) => e.stopPropagation()}>
                                                             <AlertDialogHeader>
                                                                 <AlertDialogTitle>Supprimer cette photo ?</AlertDialogTitle>
                                                                 <AlertDialogDescription>
@@ -1059,19 +1283,19 @@ export function PhotosTab() {
 
                                             {/* Info Content */}
                                             <div className="p-3">
-                                                <p className="text-sm font-medium text-gray-900 truncate mb-1" title={photo.description}>
+                                                <p className="mb-1 truncate text-sm font-medium text-slate-900" title={photo.description}>
                                                     {photo.description}
                                                 </p>
 
                                                 <div className="flex flex-wrap gap-1.5 mt-2">
                                                     {photo.month && (
-                                                        <Badge variant="outline" className="text-[10px] py-0 h-5 font-normal bg-gray-50 text-gray-600 border-gray-200">
+                                                        <Badge variant="outline" className="h-5 border-slate-200 bg-slate-50 py-0 text-[10px] font-normal text-slate-600">
                                                             <CalendarDays className="w-3 h-3 mr-1 text-odillon-teal" />
                                                             {months[photo.month - 1]}
                                                         </Badge>
                                                     )}
                                                     {photo.theme_id && (
-                                                        <Badge variant="outline" className="text-[10px] py-0 h-5 font-normal bg-gray-50 text-gray-600 border-gray-200">
+                                                        <Badge variant="outline" className="h-5 border-slate-200 bg-slate-50 py-0 text-[10px] font-normal text-slate-600">
                                                             <span className="w-1.5 h-1.5 rounded-full bg-odillon-lime mr-1"></span>
                                                             {MONTHLY_THEMES.find(t => t.id === photo.theme_id)?.name || "Thème"}
                                                         </Badge>
@@ -1079,7 +1303,8 @@ export function PhotosTab() {
                                                 </div>
                                             </div>
                                         </div>
-                                    ))}
+                                        )
+                                    })}
                                 </div>
                             )
                         )}
@@ -1099,13 +1324,54 @@ export function PhotosTab() {
                     {editingPhoto && (
                         <div className="grid gap-4 py-4">
                             <div className="space-y-2">
-                                <Label htmlFor="edit-desc">Description / Album</Label>
-                                <Input
-                                    id="edit-desc"
-                                    value={editingPhoto.description}
-                                    onChange={(e) => setEditingPhoto({ ...editingPhoto, description: e.target.value })}
-                                />
-                                <p className="text-[10px] text-gray-500">Changer ceci déplacera la photo dans un autre album si le nom est différent.</p>
+                                <Label htmlFor="edit-desc">{activeSection === 'phototheque' ? "Album" : "Titre / Description"}</Label>
+                                {activeSection === 'phototheque' ? (
+                                    editIsNewAlbum ? (
+                                        <div className="flex gap-2">
+                                            <Input
+                                                id="edit-desc"
+                                                autoFocus
+                                                placeholder="Nom du nouvel album"
+                                                value={editingPhoto.description}
+                                                onChange={(e) => setEditingPhoto({ ...editingPhoto, description: e.target.value })}
+                                            />
+                                            <Button variant="ghost" size="icon" onClick={() => setEditIsNewAlbum(false)} title="Annuler">
+                                                <X className="w-4 h-4" />
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <Select
+                                            value={editingPhoto.description}
+                                            onValueChange={(val) => {
+                                                if (val === '__new__') {
+                                                    setEditIsNewAlbum(true)
+                                                    setEditingPhoto({ ...editingPhoto, description: '' })
+                                                } else {
+                                                    setEditingPhoto({ ...editingPhoto, description: val })
+                                                }
+                                            }}
+                                        >
+                                            <SelectTrigger id="edit-desc">
+                                                <SelectValue placeholder="Choisir un album" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {albumOrder.map((name) => (
+                                                    <SelectItem key={name} value={name}>{name}</SelectItem>
+                                                ))}
+                                                <SelectItem value="__new__">➕ Nouvel album…</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    )
+                                ) : (
+                                    <Input
+                                        id="edit-desc"
+                                        value={editingPhoto.description}
+                                        onChange={(e) => setEditingPhoto({ ...editingPhoto, description: e.target.value })}
+                                    />
+                                )}
+                                {activeSection === 'phototheque' && (
+                                    <p className="text-[10px] text-gray-500">Choisir un autre album déplacera la photo. « Nouvel album » crée un album.</p>
+                                )}
                             </div>
 
                             <div className="space-y-2">
@@ -1127,23 +1393,22 @@ export function PhotosTab() {
                                 />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <Label>Mois</Label>
-                                    <Select
-                                        value={editingPhoto.month?.toString()}
-                                        onValueChange={(val) => setEditingPhoto({ ...editingPhoto, month: parseInt(val) })}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Mois" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {months.map((m, i) => (
-                                                <SelectItem key={i} value={(i + 1).toString()}>{m}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
+                            <div className="space-y-2">
+                                <Label>Mois</Label>
+                                <Select
+                                    value={editingPhoto.month?.toString() || "none"}
+                                    onValueChange={(val) => setEditingPhoto({ ...editingPhoto, month: val === "none" ? null : parseInt(val) })}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Mois" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="none">Aucun</SelectItem>
+                                        {months.map((m, i) => (
+                                            <SelectItem key={i} value={(i + 1).toString()}>{m}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </div>
 
                             <div className="space-y-2">
@@ -1253,6 +1518,110 @@ export function PhotosTab() {
                 </DialogContent>
             </Dialog>
 
+            {/* BULK MOVE DIALOG */}
+            <Dialog open={isBulkMoveOpen} onOpenChange={setIsBulkMoveOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Déplacer vers un album</DialogTitle>
+                        <DialogDescription>
+                            {selectedIds.length} photo(s) seront déplacée(s) vers l'album choisi.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="grid gap-4 py-4">
+                        {bulkMoveIsNew ? (
+                            <div className="space-y-2">
+                                <Label htmlFor="bulk-new-album">Nom du nouvel album</Label>
+                                <div className="flex gap-2">
+                                    <Input
+                                        id="bulk-new-album"
+                                        autoFocus
+                                        placeholder="Ex: Séminaire annuel 2025"
+                                        value={bulkMoveNewName}
+                                        onChange={(e) => setBulkMoveNewName(e.target.value)}
+                                    />
+                                    <Button variant="ghost" size="icon" onClick={() => setBulkMoveIsNew(false)} title="Albums existants">
+                                        <X className="w-4 h-4" />
+                                    </Button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="space-y-2">
+                                <Label>Album de destination</Label>
+                                <Select
+                                    value={bulkMoveTarget}
+                                    onValueChange={(val) => {
+                                        if (val === '__new__') {
+                                            setBulkMoveIsNew(true)
+                                        } else {
+                                            setBulkMoveTarget(val)
+                                        }
+                                    }}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Choisir un album" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {albumOrder.map((name) => (
+                                            <SelectItem key={name} value={name}>{name}</SelectItem>
+                                        ))}
+                                        <SelectItem value="__new__">➕ Nouvel album…</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )}
+                    </div>
+
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsBulkMoveOpen(false)}>Annuler</Button>
+                        <Button onClick={handleBulkMove} disabled={bulkBusy} className="bg-odillon-teal">
+                            {bulkBusy ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <FolderInput className="w-4 h-4 mr-2" />}
+                            Déplacer
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* BULK DELETE CONFIRM */}
+            <AlertDialog open={isBulkDeleteOpen} onOpenChange={setIsBulkDeleteOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Supprimer {selectedIds.length} photo(s) ?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Cette action est irréversible. Les photos sélectionnées seront supprimées définitivement.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel disabled={bulkBusy}>Annuler</AlertDialogCancel>
+                        <AlertDialogAction onClick={(e) => { e.preventDefault(); handleBulkDelete() }} disabled={bulkBusy} className="bg-red-600 hover:bg-red-700">
+                            {bulkBusy ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                            Supprimer
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
+            {/* DELETE ALBUM CONFIRM */}
+            <AlertDialog open={isDeleteAlbumOpen} onOpenChange={setIsDeleteAlbumOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Supprimer l'album « {albumToDelete} » ?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {albumToDelete
+                                ? `Cette action supprimera définitivement les ${photos.filter(p => p.description === albumToDelete).length} photo(s) de cet album. Action irréversible.`
+                                : ""}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel disabled={bulkBusy}>Annuler</AlertDialogCancel>
+                        <AlertDialogAction onClick={(e) => { e.preventDefault(); handleDeleteAlbum() }} disabled={bulkBusy} className="bg-red-600 hover:bg-red-700">
+                            {bulkBusy ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                            Supprimer l'album
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
             {/* PHOTO PREVIEW LIGHTBOX */}
             <AnimatePresence>
                 {selectedPhotoForPreview && (
@@ -1291,7 +1660,10 @@ export function PhotosTab() {
                                     <div className="flex-1 space-y-3">
                                         <div className="flex items-center gap-3">
                                             <h3 className="text-white font-bold text-xl">{selectedPhotoForPreview.description}</h3>
-                                            <Badge variant={selectedPhotoForPreview.is_active ? "default" : "secondary"} className="bg-green-500/90 hover:bg-green-600">
+                                            <Badge
+                                                variant={selectedPhotoForPreview.is_active ? "default" : "secondary"}
+                                                className={selectedPhotoForPreview.is_active ? "bg-odillon-teal/90 hover:bg-odillon-teal" : "bg-white/15 text-white hover:bg-white/20"}
+                                            >
                                                 {selectedPhotoForPreview.is_active ? "Active" : "Masquée"}
                                             </Badge>
                                         </div>

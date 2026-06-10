@@ -41,7 +41,7 @@ function extractDominantColor(imageUrl: string): Promise<string> {
             canvas.width = size
             canvas.height = size
             const ctx = canvas.getContext("2d")
-            if (!ctx) { resolve("#39837a"); return }
+            if (!ctx) { resolve("#00a795"); return }
 
             ctx.drawImage(img, 0, 0, size, size)
             const data = ctx.getImageData(0, 0, size, size).data
@@ -89,10 +89,10 @@ function extractDominantColor(imageUrl: string): Promise<string> {
                 const b = Math.round(best.b / best.count)
                 resolve(`#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`)
             } else {
-                resolve("#39837a")
+                resolve("#00a795")
             }
         }
-        img.onerror = () => resolve("#39837a")
+        img.onerror = () => resolve("#00a795")
         img.src = imageUrl
     })
 }
@@ -241,7 +241,7 @@ export function LogosTab() {
         full_name: "",
         logo_path: "",
         fallback: "",
-        color: "#39837a"
+        color: "#00a795"
     })
 
     useEffect(() => {
@@ -265,7 +265,7 @@ export function LogosTab() {
     }
 
     const resetNewLogo = () => {
-        setNewLogo({ name: "", full_name: "", logo_path: "", fallback: "", color: "#39837a" })
+        setNewLogo({ name: "", full_name: "", logo_path: "", fallback: "", color: "#00a795" })
     }
 
     const handleAddLogo = async () => {

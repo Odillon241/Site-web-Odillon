@@ -12,7 +12,7 @@ interface AnimatedClockProps {
 export function AnimatedClock({
   className,
   size = 32,
-  color = "#39837a"
+  color = "#00a795"
 }: AnimatedClockProps) {
   // Initialize with a fixed date to avoid hydration mismatch
   // Will be updated on client after mount
