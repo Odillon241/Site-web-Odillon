@@ -104,12 +104,6 @@ export function ServicesHome() {
               >
                 <Link href={`/offres#${service.slug}`} className="block h-full group">
                   <div className="relative h-full bg-slate-50/50 hover:bg-white border border-slate-100 hover:border-slate-200 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500 rounded-2xl p-8 sm:p-10 flex flex-col overflow-hidden">
-                    {/* Discret Accent Color Top */}
-                    <div 
-                      className="absolute top-0 left-0 w-full h-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                      style={{ backgroundColor: service.color }}
-                    />
-
                     {/* Icon - Static & Clean */}
                     <div 
                       className="w-12 h-12 rounded-lg flex items-center justify-center mb-8 transition-transform group-hover:scale-110"

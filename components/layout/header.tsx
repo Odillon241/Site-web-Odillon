@@ -62,10 +62,9 @@ export function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-sm font-medium text-gray-700 hover:text-odillon-teal transition-colors duration-200 relative group"
+                className="text-sm font-medium text-gray-700 transition-colors duration-200 hover:text-odillon-teal"
               >
                 {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-odillon-teal transition-all duration-300 group-hover:w-full" />
               </Link>
             ))}
           </div>

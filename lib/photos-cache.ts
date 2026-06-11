@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache"
 import { createClient } from "@supabase/supabase-js"
+import { getSupabaseConfig } from "@/lib/supabase/config"
 
 export interface Photo {
   id: string
@@ -18,9 +19,8 @@ export interface Photo {
 export const getActivePhotos = unstable_cache(
   async (): Promise<Photo[]> => {
     try {
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      const supabase = createClient(supabaseUrl, supabaseKey)
+      const { supabaseUrl, supabasePublishableKey } = getSupabaseConfig()
+      const supabase = createClient(supabaseUrl, supabasePublishableKey)
 
       const { data, error } = await supabase
         .from('photos')

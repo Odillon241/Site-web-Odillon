@@ -51,35 +51,26 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
       </div>
 
       {/* Main Content - Split Layout */}
-      <div className="od-container relative z-10 flex flex-1 items-center py-12 sm:py-16 lg:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center w-full">
+      <div className="od-container relative z-10 flex flex-1 items-center py-10 sm:py-16 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 xl:gap-16 items-center w-full">
           {/* Left Column - Text Content */}
-          <div className="order-1 flex flex-col gap-5 sm:gap-6">
+          <div className="order-1 flex max-w-2xl flex-col gap-5 sm:gap-6">
             {/* Main Headline */}
             <FadeIn delay={0.1} direction="up">
-              <h1 className="leading-[1.1]">
-                <span className="block text-3xl sm:text-[2.2rem] lg:text-[2.75rem]">
-                  <span className="font-air font-extrabold text-odillon-dark">ODILLON</span>
-                  <span className="font-air font-light text-slate-500 ml-2">vous accompagne</span>
-                </span>
-                <span className="relative block mt-1">
-                  <span className="od-heading-display text-[2rem] sm:text-[2.6rem] lg:text-[3.4rem]">
-                    en Afrique francophone
-                  </span>
-                  <span
-                    className="absolute -bottom-2 left-0 h-[2px] w-20 rounded-full"
-                    style={{ background: "linear-gradient(to right, #00a795, #C4D82E)" }}
-                  />
+              <h1 className="max-w-2xl font-baskvill text-[1.2rem] font-semibold italic leading-[1.12] tracking-normal text-odillon-dark min-[380px]:text-[1.38rem] sm:text-[1.85rem] lg:text-[2.2rem]">
+                <span className="block whitespace-nowrap">Odillon vous accompagne</span>
+                <span className="mt-1.5 block whitespace-nowrap text-slate-700">
+                  en Afrique francophone
                 </span>
               </h1>
-              <p className="mt-3 text-lg sm:text-xl md:text-2xl text-slate-600 font-medium">
+              <p className="mt-5 max-w-xl text-lg font-semibold text-slate-700 sm:text-xl md:text-2xl">
                 Stratégies robustes et durables
               </p>
             </FadeIn>
 
             {/* Subtitle */}
             <FadeIn delay={0.25} direction="up">
-              <p className="text-base sm:text-lg text-gray-600 max-w-lg leading-relaxed">
+              <p className="max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">
                 Fondée en mai 2017, ODILLON accompagne les entreprises dans leurs projets de conseil, d’ingénierie organisationnelle et d’optimisation de la performance. Nous concevons et déployons des solutions fiables, innovantes et durables, adaptées aux réalités, aux enjeux et aux ambitions de chaque organisation.
               </p>
             </FadeIn>
@@ -88,17 +79,17 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
 
             {/* CTA Buttons */}
             <FadeIn delay={0.4} direction="up">
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
                 <Link
                   href="#apropos"
-                  className="inline-flex items-center justify-center gap-2 rounded-md bg-odillon-teal px-6 py-3.5 text-sm font-semibold text-white shadow-sm shadow-odillon-teal/20 transition-all duration-300 hover:bg-odillon-teal/90 hover:shadow-md hover:shadow-odillon-teal/20 sm:text-base group"
+                  className="group inline-flex items-center justify-center gap-2 rounded-md bg-odillon-teal px-6 py-3.5 text-sm font-semibold text-white shadow-sm shadow-odillon-teal/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-odillon-teal/90 hover:shadow-md hover:shadow-odillon-teal/20 sm:text-base"
                 >
                   Découvrir notre approche
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
                   href="#contact"
-                  className="inline-flex items-center justify-center gap-2 rounded-md border border-odillon-dark/20 px-6 py-3.5 text-sm font-semibold text-odillon-dark transition-all duration-300 hover:border-odillon-teal/40 hover:bg-odillon-teal/5 hover:text-odillon-teal sm:text-base"
+                  className="inline-flex items-center justify-center gap-2 rounded-md border border-odillon-dark/15 bg-white/70 px-6 py-3.5 text-sm font-semibold text-odillon-dark shadow-sm shadow-odillon-dark/[0.03] transition-all duration-300 hover:-translate-y-0.5 hover:border-odillon-teal/40 hover:bg-odillon-teal/5 hover:text-odillon-teal sm:text-base"
                 >
                   <Phone className="w-4 h-4" />
                   Nous contacter

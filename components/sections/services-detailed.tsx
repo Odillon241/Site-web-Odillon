@@ -264,13 +264,6 @@ export function ServicesDetailed() {
                       style={{ backgroundColor: service.color }}
                       aria-hidden="true"
                     />
-                    
-                    {/* Color accent bar */}
-                    <div
-                      className="h-1.5 w-full"
-                      style={{ backgroundColor: service.color }}
-                      aria-hidden="true"
-                    />
 
                     <div className={isLarge ? "p-8 md:p-10 flex flex-col flex-1" : "p-5 md:p-6 flex flex-col flex-1"}>
                       {/* Icon + Title */}

@@ -479,9 +479,6 @@ export function Contact() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <BlurFade delay={0.2}>
             <div className="relative bg-white rounded-lg border border-amber-200/60 shadow-sm overflow-hidden">
-              {/* Accent latéral ambre */}
-              <div className="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b from-amber-400 to-amber-500" />
-
               <div className="p-6 sm:p-8 md:p-10">
                 <div className="flex items-start gap-4 sm:gap-5 mb-6">
                   <div className="w-12 h-12 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center flex-shrink-0">

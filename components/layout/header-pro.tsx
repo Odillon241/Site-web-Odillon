@@ -148,7 +148,7 @@ export function HeaderPro() {
                   <Link
                     href={item.href}
                     className={cn(
-                      "px-3 py-2 text-sm font-semibold transition-all relative group flex items-center gap-2 rounded-md",
+                      "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition-all",
                       isActive
                         ? "text-odillon-teal bg-odillon-teal/10"
                         : "text-gray-700 hover:text-odillon-teal hover:bg-odillon-teal/5",
@@ -159,9 +159,6 @@ export function HeaderPro() {
                     {item.name}
                     {item.submenu && (
                       <ChevronDown className="ml-1 w-4 h-4" />
-                    )}
-                    {!isActive && (
-                      <span className="absolute bottom-1 left-3 right-3 h-px origin-left scale-x-0 bg-odillon-teal transition-transform duration-300 group-hover:scale-x-100" />
                     )}
                   </Link>
 

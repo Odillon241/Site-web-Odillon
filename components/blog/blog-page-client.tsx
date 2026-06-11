@@ -140,7 +140,7 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                             className="lg:col-span-7 relative"
                         >
                             {featuredArticle ? (
-                                <Link href={`/blog/${featuredArticle.slug}`} className="group block relative aspect-[4/5] sm:aspect-[16/10] lg:aspect-auto lg:h-[560px] overflow-hidden bg-gray-100 shadow-xl">
+                                <Link href={`/blog/${featuredArticle.slug}`} className="group block relative aspect-[4/5] overflow-hidden rounded-2xl bg-gray-100 shadow-xl sm:aspect-[16/10] lg:aspect-auto lg:h-[560px]">
                                     {featuredArticle.cover_image ? (
                                         <Image
                                             src={featuredArticle.cover_image}
@@ -195,7 +195,7 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                                     </div>
                                 </Link>
                             ) : (
-                                <div className="relative aspect-[16/10] lg:aspect-auto lg:h-[560px] overflow-hidden bg-gradient-to-br from-odillon-teal/10 via-white to-odillon-lime/10 flex items-center justify-center border border-gray-100">
+                                <div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden rounded-2xl border border-gray-100 bg-gradient-to-br from-odillon-teal/10 via-white to-odillon-lime/10 lg:aspect-auto lg:h-[560px]">
                                     <Newspaper className="w-20 h-20 text-odillon-teal/30" />
                                 </div>
                             )}
@@ -258,7 +258,7 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                             initial={{ opacity: 0, scale: 0.97 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.7, delay: 0.35 }}
-                            className="relative overflow-hidden shadow-xl aspect-[21/6] group"
+                            className="group relative aspect-[21/6] overflow-hidden rounded-2xl shadow-xl"
                         >
                             <Link href={settings!.blog_banner_link || "#"} target="_blank">
                                 <Image
@@ -342,13 +342,16 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                             variants={container}
                             initial="hidden"
                             animate="show"
-                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14 lg:gap-y-20"
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                         >
                             {gridArticles.map((article) => (
                                 <m.article key={article.id} variants={item}>
-                                    <Link href={`/blog/${article.slug}`} className="group block h-full">
+                                    <Link
+                                        href={`/blog/${article.slug}`}
+                                        className="group block h-full overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm shadow-[#0A1F2C]/[0.04] transition-all duration-300 hover:-translate-y-1 hover:border-odillon-teal/25 hover:shadow-xl hover:shadow-[#0A1F2C]/[0.08]"
+                                    >
                                         {/* Image — cadre simple sans border, coin carré cohérent avec hero */}
-                                        <div className="relative aspect-[4/3] overflow-hidden bg-gray-100 mb-6">
+                                        <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
                                             {article.cover_image ? (
                                                 <Image
                                                     src={article.cover_image}
@@ -361,12 +364,10 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
                                                     <Newspaper className="w-12 h-12 text-odillon-teal/30" />
                                                 </div>
                                             )}
-                                            {/* Barre lime révélée au hover */}
-                                            <div className="absolute inset-x-0 top-0 h-1 bg-odillon-lime origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
                                         </div>
 
                                         {/* Contenu */}
-                                        <div className="flex flex-col">
+                                        <div className="flex flex-col p-5 sm:p-6">
                                             {/* Eyebrow : catégorie + date en alignement minimaliste */}
                                             <div className="flex items-center gap-3 mb-4 text-xs font-semibold tracking-[0.15em] uppercase">
                                                 <span className="text-odillon-teal">{article.category}</span>
