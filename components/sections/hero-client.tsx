@@ -7,7 +7,7 @@ import { LogoRotator } from "@/components/ui/logo-rotator";
 import Link from "next/link";
 import { CompanyLogo, Video } from "@/types/admin";
 import { VideoPlayer } from "@/components/ui/video-player";
-import { ArrowRight, MapPin, Phone } from "lucide-react";
+import { ArrowRight, Phone } from "lucide-react";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { NewsTicker } from "@/components/sections/news-ticker";
 
@@ -55,30 +55,42 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 xl:gap-16 items-center w-full">
           {/* Left Column - Text Content */}
           <div className="order-1 flex max-w-2xl flex-col gap-5 sm:gap-6">
+
             {/* Main Headline */}
-            <FadeIn delay={0.1} direction="up">
-              <h1 className="max-w-2xl font-baskvill text-[1.2rem] font-semibold italic leading-[1.12] tracking-normal text-odillon-dark min-[380px]:text-[1.38rem] sm:text-[1.85rem] lg:text-[2.2rem]">
-                <span className="block whitespace-nowrap">Odillon vous accompagne</span>
-                <span className="mt-1.5 block whitespace-nowrap text-slate-700">
-                  en Afrique francophone
+            <FadeIn delay={0.15} direction="up">
+              <h1 className="font-baskvill leading-[1.1] text-odillon-dark">
+                {/* "Odillon" as logotype */}
+                <span className="block not-italic font-bold tracking-tight text-[1.75rem] min-[380px]:text-[2rem] sm:text-[2.7rem] lg:text-[3.1rem]">
+                  Odillon
+                </span>
+                {/* "vous accompagne" italic, slightly smaller */}
+                <span className="block italic font-semibold text-slate-700 mt-0.5 text-[1.05rem] min-[380px]:text-[1.2rem] sm:text-[1.6rem] lg:text-[1.9rem]">
+                  vous accompagne
+                </span>
+                {/* "en Afrique francophone" with gradient underline on "francophone" */}
+                <span className="block italic font-semibold mt-0.5 text-[1.05rem] min-[380px]:text-[1.2rem] sm:text-[1.6rem] lg:text-[1.9rem]">
+                  en Afrique{" "}
+                  <span className="relative inline-block">
+                    <span className="relative z-10 text-odillon-dark">francophone</span>
+                    <span
+                      className="absolute -bottom-0.5 left-0 right-0 h-[2.5px] rounded-full"
+                      style={{ background: "linear-gradient(to right, #C4D82E, #1A9B8E)" }}
+                    />
+                  </span>
                 </span>
               </h1>
-              <p className="mt-5 max-w-xl text-lg font-semibold text-slate-700 sm:text-xl md:text-2xl">
-                Stratégies robustes et durables
-              </p>
             </FadeIn>
 
-            {/* Subtitle */}
-            <FadeIn delay={0.25} direction="up">
-              <p className="max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">
-                Fondée en mai 2017, ODILLON accompagne les entreprises dans leurs projets de conseil, d’ingénierie organisationnelle et d’optimisation de la performance. Nous concevons et déployons des solutions fiables, innovantes et durables, adaptées aux réalités, aux enjeux et aux ambitions de chaque organisation.
+            {/* Description */}
+            <FadeIn delay={0.37} direction="up">
+              <p className="max-w-xl text-[0.925rem] leading-[1.82] text-slate-600 sm:text-base">
+                <strong className="font-semibold text-odillon-dark">Fondée en 2017,</strong>{" "}
+                ODILLON accompagne les entreprises dans leurs projets de conseil, d&apos;ingénierie organisationnelle et d&apos;optimisation de la performance. Nous concevons et déployons des solutions fiables, innovantes et durables, adaptées aux réalités et aux ambitions de chaque organisation.
               </p>
             </FadeIn>
-
-
 
             {/* CTA Buttons */}
-            <FadeIn delay={0.4} direction="up">
+            <FadeIn delay={0.52} direction="up">
               <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
                 <Link
                   href="#apropos"
@@ -102,16 +114,7 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
           <div className="order-2">
             <FadeIn delay={0.3} direction="right">
               <div className="relative">
-                <div className="od-surface absolute -left-4 top-6 z-20 hidden max-w-[210px] p-4 lg:block">
-                  <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#00a795]">
-                    <MapPin className="h-4 w-4" />
-                    Proximité
-                  </div>
-                  <p className="text-sm font-semibold leading-snug text-odillon-dark">
-                    Basés à Libreville, nous accompagnons vos enjeux avec une
-                    lecture locale et opérationnelle.
-                  </p>
-                </div>
+
 
                 {/* Decorative frame behind */}
                 <div className="absolute -inset-3 rounded-xl bg-gradient-to-br from-[#00a795]/15 via-[#C4D82E]/10 to-transparent" />

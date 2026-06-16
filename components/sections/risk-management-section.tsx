@@ -71,15 +71,14 @@ export function RiskManagementSection() {
                     <BlurFade delay={0.1}>
                         <div className="relative group">
                             <div className="absolute -inset-4 bg-odillon-teal/5 rounded-[2rem] -rotate-1 group-hover:rotate-0 transition-transform duration-500" />
-                            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 shadow-2xl">
+                            <div className="relative aspect-[16/9] rounded-2xl overflow-hidden border border-slate-200 shadow-2xl bg-white">
                                 <Image
-                                    src="/images/management-risques.jpg"
+                                    src="/images/management-risques-moderne.png"
                                     alt="Management des Risques"
                                     fill
-                                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    className="object-contain transition-transform duration-700 group-hover:scale-105"
                                     sizes="(max-width: 1024px) 100vw, 600px"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-60" />
                             </div>
                             
                             {/* Floating Badge on Image */}
