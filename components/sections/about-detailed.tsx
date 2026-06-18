@@ -140,9 +140,6 @@ export function AboutDetailed() {
                 />
                 {/* Overlay dégradé + titre */}
                 <div className="pointer-events-none absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/25 to-transparent p-6 sm:p-10 lg:p-14">
-                  <span className="mb-3 inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-odillon-lime">
-                    <Sparkles className="w-4 h-4" /> Together we the future
-                  </span>
                   <h1 className="font-baskvill not-italic font-bold text-2xl sm:text-4xl lg:text-5xl text-white mb-2 leading-tight drop-shadow">
                     À propos d&apos;{" "}
                     <span className="bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
@@ -166,9 +163,6 @@ export function AboutDetailed() {
             /* ----- Fallback : hero dégradé sans vidéo ----- */
             <FadeIn delay={0.1}>
               <div className="text-center max-w-4xl mx-auto py-10 md:py-16">
-                <span className="mb-4 inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-odillon-teal">
-                  <Sparkles className="w-4 h-4" /> Together we the future
-                </span>
                 <h1 className="font-baskvill not-italic font-bold text-3xl sm:text-4xl lg:text-5xl text-gray-900 mb-3 leading-tight">
                   À propos d&apos;{" "}
                   <span className="bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">

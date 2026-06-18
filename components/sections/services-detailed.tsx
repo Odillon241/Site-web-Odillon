@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { m } from "framer-motion"
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
-import { AnimatedSlogan } from "@/components/magicui/animated-slogan"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { CtaBanner } from "@/components/sections/cta-banner"
@@ -172,15 +171,7 @@ export function ServicesDetailed() {
         {/* Content */}
         <div className="od-container relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <FadeIn delay={0.1} className="flex justify-center">
-              <AnimatedSlogan
-                text="Together we the future"
-                iconPosition={2}
-                className="mb-6 md:mb-8 text-odillon-teal"
-              />
-            </FadeIn>
-
-            <FadeIn delay={0.2}>
+            <FadeIn delay={0.1}>
               <h1 className="od-heading-display mb-6 text-4xl sm:text-5xl lg:text-6xl">
                 Des offres qui transforment{" "}
                 <span className="relative inline-block mt-2">

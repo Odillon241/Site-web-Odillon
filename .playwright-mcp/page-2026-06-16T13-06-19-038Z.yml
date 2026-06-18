@@ -1,0 +1,699 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e4]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - link "+241 11 74 75 74" [ref=e9] [cursor=pointer]:
+          - /url: tel:+24111747574
+          - img [ref=e10]
+          - generic [ref=e12]: +241 11 74 75 74
+        - link "+241 74 75 95 15" [ref=e13] [cursor=pointer]:
+          - /url: tel:+24174759515
+          - img [ref=e14]
+          - text: +241 74 75 95 15
+        - link "contact@odillon.fr" [ref=e16] [cursor=pointer]:
+          - /url: mailto:contact@odillon.fr
+          - img [ref=e17]
+          - text: contact@odillon.fr
+      - generic [ref=e20]: BP 13262, Libreville, Gabon
+    - navigation [ref=e21]:
+      - generic [ref=e22]:
+        - link "Odillon - Ingénierie d'Entreprises" [ref=e23] [cursor=pointer]:
+          - /url: /
+          - img "Odillon - Ingénierie d'Entreprises" [ref=e24]
+        - generic [ref=e25]:
+          - link "Accueil" [ref=e27] [cursor=pointer]:
+            - /url: /
+            - img [ref=e28]
+            - text: Accueil
+          - link "Nos offres" [ref=e32] [cursor=pointer]:
+            - /url: /offres
+            - img [ref=e33]
+            - text: Nos offres
+            - img [ref=e36]
+          - link "Formations" [ref=e39] [cursor=pointer]:
+            - /url: /calendrier-formations
+            - img [ref=e40]
+            - text: Formations
+          - link "Nos événements" [ref=e44] [cursor=pointer]:
+            - /url: /phototheque
+            - img [ref=e45]
+            - text: Nos événements
+          - link "À propos" [ref=e50] [cursor=pointer]:
+            - /url: /a-propos
+            - img [ref=e51]
+            - text: À propos
+          - link "Blog" [ref=e57] [cursor=pointer]:
+            - /url: /blog
+            - img [ref=e58]
+            - text: Blog
+        - link "Nous contacter" [ref=e62] [cursor=pointer]:
+          - /url: /contact
+          - img
+          - text: Nous contacter
+  - main [ref=e63]:
+    - generic [ref=e64]:
+      - img
+      - generic [ref=e67]:
+        - img [ref=e69]
+        - generic [ref=e72]: Chargement des actualités...
+      - generic [ref=e74]:
+        - generic [ref=e75]:
+          - heading "Odillon vous accompagne en Afrique francophone" [level=1] [ref=e77]:
+            - generic [ref=e78]: Odillon
+            - generic [ref=e79]: vous accompagne
+            - generic [ref=e80]:
+              - text: en Afrique
+              - generic [ref=e81]: francophone
+          - paragraph [ref=e84]:
+            - strong [ref=e85]: Fondée en 2017,
+            - text: ODILLON accompagne les entreprises dans leurs projets de conseil, d'ingénierie organisationnelle et d'optimisation de la performance. Nous concevons et déployons des solutions fiables, innovantes et durables, adaptées aux réalités et aux ambitions de chaque organisation.
+          - generic [ref=e87]:
+            - link "Découvrir notre approche" [ref=e88] [cursor=pointer]:
+              - /url: "#apropos"
+              - text: Découvrir notre approche
+              - img [ref=e89]
+            - link "Nous contacter" [ref=e91] [cursor=pointer]:
+              - /url: "#contact"
+              - img [ref=e92]
+              - text: Nous contacter
+        - generic [ref=e96]:
+          - generic [ref=e97]:
+            - generic [ref=e98]:
+              - img [ref=e99]
+              - text: Proximité
+            - paragraph [ref=e102]: Basés à Libreville, nous accompagnons vos enjeux avec une lecture locale et opérationnelle.
+          - img "Section Hero" [ref=e108]
+      - generic [ref=e117]:
+        - paragraph [ref=e118]: Ils nous font confiance
+        - generic [ref=e120]:
+          - img "CDC logo" [ref=e124]
+          - img "CAISTAB logo" [ref=e128]
+          - img "UBA logo" [ref=e132]
+          - img "SEM logo" [ref=e136]
+    - region "Monday Motivation" [ref=e137]:
+      - generic [ref=e139]:
+        - generic [ref=e141]:
+          - generic [ref=e142]:
+            - img [ref=e143]
+            - text: Actualite de la semaine
+          - heading "Monday Motivation" [level=2] [ref=e145]
+          - generic [ref=e146]:
+            - img [ref=e147]
+            - generic [ref=e149]: Semaine du 15 juin 2026
+          - generic [ref=e150]:
+            - heading "Rigueur et Organisation" [level=3] [ref=e151]
+            - paragraph [ref=e152]:
+              - text: Nadia TATY
+              - generic [ref=e153]: — Assistante Administrative et Relations Clients
+        - generic "Rigueur et Organisation" [ref=e160]
+    - generic [ref=e163]:
+      - generic [ref=e164]:
+        - generic [ref=e166]:
+          - generic [ref=e169]: Nos Piliers d'Expertise
+          - heading "L'expertise stratégique au service de votre transformation." [level=2] [ref=e170]
+          - paragraph [ref=e171]: Quatre domaines d'intervention pour structurer votre organisation et sécuriser votre croissance de manière pérenne.
+        - link "Voir toutes nos offres" [ref=e173] [cursor=pointer]:
+          - /url: /offres
+          - text: Voir toutes nos offres
+          - img
+      - generic [ref=e174]:
+        - link "Structuration et Restructuration d'Entreprises Gouvernance Règles de bonne gouvernance Conseil d'Administration Risques opérationnels En savoir plus" [ref=e176] [cursor=pointer]:
+          - /url: /offres#gouvernance
+          - generic [ref=e177]:
+            - img [ref=e179]
+            - generic [ref=e181]:
+              - paragraph [ref=e182]: Structuration et Restructuration d'Entreprises
+              - heading "Gouvernance" [level=3] [ref=e183]
+              - list [ref=e184]:
+                - listitem [ref=e185]:
+                  - img [ref=e186]
+                  - generic [ref=e188]: Règles de bonne gouvernance
+                - listitem [ref=e189]:
+                  - img [ref=e190]
+                  - generic [ref=e192]: Conseil d'Administration
+                - listitem [ref=e193]:
+                  - img [ref=e194]
+                  - generic [ref=e196]: Risques opérationnels
+            - generic [ref=e197]:
+              - text: En savoir plus
+              - img [ref=e198]
+        - link "Accompagnement Juridique Externalisé Juridique Service externalisé Contrats Négociation En savoir plus" [ref=e201] [cursor=pointer]:
+          - /url: /offres#juridique
+          - generic [ref=e202]:
+            - img [ref=e204]
+            - generic [ref=e208]:
+              - paragraph [ref=e209]: Accompagnement Juridique Externalisé
+              - heading "Juridique" [level=3] [ref=e210]
+              - list [ref=e211]:
+                - listitem [ref=e212]:
+                  - img [ref=e213]
+                  - generic [ref=e215]: Service externalisé
+                - listitem [ref=e216]:
+                  - img [ref=e217]
+                  - generic [ref=e219]: Contrats
+                - listitem [ref=e220]:
+                  - img [ref=e221]
+                  - generic [ref=e223]: Négociation
+            - generic [ref=e224]:
+              - text: En savoir plus
+              - img [ref=e225]
+        - link "Administration et Ressources Humaines Capital Humain Développement RH Évaluation Rémunérations En savoir plus" [ref=e228] [cursor=pointer]:
+          - /url: /offres#ressources-humaines
+          - generic [ref=e229]:
+            - img [ref=e231]
+            - generic [ref=e236]:
+              - paragraph [ref=e237]: Administration et Ressources Humaines
+              - heading "Capital Humain" [level=3] [ref=e238]
+              - list [ref=e239]:
+                - listitem [ref=e240]:
+                  - img [ref=e241]
+                  - generic [ref=e243]: Développement RH
+                - listitem [ref=e244]:
+                  - img [ref=e245]
+                  - generic [ref=e247]: Évaluation
+                - listitem [ref=e248]:
+                  - img [ref=e249]
+                  - generic [ref=e251]: Rémunérations
+            - generic [ref=e252]:
+              - text: En savoir plus
+              - img [ref=e253]
+        - link "Formation Professionnelle Formation Master Class Coaching professionnel Formations en ligne En savoir plus" [ref=e256] [cursor=pointer]:
+          - /url: /offres#formations
+          - generic [ref=e257]:
+            - img [ref=e259]
+            - generic [ref=e262]:
+              - paragraph [ref=e263]: Formation Professionnelle
+              - heading "Formation" [level=3] [ref=e264]
+              - list [ref=e265]:
+                - listitem [ref=e266]:
+                  - img [ref=e267]
+                  - generic [ref=e269]: Master Class
+                - listitem [ref=e270]:
+                  - img [ref=e271]
+                  - generic [ref=e273]: Coaching professionnel
+                - listitem [ref=e274]:
+                  - img [ref=e275]
+                  - generic [ref=e277]: Formations en ligne
+            - generic [ref=e278]:
+              - text: En savoir plus
+              - img [ref=e279]
+    - generic [ref=e283]:
+      - generic [ref=e284]:
+        - generic [ref=e288]: De 2017 à Nos Jours
+        - heading "Nos compétences au service de votre réussite." [level=2] [ref=e290]
+        - paragraph [ref=e292]: Nous partageons notre expérience professionnelle et notre éthique afin que nos clients puissent intégrer les pratiques qui pourraient leur convenir.
+        - link "Découvrir notre approche" [ref=e294] [cursor=pointer]:
+          - /url: /offres
+          - text: Découvrir notre approche
+          - img [ref=e295]
+      - generic [ref=e297]:
+        - link "Cohérence Adaptation de la gestion et des outils de travail au changement opérationnel. Gestion du changement Outils adaptés Opérationnel" [ref=e299] [cursor=pointer]:
+          - /url: /offres
+          - generic [ref=e300]:
+            - generic [ref=e303]:
+              - img [ref=e305]
+              - generic [ref=e307]:
+                - heading "Cohérence" [level=3] [ref=e308]
+                - paragraph [ref=e309]: Adaptation de la gestion et des outils de travail au changement opérationnel.
+            - generic [ref=e310]:
+              - generic [ref=e311]:
+                - img [ref=e312]
+                - text: Gestion du changement
+              - generic [ref=e315]:
+                - img [ref=e316]
+                - text: Outils adaptés
+              - generic [ref=e319]:
+                - img [ref=e320]
+                - text: Opérationnel
+        - link "Amélioration Proposer des solutions idoines. Solutions sur-mesure Optimisation Performance" [ref=e324] [cursor=pointer]:
+          - /url: /offres
+          - generic [ref=e325]:
+            - generic [ref=e328]:
+              - img [ref=e330]
+              - generic [ref=e332]:
+                - heading "Amélioration" [level=3] [ref=e333]
+                - paragraph [ref=e334]: Proposer des solutions idoines.
+            - generic [ref=e335]:
+              - generic [ref=e336]:
+                - img [ref=e337]
+                - text: Solutions sur-mesure
+              - generic [ref=e340]:
+                - img [ref=e341]
+                - text: Optimisation
+              - generic [ref=e344]:
+                - img [ref=e345]
+                - text: Performance
+        - link "Pertinence Adapter les besoins du client aux contraintes. Analyse des besoins Adaptation Contraintes maîtrisées" [ref=e349] [cursor=pointer]:
+          - /url: /offres
+          - generic [ref=e350]:
+            - generic [ref=e353]:
+              - img [ref=e355]
+              - generic [ref=e359]:
+                - heading "Pertinence" [level=3] [ref=e360]
+                - paragraph [ref=e361]: Adapter les besoins du client aux contraintes.
+            - generic [ref=e362]:
+              - generic [ref=e363]:
+                - img [ref=e364]
+                - text: Analyse des besoins
+              - generic [ref=e367]:
+                - img [ref=e368]
+                - text: Adaptation
+              - generic [ref=e371]:
+                - img [ref=e372]
+                - text: Contraintes maîtrisées
+    - generic [ref=e376]:
+      - generic [ref=e377]:
+        - generic [ref=e379]:
+          - img "Management des Risques" [ref=e382]
+          - generic [ref=e383]:
+            - paragraph [ref=e384]: Objectif
+            - paragraph [ref=e385]: Transformer vos vulnérabilités en leviers de performance.
+        - generic [ref=e387]:
+          - generic [ref=e390]: Management Stratégique
+          - heading "Anticiper pour mieux maîtriser." [level=2] [ref=e391]
+          - paragraph [ref=e392]: Notre approche structurée en 6 étapes clés vous permet non seulement de protéger vos actifs, mais aussi d'asseoir une gouvernance solide face aux incertitudes du marché.
+          - link "Découvrir notre approche" [ref=e394] [cursor=pointer]:
+            - /url: /offres
+            - text: Découvrir notre approche
+            - img
+      - generic [ref=e395]:
+        - heading "6 Étapes de notre méthodologie" [level=3] [ref=e397]:
+          - generic [ref=e398]: "6"
+          - text: Étapes de notre méthodologie
+        - generic [ref=e399]:
+          - generic [ref=e401]:
+            - generic [ref=e402]:
+              - img [ref=e404]
+              - generic [ref=e407]: Étape 01
+            - heading "Analyser" [level=4] [ref=e408]
+            - paragraph [ref=e409]: Identification et évaluation des risques potentiels pour votre organisation.
+            - list [ref=e410]:
+              - listitem [ref=e411]: Cartographie des risques
+              - listitem [ref=e413]: Évaluation d'impact
+              - listitem [ref=e415]: Matrice de probabilité
+          - generic [ref=e418]:
+            - generic [ref=e419]:
+              - img [ref=e421]
+              - generic [ref=e424]: Étape 02
+            - heading "Transférer" [level=4] [ref=e425]
+            - paragraph [ref=e426]: Délégation des risques via assurances, contrats ou partenariats stratégiques.
+            - list [ref=e427]:
+              - listitem [ref=e428]: Assurances adaptées
+              - listitem [ref=e430]: Clauses contractuelles
+              - listitem [ref=e432]: Partenariats stratégiques
+          - generic [ref=e435]:
+            - generic [ref=e436]:
+              - img [ref=e438]
+              - generic [ref=e442]: Étape 03
+            - heading "Éviter" [level=4] [ref=e443]
+            - paragraph [ref=e444]: Élimination des activités ou processus générateurs de risques majeurs.
+            - list [ref=e445]:
+              - listitem [ref=e446]: Revue des processus
+              - listitem [ref=e448]: Arbitrages stratégiques
+              - listitem [ref=e450]: Élimination ciblée
+          - generic [ref=e453]:
+            - generic [ref=e454]:
+              - img [ref=e456]
+              - generic [ref=e459]: Étape 04
+            - heading "Réduire" [level=4] [ref=e460]
+            - paragraph [ref=e461]: Mise en place de contrôles pour minimiser la probabilité et l'impact.
+            - list [ref=e462]:
+              - listitem [ref=e463]: Contrôles internes
+              - listitem [ref=e465]: Procédures renforcées
+              - listitem [ref=e467]: Formation des équipes
+          - generic [ref=e470]:
+            - generic [ref=e471]:
+              - img [ref=e473]
+              - generic [ref=e476]: Étape 05
+            - heading "Préparer" [level=4] [ref=e477]
+            - paragraph [ref=e478]: Élaboration de plans de continuité et de gestion de crise (PCA/PRA).
+            - list [ref=e479]:
+              - listitem [ref=e480]: Plan de continuité (PCA)
+              - listitem [ref=e482]: Plan de reprise (PRA)
+              - listitem [ref=e484]: Gestion de crise
+          - generic [ref=e487]:
+            - generic [ref=e488]:
+              - img [ref=e490]
+              - generic [ref=e493]: Étape 06
+            - heading "Contrôler" [level=4] [ref=e494]
+            - paragraph [ref=e495]: Surveillance continue et ajustement des mesures de maîtrise des risques.
+            - list [ref=e496]:
+              - listitem [ref=e497]: Audits réguliers
+              - listitem [ref=e499]: KPI dédiés
+              - listitem [ref=e501]: Reporting continu
+    - generic [ref=e505]:
+      - img "Équipe en collaboration" [ref=e507]
+      - generic [ref=e511]:
+        - generic [ref=e512]: Expertise
+        - heading "Découvrez notre expertise approfondie et nos méthodologies éprouvées" [level=2] [ref=e513]
+        - link "En savoir plus sur notre expertise" [ref=e514] [cursor=pointer]:
+          - /url: /expertise
+          - text: En savoir plus sur notre expertise
+          - img
+    - generic [ref=e516]:
+      - generic [ref=e517]:
+        - generic [ref=e518]:
+          - generic [ref=e519]:
+            - generic [ref=e522]: À propos
+            - heading "Votre partenaire stratégique de confiance." [level=2] [ref=e523]:
+              - text: Votre partenaire
+              - text: stratégique de confiance.
+          - generic [ref=e524]:
+            - paragraph [ref=e525]: Fondée en mai 2017, ODILLON accompagne les entreprises dans leurs projets de conseil, d’ingénierie organisationnelle et d’optimisation de la performance.
+            - paragraph [ref=e526]: Nous concevons et déployons des solutions fiables, innovantes et durables, adaptées aux réalités, aux enjeux et aux ambitions de chaque organisation. Notre mission est d'aider les entreprises à renforcer leur efficacité opérationnelle, améliorer leur gouvernance et atteindre leurs objectifs stratégiques.
+            - generic [ref=e527]:
+              - generic [ref=e529]: "Notre vision :"
+              - paragraph [ref=e530]: « Construire des entreprises compétitives, responsables et performantes, capables de relever durablement les défis de leur environnement. »
+            - link "Notre histoire" [ref=e532] [cursor=pointer]:
+              - /url: /a-propos
+        - generic [ref=e539]: Odillon
+      - generic [ref=e548]:
+        - generic [ref=e549]: "2017"
+        - heading "FONDATION" [level=3] [ref=e550]
+        - paragraph [ref=e551]: Création de la Société ODILLON, spécialisée en Ingénierie d'Entreprises.
+        - generic:
+          - img
+      - generic [ref=e552]:
+        - generic [ref=e553]:
+          - heading "Nos Valeurs Fondamentales" [level=3] [ref=e554]
+          - paragraph [ref=e555]: Les principes qui guident chaque action et façonnent notre engagement.
+        - generic [ref=e556]:
+          - generic [ref=e557]:
+            - img [ref=e559]
+            - heading "Talent" [level=4] [ref=e562]
+            - paragraph [ref=e563]: Notre équipe se définit par l'expression de ses compétences transversales matérialisées par le professionnalisme, la rigueur et la discipline.
+          - generic [ref=e564]:
+            - img [ref=e566]
+            - heading "Challenge" [level=4] [ref=e568]
+            - paragraph [ref=e569]: Notre détermination et notre motivation à toujours proposer des solutions innovantes mieux adaptées aux besoins de nos clients.
+          - generic [ref=e570]:
+            - img [ref=e572]
+            - heading "Proximité" [level=4] [ref=e577]
+            - paragraph [ref=e578]: Notre implication à fournir des services de qualité exceptionnelle aux clients.
+    - generic [ref=e580]:
+      - generic [ref=e582]:
+        - generic [ref=e583]: Ressources
+        - heading "Notre sélection d'articles" [level=2] [ref=e584]
+        - paragraph [ref=e585]: Découvrez les articles que nous vous recommandons sur la stratégie d'entreprise.
+      - generic [ref=e586]:
+        - 'link "Au-delà de la rémunération : L''art stratégique de fidéliser vos talents chez Odillon Ressources Humaines 22 avril 2026 5 min Au-delà de la rémunération : L''art stratégique de fidéliser vos talents chez Odillon Dans un marché du travail sous tension, retenir ses meilleurs collaborateurs est devenu un impératif stratégique. Odillon vous livre les clés pour transformer votre gestion des ressources humaines en un véritable moteur de fidélisation durable. Lire l''article" [ref=e588] [cursor=pointer]':
+          - /url: /blog/au-dela-de-la-remuneration-l-art-strategique-de-fideliser-vos-talents-chez-odillon-314222
+          - generic [ref=e589]:
+            - generic [ref=e590]:
+              - 'img "Au-delà de la rémunération : L''art stratégique de fidéliser vos talents chez Odillon" [ref=e592]'
+              - generic [ref=e593]: Ressources Humaines
+            - generic [ref=e594]:
+              - generic [ref=e595]:
+                - generic [ref=e596]:
+                  - img [ref=e597]
+                  - text: 22 avril 2026
+                - generic [ref=e599]:
+                  - img [ref=e600]
+                  - text: 5 min
+              - 'heading "Au-delà de la rémunération : L''art stratégique de fidéliser vos talents chez Odillon" [level=3] [ref=e603]'
+              - paragraph [ref=e604]: Dans un marché du travail sous tension, retenir ses meilleurs collaborateurs est devenu un impératif stratégique. Odillon vous livre les clés pour transformer votre gestion des ressources humaines en un véritable moteur de fidélisation durable.
+              - generic [ref=e605]:
+                - text: Lire l'article
+                - img [ref=e606]
+        - 'link "Stratégie d''entreprise : L''art de transformer le changement en levier de croissance durable Stratégie 22 avril 2026 5 min Stratégie d''entreprise : L''art de transformer le changement en levier de croissance durable Dans un environnement économique en constante mutation, la capacité d''une entreprise à piloter le changement détermine sa pérennité. Découvrez comment Odillon accompagne les dirigeants pour transformer l''incertitude en opportunité stratégique à travers une méthodologie structurée. Lire l''article" [ref=e609] [cursor=pointer]':
+          - /url: /blog/strategie-d-entreprise-l-art-de-transformer-le-changement-en-levier-de-croissance-durable-314223
+          - generic [ref=e610]:
+            - generic [ref=e611]:
+              - 'img "Stratégie d''entreprise : L''art de transformer le changement en levier de croissance durable" [ref=e613]'
+              - generic [ref=e614]: Stratégie
+            - generic [ref=e615]:
+              - generic [ref=e616]:
+                - generic [ref=e617]:
+                  - img [ref=e618]
+                  - text: 22 avril 2026
+                - generic [ref=e620]:
+                  - img [ref=e621]
+                  - text: 5 min
+              - 'heading "Stratégie d''entreprise : L''art de transformer le changement en levier de croissance durable" [level=3] [ref=e624]'
+              - paragraph [ref=e625]: Dans un environnement économique en constante mutation, la capacité d'une entreprise à piloter le changement détermine sa pérennité. Découvrez comment Odillon accompagne les dirigeants pour transformer l'incertitude en opportunité stratégique à travers une méthodologie structurée.
+              - generic [ref=e626]:
+                - text: Lire l'article
+                - img [ref=e627]
+        - 'link "RSE et Transition Écologique : Transformer l''Impact Environnemental en Levier de Valeur chez Odillon Stratégie 22 avril 2026 5 min RSE et Transition Écologique : Transformer l''Impact Environnemental en Levier de Valeur chez Odillon La Responsabilité Sociétale des Entreprises (RSE) n''est plus une option, mais un pilier central de la stratégie d''entreprise. Cet article explore comment Odillon accompagne les organisations pour concilier performance économique et préservation des écosystèmes. Lire l''article" [ref=e630] [cursor=pointer]':
+          - /url: /blog/rse-et-transition-ecologique-transformer-l-impact-environnemental-en-levier-de-valeur-chez-odillon-314224
+          - generic [ref=e631]:
+            - generic [ref=e632]:
+              - 'img "RSE et Transition Écologique : Transformer l''Impact Environnemental en Levier de Valeur chez Odillon" [ref=e634]'
+              - generic [ref=e635]: Stratégie
+            - generic [ref=e636]:
+              - generic [ref=e637]:
+                - generic [ref=e638]:
+                  - img [ref=e639]
+                  - text: 22 avril 2026
+                - generic [ref=e641]:
+                  - img [ref=e642]
+                  - text: 5 min
+              - 'heading "RSE et Transition Écologique : Transformer l''Impact Environnemental en Levier de Valeur chez Odillon" [level=3] [ref=e645]'
+              - paragraph [ref=e646]: La Responsabilité Sociétale des Entreprises (RSE) n'est plus une option, mais un pilier central de la stratégie d'entreprise. Cet article explore comment Odillon accompagne les organisations pour concilier performance économique et préservation des écosystèmes.
+              - generic [ref=e647]:
+                - text: Lire l'article
+                - img [ref=e648]
+      - link "Voir toutes les actualités" [ref=e652] [cursor=pointer]:
+        - /url: /blog
+        - text: Voir toutes les actualités
+        - img [ref=e653]
+    - generic [ref=e657]:
+      - generic [ref=e658]: Avis
+      - heading "Témoignages Clients" [level=2] [ref=e659]
+    - generic [ref=e661]:
+      - generic [ref=e663]:
+        - generic [ref=e664]:
+          - img [ref=e665]
+          - text: FAQ
+        - heading "Questions fréquentes" [level=2] [ref=e668]
+        - paragraph [ref=e669]: Retrouvez les réponses aux questions les plus courantes sur nos services et notre approche.
+      - generic [ref=e672]:
+        - heading "Quels types d'entreprises accompagnez-vous ?" [level=3] [ref=e674]:
+          - button "Quels types d'entreprises accompagnez-vous ?" [ref=e675] [cursor=pointer]:
+            - text: Quels types d'entreprises accompagnez-vous ?
+            - img [ref=e676]
+        - heading "Quelle est votre zone d'intervention géographique ?" [level=3] [ref=e679]:
+          - button "Quelle est votre zone d'intervention géographique ?" [ref=e680] [cursor=pointer]:
+            - text: Quelle est votre zone d'intervention géographique ?
+            - img [ref=e681]
+        - heading "Combien de temps dure une mission type ?" [level=3] [ref=e684]:
+          - button "Combien de temps dure une mission type ?" [ref=e685] [cursor=pointer]:
+            - text: Combien de temps dure une mission type ?
+            - img [ref=e686]
+        - heading "Comment se déroule un premier contact ?" [level=3] [ref=e689]:
+          - button "Comment se déroule un premier contact ?" [ref=e690] [cursor=pointer]:
+            - text: Comment se déroule un premier contact ?
+            - img [ref=e691]
+        - heading "Proposez-vous des formations ?" [level=3] [ref=e694]:
+          - button "Proposez-vous des formations ?" [ref=e695] [cursor=pointer]:
+            - text: Proposez-vous des formations ?
+            - img [ref=e696]
+        - heading "Quelles garanties offrez-vous sur vos prestations ?" [level=3] [ref=e699]:
+          - button "Quelles garanties offrez-vous sur vos prestations ?" [ref=e700] [cursor=pointer]:
+            - text: Quelles garanties offrez-vous sur vos prestations ?
+            - img [ref=e701]
+      - generic [ref=e704]:
+        - paragraph [ref=e705]: Vous avez une autre question ?
+        - link "Contactez-nous directement →" [ref=e706] [cursor=pointer]:
+          - /url: "#contact"
+          - text: Contactez-nous directement
+          - generic [ref=e707]: →
+    - generic [ref=e713]:
+      - heading "Envie de conseil ?" [level=2] [ref=e714]
+      - paragraph [ref=e715]: Vous êtes arrivé au bon endroit. Entrez vos coordonnées pour obtenir de l'inspiration professionnelle, des solutions tendance et des conseils en matière de conseil fournis dans votre boîte de réception.
+      - generic [ref=e716]:
+        - generic [ref=e717]:
+          - generic:
+            - img
+          - textbox "votre@email.com" [ref=e718]
+        - button "S'abonner" [ref=e719] [cursor=pointer]:
+          - text: S'abonner
+          - img
+      - paragraph [ref=e720]: Nous respectons votre vie privée. Vous pourrez vous désinscrire à tout moment.
+    - generic [ref=e723]:
+      - generic [ref=e724]:
+        - generic [ref=e725]:
+          - generic [ref=e728]: Contact
+          - heading "Transformons votre vision en réalité." [level=2] [ref=e729]:
+            - text: Transformons votre
+            - text: vision en réalité.
+        - paragraph [ref=e731]: Vous avez un projet de structuration ou de développement ? Notre équipe est prête à vous écouter et à construire avec vous des solutions sur mesure.
+        - generic [ref=e733]:
+          - generic [ref=e734]:
+            - img [ref=e736]
+            - generic [ref=e738]:
+              - generic [ref=e739]:
+                - heading "Appelez-nous" [level=3] [ref=e740]
+                - img [ref=e741]
+              - generic [ref=e744]:
+                - link "+241 11 74 75 74" [ref=e745] [cursor=pointer]:
+                  - /url: tel:+24111747574
+                - link "+241 74 75 95 15" [ref=e746] [cursor=pointer]:
+                  - /url: tel:+24174759515
+              - generic [ref=e747]: Du lundi au vendredi, 8h-16h30
+          - link "Écrivez-nous contact@odillon.fr Réponse sous 24h ouvrées" [ref=e748] [cursor=pointer]:
+            - /url: mailto:contact@odillon.fr
+            - img [ref=e750]
+            - generic [ref=e753]:
+              - generic [ref=e754]:
+                - heading "Écrivez-nous" [level=3] [ref=e755]
+                - img [ref=e756]
+              - generic [ref=e758]: contact@odillon.fr
+              - generic [ref=e759]: Réponse sous 24h ouvrées
+          - link "Nous rendre visite BP 13262, Libreville, Gabon Sur rendez-vous uniquement" [ref=e760] [cursor=pointer]:
+            - /url: https://www.google.com/maps?q=0.3780070242976405,9.454325471658247
+            - img [ref=e762]
+            - generic [ref=e765]:
+              - generic [ref=e766]:
+                - heading "Nous rendre visite" [level=3] [ref=e767]
+                - img [ref=e768]
+              - generic [ref=e770]: BP 13262, Libreville, Gabon
+              - generic [ref=e771]: Sur rendez-vous uniquement
+      - generic [ref=e774]:
+        - generic [ref=e775]:
+          - heading "Envoyez-nous un message" [level=3] [ref=e776]
+          - paragraph [ref=e777]: Remplissez le formulaire ci-dessous et nous reviendrons vers vous avec une proposition adaptée.
+        - generic [ref=e778]:
+          - generic [ref=e779]:
+            - generic [ref=e780]:
+              - text: Nom *
+              - textbox "Nom *" [ref=e781]:
+                - /placeholder: Doe
+            - generic [ref=e782]:
+              - text: Prénom *
+              - textbox "Prénom *" [ref=e783]:
+                - /placeholder: John
+          - generic [ref=e784]:
+            - text: Email professionnel *
+            - textbox "Email professionnel *" [ref=e785]:
+              - /placeholder: john@entreprise.com
+          - generic [ref=e786]:
+            - text: Message *
+            - textbox "Message *" [ref=e787]:
+              - /placeholder: Parlez-nous de votre projet...
+          - button "Envoyer le message" [ref=e788] [cursor=pointer]:
+            - generic [ref=e789]: Envoyer le message
+            - img
+          - paragraph [ref=e790]:
+            - text: Vos données sont sécurisées et traitées conformément à notre
+            - link "politique de confidentialité" [ref=e791] [cursor=pointer]:
+              - /url: /politique-confidentialite
+            - text: .
+  - contentinfo [ref=e792]:
+    - generic [ref=e793]:
+      - generic [ref=e794]:
+        - generic [ref=e796]:
+          - link "Retour à l'accueil" [ref=e797] [cursor=pointer]:
+            - /url: /#accueil
+            - img "Odillon" [ref=e798]
+          - paragraph [ref=e799]: Cabinet de conseil en ingénierie d'entreprises, spécialisé dans la structuration et le management stratégique pour une croissance durable.
+          - generic [ref=e802]: Basé au Gabon 🇬🇦
+        - generic [ref=e804]:
+          - heading "Expertises" [level=3] [ref=e805]: Expertises
+          - list [ref=e807]:
+            - listitem [ref=e808]:
+              - link "Gouvernance" [ref=e809] [cursor=pointer]:
+                - /url: /offres#gouvernance
+                - img [ref=e811]
+                - generic [ref=e814]: Gouvernance
+            - listitem [ref=e815]:
+              - link "Juridique" [ref=e816] [cursor=pointer]:
+                - /url: /offres#juridique
+                - img [ref=e818]
+                - generic [ref=e822]: Juridique
+            - listitem [ref=e823]:
+              - link "Capital Humain" [ref=e824] [cursor=pointer]:
+                - /url: /offres#ressources-humaines
+                - img [ref=e826]
+                - generic [ref=e831]: Capital Humain
+            - listitem [ref=e832]:
+              - link "Formation" [ref=e833] [cursor=pointer]:
+                - /url: /offres#formations
+                - img [ref=e835]
+                - generic [ref=e838]: Formation
+        - generic [ref=e840]:
+          - heading "Navigation" [level=3] [ref=e841]: Navigation
+          - list [ref=e843]:
+            - listitem [ref=e844]:
+              - link "Accueil" [ref=e845] [cursor=pointer]:
+                - /url: /#accueil
+                - img [ref=e846]
+                - generic [ref=e848]: Accueil
+            - listitem [ref=e849]:
+              - link "Offres" [ref=e850] [cursor=pointer]:
+                - /url: /offres
+                - img [ref=e851]
+                - generic [ref=e853]: Offres
+            - listitem [ref=e854]:
+              - link "Photothèque" [ref=e855] [cursor=pointer]:
+                - /url: /phototheque
+                - img [ref=e856]
+                - generic [ref=e858]: Photothèque
+            - listitem [ref=e859]:
+              - link "Blog" [ref=e860] [cursor=pointer]:
+                - /url: /blog
+                - img [ref=e861]
+                - generic [ref=e863]: Blog
+            - listitem [ref=e864]:
+              - link "Formations" [ref=e865] [cursor=pointer]:
+                - /url: /calendrier-formations
+                - img [ref=e866]
+                - generic [ref=e868]: Formations
+            - listitem [ref=e869]:
+              - link "À Propos" [ref=e870] [cursor=pointer]:
+                - /url: /#apropos
+                - img [ref=e871]
+                - generic [ref=e873]: À Propos
+            - listitem [ref=e874]:
+              - link "Contact" [ref=e875] [cursor=pointer]:
+                - /url: /#contact
+                - img [ref=e876]
+                - generic [ref=e878]: Contact
+        - generic [ref=e880]:
+          - heading "Nous Contacter" [level=3] [ref=e881]: Nous Contacter
+          - generic [ref=e883]:
+            - generic [ref=e884]:
+              - generic [ref=e885]:
+                - img [ref=e887]
+                - generic [ref=e889]: Téléphone
+              - generic [ref=e890]:
+                - link "+241 11 74 75 74" [ref=e891] [cursor=pointer]:
+                  - /url: tel:+24111747574
+                - link "+241 74 75 95 15" [ref=e892] [cursor=pointer]:
+                  - /url: tel:+24174759515
+            - generic [ref=e893]:
+              - generic [ref=e894]:
+                - img [ref=e896]
+                - generic [ref=e899]: Email
+              - generic [ref=e900]:
+                - link "contact@odillon.fr" [ref=e901] [cursor=pointer]:
+                  - /url: mailto:contact@odillon.fr
+                - link "odillon2017@gmail.com" [ref=e902] [cursor=pointer]:
+                  - /url: mailto:odillon2017@gmail.com
+            - generic [ref=e903]:
+              - img [ref=e905]
+              - generic [ref=e908]:
+                - generic [ref=e909]: Adresse
+                - generic [ref=e910]: "BP: 13 262, Libreville (Gabon)"
+            - generic [ref=e911]:
+              - generic [ref=e912]:
+                - img [ref=e914]
+                - generic [ref=e917]: Nos Bureaux
+              - generic [ref=e919]: Libreville - Glass (Gabon)
+      - generic [ref=e925]:
+        - paragraph [ref=e926]:
+          - text: © 2026 Copyright par
+          - generic [ref=e927]: ODILLON
+          - text: . Tous les droits sont réservés.
+        - generic [ref=e928]:
+          - link "Mentions Légales" [ref=e929] [cursor=pointer]:
+            - /url: /mentions-legales
+          - link "Politique de Confidentialité" [ref=e930] [cursor=pointer]:
+            - /url: /politique-confidentialite
+          - link "odillon.fr" [ref=e931] [cursor=pointer]:
+            - /url: https://www.odillon.fr
+            - text: odillon.fr
+            - img [ref=e932]
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e941] [cursor=pointer]:
+    - img [ref=e942]

@@ -1,0 +1,79 @@
+- generic:
+  - generic [active]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - navigation [ref=e6]:
+            - button "previous" [disabled] [ref=e7]:
+              - img "previous" [ref=e8]
+            - generic [ref=e10]:
+              - generic [ref=e11]: 1/
+              - text: "1"
+            - button "next" [disabled] [ref=e12]:
+              - img "next" [ref=e13]
+          - img
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - img [ref=e17]
+            - generic "Latest available version is detected (16.2.9)." [ref=e19]: Next.js 16.2.9
+            - generic [ref=e20]: Turbopack
+          - img
+      - dialog "Build Error" [ref=e22]:
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - generic [ref=e29]: Build Error
+              - generic [ref=e30]:
+                - button "Copy Error Info" [ref=e31] [cursor=pointer]:
+                  - img [ref=e32]
+                - button "No related documentation found" [disabled] [ref=e34]:
+                  - img [ref=e35]
+                - button "Attach Node.js inspector" [ref=e37] [cursor=pointer]:
+                  - img [ref=e38]
+            - generic [ref=e47]: Expected '</', got 'numeric literal'
+          - generic [ref=e49]:
+            - generic [ref=e51]:
+              - img [ref=e53]
+              - generic [ref=e56]: ./components/sections/hero-client.tsx (116:31)
+              - button "Open in editor" [ref=e57] [cursor=pointer]:
+                - img [ref=e59]
+            - generic [ref=e62]:
+              - generic [ref=e63]: Expected '</', got 'numeric literal'
+              - generic [ref=e64]: 114 |
+              - generic [ref=e65]: <div className=
+              - generic [ref=e66]: "\"flex flex-wrap items-center gap-x-4 gap-y-1.5\""
+              - generic [ref=e67]: ">"
+              - generic [ref=e68]: 115 |
+              - generic [ref=e69]: "{["
+              - text: ">"
+              - generic [ref=e70]: 116 |
+              - generic [ref=e71]: "{ value: ‘"
+              - text: "2017"
+              - generic [ref=e72]: "’, label: ‘fondée en’ },"
+              - generic [ref=e73]: "|"
+              - text: ^^^^
+              - generic [ref=e74]: 117 |
+              - generic [ref=e75]: "{ value: ‘"
+              - text: Libreville
+              - generic [ref=e76]: "’, label: ‘"
+              - text: Gabon
+              - generic [ref=e77]: "’ },"
+              - generic [ref=e78]: 118 |
+              - generic [ref=e79]: "{ value: ‘"
+              - text: "5"
+              - generic [ref=e80]: "pôles’, label:"
+              - text: "\"d’expertise\""
+              - generic [ref=e81]: "},"
+              - generic [ref=e82]: 119 |
+              - generic [ref=e83]: "].map((stat, i) => ( Parsing ecmascript source code failed Import trace: Server Component: ./components/sections/hero-client.tsx ./components/sections/hero.tsx ./app/page.tsx"
+        - generic [ref=e84]: "1"
+        - generic [ref=e85]: "2"
+    - generic [ref=e90] [cursor=pointer]:
+      - button "Open Next.js Dev Tools" [ref=e91]:
+        - img [ref=e92]
+      - button "Open issues overlay" [ref=e96]:
+        - generic [ref=e97]:
+          - generic [ref=e98]: "0"
+          - generic [ref=e99]: "1"
+        - generic [ref=e100]: Issue
+  - alert [ref=e101]

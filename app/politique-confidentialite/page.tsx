@@ -34,12 +34,12 @@ export default function PolitiqueConfidentialitePage() {
                             <CardContent className="p-8 md:p-12">
                                 <div className="space-y-16">
                                     <section>
-                                        <div className="flex items-start gap-4 mb-6">
+                                        <div className="grid grid-cols-[3rem_minmax(0,1fr)] gap-x-4 mb-6">
                                             <div className="w-12 h-12 rounded-lg bg-odillon-teal/10 flex items-center justify-center text-odillon-teal flex-shrink-0">
                                                 <Shield className="w-6 h-6" />
                                             </div>
-                                            <div>
-                                                <h2 className="text-2xl font-bold text-slate-900 mb-2">1. Préambule</h2>
+                                            <h2 className="self-center text-2xl font-bold text-slate-900">1. Préambule</h2>
+                                            <div className="col-start-2 mt-2">
                                                 <p className="text-slate-600 leading-relaxed">
                                                     Odillon, cabinet d&apos;ingénierie d&apos;entreprises basé à Libreville, Gabon, accorde une importance capitale à la protection de la vie privée et des données à caractère personnel de ses utilisateurs.
                                                 </p>
@@ -51,12 +51,12 @@ export default function PolitiqueConfidentialitePage() {
                                     </section>
 
                                     <section>
-                                        <div className="flex items-start gap-4 mb-6">
+                                        <div className="grid grid-cols-[3rem_minmax(0,1fr)] gap-x-4 mb-6">
                                             <div className="w-12 h-12 rounded-lg bg-odillon-teal/10 flex items-center justify-center text-odillon-teal flex-shrink-0">
                                                 <Database className="w-6 h-6" />
                                             </div>
-                                            <div>
-                                                <h2 className="text-2xl font-bold text-slate-900 mb-4">2. Collecte des données</h2>
+                                            <h2 className="self-center text-2xl font-bold text-slate-900">2. Collecte des données</h2>
+                                            <div className="col-start-2 mt-4">
                                                 <p className="text-slate-600 mb-6">
                                                     Dans le cadre de son activité d&apos;ingénierie d&apos;entreprises et de conseil, Odillon collecte les données suivantes via son formulaire de contact :
                                                 </p>
@@ -83,12 +83,12 @@ export default function PolitiqueConfidentialitePage() {
                                     </section>
 
                                     <section>
-                                        <div className="flex items-start gap-4 mb-6">
+                                        <div className="grid grid-cols-[3rem_minmax(0,1fr)] gap-x-4 mb-6">
                                             <div className="w-12 h-12 rounded-lg bg-odillon-teal/10 flex items-center justify-center text-odillon-teal flex-shrink-0">
                                                 <Eye className="w-6 h-6" />
                                             </div>
-                                            <div>
-                                                <h2 className="text-2xl font-bold text-slate-900 mb-4">3. Finalité du traitement</h2>
+                                            <h2 className="self-center text-2xl font-bold text-slate-900">3. Finalité du traitement</h2>
+                                            <div className="col-start-2 mt-4">
                                                 <div className="space-y-4">
                                                     <p className="text-slate-600">Les données collectées sont utilisées exclusivement pour :</p>
                                                     <ul className="grid gap-3 sm:grid-cols-2">
@@ -110,12 +110,12 @@ export default function PolitiqueConfidentialitePage() {
                                     </section>
 
                                     <section>
-                                        <div className="flex items-start gap-4 mb-6">
+                                        <div className="grid grid-cols-[3rem_minmax(0,1fr)] gap-x-4 mb-6">
                                             <div className="w-12 h-12 rounded-lg bg-odillon-teal/10 flex items-center justify-center text-odillon-teal flex-shrink-0">
                                                 <UserCheck className="w-6 h-6" />
                                             </div>
-                                            <div>
-                                                <h2 className="text-2xl font-bold text-slate-900 mb-4">4. Vos Droits</h2>
+                                            <h2 className="self-center text-2xl font-bold text-slate-900">4. Vos Droits</h2>
+                                            <div className="col-start-2 mt-4">
                                                 <div className="grid gap-4 sm:grid-cols-2 mb-8">
                                                     {[
                                                         { title: "Accès", text: "Confirmer le traitement de vos données" },
@@ -145,12 +145,12 @@ export default function PolitiqueConfidentialitePage() {
                                     </section>
 
                                     <section>
-                                        <div className="flex items-start gap-4">
+                                        <div className="grid grid-cols-[3rem_minmax(0,1fr)] gap-x-4">
                                             <div className="w-12 h-12 rounded-lg bg-odillon-teal/10 flex items-center justify-center text-odillon-teal flex-shrink-0">
                                                 <Lock className="w-6 h-6" />
                                             </div>
-                                            <div>
-                                                <h2 className="text-2xl font-bold text-slate-900 mb-2">5. Sécurité</h2>
+                                            <h2 className="self-center text-2xl font-bold text-slate-900">5. Sécurité</h2>
+                                            <div className="col-start-2 mt-2">
                                                 <p className="text-slate-600 leading-relaxed">
                                                     Odillon met en œuvre toutes les mesures de sécurité techniques et organisationnelles nécessaires pour protéger vos données contre tout accès non autorisé, perte ou altération.
                                                 </p>

@@ -34,7 +34,7 @@ export default function MentionsLegalesPage() {
                             <CardContent className="p-8 md:p-12">
                                 <div className="space-y-16">
                                     <section className="relative">
-                                        <div className="flex items-start gap-4 mb-6">
+                                        <div className="flex items-center gap-4 mb-6">
                                             <div className="w-10 h-10 rounded-lg bg-odillon-teal/10 flex items-center justify-center text-odillon-teal">
                                                 <Building className="w-5 h-5" />
                                             </div>
@@ -70,7 +70,7 @@ export default function MentionsLegalesPage() {
                                     </section>
 
                                     <section>
-                                        <div className="flex items-start gap-4 mb-6">
+                                        <div className="flex items-center gap-4 mb-6">
                                             <div className="w-10 h-10 rounded-lg bg-odillon-teal/10 flex items-center justify-center text-odillon-teal">
                                                 <MapPin className="w-5 h-5" />
                                             </div>
@@ -88,7 +88,7 @@ export default function MentionsLegalesPage() {
                                     </section>
 
                                     <section>
-                                        <div className="flex items-start gap-4 mb-6">
+                                        <div className="flex items-center gap-4 mb-6">
                                             <div className="w-10 h-10 rounded-lg bg-odillon-teal/10 flex items-center justify-center text-odillon-teal">
                                                 <Info className="w-5 h-5" />
                                             </div>
@@ -105,7 +105,7 @@ export default function MentionsLegalesPage() {
                                     </section>
 
                                     <section>
-                                        <div className="flex items-start gap-4 mb-6">
+                                        <div className="flex items-center gap-4 mb-6">
                                             <div className="w-10 h-10 rounded-lg bg-odillon-teal/10 flex items-center justify-center text-odillon-teal">
                                                 <Shield className="w-5 h-5" />
                                             </div>
@@ -127,7 +127,7 @@ export default function MentionsLegalesPage() {
                                     </section>
 
                                     <section>
-                                        <div className="flex items-start gap-4 mb-6">
+                                        <div className="flex items-center gap-4 mb-6">
                                             <div className="w-10 h-10 rounded-lg bg-odillon-teal/10 flex items-center justify-center text-odillon-teal">
                                                 <Scale className="w-5 h-5" />
                                             </div>

@@ -1,0 +1,72 @@
+- generic:
+  - generic [active]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - navigation [ref=e6]:
+            - button "previous" [disabled] [ref=e7]:
+              - img "previous" [ref=e8]
+            - generic [ref=e10]:
+              - generic [ref=e11]: 1/
+              - text: "1"
+            - button "next" [disabled] [ref=e12]:
+              - img "next" [ref=e13]
+          - img
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - img [ref=e17]
+            - generic "Latest available version is detected (16.2.9)." [ref=e19]: Next.js 16.2.9
+            - generic [ref=e20]: Turbopack
+          - img
+      - dialog "Build Error" [ref=e22]:
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - generic [ref=e29]: Build Error
+              - generic [ref=e30]:
+                - button "Copy Error Info" [ref=e31] [cursor=pointer]:
+                  - img [ref=e32]
+                - button "No related documentation found" [disabled] [ref=e34]:
+                  - img [ref=e35]
+                - button "Attach Node.js inspector" [ref=e37] [cursor=pointer]:
+                  - img [ref=e38]
+            - generic [ref=e47]: Expected '</', got 'ident'
+          - generic [ref=e49]:
+            - generic [ref=e51]:
+              - img [ref=e53]
+              - generic [ref=e56]: ./components/sections/hero-client.tsx (87:47)
+              - button "Open in editor" [ref=e57] [cursor=pointer]:
+                - img [ref=e59]
+            - generic [ref=e62]:
+              - generic [ref=e63]: Expected '</', got 'ident'
+              - generic [ref=e64]: 85 |
+              - generic [ref=e65]: <span
+              - generic [ref=e66]: 86 |
+              - generic [ref=e67]: className=
+              - generic [ref=e68]: "\"absolute -bottom-0.5 left-0 right-0 h-[2.5px] rounded-full\""
+              - text: ">"
+              - generic [ref=e69]: 87 |
+              - generic [ref=e70]: "style={{ background: ‘linear-gradient(to right, #"
+              - text: C4D82E
+              - generic [ref=e71]: ", #"
+              - text: 1A9B8E
+              - generic [ref=e72]: ")’ }}"
+              - generic [ref=e73]: "|"
+              - text: ^^^^^^
+              - generic [ref=e74]: 88 |
+              - generic [ref=e75]: />
+              - generic [ref=e76]: 89 |
+              - generic [ref=e77]: </span>
+              - generic [ref=e78]: 90 |
+              - generic [ref=e79]: "</span> Parsing ecmascript source code failed Import trace: Server Component: ./components/sections/hero-client.tsx ./components/sections/hero.tsx ./app/page.tsx"
+        - generic [ref=e80]: "1"
+        - generic [ref=e81]: "2"
+    - generic [ref=e86] [cursor=pointer]:
+      - button "Open Next.js Dev Tools" [ref=e87]:
+        - img [ref=e88]
+      - button "Open issues overlay" [ref=e92]:
+        - generic [ref=e93]:
+          - generic [ref=e94]: "0"
+          - generic [ref=e95]: "1"
+        - generic [ref=e96]: Issue
+  - alert [ref=e97]
