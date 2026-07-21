@@ -3,6 +3,14 @@
     {
       "path": "/api/cron/generate-article?count=3",
       "schedule": "0 8 * * 1"
+    },
+    {
+      "path": "/api/cron/rappels-formations",
+      "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/cron/satisfaction-formations",
+      "schedule": "0 8 * * *"
     }
   ]
 }

@@ -24,6 +24,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Loader2, Trash2, Download, Search, UserX, UserCheck } from "lucide-react"
 import { toast } from "sonner"
+import { toCsv, telechargerCsv } from "@/lib/csv"
 
 interface Subscriber {
     id: string
@@ -134,23 +135,17 @@ export function NewsletterTab() {
     }
 
     const exportToCSV = () => {
-        const csvData = filteredSubscribers.map(sub => ({
+        const entetes = ["Email", "Date d'inscription", "Statut"]
+        const lignes = filteredSubscribers.map(sub => ({
             Email: sub.email,
             "Date d'inscription": new Date(sub.subscribed_at).toLocaleDateString('fr-FR'),
             Statut: sub.is_active ? 'Actif' : 'Inactif',
         }))
 
-        const headers = Object.keys(csvData[0] || {})
-        const csvContent = [
-            headers.join(','),
-            ...csvData.map(row => headers.map(header => row[header as keyof typeof row]).join(','))
-        ].join('\n')
-
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-        const link = document.createElement('a')
-        link.href = URL.createObjectURL(blob)
-        link.download = `newsletter-subscribers-${new Date().toISOString().split('T')[0]}.csv`
-        link.click()
+        telechargerCsv(
+            `newsletter-subscribers-${new Date().toISOString().split('T')[0]}.csv`,
+            toCsv(entetes, lignes)
+        )
     }
 
     if (loading) {

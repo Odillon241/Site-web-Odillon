@@ -5,26 +5,14 @@ import Link from "next/link"
 import { Calendar } from "@/components/ui/calendar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { CalendarDays, Clock, MapPin, User, GraduationCap, ArrowRight } from "lucide-react"
-
-export interface Formation {
-    id: string
-    titre: string
-    description: string
-    date_debut: string
-    date_fin?: string | null
-    horaires?: string | null
-    duree?: string | null
-    formateur?: string | null
-    lieu?: string | null
-    modalite?: string | null
-}
-
-const MODALITE_LABELS: Record<string, string> = {
-    presentiel: "Présentiel",
-    distanciel: "Distanciel",
-    hybride: "Hybride",
-}
+import { CalendarDays, Clock, MapPin, User, GraduationCap, ArrowRight, Wallet, Users } from "lucide-react"
+import {
+    type Formation,
+    MODALITE_LABELS,
+    estComplet,
+    placesRestantes,
+    formatMontant,
+} from "@/types/formation"
 
 function toDate(iso: string) {
     return new Date(iso + "T00:00:00")
@@ -47,6 +35,10 @@ function formatDateRange(debut: string, fin?: string | null) {
 }
 
 function FormationCard({ f }: { f: Formation }) {
+    const complet = estComplet(f)
+    const restantes = placesRestantes(f)
+    const ouvert = (f.inscriptions_ouvertes ?? true) && !complet
+
     return (
         <div className="od-surface p-5 md:p-6 transition-colors hover:border-[#00a795]/24">
             <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -57,6 +49,11 @@ function FormationCard({ f }: { f: Formation }) {
                 {f.modalite && (
                     <Badge variant="outline" className="border-odillon-lime/40 text-odillon-dark bg-odillon-lime/10">
                         {MODALITE_LABELS[f.modalite] || f.modalite}
+                    </Badge>
+                )}
+                {complet && (
+                    <Badge className="bg-red-50 text-red-700 hover:bg-red-100 border-none">
+                        Complet
                     </Badge>
                 )}
             </div>
@@ -83,14 +80,32 @@ function FormationCard({ f }: { f: Formation }) {
                         {f.formateur}
                     </span>
                 )}
+                {f.prix != null && (
+                    <span className="flex items-center gap-1.5 font-medium text-odillon-dark">
+                        <Wallet className="w-4 h-4 text-odillon-teal" />
+                        {formatMontant(f.prix, f.devise)}
+                    </span>
+                )}
+                {restantes !== null && restantes > 0 && (
+                    <span className="flex items-center gap-1.5">
+                        <Users className="w-4 h-4 text-odillon-teal" />
+                        {restantes} place{restantes > 1 ? "s" : ""} restante{restantes > 1 ? "s" : ""}
+                    </span>
+                )}
             </div>
 
-            <Button asChild className="bg-odillon-teal hover:bg-odillon-teal/90 text-white gap-2">
-                <Link href={`/contact?formation=${encodeURIComponent(f.titre)}`}>
-                    S'inscrire
-                    <ArrowRight className="w-4 h-4" />
-                </Link>
-            </Button>
+            {ouvert ? (
+                <Button asChild className="bg-odillon-teal hover:bg-odillon-teal/90 text-white gap-2">
+                    <Link href={`/formations/${f.id}/inscription`}>
+                        S'inscrire
+                        <ArrowRight className="w-4 h-4" />
+                    </Link>
+                </Button>
+            ) : (
+                <Button disabled className="gap-2">
+                    {complet ? "Complet" : "Inscriptions fermées"}
+                </Button>
+            )}
         </div>
     )
 }

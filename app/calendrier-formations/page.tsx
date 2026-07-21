@@ -2,7 +2,8 @@ import dynamic from "next/dynamic"
 import { createClient } from "@/lib/supabase/server"
 import { Footer } from "@/components/layout/footer"
 import { ScrollToTop } from "@/components/magicui/scroll-to-top"
-import { FormationsCalendar, type Formation } from "@/components/sections/formations-calendar"
+import { FormationsCalendar } from "@/components/sections/formations-calendar"
+import type { Formation } from "@/types/formation"
 
 const HeaderPro = dynamic(() => import("@/components/layout/header-pro").then(mod => mod.HeaderPro), { ssr: true })
 

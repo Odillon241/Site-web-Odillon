@@ -44,6 +44,8 @@ import { ExpertiseCtasTab } from "@/components/admin/tabs/ExpertiseCtasTab"
 import { SettingsTab } from "@/components/admin/tabs/SettingsTab"
 import { TeamTab } from "@/components/admin/tabs/TeamTab"
 import { FormationsTab } from "@/components/admin/tabs/FormationsTab"
+import { InscriptionsTab } from "@/components/admin/tabs/InscriptionsTab"
+import { SatisfactionTab } from "@/components/admin/tabs/SatisfactionTab"
 import { AboutTab } from "@/components/admin/tabs/AboutTab"
 import { ArticlesTab } from "@/components/admin/tabs/ArticlesTab"
 import { NewsletterTab } from "@/components/admin/tabs/NewsletterTab"
@@ -143,6 +145,7 @@ export default function AdminPhotosPage() {
       testimonials: "Témoignages",
       calendar: "Calendrier",
       formations: "Formations",
+      inscriptions: "Inscriptions",
       "expertise-cta": "Expertise CTA",
       settings: "Paramètres",
       newsletter: "Newsletter",
@@ -238,6 +241,8 @@ export default function AdminPhotosPage() {
             {activeTab === 'testimonials' && <TestimonialsTab />}
             {activeTab === 'calendar' && <CalendarTab />}
             {activeTab === 'formations' && <FormationsTab />}
+            {activeTab === 'inscriptions' && <InscriptionsTab />}
+            {activeTab === 'satisfaction' && <SatisfactionTab />}
             {activeTab === 'expertise-cta' && <ExpertiseCtasTab />}
             {activeTab === 'settings' && <SettingsTab />}
             {activeTab === 'team' && <TeamTab />}

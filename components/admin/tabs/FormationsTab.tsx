@@ -34,34 +34,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Loader2, Plus, Trash2, Eye, EyeOff, GraduationCap, Pencil, Clock, MapPin, User } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Loader2, Plus, Trash2, Eye, EyeOff, GraduationCap, Pencil, Clock, MapPin, User, Users, Wallet } from "lucide-react"
 import { toast } from "sonner"
-
-interface Formation {
-    id: string
-    titre: string
-    description: string
-    date_debut: string
-    date_fin?: string | null
-    horaires?: string | null
-    duree?: string | null
-    formateur?: string | null
-    lieu?: string | null
-    modalite?: string | null
-    is_active: boolean
-}
-
-const MODALITE_OPTIONS = [
-    { value: "presentiel", label: "Présentiel" },
-    { value: "distanciel", label: "Distanciel" },
-    { value: "hybride", label: "Hybride" },
-]
-
-const MODALITE_LABELS: Record<string, string> = {
-    presentiel: "Présentiel",
-    distanciel: "Distanciel",
-    hybride: "Hybride",
-}
+import { type Formation, type ChampPersonnalise, MODALITE_OPTIONS, MODALITE_LABELS, formatMontant, placesRestantes } from "@/types/formation"
+import { ChampsPersonnalisesEditor } from "@/components/admin/formations/champs-personnalises-editor"
 
 const emptyForm = {
     titre: "",
@@ -73,6 +50,13 @@ const emptyForm = {
     formateur: "",
     lieu: "",
     modalite: "",
+    prix: "",
+    devise: "XAF",
+    places_totales: "",
+    inscriptions_ouvertes: true,
+    rappel_jours_avant: "3",
+    satisfaction_jours_apres: "2",
+    instructions_paiement: "",
 }
 
 function formatDate(iso?: string | null) {
@@ -88,6 +72,7 @@ export function FormationsTab() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [editing, setEditing] = useState<Formation | null>(null)
     const [form, setForm] = useState({ ...emptyForm })
+    const [champs, setChamps] = useState<ChampPersonnalise[]>([])
 
     useEffect(() => {
         loadFormations()
@@ -110,6 +95,7 @@ export function FormationsTab() {
 
     const resetForm = () => {
         setForm({ ...emptyForm })
+        setChamps([])
         setEditing(null)
     }
 
@@ -125,13 +111,33 @@ export function FormationsTab() {
             formateur: f.formateur || "",
             lieu: f.lieu || "",
             modalite: f.modalite || "",
+            prix: f.prix != null ? String(f.prix) : "",
+            devise: f.devise || "XAF",
+            places_totales: f.places_totales != null ? String(f.places_totales) : "",
+            inscriptions_ouvertes: f.inscriptions_ouvertes ?? true,
+            rappel_jours_avant: f.rappel_jours_avant != null ? String(f.rappel_jours_avant) : "",
+            satisfaction_jours_apres: f.satisfaction_jours_apres != null ? String(f.satisfaction_jours_apres) : "",
+            instructions_paiement: f.instructions_paiement || "",
         })
+        setChamps(f.champs_personnalises || [])
         setIsDialogOpen(true)
     }
 
     const handleSave = async () => {
         if (!form.titre.trim() || !form.description.trim() || !form.date_debut) {
             toast.error("Le titre, la description et la date de début sont obligatoires")
+            return
+        }
+
+        const champsIncomplets = champs.filter(c => !c.label.trim())
+        if (champsIncomplets.length > 0) {
+            toast.error("Chaque champ personnalisé doit avoir un libellé")
+            return
+        }
+
+        const listesSansOptions = champs.filter(c => c.type === "liste" && !(c.options || []).length)
+        if (listesSansOptions.length > 0) {
+            toast.error(`La liste « ${listesSansOptions[0].label} » doit avoir au moins une option`)
             return
         }
 
@@ -148,6 +154,15 @@ export function FormationsTab() {
                 formateur: form.formateur || null,
                 lieu: form.lieu || null,
                 modalite: form.modalite || null,
+                // Champ vide = « non renseigné », pas 0 : un prix nul signifie
+                // « gratuit », alors qu'une absence de prix signifie « sur demande ».
+                prix: form.prix === "" ? null : Number(form.prix),
+                devise: form.devise || "XAF",
+                places_totales: form.places_totales === "" ? null : Number(form.places_totales),
+                rappel_jours_avant: form.rappel_jours_avant === "" ? null : Number(form.rappel_jours_avant),
+                satisfaction_jours_apres: form.satisfaction_jours_apres === "" ? null : Number(form.satisfaction_jours_apres),
+                instructions_paiement: form.instructions_paiement || null,
+                champs_personnalises: champs,
             }
 
             const res = await fetch(url, {
@@ -156,7 +171,10 @@ export function FormationsTab() {
                 body: JSON.stringify(body)
             })
 
-            if (!res.ok) throw new Error("Erreur lors de l'enregistrement")
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}))
+                throw new Error(data.error || "Erreur lors de l'enregistrement")
+            }
 
             toast.success(isEditing ? "Formation modifiée" : "Formation ajoutée")
             resetForm()
@@ -164,7 +182,7 @@ export function FormationsTab() {
             loadFormations()
         } catch (error) {
             console.error("Erreur save formation:", error)
-            toast.error("Erreur lors de l'enregistrement")
+            toast.error(error instanceof Error ? error.message : "Erreur lors de l'enregistrement")
         }
     }
 
@@ -321,6 +339,102 @@ export function FormationsTab() {
                                     </Select>
                                 </div>
                             </div>
+
+                            {/* --- Inscriptions --- */}
+                            <div className="border-t border-gray-100 pt-4 space-y-4">
+                                <h4 className="text-sm font-semibold text-gray-700">Inscriptions</h4>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium">Tarif</label>
+                                        <Input
+                                            type="number"
+                                            min="0"
+                                            step="1000"
+                                            value={form.prix}
+                                            onChange={(e) => setForm({ ...form, prix: e.target.value })}
+                                            placeholder="Sur demande"
+                                        />
+                                        <p className="text-xs text-gray-500">Vide = sur demande · 0 = gratuit</p>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium">Devise</label>
+                                        <Input
+                                            value={form.devise}
+                                            onChange={(e) => setForm({ ...form, devise: e.target.value.toUpperCase() })}
+                                            placeholder="XAF"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium">Nombre de places</label>
+                                        <Input
+                                            type="number"
+                                            min="1"
+                                            value={form.places_totales}
+                                            onChange={(e) => setForm({ ...form, places_totales: e.target.value })}
+                                            placeholder="Illimité"
+                                        />
+                                        <p className="text-xs text-gray-500">Vide = pas de limite</p>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium">Rappel (jours avant)</label>
+                                        <Input
+                                            type="number"
+                                            min="0"
+                                            max="60"
+                                            value={form.rappel_jours_avant}
+                                            onChange={(e) => setForm({ ...form, rappel_jours_avant: e.target.value })}
+                                            placeholder="Aucun"
+                                        />
+                                        <p className="text-xs text-gray-500">Vide = pas d'e-mail de rappel</p>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium">Satisfaction (jours après)</label>
+                                        <Input
+                                            type="number"
+                                            min="0"
+                                            max="90"
+                                            value={form.satisfaction_jours_apres}
+                                            onChange={(e) => setForm({ ...form, satisfaction_jours_apres: e.target.value })}
+                                            placeholder="Aucun"
+                                        />
+                                        <p className="text-xs text-gray-500">Questionnaire envoyé après la session · vide = désactivé</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <Checkbox
+                                        id="inscriptions_ouvertes"
+                                        checked={form.inscriptions_ouvertes}
+                                        onCheckedChange={(c) => setForm({ ...form, inscriptions_ouvertes: c === true })}
+                                    />
+                                    <label htmlFor="inscriptions_ouvertes" className="text-sm text-gray-700 cursor-pointer">
+                                        Inscriptions ouvertes
+                                    </label>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Instructions de paiement</label>
+                                    <Textarea
+                                        value={form.instructions_paiement}
+                                        onChange={(e) => setForm({ ...form, instructions_paiement: e.target.value })}
+                                        placeholder="Coordonnées bancaires, modalités de règlement... (repris dans l'e-mail de confirmation)"
+                                        rows={3}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* --- Champs personnalisés --- */}
+                            <div className="border-t border-gray-100 pt-4">
+                                <ChampsPersonnalisesEditor
+                                    value={champs}
+                                    onChange={setChamps}
+                                    aDesInscrits={(editing?.places_reservees ?? 0) > 0}
+                                />
+                            </div>
                         </div>
 
                         <DialogFooter>
@@ -378,6 +492,16 @@ export function FormationsTab() {
                                                     {f.formateur}
                                                 </span>
                                             )}
+                                            <span className="flex items-center gap-1">
+                                                <Wallet className="w-3.5 h-3.5" />
+                                                {formatMontant(f.prix, f.devise)}
+                                            </span>
+                                            <span className="flex items-center gap-1 tabular-nums">
+                                                <Users className="w-3.5 h-3.5" />
+                                                {f.places_totales != null
+                                                    ? `${f.places_reservees ?? 0}/${f.places_totales} inscrits`
+                                                    : `${f.places_reservees ?? 0} inscrit${(f.places_reservees ?? 0) > 1 ? "s" : ""}`}
+                                            </span>
                                         </div>
                                     </div>
 

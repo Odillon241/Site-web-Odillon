@@ -17,7 +17,9 @@ import {
     Mail,
     MessageSquare,
     Rss,
-    GraduationCap
+    GraduationCap,
+    ClipboardList,
+    SmilePlus
 } from "lucide-react"
 
 import {
@@ -71,6 +73,8 @@ export function AdminSidebar({
                 { title: "Témoignages", icon: Quote, value: "testimonials" },
                 { title: "Logos Partenaires", icon: Building2, value: "logos" },
                 { title: "Formations", icon: GraduationCap, value: "formations" },
+                { title: "Inscriptions", icon: ClipboardList, value: "inscriptions" },
+                { title: "Satisfaction", icon: SmilePlus, value: "satisfaction" },
             ]
         },
         {

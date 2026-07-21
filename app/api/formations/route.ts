@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
+import { champsPersonnalisesSchema } from "@/lib/validations/formation"
 
 export async function GET(request: Request) {
     try {
@@ -38,10 +39,22 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json()
-        const { titre, description, date_debut, date_fin, horaires, duree, formateur, lieu, modalite, is_active } = body
+        const {
+            titre, description, date_debut, date_fin, horaires, duree, formateur, lieu, modalite, is_active,
+            prix, devise, places_totales, inscriptions_ouvertes, champs_personnalises,
+            rappel_jours_avant, satisfaction_jours_apres, instructions_paiement
+        } = body
 
         if (!titre || !description || !date_debut) {
             return NextResponse.json({ error: "Le titre, la description et la date de début sont obligatoires" }, { status: 400 })
+        }
+
+        const champs = champsPersonnalisesSchema.safeParse(champs_personnalises ?? [])
+        if (!champs.success) {
+            return NextResponse.json(
+                { error: "Champs personnalisés invalides", details: champs.error.issues.map(i => i.message) },
+                { status: 400 }
+            )
         }
 
         const { data, error } = await supabase
@@ -57,6 +70,14 @@ export async function POST(request: Request) {
                 lieu: lieu || null,
                 modalite: modalite || null,
                 is_active: is_active ?? true,
+                prix: prix ?? null,
+                devise: devise || "XAF",
+                places_totales: places_totales ?? null,
+                inscriptions_ouvertes: inscriptions_ouvertes ?? true,
+                champs_personnalises: champs.data,
+                rappel_jours_avant: rappel_jours_avant ?? null,
+                satisfaction_jours_apres: satisfaction_jours_apres ?? null,
+                instructions_paiement: instructions_paiement || null,
                 created_by: user.id
             })
             .select()
