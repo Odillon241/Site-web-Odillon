@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
   BookOpen,
-  X,
+  ChevronDown,
   Image,
   Building2,
   Video,
@@ -18,6 +18,7 @@ import {
   Target,
   type LucideIcon,
 } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 type GuideSection = {
   title: string
@@ -38,7 +39,7 @@ const guideSections: GuideSection[] = [
     ],
   },
   {
-    title: "Logos Partenaires",
+    title: "Logos partenaires",
     icon: Building2,
     items: [
       "Ajoutez les logos des entreprises partenaires",
@@ -49,8 +50,8 @@ const guideSections: GuideSection[] = [
     title: "Vidéos",
     icon: Video,
     items: [
-      "Supporté: YouTube, Vimeo, vidéos directes",
-      "Catégories: Présentation ou Témoignage",
+      "Supporté : YouTube, Vimeo, vidéos directes",
+      "Catégories : Présentation ou Témoignage",
     ],
   },
   {
@@ -70,7 +71,7 @@ const guideSections: GuideSection[] = [
     ],
   },
   {
-    title: "À Propos",
+    title: "À propos",
     icon: Target,
     items: [
       "Définissez la mission et la description",
@@ -94,7 +95,7 @@ const guideSections: GuideSection[] = [
     ],
   },
   {
-    title: "Paramètres Site",
+    title: "Paramètres du site",
     icon: Settings,
     items: [
       "Activez/désactivez sections entières",
@@ -106,77 +107,72 @@ const guideSections: GuideSection[] = [
 export function AdminGuide() {
   const [isOpen, setIsOpen] = useState(true)
 
-  if (!isOpen) {
-    return (
-      <Button
-        onClick={() => setIsOpen(true)}
-        variant="outline"
-        className="fixed bottom-4 right-4 z-50 border-slate-200 bg-white shadow-lg hover:bg-slate-50"
-      >
-        <BookOpen className="mr-2 h-4 w-4 text-odillon-teal" />
-        Guide d'utilisation
-      </Button>
-    )
-  }
-
   return (
-    <div className="rounded-lg border border-slate-200/80 bg-slate-50/60">
-      <div className="flex items-start justify-between gap-4 border-b border-slate-200/70 px-5 py-4">
+    <section className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm">
+      <button
+        type="button"
+        onClick={() => setIsOpen((v) => !v)}
+        aria-expanded={isOpen}
+        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-slate-50/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-odillon-teal sm:px-6"
+      >
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
             <BookOpen className="h-4 w-4" />
-          </div>
+          </span>
           <div>
-            <h4 className="text-sm font-semibold text-slate-950">Guide d'utilisation du panneau d'administration</h4>
-            <p className="text-xs text-slate-500">Repères rapides pour les sections les plus utilisées.</p>
+            <h2 className="text-base font-semibold tracking-tight text-slate-950">Guide d'utilisation</h2>
+            <p className="text-[13px] text-slate-500">Repères rapides pour les sections les plus utilisées.</p>
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setIsOpen(false)}
-          className="h-8 w-8 text-slate-400 hover:bg-white hover:text-slate-700"
-        >
-          <X className="h-4 w-4" />
-        </Button>
-      </div>
+        <ChevronDown
+          className={cn(
+            "h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200",
+            isOpen && "rotate-180"
+          )}
+        />
+      </button>
 
-      <div className="grid gap-4 p-5 md:grid-cols-2">
-        {guideSections.map((section) => {
-          const Icon = section.icon
+      {isOpen && (
+        <div className="border-t border-slate-200/80 bg-[#f7f9f8]">
+          <div className="grid gap-x-8 gap-y-6 p-5 sm:p-6 md:grid-cols-2">
+            {guideSections.map((section) => {
+              const Icon = section.icon
 
-          return (
-            <div key={section.title} className="rounded-md border border-slate-200/80 bg-white p-4">
-              <div className="mb-3 flex items-center gap-2">
-                <div className="flex h-7 w-7 items-center justify-center rounded-md bg-odillon-teal/[0.08] text-odillon-teal">
-                  <Icon className="h-4 w-4" />
+              return (
+                <div key={section.title}>
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-md bg-odillon-teal/[0.08] text-odillon-teal">
+                      <Icon className="h-4 w-4" />
+                    </span>
+                    <h3 className="font-semibold text-slate-900">{section.title}</h3>
+                    {section.badge && (
+                      <Badge variant="outline" className="border-odillon-lime/40 bg-odillon-lime/10 text-[10px] font-medium text-slate-700">
+                        {section.badge}
+                      </Badge>
+                    )}
+                  </div>
+                  <ul className="ml-9 space-y-1.5 text-sm text-slate-600">
+                    {section.items.map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <ChevronRight className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-odillon-teal" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <h5 className="font-semibold text-slate-900">{section.title}</h5>
-                {section.badge && (
-                  <Badge variant="outline" className="border-odillon-lime/40 bg-odillon-lime/10 text-[10px] font-medium text-slate-700">
-                    {section.badge}
-                  </Badge>
-                )}
-              </div>
-              <ul className="ml-9 space-y-1.5 text-sm text-slate-600">
-                {section.items.map((item) => (
-                  <li key={item} className="flex items-start gap-2">
-                    <ChevronRight className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-odillon-teal" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )
-        })}
-      </div>
+              )
+            })}
+          </div>
 
-      <div className="mx-5 mb-5 rounded-md border border-odillon-lime/30 bg-odillon-lime/[0.08] p-3">
-        <p className="mb-1 text-sm font-medium text-slate-900">Conseil</p>
-        <p className="text-sm leading-relaxed text-slate-600">
-          Utilisez les onglets ci-dessous pour naviguer entre les différentes sections. Les changements sont sauvegardés automatiquement. Pensez à vérifier l'aperçu en direct sur le site.
-        </p>
-      </div>
-    </div>
+          <div className="mx-5 mb-5 rounded-lg border border-odillon-lime/30 bg-odillon-lime/[0.08] p-4 sm:mx-6 sm:mb-6">
+            <p className="mb-1 text-sm font-medium text-slate-900">Conseil</p>
+            <p className="text-sm leading-relaxed text-slate-600">
+              Naviguez entre les sections via le menu latéral ou la recherche (Ctrl K). Les changements
+              sont sauvegardés automatiquement — pensez à vérifier le rendu en direct sur le site.
+            </p>
+          </div>
+        </div>
+      )}
+    </section>
   )
 }

@@ -1,10 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { fr } from "date-fns/locale"
 import { Badge } from "@/components/ui/badge"
 import { Calendar as CalendarComponent } from "@/components/ui/calendar"
 import { CalendarDays } from "lucide-react"
+import { AdminPanel } from "@/components/admin/ui/admin-panel"
 import {
     getEventForDate,
     hasEvent,
@@ -25,97 +26,98 @@ export function CalendarTab() {
     }, [selectedDate])
 
     return (
-        <Card className="shadow-lg border-pink-200">
-            <CardHeader className="bg-gradient-to-r from-pink-50 to-pink-100/50 border-b">
-                <CardTitle className="flex items-center gap-2 text-pink-900">
-                    <CalendarDays className="w-5 h-5" />
-                    Calendrier des Événements du Gabon 2025
-                </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                    {/* Calendrier */}
-                    <div>
-                        <CalendarComponent
-                            mode="single"
-                            selected={selectedDate}
-                            onSelect={(date) => date && setSelectedDate(date)}
-                            month={currentMonth}
-                            onMonthChange={setCurrentMonth}
-                            className="rounded-md border"
-                            modifiers={{
-                                hasEvent: (date) => hasEvent(date)
-                            }}
-                            modifiersStyles={{
-                                hasEvent: {
-                                    fontWeight: 'bold',
-                                    backgroundColor: '#fce7f3',
-                                    color: '#ec4899'
-                                }
-                            }}
-                        />
-                    </div>
+        <AdminPanel
+            icon={CalendarDays}
+            title="Calendrier des événements du Gabon"
+            description="Jours fériés et dates clés pour planifier vos campagnes thématiques."
+        >
+            <div className="grid gap-6 md:grid-cols-2">
+                {/* Calendrier */}
+                <div className="rounded-lg border border-slate-200/80 bg-white p-2 shadow-sm">
+                    <CalendarComponent
+                        mode="single"
+                        locale={fr}
+                        selected={selectedDate}
+                        onSelect={(date) => date && setSelectedDate(date)}
+                        month={currentMonth}
+                        onMonthChange={setCurrentMonth}
+                        modifiers={{
+                            hasEvent: (date) => hasEvent(date)
+                        }}
+                        modifiersStyles={{
+                            hasEvent: {
+                                fontWeight: '600',
+                                backgroundColor: 'rgba(0, 167, 149, 0.12)',
+                                color: '#007a6d'
+                            }
+                        }}
+                    />
+                </div>
 
-                    {/* Informations sur l'événement sélectionné */}
-                    <div className="space-y-4">
-                        {selectedEvent ? (
-                            <div className="p-4 bg-pink-50 rounded-lg border border-pink-200">
-                                <h3 className="font-semibold text-pink-900 mb-2">
-                                    {selectedEvent.title}
-                                </h3>
-                                <p className="text-sm text-pink-700 mb-3">
-                                    {selectedEvent.description}
-                                </p>
-                                <div className="flex items-center gap-2 text-sm text-pink-600">
-                                    <CalendarDays className="w-4 h-4" />
-                                    <span>
-                                        {selectedDate.toLocaleDateString('fr-FR', {
-                                            day: 'numeric',
-                                            month: 'long',
-                                            year: 'numeric'
-                                        })}
-                                    </span>
-                                </div>
-                                {selectedEvent.type && (
-                                    <Badge className="mt-2" variant="outline">
-                                        {selectedEvent.type}
-                                    </Badge>
-                                )}
-                            </div>
-                        ) : (
-                            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 text-center">
-                                <CalendarDays className="w-12 h-12 text-gray-300 mx-auto mb-2" />
-                                <p className="text-gray-600">
-                                    Sélectionnez une date pour voir les événements
-                                </p>
-                            </div>
-                        )}
-
-                        {/* Prochains événements */}
-                        <div>
-                            <h3 className="font-semibold text-gray-900 mb-3">
-                                Prochains événements
+                {/* Informations sur l'événement sélectionné */}
+                <div className="space-y-4">
+                    {selectedEvent ? (
+                        <div className="rounded-lg border border-odillon-teal/20 bg-odillon-teal/[0.06] p-4">
+                            <h3 className="mb-2 font-semibold text-slate-950">
+                                {selectedEvent.title}
                             </h3>
-                            <div className="space-y-2">
-                                {getUpcomingEvents(5).map((event, index) => (
-                                    <div
-                                        key={index}
-                                        className="p-3 bg-white rounded-lg border hover:border-pink-300 transition-colors"
-                                    >
-                                        <p className="font-medium text-sm">{event.title}</p>
-                                        <p className="text-xs text-gray-500 mt-1">
-                                            {event.date.toLocaleDateString('fr-FR', {
-                                                day: 'numeric',
-                                                month: 'long'
-                                            })}
-                                        </p>
-                                    </div>
-                                ))}
+                            <p className="mb-3 text-sm leading-relaxed text-slate-600">
+                                {selectedEvent.description}
+                            </p>
+                            <div className="flex items-center gap-2 text-sm font-medium text-odillon-teal">
+                                <CalendarDays className="h-4 w-4" />
+                                <span>
+                                    {selectedDate.toLocaleDateString('fr-FR', {
+                                        day: 'numeric',
+                                        month: 'long',
+                                        year: 'numeric'
+                                    })}
+                                </span>
                             </div>
+                            {selectedEvent.type && (
+                                <Badge variant="outline" className="mt-3 border-odillon-lime/40 bg-odillon-lime/10 text-slate-700">
+                                    {selectedEvent.type}
+                                </Badge>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="rounded-lg border border-dashed border-slate-300 bg-white/60 p-6 text-center">
+                            <CalendarDays className="mx-auto mb-2 h-10 w-10 text-slate-300" />
+                            <p className="text-sm text-slate-600">
+                                Sélectionnez une date pour voir les événements
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Prochains événements */}
+                    <div>
+                        <h3 className="mb-3 font-semibold text-slate-950">
+                            Prochains événements
+                        </h3>
+                        <div className="space-y-2">
+                            {getUpcomingEvents(5).length === 0 && (
+                                <p className="rounded-lg border border-slate-200/80 bg-white p-3 text-sm text-slate-500">
+                                    Aucun événement à venir.
+                                </p>
+                            )}
+                            {getUpcomingEvents(5).map((event, index) => (
+                                <div
+                                    key={index}
+                                    className="rounded-lg border border-slate-200/80 bg-white p-3 shadow-sm transition-colors hover:border-odillon-teal/30"
+                                >
+                                    <p className="text-sm font-medium text-slate-900">{event.title}</p>
+                                    <p className="mt-1 text-xs text-slate-500">
+                                        {event.date.toLocaleDateString('fr-FR', {
+                                            day: 'numeric',
+                                            month: 'long'
+                                        })}
+                                    </p>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </AdminPanel>
     )
 }

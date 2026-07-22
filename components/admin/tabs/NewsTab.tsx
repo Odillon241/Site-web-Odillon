@@ -26,7 +26,6 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { BlurFade } from "@/components/magicui/blur-fade"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import {
@@ -51,6 +50,7 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 import { createClient } from "@/lib/supabase/client"
+import { AdminEmptyState } from "@/components/admin/ui/admin-panel"
 
 // Types
 interface NewsItem {
@@ -74,15 +74,16 @@ interface NewsSettings {
 }
 
 // Category configuration
+// Code couleur des catégories du ticker, en teintes (fond clair + icône colorée)
 const CATEGORIES = [
-    { value: 'juridique', label: 'Juridique', icon: Scale, color: 'bg-amber-500' },
-    { value: 'finance', label: 'Finance', icon: TrendingUp, color: 'bg-emerald-500' },
-    { value: 'rh', label: 'RH', icon: Users, color: 'bg-blue-500' },
-    { value: 'gouvernance', label: 'Gouvernance', icon: Building2, color: 'bg-purple-500' },
-    { value: 'economie', label: 'Économie', icon: TrendingUp, color: 'bg-teal-500' },
-    { value: 'afrique', label: 'Afrique', icon: Globe, color: 'bg-lime-500' },
-    { value: 'evenement', label: 'Événement', icon: CalendarDays, color: 'bg-rose-500' },
-    { value: 'jour-ferie', label: 'Jour férié', icon: PartyPopper, color: 'bg-orange-500' },
+    { value: 'juridique', label: 'Juridique', icon: Scale, color: 'bg-amber-100 text-amber-700' },
+    { value: 'finance', label: 'Finance', icon: TrendingUp, color: 'bg-emerald-100 text-emerald-700' },
+    { value: 'rh', label: 'RH', icon: Users, color: 'bg-blue-100 text-blue-700' },
+    { value: 'gouvernance', label: 'Gouvernance', icon: Building2, color: 'bg-purple-100 text-purple-700' },
+    { value: 'economie', label: 'Économie', icon: TrendingUp, color: 'bg-teal-100 text-teal-700' },
+    { value: 'afrique', label: 'Afrique', icon: Globe, color: 'bg-lime-100 text-lime-800' },
+    { value: 'evenement', label: 'Événement', icon: CalendarDays, color: 'bg-rose-100 text-rose-700' },
+    { value: 'jour-ferie', label: 'Jour férié', icon: PartyPopper, color: 'bg-orange-100 text-orange-700' },
 ]
 
 // Format relative time
@@ -436,23 +437,32 @@ export function NewsTab() {
     }
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                    <h2 className="text-2xl font-bold text-gray-900">News Ticker</h2>
-                    <p className="text-gray-500">Gérez le bandeau d'actualités de la page d'accueil</p>
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                        <Rss className="h-5 w-5" />
+                    </span>
+                    <div>
+                        <h2 className="text-xl font-semibold tracking-tight text-slate-950">News Ticker</h2>
+                        <p className="text-sm text-slate-500">Gérez le bandeau d'actualités de la page d'accueil</p>
+                    </div>
                 </div>
                 <div className="flex items-center gap-2">
                     <Button
                         variant="outline"
                         onClick={refreshNews}
                         disabled={refreshing}
+                        className="border-slate-200 text-slate-700 hover:border-odillon-teal/30 hover:text-odillon-teal"
                     >
                         <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
                         Rafraîchir RSS
                     </Button>
-                    <Button onClick={() => setIsSheetOpen(true)}>
+                    <Button
+                        onClick={() => setIsSheetOpen(true)}
+                        className="bg-odillon-teal text-white shadow-sm hover:bg-odillon-teal/90"
+                    >
                         <Plus className="w-4 h-4 mr-2" />
                         Ajouter manuellement
                     </Button>
@@ -460,22 +470,24 @@ export function NewsTab() {
             </div>
 
             {/* Settings Card */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Settings2 className="w-5 h-5" />
+            <Card className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm">
+                <CardHeader className="border-b border-slate-200/80 bg-white py-4">
+                    <CardTitle className="flex items-center gap-3 text-base font-semibold tracking-tight text-slate-950">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                            <Settings2 className="h-4 w-4" />
+                        </span>
                         Paramètres du Ticker
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-slate-500">
                         Configurez l'affichage et le comportement du bandeau d'actualités
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-6">
                     <div className="grid gap-6 md:grid-cols-2">
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div className="flex items-center justify-between rounded-lg border border-slate-200/80 bg-slate-50 p-4">
                             <div className="space-y-0.5">
-                                <Label className="text-base font-medium">Afficher le ticker</Label>
-                                <p className="text-sm text-gray-500">
+                                <Label className="text-base font-medium text-slate-900">Afficher le ticker</Label>
+                                <p className="text-sm text-slate-500">
                                     Active/désactive le bandeau d'actualités sur la page d'accueil
                                 </p>
                             </div>
@@ -485,13 +497,14 @@ export function NewsTab() {
                                     setSettings(prev => ({ ...prev, show_news_ticker: checked }))
                                     saveSetting('show_news_ticker', checked)
                                 }}
+                                className="data-[state=checked]:bg-odillon-teal"
                             />
                         </div>
 
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div className="flex items-center justify-between rounded-lg border border-slate-200/80 bg-slate-50 p-4">
                             <div className="space-y-0.5">
-                                <Label className="text-base font-medium">Rafraîchissement auto</Label>
-                                <p className="text-sm text-gray-500">
+                                <Label className="text-base font-medium text-slate-900">Rafraîchissement auto</Label>
+                                <p className="text-sm text-slate-500">
                                     Met à jour automatiquement les actualités
                                 </p>
                             </div>
@@ -501,11 +514,12 @@ export function NewsTab() {
                                     setSettings(prev => ({ ...prev, news_auto_refresh: checked }))
                                     saveSetting('news_auto_refresh', checked)
                                 }}
+                                className="data-[state=checked]:bg-odillon-teal"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Vitesse de défilement</Label>
+                            <Label className="text-slate-700">Vitesse de défilement</Label>
                             <div className="flex items-center gap-4">
                                 <Input
                                     type="range"
@@ -519,12 +533,12 @@ export function NewsTab() {
                                     onTouchEnd={(e) => saveSetting('news_ticker_speed', parseInt((e.target as HTMLInputElement).value))}
                                     className="flex-1"
                                 />
-                                <span className="text-sm font-medium w-16">{settings.news_ticker_speed} px/s</span>
+                                <span className="w-16 text-sm font-medium tabular-nums text-slate-700">{settings.news_ticker_speed} px/s</span>
                             </div>
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Intervalle de rafraîchissement (minutes)</Label>
+                            <Label className="text-slate-700">Intervalle de rafraîchissement (minutes)</Label>
                             <Select
                                 value={String(settings.news_refresh_interval)}
                                 onValueChange={(value) => {
@@ -552,12 +566,12 @@ export function NewsTab() {
             {/* Filters */}
             <div className="flex flex-col md:flex-row gap-4">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <Input
                         placeholder="Rechercher une actualité..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10"
+                        className="pl-10 border-slate-200 bg-white"
                     />
                 </div>
                 <Select value={filterCategory} onValueChange={setFilterCategory}>
@@ -585,15 +599,18 @@ export function NewsTab() {
                     const count = news.filter(n => n.category === cat.value).length
                     const Icon = cat.icon
                     return (
-                        <Card key={cat.value} className="cursor-pointer hover:shadow-md transition-shadow"
-                            onClick={() => setFilterCategory(cat.value)}>
-                            <CardContent className="p-4 flex items-center gap-3">
-                                <div className={`w-10 h-10 rounded-lg ${cat.color} flex items-center justify-center`}>
-                                    <Icon className="w-5 h-5 text-white" />
+                        <Card
+                            key={cat.value}
+                            className="cursor-pointer rounded-xl border border-slate-200/80 bg-white shadow-sm transition-colors hover:border-odillon-teal/30"
+                            onClick={() => setFilterCategory(cat.value)}
+                        >
+                            <CardContent className="flex items-center gap-3 p-4">
+                                <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${cat.color}`}>
+                                    <Icon className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <p className="text-2xl font-bold">{count}</p>
-                                    <p className="text-xs text-gray-500">{cat.label}</p>
+                                    <p className="text-2xl font-semibold tabular-nums tracking-tight text-slate-950">{count}</p>
+                                    <p className="text-xs text-slate-500">{cat.label}</p>
                                 </div>
                             </CardContent>
                         </Card>
@@ -602,53 +619,56 @@ export function NewsTab() {
             </div>
 
             {/* News List */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                        <span className="flex items-center gap-2">
-                            <Rss className="w-5 h-5" />
+            <Card className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm">
+                <CardHeader className="border-b border-slate-200/80 bg-white py-4">
+                    <CardTitle className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="flex items-center gap-3 text-base font-semibold tracking-tight text-slate-950">
+                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                                <Rss className="h-4 w-4" />
+                            </span>
                             Actualités ({filteredNews.length})
                         </span>
-                        <Badge variant="outline" className="font-normal">
-                            Dernier rafraîchissement: {news[0]?.cached_at ? formatRelativeTime(news[0].cached_at) : 'Jamais'}
+                        <Badge variant="outline" className="border-slate-200 font-normal text-slate-500">
+                            Dernier rafraîchissement : {news[0]?.cached_at ? formatRelativeTime(news[0].cached_at) : 'Jamais'}
                         </Badge>
                     </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="min-h-[300px] bg-[#f7f9f8] p-6">
                     {loading ? (
                         <div className="flex items-center justify-center py-12">
-                            <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+                            <Loader2 className="w-8 h-8 animate-spin text-odillon-teal" />
                         </div>
                     ) : filteredNews.length === 0 ? (
-                        <div className="text-center py-12">
-                            <Rss className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                            <h3 className="text-lg font-medium text-gray-900 mb-1">Aucune actualité</h3>
-                            <p className="text-gray-500 mb-4">
-                                {searchTerm || filterCategory !== 'all'
-                                    ? "Aucune actualité ne correspond à vos critères"
-                                    : "Cliquez sur 'Rafraîchir RSS' pour récupérer les dernières actualités"}
-                            </p>
-                            {!searchTerm && filterCategory === 'all' && (
-                                <Button onClick={refreshNews} disabled={refreshing}>
+                        <AdminEmptyState
+                            icon={Rss}
+                            title="Aucune actualité"
+                            hint={searchTerm || filterCategory !== 'all'
+                                ? "Aucune actualité ne correspond à vos critères."
+                                : "Cliquez sur « Rafraîchir RSS » pour récupérer les dernières actualités."}
+                            action={!searchTerm && filterCategory === 'all' ? (
+                                <Button
+                                    onClick={refreshNews}
+                                    disabled={refreshing}
+                                    className="bg-odillon-teal text-white shadow-sm hover:bg-odillon-teal/90"
+                                >
                                     <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
                                     Rafraîchir RSS
                                 </Button>
-                            )}
-                        </div>
+                            ) : undefined}
+                        />
                     ) : (
                         <div className="space-y-3">
-                            {filteredNews.map((item, index) => {
+                            {filteredNews.map((item) => {
                                 const catConfig = getCategoryConfig(item.category)
                                 const Icon = catConfig.icon
                                 return (
-                                    <BlurFade key={item.id} delay={index * 0.05}>
-                                        <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group">
-                                            <div className={`w-10 h-10 rounded-lg ${catConfig.color} flex items-center justify-center flex-shrink-0`}>
-                                                <Icon className="w-5 h-5 text-white" />
+                                        <div key={item.id} className="group flex items-center gap-4 rounded-lg border border-slate-200/80 bg-white p-4 transition-shadow hover:shadow-md">
+                                            <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg ${catConfig.color}`}>
+                                                <Icon className="w-5 h-5" />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <h4 className="font-medium text-gray-900 truncate">{item.title}</h4>
-                                                <div className="flex items-center gap-2 text-sm text-gray-500">
+                                                <h4 className="font-medium text-slate-900 truncate">{item.title}</h4>
+                                                <div className="flex items-center gap-2 text-sm text-slate-500">
                                                     <span>{item.source}</span>
                                                     <span>•</span>
                                                     <span className="flex items-center gap-1">
@@ -658,17 +678,19 @@ export function NewsTab() {
                                                     {item.id.startsWith('manual-') && (
                                                         <>
                                                             <span>•</span>
-                                                            <Badge variant="secondary" className="text-xs">Manuel</Badge>
+                                                            <Badge variant="secondary" className="bg-slate-100 text-xs text-slate-600">Manuel</Badge>
                                                         </>
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="flex items-center gap-1 md:opacity-0 md:transition-opacity md:group-hover:opacity-100">
                                                 {item.url && (
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
                                                         onClick={() => window.open(item.url!, '_blank')}
+                                                        aria-label="Ouvrir le lien"
+                                                        className="text-slate-500 hover:bg-slate-100 hover:text-slate-700"
                                                     >
                                                         <ExternalLink className="w-4 h-4" />
                                                     </Button>
@@ -677,13 +699,16 @@ export function NewsTab() {
                                                     variant="ghost"
                                                     size="icon"
                                                     onClick={() => setEditingNews(item)}
+                                                    aria-label="Modifier"
+                                                    className="text-odillon-teal transition-[color,background-color,transform] hover:bg-odillon-teal/[0.08] hover:text-odillon-teal active:scale-[0.96]"
                                                 >
                                                     <Edit className="w-4 h-4" />
                                                 </Button>
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
-                                                    className="text-red-500 hover:text-red-600"
+                                                    className="text-red-500 transition-[color,background-color,transform] hover:bg-red-50 hover:text-red-600 active:scale-[0.96]"
+                                                    aria-label="Supprimer"
                                                     onClick={() => {
                                                         setNewsToDelete(item)
                                                         setDeleteDialogOpen(true)
@@ -693,7 +718,6 @@ export function NewsTab() {
                                                 </Button>
                                             </div>
                                         </div>
-                                    </BlurFade>
                                 )
                             })}
                         </div>

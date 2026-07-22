@@ -1,26 +1,9 @@
 "use client"
 
 import * as React from "react"
-import {
-    ImageIcon,
-    Users,
-    Quote,
-    Building2,
-    Video,
-    CalendarDays,
-    Sparkles,
-    Settings as SettingsIcon,
-    LogOut,
-    Target,
-    LayoutDashboard,
-    Newspaper,
-    Mail,
-    MessageSquare,
-    Rss,
-    GraduationCap,
-    ClipboardList,
-    SmilePlus
-} from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
+import { LogOut, ExternalLink } from "lucide-react"
 
 import {
     Sidebar,
@@ -33,17 +16,24 @@ import {
     SidebarMenu,
     SidebarMenuItem,
     SidebarMenuButton,
+    SidebarMenuBadge,
 } from "@/components/ui/sidebar"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
+import { sidebarGroups, dashboardItem, settingsItem } from "@/components/admin/nav"
+
+const itemClass =
+    "text-sidebar-foreground/85 transition-colors hover:bg-sidebar-accent hover:text-white data-[active=true]:bg-odillon-teal data-[active=true]:font-medium data-[active=true]:text-white"
 
 export function AdminSidebar({
     activeTab,
     setActiveTab,
+    unreadMessages = 0,
     ...props
 }: React.ComponentProps<typeof Sidebar> & {
-    activeTab: string,
+    activeTab: string
     setActiveTab: (tab: string) => void
+    unreadMessages?: number
 }) {
     const router = useRouter()
 
@@ -57,69 +47,59 @@ export function AdminSidebar({
         }
     }
 
-    const navItems = [
-        {
-            label: "Vue d'ensemble",
-            items: [
-                { title: "Tableau de Bord", icon: LayoutDashboard, value: "dashboard" }
-            ]
-        },
-        {
-            label: "Contenu",
-            items: [
-                { title: "Photos", icon: ImageIcon, value: "photos" },
-                { title: "Vidéos", icon: Video, value: "videos" },
-                { title: "Articles", icon: Newspaper, value: "articles" },
-                { title: "Témoignages", icon: Quote, value: "testimonials" },
-                { title: "Logos Partenaires", icon: Building2, value: "logos" },
-                { title: "Formations", icon: GraduationCap, value: "formations" },
-                { title: "Inscriptions", icon: ClipboardList, value: "inscriptions" },
-                { title: "Satisfaction", icon: SmilePlus, value: "satisfaction" },
-            ]
-        },
-        {
-            label: "Marketing",
-            items: [
-                { title: "Messages", icon: MessageSquare, value: "messages" },
-                { title: "Newsletter", icon: Mail, value: "newsletter" },
-                { title: "News Ticker", icon: Rss, value: "news" },
-            ]
-        },
-        {
-            label: "Organisation",
-            items: [
-                { title: "Équipe", icon: Users, value: "team" },
-                { title: "A Propos", icon: Target, value: "about" },
-                { title: "Calendrier", icon: CalendarDays, value: "calendar" },
-                { title: "Expertise CTA", icon: Sparkles, value: "expertise-cta" },
-            ]
-        },
-        {
-            label: "Système",
-            items: [
-                { title: "Paramètres", icon: SettingsIcon, value: "settings" },
-            ]
-        }
-    ]
-
     return (
-        <Sidebar collapsible="icon" className="border-r border-slate-200/80 bg-white" {...props}>
-            <SidebarHeader className="border-b border-slate-100 pb-3">
-                <div className="flex items-center gap-3 px-2 py-2 text-slate-900">
-                    <div className="flex aspect-square size-8 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.08] text-odillon-teal">
-                        <SettingsIcon className="size-4" />
-                    </div>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                        <span className="truncate font-semibold tracking-tight">Odillon Admin</span>
-                        <span className="truncate text-xs text-slate-500">v1.2.0</span>
-                    </div>
-                </div>
+        <Sidebar collapsible="icon" className="border-r border-sidebar-border" {...props}>
+            <SidebarHeader className="border-b border-sidebar-border px-3 pb-3 pt-4 group-data-[collapsible=icon]:px-2">
+                <button
+                    type="button"
+                    onClick={() => setActiveTab("dashboard")}
+                    className="flex items-center justify-start rounded-md outline-none transition-opacity hover:opacity-85 focus-visible:ring-2 focus-visible:ring-sidebar-ring group-data-[collapsible=icon]:justify-center"
+                    aria-label="Retour au tableau de bord"
+                >
+                    <Image
+                        src="/images/logos/odillon-logo-white.svg"
+                        alt="Odillon"
+                        width={174}
+                        height={52}
+                        className="h-8 w-auto group-data-[collapsible=icon]:hidden"
+                        priority
+                    />
+                    <Image
+                        src="/images/logos/odillon-icon-white.svg"
+                        alt="Odillon"
+                        width={28}
+                        height={28}
+                        className="hidden size-7 group-data-[collapsible=icon]:block"
+                    />
+                </button>
+                <p className="px-0.5 text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/50 group-data-[collapsible=icon]:hidden">
+                    Espace d'administration
+                </p>
             </SidebarHeader>
 
-            <SidebarContent className="gap-1 py-2">
-                {navItems.map((group) => (
-                    <SidebarGroup key={group.label}>
-                        <SidebarGroupLabel className="px-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400">{group.label}</SidebarGroupLabel>
+            <SidebarContent className="gap-0 py-1.5">
+                {/* Tableau de bord : épinglé en tête, sans libellé de groupe */}
+                <SidebarGroup className="py-0.5">
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton
+                                tooltip={dashboardItem.title}
+                                onClick={() => setActiveTab(dashboardItem.value)}
+                                isActive={activeTab === dashboardItem.value}
+                                className={itemClass}
+                            >
+                                <dashboardItem.icon />
+                                <span>{dashboardItem.title}</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarGroup>
+
+                {sidebarGroups.map((group) => (
+                    <SidebarGroup key={group.label} className="py-0.5">
+                        <SidebarGroupLabel className="h-6 px-2 text-[11px] font-semibold uppercase tracking-wider text-sidebar-foreground/45">
+                            {group.label}
+                        </SidebarGroupLabel>
                         <SidebarMenu>
                             {group.items.map((item) => (
                                 <SidebarMenuItem key={item.value}>
@@ -127,14 +107,16 @@ export function AdminSidebar({
                                         tooltip={item.title}
                                         onClick={() => setActiveTab(item.value)}
                                         isActive={activeTab === item.value}
-                                        className={activeTab === item.value
-                                            ? "!bg-odillon-teal/[0.08] !text-odillon-teal"
-                                            : "text-slate-600 hover:bg-slate-100/80 hover:text-slate-950"
-                                        }
+                                        className={itemClass}
                                     >
-                                        {item.icon && <item.icon />}
+                                        <item.icon />
                                         <span>{item.title}</span>
                                     </SidebarMenuButton>
+                                    {item.value === "messages" && unreadMessages > 0 && (
+                                        <SidebarMenuBadge className="bg-odillon-lime font-semibold text-odillon-dark">
+                                            {unreadMessages}
+                                        </SidebarMenuBadge>
+                                    )}
                                 </SidebarMenuItem>
                             ))}
                         </SidebarMenu>
@@ -142,12 +124,36 @@ export function AdminSidebar({
                 ))}
             </SidebarContent>
 
-            <SidebarFooter className="border-t border-slate-100 pt-3">
+            <SidebarFooter className="border-t border-sidebar-border pb-3 pt-2">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton
+                            tooltip={settingsItem.title}
+                            onClick={() => setActiveTab(settingsItem.value)}
+                            isActive={activeTab === settingsItem.value}
+                            className={itemClass}
+                        >
+                            <settingsItem.icon />
+                            <span>{settingsItem.title}</span>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton
+                            asChild
+                            tooltip="Voir le site"
+                            className="text-sidebar-foreground/85 hover:bg-sidebar-accent hover:text-white"
+                        >
+                            <Link href="/" target="_blank" rel="noopener noreferrer">
+                                <ExternalLink />
+                                <span>Voir le site</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton
+                            tooltip="Déconnexion"
                             onClick={handleLogout}
-                            className="text-slate-500 hover:bg-red-50 hover:text-red-600"
+                            className="text-sidebar-foreground/85 hover:bg-red-500/15 hover:text-red-300"
                         >
                             <LogOut />
                             <span>Déconnexion</span>

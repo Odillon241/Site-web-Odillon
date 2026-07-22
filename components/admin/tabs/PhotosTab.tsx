@@ -30,7 +30,6 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { StackedCardsInteraction } from "@/components/ui/stacked-cards-interaction"
-import { BlurFade } from "@/components/magicui/blur-fade"
 
 import { Loader2, Plus, Search, Trash2, Eye, EyeOff, Camera, ImageIcon, CalendarDays, RefreshCw, UploadCloud, X, ArrowLeft, Edit, FolderEdit, Save, Crop, MapPin, FolderInput, ListChecks, CheckCircle2 } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -1140,7 +1139,6 @@ export function PhotosTab() {
 
                                                 return (
                                                     <SortablePhotoItem key={albumName} id={albumName}>
-                                                        <BlurFade delay={0.05}>
                                                             <div
                                                                 className="relative w-full aspect-[7/8] max-w-[300px] mx-auto group perspective-1000 cursor-pointer"
                                                                 onClick={() => setSelectedAlbum(albumName)}
@@ -1161,7 +1159,6 @@ export function PhotosTab() {
                                                                     rotationAngle={4}
                                                                 />
                                                             </div>
-                                                        </BlurFade>
                                                     </SortablePhotoItem>
                                                 );
                                             })

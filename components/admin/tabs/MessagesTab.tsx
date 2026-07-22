@@ -36,6 +36,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
     Loader2,
     Trash2,
@@ -50,6 +51,7 @@ import {
     Archive,
     CheckCircle2,
     MessageCircle,
+    MessageSquare,
     ExternalLink
 } from "lucide-react"
 import { toast } from "sonner"
@@ -222,52 +224,53 @@ export function MessagesTab() {
     const archivedCount = messages.filter(m => m.status === 'archived').length
 
     const stats = [
-        { label: 'Nouveaux', count: newCount, icon: Mail, iconBg: 'bg-odillon-teal/10', iconColor: 'text-odillon-teal' },
-        { label: 'Lus', count: readCount, icon: MailOpen, iconBg: 'bg-amber-50', iconColor: 'text-amber-600' },
-        { label: 'Répondus', count: repliedCount, icon: CheckCircle2, iconBg: 'bg-emerald-50', iconColor: 'text-emerald-600' },
-        { label: 'Archivés', count: archivedCount, icon: Archive, iconBg: 'bg-gray-100', iconColor: 'text-gray-400' },
+        { label: 'Nouveaux', count: newCount, icon: Mail, chipClass: 'border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal' },
+        { label: 'Lus', count: readCount, icon: MailOpen, chipClass: 'border-amber-200 bg-amber-50 text-amber-600' },
+        { label: 'Répondus', count: repliedCount, icon: CheckCircle2, chipClass: 'border-emerald-200 bg-emerald-50 text-emerald-600' },
+        { label: 'Archivés', count: archivedCount, icon: Archive, chipClass: 'border-slate-200 bg-slate-100 text-slate-500' },
     ]
 
     return (
         <div className="space-y-6">
-            {/* Header Stats */}
+            {/* Header Stats : même modèle que les cartes du tableau de bord */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {stats.map((stat) => {
                     const StatIcon = stat.icon
                     return (
                         <div
                             key={stat.label}
-                            className="group bg-white border border-gray-200/80 rounded-xl p-5 transition-all duration-200 hover:border-gray-300 hover:shadow-sm"
+                            className="rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm"
                         >
-                            <div className="flex items-center justify-between">
-                                <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${stat.iconBg}`}>
-                                    <StatIcon className={`h-5 w-5 ${stat.iconColor}`} />
+                            <div className="flex items-center gap-4">
+                                <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-md border ${stat.chipClass}`}>
+                                    <StatIcon className="h-5 w-5" />
                                 </div>
-                                <span className="text-3xl font-semibold tracking-tight text-gray-900 tabular-nums">
-                                    {stat.count}
-                                </span>
+                                <div className="min-w-0">
+                                    <p className="truncate text-sm font-medium text-slate-500">{stat.label}</p>
+                                    <p className="text-2xl font-semibold tabular-nums tracking-tight text-slate-950">{stat.count}</p>
+                                </div>
                             </div>
-                            <p className="mt-3 text-sm font-medium text-gray-500">{stat.label}</p>
                         </div>
                     )
                 })}
             </div>
 
-            {/* Actions Bar */}
-            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-                <div className="relative flex-grow max-w-md">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <Input
-                        type="text"
-                        placeholder="Rechercher par nom, email, sujet..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-10"
-                    />
-                </div>
-                <div className="flex gap-2">
+            {/* Messages Card */}
+            <Card className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm">
+                <CardHeader className="flex flex-col gap-3 border-b border-slate-200/80 bg-white py-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-3">
+                        <CardTitle className="flex items-center gap-3 text-base font-semibold tracking-tight text-slate-950">
+                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                                <MessageSquare className="h-4 w-4" />
+                            </span>
+                            Messages
+                        </CardTitle>
+                        <Badge variant="secondary" className="bg-slate-100 text-slate-600">
+                            {filteredMessages.length}
+                        </Badge>
+                    </div>
                     <Select value={statusFilter} onValueChange={setStatusFilter}>
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger className="w-full border-slate-200 sm:w-[180px]">
                             <SelectValue placeholder="Filtrer par statut" />
                         </SelectTrigger>
                         <SelectContent>
@@ -278,102 +281,116 @@ export function MessagesTab() {
                             <SelectItem value="archived">Archivés</SelectItem>
                         </SelectContent>
                     </Select>
-                </div>
-            </div>
-
-            {/* Messages Table */}
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="w-[50px]">Statut</TableHead>
-                            <TableHead>Expéditeur</TableHead>
-                            <TableHead>Sujet</TableHead>
-                            <TableHead>Date</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {filteredMessages.length === 0 ? (
-                            <TableRow>
-                                <TableCell colSpan={5} className="text-center py-8 text-gray-500">
-                                    <MessageCircle className="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                                    {searchQuery || statusFilter !== "all"
-                                        ? "Aucun message trouvé"
-                                        : "Aucun message pour le moment"}
-                                </TableCell>
+                </CardHeader>
+                <CardContent className="p-0">
+                    <div className="border-b border-slate-200/80 bg-white p-4">
+                        <div className="relative max-w-md">
+                            <Search className="absolute left-3 top-1/2 w-4 h-4 -translate-y-1/2 text-slate-400" />
+                            <Input
+                                type="text"
+                                placeholder="Rechercher par nom, email, sujet..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="pl-10 border-slate-200 bg-slate-50"
+                            />
+                        </div>
+                    </div>
+                    <Table>
+                        <TableHeader>
+                            <TableRow className="hover:bg-transparent">
+                                <TableHead className="w-[50px]">Statut</TableHead>
+                                <TableHead>Expéditeur</TableHead>
+                                <TableHead>Sujet</TableHead>
+                                <TableHead>Date</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
-                        ) : (
-                            filteredMessages.map((message) => {
-                                const StatusIcon = statusConfig[message.status].icon
-                                return (
-                                    <TableRow
-                                        key={message.id}
-                                        className={message.status === 'new' ? 'bg-blue-50/50' : ''}
-                                    >
-                                        <TableCell>
-                                            <Badge
-                                                variant="secondary"
-                                                className={`${statusConfig[message.status].color} text-white`}
-                                            >
-                                                <StatusIcon className="w-3 h-3" />
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="flex flex-col">
-                                                <span className={`font-medium ${message.status === 'new' ? 'text-gray-900' : 'text-gray-700'}`}>
-                                                    {message.name}
-                                                </span>
-                                                <span className="text-sm text-gray-500">{message.email}</span>
-                                                {message.company && (
-                                                    <span className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
-                                                        <Building2 className="w-3 h-3" />
-                                                        {message.company}
+                        </TableHeader>
+                        <TableBody>
+                            {filteredMessages.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={5} className="py-10 text-center text-slate-500">
+                                        <MessageCircle className="w-12 h-12 mx-auto mb-2 text-slate-300" />
+                                        {searchQuery || statusFilter !== "all"
+                                            ? "Aucun message trouvé"
+                                            : "Aucun message pour le moment"}
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                filteredMessages.map((message) => {
+                                    const StatusIcon = statusConfig[message.status].icon
+                                    return (
+                                        <TableRow
+                                            key={message.id}
+                                            className={message.status === 'new' ? 'bg-odillon-teal/[0.035]' : ''}
+                                        >
+                                            <TableCell>
+                                                <Badge
+                                                    variant="secondary"
+                                                    className={`${statusConfig[message.status].color} text-white`}
+                                                >
+                                                    <StatusIcon className="w-3 h-3" />
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="flex flex-col">
+                                                    <span className={`font-medium ${message.status === 'new' ? 'text-slate-900' : 'text-slate-700'}`}>
+                                                        {message.name}
                                                     </span>
-                                                )}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <span className={`${message.status === 'new' ? 'font-semibold' : ''}`}>
-                                                {message.subject}
-                                            </span>
-                                            <p className="text-sm text-gray-500 truncate max-w-[300px]">
-                                                {message.message}
-                                            </p>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="flex items-center gap-1 text-sm text-gray-500">
-                                                <Clock className="w-3 h-3" />
-                                                {formatRelativeDate(message.created_at)}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            <div className="flex justify-end gap-1">
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    onClick={() => handleViewMessage(message)}
-                                                    title="Voir le message"
-                                                >
-                                                    <Eye className="w-4 h-4 text-odillon-teal" />
-                                                </Button>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    onClick={() => setDeleteId(message.id)}
-                                                    title="Supprimer"
-                                                >
-                                                    <Trash2 className="w-4 h-4 text-red-500" />
-                                                </Button>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                )
-                            })
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
+                                                    <span className="text-sm text-slate-500">{message.email}</span>
+                                                    {message.company && (
+                                                        <span className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                                                            <Building2 className="w-3 h-3" />
+                                                            {message.company}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <span className={`${message.status === 'new' ? 'font-semibold text-slate-900' : 'text-slate-700'}`}>
+                                                    {message.subject}
+                                                </span>
+                                                <p className="text-sm text-slate-500 truncate max-w-[300px]">
+                                                    {message.message}
+                                                </p>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="flex items-center gap-1 text-sm text-slate-500">
+                                                    <Clock className="w-3 h-3" />
+                                                    {formatRelativeDate(message.created_at)}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                <div className="flex justify-end gap-1">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => handleViewMessage(message)}
+                                                        title="Voir le message"
+                                                        aria-label="Voir le message"
+                                                        className="text-odillon-teal transition-[color,background-color,transform] hover:bg-odillon-teal/[0.08] hover:text-odillon-teal active:scale-[0.96]"
+                                                    >
+                                                        <Eye className="w-4 h-4" />
+                                                    </Button>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => setDeleteId(message.id)}
+                                                        title="Supprimer"
+                                                        aria-label="Supprimer"
+                                                        className="text-red-500 transition-[color,background-color,transform] hover:bg-red-50 hover:text-red-600 active:scale-[0.96]"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                })
+                            )}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
 
             {/* Message Detail Dialog */}
             <Dialog open={!!selectedMessage} onOpenChange={(open) => !open && setSelectedMessage(null)}>
@@ -381,7 +398,7 @@ export function MessagesTab() {
                     {selectedMessage && (
                         <>
                             <DialogHeader>
-                                <div className="flex items-start justify-between gap-4">
+                                <div className="flex items-start justify-between gap-4 pr-8">
                                     <div>
                                         <DialogTitle className="text-xl">{selectedMessage.subject}</DialogTitle>
                                         <DialogDescription className="mt-1">
@@ -399,7 +416,7 @@ export function MessagesTab() {
 
                             <div className="space-y-6 mt-4">
                                 {/* Contact Info */}
-                                <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                                <div className="bg-slate-50 border border-slate-200/80 rounded-lg p-4 space-y-3">
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 bg-odillon-teal/10 rounded-full flex items-center justify-center">
                                             <span className="text-odillon-teal font-semibold">
@@ -407,7 +424,7 @@ export function MessagesTab() {
                                             </span>
                                         </div>
                                         <div>
-                                            <p className="font-semibold text-gray-900">{selectedMessage.name}</p>
+                                            <p className="font-semibold text-slate-900">{selectedMessage.name}</p>
                                             <a
                                                 href={`mailto:${selectedMessage.email}`}
                                                 className="text-sm text-odillon-teal hover:underline flex items-center gap-1"
@@ -418,13 +435,13 @@ export function MessagesTab() {
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-4 pt-2 border-t">
+                                    <div className="grid grid-cols-2 gap-4 pt-2 border-t border-slate-200/80">
                                         {selectedMessage.phone && (
                                             <div className="flex items-center gap-2 text-sm">
-                                                <Phone className="w-4 h-4 text-gray-400" />
+                                                <Phone className="w-4 h-4 text-slate-400" />
                                                 <a
                                                     href={`tel:${selectedMessage.phone}`}
-                                                    className="text-gray-700 hover:text-odillon-teal"
+                                                    className="text-slate-700 hover:text-odillon-teal"
                                                 >
                                                     {selectedMessage.phone}
                                                 </a>
@@ -432,8 +449,8 @@ export function MessagesTab() {
                                         )}
                                         {selectedMessage.company && (
                                             <div className="flex items-center gap-2 text-sm">
-                                                <Building2 className="w-4 h-4 text-gray-400" />
-                                                <span className="text-gray-700">{selectedMessage.company}</span>
+                                                <Building2 className="w-4 h-4 text-slate-400" />
+                                                <span className="text-slate-700">{selectedMessage.company}</span>
                                             </div>
                                         )}
                                     </div>
@@ -441,9 +458,9 @@ export function MessagesTab() {
 
                                 {/* Message Content */}
                                 <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-2">Message</h4>
-                                    <div className="bg-white border border-gray-200 rounded-lg p-4">
-                                        <p className="text-gray-700 whitespace-pre-wrap">{selectedMessage.message}</p>
+                                    <h4 className="text-sm font-medium text-slate-500 mb-2">Message</h4>
+                                    <div className="bg-white border border-slate-200/80 rounded-lg p-4">
+                                        <p className="text-slate-700 whitespace-pre-wrap">{selectedMessage.message}</p>
                                     </div>
                                 </div>
 

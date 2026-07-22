@@ -34,9 +34,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { BlurFade } from "@/components/magicui/blur-fade";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import {
   Loader2,
@@ -53,13 +58,16 @@ import {
   Calendar,
   Clock,
   FileText,
+  FileType,
   Upload,
   Image as ImageIcon,
   Sparkles,
+  ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { BatchImportDialog } from "@/components/admin/batch-import-dialog";
+import { AdminEmptyState } from "@/components/admin/ui/admin-panel";
 
 interface Article {
   id: string;
@@ -128,6 +136,7 @@ export function ArticlesTab() {
 
   // AI Generation
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
 
   const handleGenerateArticle = async () => {
     try {
@@ -407,29 +416,18 @@ export function ArticlesTab() {
 
   return (
     <div className="space-y-6">
-      {/* HEADER */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-4 rounded-lg shadow-sm border border-gray-100 gap-4">
-        <div>
-          <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-            <Newspaper className="w-5 h-5 text-odillon-teal" />
-            Gestion des Articles
-          </h2>
-          <p className="text-sm text-gray-500">
-            Créez et gérez les articles du blog
-          </p>
-        </div>
-      </div>
-
       {/* BANNER CONFIGURATION */}
-      <Card className="border-none shadow-md overflow-hidden bg-white">
-        <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
+      <Card className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm">
+        <CardHeader className="border-b border-slate-200/80 bg-white py-4">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base font-medium text-gray-700 flex items-center gap-2">
-              <ImageIcon className="w-4 h-4 text-odillon-teal" />
+            <CardTitle className="flex items-center gap-3 text-base font-semibold tracking-tight text-slate-950">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                <ImageIcon className="h-4 w-4" />
+              </span>
               Bannière Promotionnelle
             </CardTitle>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">Activer</span>
+              <span className="text-sm text-slate-600">Activer</span>
               <Switch
                 checked={settings?.show_blog_banner || false}
                 onCheckedChange={(checked) =>
@@ -440,10 +438,10 @@ export function ArticlesTab() {
           </div>
         </CardHeader>
         {settings?.show_blog_banner && (
-          <CardContent className="p-6 grid md:grid-cols-2 gap-8 items-start">
+          <CardContent className="grid items-start gap-8 bg-[#f7f9f8] p-6 md:grid-cols-2">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label>Lien de redirection</Label>
+                <Label className="text-slate-700">Lien de redirection</Label>
                 <Input
                   placeholder="https://..."
                   value={settings?.blog_banner_link || ""}
@@ -460,13 +458,13 @@ export function ArticlesTab() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Image de bannière</Label>
+                <Label className="text-slate-700">Image de bannière</Label>
                 <div className="flex gap-2">
                   <Input
                     type="file"
                     accept="image/*"
                     id="blog-banner-upload"
-                    className="bg-white cursor-pointer"
+                    className="cursor-pointer border-slate-200 bg-white"
                     onChange={(e) => {
                       if (e.target.files?.[0])
                         handleBannerUpload(e.target.files[0]);
@@ -480,7 +478,7 @@ export function ArticlesTab() {
                 )}
               </div>
             </div>
-            <div className="relative aspect-[3/1] w-full bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+            <div className="relative aspect-[3/1] w-full overflow-hidden rounded-lg border border-slate-200 bg-white">
               {settings?.blog_banner_image_url ? (
                 <img
                   src={settings.blog_banner_image_url}
@@ -488,7 +486,7 @@ export function ArticlesTab() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-400 text-sm">
+                <div className="flex h-full items-center justify-center text-sm text-slate-400">
                   Aperçu
                 </div>
               )}
@@ -498,36 +496,54 @@ export function ArticlesTab() {
       </Card>
 
       {/* MAIN CONTENT */}
-      <Card className="border-none shadow-md overflow-hidden">
-        <CardHeader className="bg-gray-50/50 border-b border-gray-100 flex flex-row items-center justify-between py-4">
-          <div className="flex items-center gap-2">
-            <CardTitle className="text-lg font-medium text-gray-700">
+      <Card className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm">
+        <CardHeader className="flex flex-row items-center justify-between border-b border-slate-200/80 bg-white py-4">
+          <div className="flex items-center gap-3">
+            <CardTitle className="flex items-center gap-3 text-base font-semibold tracking-tight text-slate-950">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                <Newspaper className="h-4 w-4" />
+              </span>
               Articles
             </CardTitle>
-            <Badge
-              variant="secondary"
-              className="bg-white border shadow-sm text-xs font-normal"
-            >
+            <Badge variant="secondary" className="bg-slate-100 text-slate-600">
               {filteredArticles.length}
             </Badge>
           </div>
 
-          {/* ADD ARTICLE BUTTON */}
+          {/* Actions : une primaire (Nouvel article), les outils IA regroupés */}
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={handleGenerateArticle}
-              disabled={isGenerating}
-              className="bg-purple-50 text-purple-600 border-purple-200 hover:bg-purple-100 hover:text-purple-700"
-            >
-              {isGenerating ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <Sparkles className="w-4 h-4 mr-2" />
-              )}
-              Générer (IA)
-            </Button>
-            <BatchImportDialog onArticlesCreated={loadArticles} />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  disabled={isGenerating}
+                  className="border-slate-200 text-slate-700 hover:border-odillon-teal/30 hover:text-odillon-teal"
+                >
+                  {isGenerating ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Sparkles className="w-4 h-4 mr-2 text-odillon-teal" />
+                  )}
+                  Outils IA
+                  <ChevronDown className="w-4 h-4 ml-2 text-slate-400" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleGenerateArticle} disabled={isGenerating}>
+                  <Sparkles className="mr-2 h-4 w-4 text-odillon-teal" />
+                  Générer un article
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setIsImportOpen(true)}>
+                  <FileType className="mr-2 h-4 w-4 text-odillon-teal" />
+                  Import de documents (IA)
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <BatchImportDialog
+              open={isImportOpen}
+              onOpenChange={setIsImportOpen}
+              onArticlesCreated={loadArticles}
+            />
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
               {" "}
               <SheetTrigger asChild>
@@ -765,19 +781,19 @@ export function ArticlesTab() {
 
         <CardContent className="p-0">
           {/* FILTERS BAR */}
-          <div className="p-4 border-b border-gray-100 flex flex-wrap gap-3 bg-white">
+          <div className="flex flex-wrap gap-3 border-b border-slate-200/80 bg-white p-4">
             <div className="relative flex-1 min-w-[200px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
                 placeholder="Rechercher..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 bg-gray-50 border-gray-200"
+                className="pl-9 bg-slate-50 border-slate-200"
               />
             </div>
 
             <Select value={filterCategory} onValueChange={setFilterCategory}>
-              <SelectTrigger className="w-[160px] bg-gray-50 border-gray-200">
+              <SelectTrigger className="w-[160px] bg-slate-50 border-slate-200">
                 <SelectValue placeholder="Catégorie" />
               </SelectTrigger>
               <SelectContent>
@@ -791,7 +807,7 @@ export function ArticlesTab() {
             </Select>
 
             <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-[140px] bg-gray-50 border-gray-200">
+              <SelectTrigger className="w-[140px] bg-slate-50 border-slate-200">
                 <SelectValue placeholder="Statut" />
               </SelectTrigger>
               <SelectContent>
@@ -801,35 +817,28 @@ export function ArticlesTab() {
               </SelectContent>
             </Select>
 
-            <Button variant="ghost" size="icon" onClick={loadArticles}>
-              <RefreshCw className="w-4 h-4 text-gray-500" />
+            <Button variant="ghost" size="icon" onClick={loadArticles} aria-label="Rafraîchir">
+              <RefreshCw className="w-4 h-4 text-slate-500" />
             </Button>
           </div>
 
           {/* ARTICLES LIST */}
-          <div className="p-6 bg-gray-50/30 min-h-[400px]">
+          <div className="min-h-[400px] bg-[#f7f9f8] p-6">
             {loading ? (
               <div className="flex flex-col items-center justify-center py-20">
                 <Loader2 className="w-10 h-10 animate-spin text-odillon-teal mb-4" />
-                <p className="text-gray-500">Chargement des articles...</p>
+                <p className="text-slate-500">Chargement des articles...</p>
               </div>
             ) : filteredArticles.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 text-center">
-                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                  <FileText className="w-10 h-10 text-gray-300" />
-                </div>
-                <h3 className="text-lg font-medium text-gray-900">
-                  Aucun article
-                </h3>
-                <p className="text-gray-500">
-                  Créez votre premier article pour commencer.
-                </p>
-              </div>
+              <AdminEmptyState
+                icon={FileText}
+                title="Aucun article"
+                hint="Créez votre premier article pour commencer."
+              />
             ) : (
               <div className="space-y-4">
-                {filteredArticles.map((article, idx) => (
-                  <BlurFade key={article.id} delay={0.05 * idx}>
-                    <div className="bg-white p-4 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                {filteredArticles.map((article) => (
+                    <div key={article.id} className="rounded-lg border border-slate-200/80 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-2">
@@ -847,13 +856,13 @@ export function ArticlesTab() {
                             </Badge>
                             <Badge variant="outline">{article.category}</Badge>
                           </div>
-                          <h3 className="font-semibold text-gray-900 mb-1 truncate">
+                          <h3 className="font-semibold text-slate-900 mb-1 truncate">
                             {article.title}
                           </h3>
-                          <p className="text-sm text-gray-500 line-clamp-2">
+                          <p className="text-sm text-slate-500 line-clamp-2">
                             {article.excerpt}
                           </p>
-                          <div className="flex items-center gap-4 mt-2 text-xs text-gray-400">
+                          <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
                             <span className="flex items-center gap-1">
                               <Calendar className="w-3 h-3" />
                               {formatDate(
@@ -867,19 +876,20 @@ export function ArticlesTab() {
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
                           <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => togglePublished(article)}
+                            className="text-slate-500 hover:bg-slate-100 hover:text-slate-700"
                             title={
                               article.is_published ? "Dépublier" : "Publier"
                             }
                           >
                             {article.is_published ? (
-                              <EyeOff className="w-4 h-4 text-gray-400" />
+                              <EyeOff className="w-4 h-4" />
                             ) : (
-                              <Eye className="w-4 h-4 text-gray-400" />
+                              <Eye className="w-4 h-4" />
                             )}
                           </Button>
 
@@ -887,14 +897,21 @@ export function ArticlesTab() {
                             variant="ghost"
                             size="icon"
                             onClick={() => setEditingArticle(article)}
+                            aria-label="Modifier"
+                            className="text-odillon-teal transition-[color,background-color,transform] hover:bg-odillon-teal/[0.08] hover:text-odillon-teal active:scale-[0.96]"
                           >
-                            <Edit className="w-4 h-4 text-gray-400" />
+                            <Edit className="w-4 h-4" />
                           </Button>
 
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <Trash2 className="w-4 h-4 text-red-400" />
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                aria-label="Supprimer"
+                                className="text-red-500 transition-[color,background-color,transform] hover:bg-red-50 hover:text-red-600 active:scale-[0.96]"
+                              >
+                                <Trash2 className="w-4 h-4" />
                               </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
@@ -920,7 +937,6 @@ export function ArticlesTab() {
                         </div>
                       </div>
                     </div>
-                  </BlurFade>
                 ))}
               </div>
             )}

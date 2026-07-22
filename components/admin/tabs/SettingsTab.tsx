@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Loader2, Upload, Settings as SettingsIcon, Image as ImageIcon, Trash2 } from "lucide-react"
+import { AdminPanel } from "@/components/admin/ui/admin-panel"
 import { SiteSettings } from "@/types/admin"
 import { toast } from "sonner"
 
@@ -116,16 +116,12 @@ export function SettingsTab() {
 
 
     return (
-        <Card className="overflow-hidden border border-slate-200/80 bg-white shadow-sm">
-            <CardHeader className="border-b border-slate-200/80 bg-white">
-                <CardTitle className="flex items-center gap-3 text-lg font-semibold tracking-tight text-slate-950">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
-                        <SettingsIcon className="h-4 w-4" />
-                    </span>
-                    Paramètres du Site
-                </CardTitle>
-            </CardHeader>
-            <CardContent className="min-h-[400px] space-y-6 bg-[#f7f9f8] p-6">
+        <AdminPanel
+            icon={SettingsIcon}
+            title="Paramètres du site"
+            description="Images globales affichées sur les pages publiques."
+            contentClassName="min-h-[400px] space-y-6"
+        >
                 {loadingSettings ? (
                     <div className="flex justify-center py-12">
                         <Loader2 className="w-8 h-8 animate-spin text-odillon-teal" />
@@ -226,9 +222,7 @@ export function SettingsTab() {
                             </div>
                         </div>
 
-                        <div className="h-px bg-slate-200/80"></div>
-
-                        {/* Section Image À Propos */}
+{/* Section Image À Propos */}
                         <div className="grid items-start gap-8 rounded-lg border border-slate-200/80 bg-white p-5 shadow-sm md:grid-cols-2">
                             <div className="space-y-4">
                                 <h3 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
@@ -302,10 +296,8 @@ export function SettingsTab() {
                             </div>
                         </div>
 
-                        <div className="h-px bg-slate-200/80"></div>
                     </>
                 )}
-            </CardContent>
-        </Card>
+        </AdminPanel>
     )
 }

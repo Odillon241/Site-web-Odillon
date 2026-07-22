@@ -1,14 +1,13 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { Loader2, Plus, Trash2, Save, RefreshCw, Award, Shield, Lightbulb, Heart, Target, Sparkles, Gem, Flame, HeartHandshake } from "lucide-react"
+import { Loader2, Plus, Trash2, Save, Award, Shield, Lightbulb, Heart, Target, Sparkles, Gem, Flame, HeartHandshake } from "lucide-react"
 import { toast } from "sonner"
-import { createClient } from "@/lib/supabase/client"
+import { AdminPanel, AdminEmptyState } from "@/components/admin/ui/admin-panel"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface ValueItem {
@@ -40,7 +39,6 @@ const DEFAULT_COLORS = [
 export function AboutTab() {
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
-    // const { toast } = useToast() - removed
 
     // Mission Fields
     const [missionTitle, setMissionTitle] = useState("")
@@ -126,152 +124,169 @@ export function AboutTab() {
         setValues(newValues)
     }
 
-    if (loading) {
-        return (
-            <div className="flex justify-center p-12">
-                <Loader2 className="w-8 h-8 animate-spin text-odillon-teal" />
-            </div>
-        )
-    }
-
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Gestion de la Page À Propos</h2>
-                    <p className="text-gray-500">Modifiez les textes de la mission et les valeurs de l'entreprise.</p>
-                </div>
-                <Button onClick={handleSave} disabled={saving} className="bg-odillon-teal hover:bg-odillon-teal/90">
+        <AdminPanel
+            icon={Target}
+            title="Page À Propos"
+            description="Modifiez les textes de la mission et les valeurs de l'entreprise."
+            contentClassName="min-h-[400px] space-y-6"
+            actions={
+                <Button
+                    onClick={handleSave}
+                    disabled={saving || loading}
+                    className="bg-odillon-teal text-white shadow-sm hover:bg-odillon-teal/90"
+                >
                     {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
                     Enregistrer
                 </Button>
-            </div>
+            }
+        >
+            {loading ? (
+                <div className="flex justify-center py-12">
+                    <Loader2 className="w-8 h-8 animate-spin text-odillon-teal" />
+                </div>
+            ) : (
+                <>
+                    {/* MISSION SECTION */}
+                    <div className="space-y-4 rounded-lg border border-slate-200/80 bg-white p-5 shadow-sm">
+                        <div>
+                            <h3 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                                <Target className="h-5 w-5 text-odillon-teal" />
+                                Notre Mission
+                            </h3>
+                            <p className="text-sm text-slate-600">Définissez le texte principal de la section mission.</p>
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-slate-700">Titre de la Mission</Label>
+                            <Input
+                                value={missionTitle}
+                                onChange={(e) => setMissionTitle(e.target.value)}
+                                placeholder="Ex: Notre Mission"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-slate-700">Description de la Mission</Label>
+                            <Textarea
+                                value={missionDescription}
+                                onChange={(e) => setMissionDescription(e.target.value)}
+                                placeholder="Ex: Fondée sur la conviction..."
+                                className="min-h-[120px]"
+                            />
+                        </div>
+                    </div>
 
-            {/* MISSION SECTION */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Notre Mission</CardTitle>
-                    <CardDescription>Définissez le texte principal de la section mission.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                        <Label>Titre de la Mission</Label>
-                        <Input
-                            value={missionTitle}
-                            onChange={(e) => setMissionTitle(e.target.value)}
-                            placeholder="Ex: Notre Mission"
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <Label>Description de la Mission</Label>
-                        <Textarea
-                            value={missionDescription}
-                            onChange={(e) => setMissionDescription(e.target.value)}
-                            placeholder="Ex: Fondée sur la conviction..."
-                            className="min-h-[120px]"
-                        />
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* VALUES SECTION */}
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <div>
-                        <CardTitle>Nos Valeurs</CardTitle>
-                        <CardDescription>Gérez les cartes de valeurs affichées.</CardDescription>
-                    </div>
-                    <Button onClick={addValue} variant="outline" size="sm">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Ajouter une valeur
-                    </Button>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                    {values.map((item, index) => (
-                        <div key={index} className="flex flex-col md:flex-row gap-4 p-4 border rounded-lg bg-gray-50/50 relative group">
+                    {/* VALUES SECTION */}
+                    <div className="space-y-6 rounded-lg border border-slate-200/80 bg-white p-5 shadow-sm">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                            <div>
+                                <h3 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                                    <Sparkles className="h-5 w-5 text-odillon-teal" />
+                                    Nos Valeurs
+                                </h3>
+                                <p className="text-sm text-slate-600">Gérez les cartes de valeurs affichées.</p>
+                            </div>
                             <Button
-                                variant="ghost"
-                                size="icon"
-                                className="absolute top-2 right-2 text-gray-400 hover:text-red-500 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
-                                onClick={() => removeValue(index)}
+                                onClick={addValue}
+                                variant="outline"
+                                size="sm"
+                                className="border-slate-200 text-slate-700 hover:border-odillon-teal/30 hover:text-odillon-teal"
                             >
-                                <Trash2 className="w-4 h-4" />
+                                <Plus className="w-4 h-4 mr-2" />
+                                Ajouter une valeur
                             </Button>
+                        </div>
 
-                            <div className="flex-1 space-y-4">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {values.map((item, index) => (
+                            <div key={index} className="group relative flex flex-col gap-4 rounded-lg border border-slate-200 bg-slate-50/60 p-4 md:flex-row">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute right-2 top-2 text-slate-400 transition-opacity hover:text-red-500 md:opacity-0 md:group-hover:opacity-100"
+                                    onClick={() => removeValue(index)}
+                                    aria-label="Supprimer la valeur"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </Button>
+
+                                <div className="flex-1 space-y-4">
+                                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                        <div className="space-y-2">
+                                            <Label className="text-slate-700">Titre</Label>
+                                            <Input
+                                                value={item.title}
+                                                onChange={(e) => updateValue(index, 'title', e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label className="text-slate-700">Sous-titre (Valeur)</Label>
+                                            <Input
+                                                value={item.value}
+                                                onChange={(e) => updateValue(index, 'value', e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+
                                     <div className="space-y-2">
-                                        <Label>Titre</Label>
-                                        <Input
-                                            value={item.title}
-                                            onChange={(e) => updateValue(index, 'title', e.target.value)}
+                                        <Label className="text-slate-700">Description</Label>
+                                        <Textarea
+                                            value={item.description}
+                                            onChange={(e) => updateValue(index, 'description', e.target.value)}
                                         />
                                     </div>
-                                    <div className="space-y-2">
-                                        <Label>Sous-titre (Valeur)</Label>
-                                        <Input
-                                            value={item.value}
-                                            onChange={(e) => updateValue(index, 'value', e.target.value)}
-                                        />
-                                    </div>
-                                </div>
 
-                                <div className="space-y-2">
-                                    <Label>Description</Label>
-                                    <Textarea
-                                        value={item.description}
-                                        onChange={(e) => updateValue(index, 'description', e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <Label>Icône Lucide</Label>
-                                        <Select
-                                            value={item.icon}
-                                            onValueChange={(val) => updateValue(index, 'icon', val)}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Choisir une icône" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {AVAILABLE_ICONS.map(icon => (
-                                                    <SelectItem key={icon.value} value={icon.value}>
-                                                        <div className="flex items-center gap-2">
-                                                            <icon.icon className="w-4 h-4" />
-                                                            {icon.label}
-                                                        </div>
-                                                    </SelectItem>
+                                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                        <div className="space-y-2">
+                                            <Label className="text-slate-700">Icône Lucide</Label>
+                                            <Select
+                                                value={item.icon}
+                                                onValueChange={(val) => updateValue(index, 'icon', val)}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Choisir une icône" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {AVAILABLE_ICONS.map(icon => (
+                                                        <SelectItem key={icon.value} value={icon.value}>
+                                                            <div className="flex items-center gap-2">
+                                                                <icon.icon className="w-4 h-4" />
+                                                                {icon.label}
+                                                            </div>
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label className="text-slate-700">Couleur</Label>
+                                            <div className="flex gap-2">
+                                                {DEFAULT_COLORS.map(color => (
+                                                    <button
+                                                        key={color.value}
+                                                        type="button"
+                                                        className={`h-8 w-8 rounded-full border-2 transition-transform ${item.color === color.value ? 'scale-110 border-slate-900' : 'border-transparent hover:scale-105'}`}
+                                                        style={{ backgroundColor: color.value }}
+                                                        onClick={() => updateValue(index, 'color', color.value)}
+                                                        title={color.label}
+                                                        aria-label={color.label}
+                                                    />
                                                 ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>Couleur</Label>
-                                        <div className="flex gap-2">
-                                            {DEFAULT_COLORS.map(color => (
-                                                <div
-                                                    key={color.value}
-                                                    className={`w-8 h-8 rounded-full cursor-pointer border-2 ${item.color === color.value ? 'border-gray-900 scale-110' : 'border-transparent'}`}
-                                                    style={{ backgroundColor: color.value }}
-                                                    onClick={() => updateValue(index, 'color', color.value)}
-                                                    title={color.label}
-                                                />
-                                            ))}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
 
-                    {values.length === 0 && (
-                        <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg border border-dashed">
-                            Aucune valeur définie. Cliquez sur "Ajouter une valeur" pour commencer.
-                        </div>
-                    )}
-                </CardContent>
-            </Card>
-        </div>
+                        {values.length === 0 && (
+                            <AdminEmptyState
+                                icon={Sparkles}
+                                title="Aucune valeur définie"
+                                hint={'Cliquez sur "Ajouter une valeur" pour commencer.'}
+                            />
+                        )}
+                    </div>
+                </>
+            )}
+        </AdminPanel>
     )
 }

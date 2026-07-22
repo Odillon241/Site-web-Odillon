@@ -29,6 +29,7 @@ import {
 import { Loader2, Plus, Trash2, Eye, EyeOff, Building2, Upload, Pencil, ImageIcon, X } from "lucide-react"
 import { CompanyLogo } from "@/types/admin"
 import { toast } from "sonner"
+import { AdminItemActions, AdminDeleteButton } from "@/components/admin/ui/admin-panel"
 
 // Extraction de la couleur dominante d'une image via Canvas
 function extractDominantColor(imageUrl: string): Promise<string> {
@@ -166,7 +167,7 @@ function LogoUploadZone({
                     <button
                         type="button"
                         onClick={() => onUploaded("")}
-                        className="absolute top-2 right-2 p-1 bg-white rounded-full shadow hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"
+                        className="absolute top-2 right-2 p-1 bg-white rounded-full border border-slate-200 shadow-sm hover:bg-red-50 text-slate-600 hover:text-red-600 transition-colors"
                     >
                         <X className="w-3.5 h-3.5" />
                     </button>
@@ -183,7 +184,7 @@ function LogoUploadZone({
                     const file = e.dataTransfer.files?.[0]
                     if (file) handleFileSelect(file)
                 }}
-                className="border-2 border-dashed border-gray-300 hover:border-green-400 rounded-md p-6 text-center cursor-pointer transition-colors hover:bg-green-50/30"
+                className="border-2 border-dashed border-gray-300 hover:border-odillon-teal/50 rounded-md p-6 text-center cursor-pointer transition-colors hover:bg-odillon-teal/[0.04]"
             >
                 <input
                     ref={fileInputRef}
@@ -198,7 +199,7 @@ function LogoUploadZone({
                 />
                 {uploading ? (
                     <div className="flex flex-col items-center gap-2">
-                        <Loader2 className="w-8 h-8 text-green-600 animate-spin" />
+                        <Loader2 className="w-8 h-8 text-odillon-teal animate-spin" />
                         <p className="text-sm text-gray-500">Téléversement en cours...</p>
                     </div>
                 ) : (
@@ -372,11 +373,16 @@ export function LogosTab() {
     }
 
     return (
-        <Card className="border-none shadow-md">
-            <CardHeader className="bg-gray-50/50 border-b border-gray-100 flex flex-row items-center justify-between py-4">
-                <div className="flex items-center gap-2">
-                    <CardTitle className="text-lg font-medium text-gray-700">Partenaires & Clients</CardTitle>
-                    <Badge variant="secondary" className="bg-white border shadow-sm text-xs font-normal">
+        <Card className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm">
+            <CardHeader className="border-b border-slate-200/80 bg-white flex flex-row items-center justify-between py-4">
+                <div className="flex items-center gap-3">
+                    <CardTitle className="flex items-center gap-3 text-base font-semibold tracking-tight text-slate-950">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                            <Building2 className="h-4 w-4" />
+                        </span>
+                        Partenaires & clients
+                    </CardTitle>
+                    <Badge variant="secondary" className="bg-slate-100 text-slate-600">
                         {logos.length} logos
                     </Badge>
                 </div>
@@ -386,7 +392,7 @@ export function LogosTab() {
                     if (!open) { resetNewLogo(); setUploading(false) }
                 }}>
                     <DialogTrigger asChild>
-                        <Button className="bg-green-600 hover:bg-green-700 text-white shadow-sm gap-2">
+                        <Button className="bg-odillon-teal hover:bg-odillon-teal/90 text-white shadow-sm gap-2">
                             <Plus className="w-4 h-4" />
                             Ajouter un logo
                         </Button>
@@ -436,7 +442,7 @@ export function LogosTab() {
                             <Button
                                 onClick={handleAddLogo}
                                 disabled={uploading}
-                                className="bg-green-600 hover:bg-green-700"
+                                className="bg-odillon-teal hover:bg-odillon-teal/90 text-white"
                             >
                                 Enregistrer
                             </Button>
@@ -445,10 +451,10 @@ export function LogosTab() {
                 </Dialog>
             </CardHeader>
 
-            <CardContent className="p-6 bg-gray-50/30 min-h-[400px]">
+            <CardContent className="p-6 bg-[#f7f9f8] min-h-[400px]">
                 {loading ? (
                     <div className="flex justify-center py-12">
-                        <Loader2 className="w-8 h-8 animate-spin text-green-600" />
+                        <Loader2 className="w-8 h-8 animate-spin text-odillon-teal" />
                     </div>
                 ) : logos.length === 0 ? (
                     <div className="text-center py-12">
@@ -478,44 +484,17 @@ export function LogosTab() {
                                         <div className="flex-1 min-w-0">
                                             <p className="font-medium text-gray-900 truncate">{logo.full_name}</p>
                                             <p className="text-xs text-gray-500">{logo.name}</p>
-                                            <div className="mt-1">
-                                                {logo.is_active ? (
-                                                    <Badge className="bg-green-100 text-green-700 hover:bg-green-200 border-none shadow-none text-[10px] px-2">Actif</Badge>
-                                                ) : (
-                                                    <Badge variant="secondary" className="text-[10px] px-2">Inactif</Badge>
-                                                )}
-                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="flex gap-2 pt-2 border-t border-gray-50">
-                                        <Button
-                                            size="sm"
-                                            variant="ghost"
-                                            onClick={() => toggleLogoActive(logo.id)}
-                                            className="flex-1 h-8 text-xs"
-                                        >
-                                            {logo.is_active ? (
-                                                <><EyeOff className="w-3 h-3 mr-2" /> Masquer</>
-                                            ) : (
-                                                <><Eye className="w-3 h-3 mr-2" /> Afficher</>
-                                            )}
-                                        </Button>
-
-                                        <Button
-                                            size="sm"
-                                            variant="ghost"
-                                            onClick={() => openEditDialog(logo)}
-                                            className="h-8 w-8 p-0 text-blue-500 hover:text-blue-600 hover:bg-blue-50"
-                                        >
-                                            <Pencil className="w-3.5 h-3.5" />
-                                        </Button>
-
+                                    <AdminItemActions
+                                        visible={logo.is_active}
+                                        onToggleVisible={() => toggleLogoActive(logo.id)}
+                                        onEdit={() => openEditDialog(logo)}
+                                    >
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
-                                                <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50">
-                                                    <Trash2 className="w-3.5 h-3.5" />
-                                                </Button>
+                                                <AdminDeleteButton />
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader>
@@ -532,7 +511,7 @@ export function LogosTab() {
                                                 </AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog>
-                                    </div>
+                                    </AdminItemActions>
                                 </CardContent>
                             </Card>
                         ))}
@@ -591,7 +570,7 @@ export function LogosTab() {
                         <Button
                             onClick={handleEditLogo}
                             disabled={uploading}
-                            className="bg-blue-600 hover:bg-blue-700"
+                            className="bg-odillon-teal hover:bg-odillon-teal/90 text-white"
                         >
                             Enregistrer
                         </Button>

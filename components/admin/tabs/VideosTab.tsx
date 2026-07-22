@@ -39,6 +39,7 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
+import { AdminDeleteButton } from "@/components/admin/ui/admin-panel"
 import {
     DndContext,
     closestCenter,
@@ -81,13 +82,13 @@ function SortableVideoCard({ video, onEdit, onDelete }: SortableVideoCardProps) 
     };
 
     return (
-        <Card ref={setNodeRef} style={style} className={`group relative overflow-hidden transition-all hover:shadow-md border-purple-100/50 bg-white/50 backdrop-blur-sm ${isDragging ? 'shadow-xl ring-2 ring-purple-500/20' : ''}`}>
+        <Card ref={setNodeRef} style={style} className={`group relative overflow-hidden transition-all hover:shadow-md border-slate-200/80 bg-white ${isDragging ? 'shadow-xl ring-2 ring-odillon-teal/20' : ''}`}>
             <div
                 {...attributes}
                 {...listeners}
-                className="absolute left-0 top-0 bottom-0 w-8 flex items-center justify-center cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-purple-50"
+                className="absolute left-0 top-0 bottom-0 w-8 flex items-center justify-center cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-slate-50"
             >
-                <GripVertical className="h-4 w-4 text-purple-300" />
+                <GripVertical className="h-4 w-4 text-slate-400" />
             </div>
 
             <CardContent className="p-4 pl-10">
@@ -129,22 +130,22 @@ function SortableVideoCard({ video, onEdit, onDelete }: SortableVideoCardProps) 
                         <div>
                             <div className="flex items-start justify-between gap-2 mb-2">
                                 <div>
-                                    <h3 className="font-semibold text-purple-900 line-clamp-1">{video.title}</h3>
+                                    <h3 className="font-semibold text-slate-950 line-clamp-1">{video.title}</h3>
                                     <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                        <Badge variant="outline" className="text-xs border-purple-200 text-purple-700 bg-purple-50">
+                                        <Badge variant="outline" className="text-xs border-odillon-teal/20 text-odillon-teal bg-odillon-teal/[0.06]">
                                             {video.category === 'presentation' ? 'Présentation' : 'Témoignage'}
                                         </Badge>
                                         {video.page && (
-                                            <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700 border border-blue-100">
+                                            <Badge variant="secondary" className="text-xs bg-slate-100 text-slate-700 border border-slate-200">
                                                 Page: {video.page}
                                             </Badge>
                                         )}
                                         {video.section && (
-                                            <Badge variant="secondary" className="text-xs bg-indigo-50 text-indigo-700 border border-indigo-100">
+                                            <Badge variant="secondary" className="text-xs bg-slate-100 text-slate-700 border border-slate-200">
                                                 Section: {video.section}
                                             </Badge>
                                         )}
-                                        <Badge variant={video.is_active ? "default" : "secondary"} className={video.is_active ? "bg-green-500 hover:bg-green-600" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}>
+                                        <Badge variant={video.is_active ? "default" : "outline"} className={video.is_active ? "bg-emerald-600 text-white hover:bg-emerald-600/90" : "border-slate-200 bg-white text-slate-600"}>
                                             {video.is_active ? "Actif" : "Inactif"}
                                         </Badge>
                                     </div>
@@ -157,25 +158,17 @@ function SortableVideoCard({ video, onEdit, onDelete }: SortableVideoCardProps) 
                             )}
                         </div>
 
-                        <div className="flex justify-end gap-2 mt-auto" onPointerDown={(e) => e.stopPropagation()}>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => onEdit(video)}
-                                className="h-8 text-purple-700 hover:text-purple-900 border-purple-200 hover:bg-purple-50"
-                            >
-                                <Pencil className="w-3.5 h-3.5 mr-1.5" />
-                                Modifier
-                            </Button>
+                        <div className="flex justify-end mt-auto" onPointerDown={(e) => e.stopPropagation()}>
                             <Button
                                 variant="ghost"
-                                size="sm"
-                                onClick={() => onDelete(video.id)}
-                                className="h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                size="icon"
+                                onClick={() => onEdit(video)}
+                                aria-label="Modifier"
+                                className="text-odillon-teal transition-[color,background-color,transform] hover:bg-odillon-teal/[0.08] hover:text-odillon-teal active:scale-[0.96]"
                             >
-                                <Trash2 className="w-3.5 h-3.5 mr-1.5" />
-                                Supprimer
+                                <Pencil className="h-4 w-4" />
                             </Button>
+                            <AdminDeleteButton onClick={() => onDelete(video.id)} />
                         </div>
                     </div>
                 </div>
@@ -472,24 +465,26 @@ export function VideosTab() {
     )
 
     return (
-        <Card className="shadow-lg border-purple-200">
-            <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100/50 border-b">
-                <div className="flex items-center justify-between">
+        <Card className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm">
+            <CardHeader className="border-b border-slate-200/80 bg-white">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                        <CardTitle className="flex items-center gap-2 text-purple-900">
-                            <VideoIcon className="w-5 h-5" />
-                            Gestion des Vidéos
-                            <Badge variant="secondary" className="ml-2 bg-white/50">
+                        <CardTitle className="flex items-center gap-3 text-base font-semibold tracking-tight text-slate-950">
+                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                                <VideoIcon className="h-4 w-4" />
+                            </span>
+                            Gestion des vidéos
+                            <Badge variant="secondary" className="bg-slate-100 text-slate-600">
                                 {videos.length} vidéos
                             </Badge>
                         </CardTitle>
-                        <CardDescription className="text-purple-600 mt-1">
+                        <CardDescription className="mt-1 text-slate-500">
                             Gérez les vidéos de présentation et témoignages
                         </CardDescription>
                     </div>
                     <Button
                         onClick={() => setIsAddDialogOpen(true)}
-                        className="bg-purple-600 hover:bg-purple-700 text-white shadow-md transition-all hover:scale-105"
+                        className="bg-odillon-teal text-white shadow-sm hover:bg-odillon-teal/90"
                     >
                         <Plus className="w-4 h-4 mr-2" />
                         Ajouter une vidéo
@@ -497,16 +492,16 @@ export function VideosTab() {
                 </div>
 
                 <div className="mt-4 relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 w-4 h-4" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                     <Input
                         placeholder="Rechercher une vidéo..."
-                        className="pl-9 border-purple-200 bg-white/50 focus:bg-white transition-all"
+                        className="pl-9 border-slate-200 bg-slate-50/80 focus-visible:ring-odillon-teal"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
             </CardHeader>
-            <CardContent className="pt-6 bg-slate-50/50 min-h-[400px]">
+            <CardContent className="bg-[#f7f9f8] p-6 min-h-[400px]">
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
@@ -527,10 +522,10 @@ export function VideosTab() {
                             ))}
 
                             {!isLoading && filteredVideos.length === 0 && (
-                                <div className="text-center py-12 bg-white rounded-lg border border-dashed border-purple-200">
-                                    <VideoIcon className="w-12 h-12 text-purple-200 mx-auto mb-3" />
-                                    <h3 className="text-purple-900 font-medium">Aucune vidéo trouvée</h3>
-                                    <p className="text-purple-500 text-sm mt-1">
+                                <div className="text-center py-12 bg-white/60 rounded-lg border border-dashed border-slate-300">
+                                    <VideoIcon className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                                    <h3 className="text-slate-900 font-medium">Aucune vidéo trouvée</h3>
+                                    <p className="text-slate-600 text-sm mt-1">
                                         Commencez par ajouter une nouvelle vidéo
                                     </p>
                                 </div>
@@ -580,13 +575,13 @@ export function VideosTab() {
                                         <Label>Fichier Vidéo (MP4, WebM)</Label>
 
                                         {formData.url && formData.type === 'direct' ? (
-                                            <div className="flex items-center gap-3 p-3 border rounded-md bg-purple-50 border-purple-100">
-                                                <div className="h-10 w-10 bg-purple-100 rounded flex items-center justify-center text-purple-600">
+                                            <div className="flex items-center gap-3 p-3 border rounded-md bg-odillon-teal/[0.06] border-odillon-teal/15">
+                                                <div className="h-10 w-10 bg-odillon-teal/10 rounded flex items-center justify-center text-odillon-teal">
                                                     <FileVideo size={20} />
                                                 </div>
                                                 <div className="flex-1 overflow-hidden min-w-0">
-                                                    <p className="text-sm font-medium truncate text-purple-900">Vidéo uploadée</p>
-                                                    <p className="text-xs text-purple-500 truncate" title={formData.url}>
+                                                    <p className="text-sm font-medium truncate text-slate-900">Vidéo uploadée</p>
+                                                    <p className="text-xs text-slate-600 truncate" title={formData.url}>
                                                         {formData.url.split('/').pop()}
                                                     </p>
                                                 </div>
@@ -611,13 +606,13 @@ export function VideosTab() {
                                                 <div className="flex flex-col items-center justify-center gap-2">
                                                     {isUploading ? (
                                                         <>
-                                                            <Loader2 className="h-10 w-10 text-purple-600 animate-spin" />
-                                                            <p className="text-sm text-purple-600 font-medium">Upload en cours...</p>
+                                                            <Loader2 className="h-10 w-10 text-odillon-teal animate-spin" />
+                                                            <p className="text-sm text-odillon-teal font-medium">Upload en cours...</p>
                                                         </>
                                                     ) : (
                                                         <>
-                                                            <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-purple-100 transition-colors">
-                                                                <UploadCloud className="h-5 w-5 text-gray-500 group-hover:text-purple-600" />
+                                                            <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-odillon-teal/10 transition-colors">
+                                                                <UploadCloud className="h-5 w-5 text-gray-500 group-hover:text-odillon-teal" />
                                                             </div>
                                                             <div>
                                                                 <p className="text-sm font-medium text-gray-700">Cliquez ou glissez une vidéo ici</p>
@@ -749,7 +744,7 @@ export function VideosTab() {
                     </div>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>Annuler</Button>
-                        <Button onClick={handleSaveVideo} className="bg-purple-600 hover:bg-purple-700 text-white">
+                        <Button onClick={handleSaveVideo} className="bg-odillon-teal hover:bg-odillon-teal/90 text-white">
                             {editingVideo ? 'Enregistrer' : 'Ajouter'}
                         </Button>
                     </DialogFooter>

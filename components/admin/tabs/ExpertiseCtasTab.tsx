@@ -129,14 +129,16 @@ export function ExpertiseCtasTab() {
     }
 
     return (
-        <Card className="border-none shadow-md">
-            <CardHeader className="bg-gray-50/50 border-b border-gray-100">
-                <CardTitle className="flex items-center gap-2 text-gray-900">
-                    <Sparkles className="w-5 h-5 text-odillon-teal" />
+        <Card className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm">
+            <CardHeader className="border-b border-slate-200/80 bg-white py-4">
+                <CardTitle className="flex items-center gap-3 text-base font-semibold tracking-tight text-slate-950">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                        <Sparkles className="h-4 w-4" />
+                    </span>
                     Bannière d'Expertise (CTA)
                 </CardTitle>
             </CardHeader>
-            <CardContent className="pt-6 space-y-8 bg-gray-50/30 min-h-[400px]">
+            <CardContent className="space-y-8 bg-[#f7f9f8] pt-6 min-h-[400px]">
                 {loadingSettings ? (
                     <div className="flex justify-center py-12">
                         <Loader2 className="w-8 h-8 animate-spin text-odillon-teal" />
@@ -265,7 +267,7 @@ export function ExpertiseCtasTab() {
                                             }
                                         }}
                                         disabled={uploadingImage}
-                                        className="bg-gray-900 hover:bg-black text-white"
+                                        className="bg-odillon-teal hover:bg-odillon-teal/90 text-white"
                                     >
                                         {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                                     </Button>

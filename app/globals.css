@@ -99,6 +99,56 @@
   .theme {
     --animate-orbit: orbit calc(var(--duration)*1s) linear infinite;
   }
+
+  /* Espace d'administration : sidebar sombre #0A1F2C, écho de la topbar
+     et du footer du site public. Scopé pour ne pas toucher au reste.
+     Le second sélecteur couvre la version mobile (Sheet rendue en portail,
+     donc hors de .admin-shell) ; la sidebar n'est utilisée que par l'admin. */
+  .admin-shell,
+  [data-sidebar="sidebar"][data-mobile="true"] {
+    --sidebar-background: 203 63% 11%;
+    --sidebar-foreground: 189 18% 80%;
+    --sidebar-primary: 174 100% 33%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 202 48% 16%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 202 45% 17%;
+    --sidebar-ring: 174 100% 33%;
+  }
+
+  /* Barre de défilement discrète dans la sidebar sombre : fine, sans piste,
+     visible uniquement au survol. */
+  .admin-shell [data-sidebar="content"],
+  [data-sidebar="sidebar"][data-mobile="true"] [data-sidebar="content"] {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .admin-shell [data-sidebar="content"]:hover,
+  [data-sidebar="sidebar"][data-mobile="true"] [data-sidebar="content"]:hover {
+    scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  }
+
+  .admin-shell [data-sidebar="content"]::-webkit-scrollbar,
+  [data-sidebar="sidebar"][data-mobile="true"] [data-sidebar="content"]::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .admin-shell [data-sidebar="content"]::-webkit-scrollbar-track,
+  [data-sidebar="sidebar"][data-mobile="true"] [data-sidebar="content"]::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .admin-shell [data-sidebar="content"]::-webkit-scrollbar-thumb,
+  [data-sidebar="sidebar"][data-mobile="true"] [data-sidebar="content"]::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 9999px;
+  }
+
+  .admin-shell [data-sidebar="content"]:hover::-webkit-scrollbar-thumb,
+  [data-sidebar="sidebar"][data-mobile="true"] [data-sidebar="content"]:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.18);
+  }
 }
 
 @layer base {

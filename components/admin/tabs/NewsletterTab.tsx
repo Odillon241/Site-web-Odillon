@@ -22,7 +22,8 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, Trash2, Download, Search, UserX, UserCheck } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Loader2, Trash2, Download, Search, UserX, UserCheck, Users, Mail } from "lucide-react"
 import { toast } from "sonner"
 import { toCsv, telechargerCsv } from "@/lib/csv"
 
@@ -162,125 +163,160 @@ export function NewsletterTab() {
     return (
         <div className="space-y-6">
             {/* Header Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <div className="text-sm text-gray-600 mb-1">Total des abonnés</div>
-                    <div className="text-2xl font-bold text-gray-900">{totalCount}</div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <div className="flex items-center gap-4 rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                        <Users className="h-5 w-5" />
+                    </span>
+                    <div>
+                        <div className="text-sm text-slate-500">Total des abonnés</div>
+                        <div className="text-2xl font-semibold tabular-nums tracking-tight text-slate-950">{totalCount}</div>
+                    </div>
                 </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <div className="text-sm text-gray-600 mb-1">Abonnés actifs</div>
-                    <div className="text-2xl font-bold text-green-600">{activeCount}</div>
+                <div className="flex items-center gap-4 rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-green-500/15 bg-green-500/[0.08] text-green-600">
+                        <UserCheck className="h-5 w-5" />
+                    </span>
+                    <div>
+                        <div className="text-sm text-slate-500">Abonnés actifs</div>
+                        <div className="text-2xl font-semibold tabular-nums tracking-tight text-green-600">{activeCount}</div>
+                    </div>
                 </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <div className="text-sm text-gray-600 mb-1">Désabonnés</div>
-                    <div className="text-2xl font-bold text-gray-400">{totalCount - activeCount}</div>
-                </div>
-            </div>
-
-            {/* Actions Bar */}
-            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-                <div className="relative flex-grow max-w-md">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <Input
-                        type="text"
-                        placeholder="Rechercher un email..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-10"
-                    />
-                </div>
-                <div className="flex gap-2">
-                    <Button
-                        variant={showActiveOnly ? "default" : "outline"}
-                        onClick={() => setShowActiveOnly(!showActiveOnly)}
-                        size="sm"
-                    >
-                        {showActiveOnly ? "Tous" : "Actifs uniquement"}
-                    </Button>
-                    <Button
-                        variant="outline"
-                        onClick={exportToCSV}
-                        disabled={filteredSubscribers.length === 0}
-                        size="sm"
-                    >
-                        <Download className="w-4 h-4 mr-2" />
-                        Exporter CSV
-                    </Button>
+                <div className="flex items-center gap-4 rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-slate-100 text-slate-400">
+                        <UserX className="h-5 w-5" />
+                    </span>
+                    <div>
+                        <div className="text-sm text-slate-500">Désabonnés</div>
+                        <div className="text-2xl font-semibold tabular-nums tracking-tight text-slate-400">{totalCount - activeCount}</div>
+                    </div>
                 </div>
             </div>
 
-            {/* Subscribers Table */}
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Email</TableHead>
-                            <TableHead>Date d'inscription</TableHead>
-                            <TableHead>Statut</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {filteredSubscribers.length === 0 ? (
-                            <TableRow>
-                                <TableCell colSpan={4} className="text-center py-8 text-gray-500">
-                                    {searchQuery ? "Aucun abonné trouvé" : "Aucun abonné pour le moment"}
-                                </TableCell>
+            {/* Subscribers Card */}
+            <Card className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm">
+                <CardHeader className="flex flex-col gap-3 border-b border-slate-200/80 bg-white py-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-3">
+                        <CardTitle className="flex items-center gap-3 text-base font-semibold tracking-tight text-slate-950">
+                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                                <Mail className="h-4 w-4" />
+                            </span>
+                            Abonnés
+                        </CardTitle>
+                        <Badge variant="secondary" className="bg-slate-100 text-slate-600">
+                            {filteredSubscribers.length}
+                        </Badge>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        <Button
+                            variant={showActiveOnly ? "default" : "outline"}
+                            onClick={() => setShowActiveOnly(!showActiveOnly)}
+                            size="sm"
+                            className={showActiveOnly
+                                ? "bg-odillon-teal text-white shadow-sm hover:bg-odillon-teal/90"
+                                : "border-slate-200 text-slate-700 hover:border-odillon-teal/30 hover:text-odillon-teal"}
+                        >
+                            {showActiveOnly ? "Tous" : "Actifs uniquement"}
+                        </Button>
+                        <Button
+                            variant="outline"
+                            onClick={exportToCSV}
+                            disabled={filteredSubscribers.length === 0}
+                            size="sm"
+                            className="border-slate-200 text-slate-700 hover:border-odillon-teal/30 hover:text-odillon-teal"
+                        >
+                            <Download className="w-4 h-4 mr-2" />
+                            Exporter CSV
+                        </Button>
+                    </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                    <div className="border-b border-slate-200/80 bg-white p-4">
+                        <div className="relative max-w-md">
+                            <Search className="absolute left-3 top-1/2 w-4 h-4 -translate-y-1/2 text-slate-400" />
+                            <Input
+                                type="text"
+                                placeholder="Rechercher un email..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="pl-10 border-slate-200 bg-slate-50"
+                            />
+                        </div>
+                    </div>
+                    <Table>
+                        <TableHeader>
+                            <TableRow className="hover:bg-transparent">
+                                <TableHead>Email</TableHead>
+                                <TableHead>Date d'inscription</TableHead>
+                                <TableHead>Statut</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
-                        ) : (
-                            filteredSubscribers.map((subscriber) => (
-                                <TableRow key={subscriber.id}>
-                                    <TableCell className="font-medium">{subscriber.email}</TableCell>
-                                    <TableCell>
-                                        {new Date(subscriber.subscribed_at).toLocaleDateString('fr-FR', {
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric'
-                                        })}
-                                    </TableCell>
-                                    <TableCell>
-                                        {subscriber.is_active ? (
-                                            <Badge variant="default" className="bg-green-500">Actif</Badge>
-                                        ) : (
-                                            <Badge variant="secondary">Inactif</Badge>
-                                        )}
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        <div className="flex justify-end gap-2">
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() => {
-                                                    setToggleId(subscriber.id)
-                                                    handleToggleStatus(subscriber.email, subscriber.is_active)
-                                                }}
-                                                disabled={toggleId === subscriber.id}
-                                                title={subscriber.is_active ? "Désactiver" : "Réactiver"}
-                                            >
-                                                {toggleId === subscriber.id ? (
-                                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                                ) : subscriber.is_active ? (
-                                                    <UserX className="w-4 h-4 text-orange-500" />
-                                                ) : (
-                                                    <UserCheck className="w-4 h-4 text-green-500" />
-                                                )}
-                                            </Button>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() => setDeleteId(subscriber.id)}
-                                                title="Supprimer définitivement"
-                                            >
-                                                <Trash2 className="w-4 h-4 text-red-500" />
-                                            </Button>
-                                        </div>
+                        </TableHeader>
+                        <TableBody>
+                            {filteredSubscribers.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={4} className="py-10 text-center text-slate-500">
+                                        {searchQuery ? "Aucun abonné trouvé" : "Aucun abonné pour le moment"}
                                     </TableCell>
                                 </TableRow>
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
+                            ) : (
+                                filteredSubscribers.map((subscriber) => (
+                                    <TableRow key={subscriber.id}>
+                                        <TableCell className="font-medium text-slate-900">{subscriber.email}</TableCell>
+                                        <TableCell className="text-slate-600">
+                                            {new Date(subscriber.subscribed_at).toLocaleDateString('fr-FR', {
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric'
+                                            })}
+                                        </TableCell>
+                                        <TableCell>
+                                            {subscriber.is_active ? (
+                                                <Badge className="border-green-200 bg-green-100 text-green-700 hover:bg-green-100">Actif</Badge>
+                                            ) : (
+                                                <Badge variant="secondary" className="bg-slate-100 text-slate-500">Inactif</Badge>
+                                            )}
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <div className="flex justify-end gap-1">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => {
+                                                        setToggleId(subscriber.id)
+                                                        handleToggleStatus(subscriber.email, subscriber.is_active)
+                                                    }}
+                                                    disabled={toggleId === subscriber.id}
+                                                    title={subscriber.is_active ? "Désactiver" : "Réactiver"}
+                                                    className="text-slate-500 hover:bg-slate-100"
+                                                >
+                                                    {toggleId === subscriber.id ? (
+                                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                                    ) : subscriber.is_active ? (
+                                                        <UserX className="w-4 h-4 text-orange-500" />
+                                                    ) : (
+                                                        <UserCheck className="w-4 h-4 text-green-500" />
+                                                    )}
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => setDeleteId(subscriber.id)}
+                                                    title="Supprimer définitivement"
+                                                    aria-label="Supprimer définitivement"
+                                                    className="text-red-500 transition-[color,background-color,transform] hover:bg-red-50 hover:text-red-600 active:scale-[0.96]"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </Button>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
 
             {/* Delete Confirmation Dialog */}
             <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>

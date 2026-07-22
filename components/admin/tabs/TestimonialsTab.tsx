@@ -38,6 +38,7 @@ import {
 import { Loader2, Plus, Trash2, Eye, EyeOff, Upload, Quote, X, Pencil } from "lucide-react"
 import { toast } from "sonner"
 import { ImageCropper } from "../ImageCropper"
+import { AdminItemActions, AdminDeleteButton } from "@/components/admin/ui/admin-panel"
 import { Testimonial } from "@/types/admin"
 import {
     DndContext,
@@ -93,7 +94,7 @@ function SortableTestimonialCard({ testimonial, handleEdit, toggleActive, delete
                                     className="w-full h-full object-cover"
                                 />
                             ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-orange-100 text-orange-500 font-bold text-lg">
+                                <div className="w-full h-full flex items-center justify-center bg-odillon-teal/10 text-odillon-teal font-bold text-lg">
                                     {testimonial.name?.charAt(0) || "?"}
                                 </div>
                             )}
@@ -103,13 +104,8 @@ function SortableTestimonialCard({ testimonial, handleEdit, toggleActive, delete
                             <p className="text-sm text-gray-500 truncate">{testimonial.position}</p>
 
                             <div className="flex flex-wrap gap-1 mt-1">
-                                {testimonial.is_active ? (
-                                    <Badge className="bg-green-100 text-green-700 hover:bg-green-200 border-none shadow-sm text-[10px] px-1.5 py-0.5">Actif</Badge>
-                                ) : (
-                                    <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5">Inactif</Badge>
-                                )}
                                 {testimonial.page && (
-                                    <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 bg-blue-50 text-blue-700 border-blue-100">
+                                    <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-700 border-slate-200">
                                         {testimonial.page}
                                     </Badge>
                                 )}
@@ -118,40 +114,21 @@ function SortableTestimonialCard({ testimonial, handleEdit, toggleActive, delete
                     </div>
 
                     <div className="relative pl-6 flex-1">
-                        <Quote className="absolute left-0 top-0 w-4 h-4 text-orange-200" />
+                        <Quote className="absolute left-0 top-0 w-4 h-4 text-odillon-teal/30" />
                         <p className="text-sm text-gray-600 line-clamp-4 italic">
                             "{testimonial.quote}"
                         </p>
                     </div>
 
-                    <div className="flex gap-2 pt-4 mt-4 border-t border-gray-50" onPointerDown={(e) => e.stopPropagation()}>
-                        <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => handleEdit(testimonial)}
-                            className="h-8 w-8 p-0 text-blue-500 hover:text-blue-600 hover:bg-blue-50"
-                        >
-                            <Pencil className="w-3.5 h-3.5" />
-                        </Button>
-
-                        <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => toggleActive(testimonial.id)}
-                            className="flex-1 h-8 text-xs"
-                        >
-                            {testimonial.is_active ? (
-                                <><EyeOff className="w-3 h-3 mr-2" /> Masquer</>
-                            ) : (
-                                <><Eye className="w-3 h-3 mr-2" /> Afficher</>
-                            )}
-                        </Button>
-
+                    <AdminItemActions
+                        className="mt-4"
+                        visible={testimonial.is_active}
+                        onToggleVisible={() => toggleActive(testimonial.id)}
+                        onEdit={() => handleEdit(testimonial)}
+                    >
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
-                                <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50">
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                </Button>
+                                <AdminDeleteButton />
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                                 <AlertDialogHeader>
@@ -168,7 +145,7 @@ function SortableTestimonialCard({ testimonial, handleEdit, toggleActive, delete
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
-                    </div>
+                    </AdminItemActions>
                 </CardContent>
             </Card>
         </div>
@@ -399,14 +376,16 @@ export function TestimonialsTab() {
     }
 
     return (
-        <Card className="shadow-lg border-orange-200">
-            <CardHeader className="bg-gradient-to-r from-orange-50 to-orange-100/50 border-b flex flex-row items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <CardTitle className="flex items-center gap-2 text-orange-900">
-                        <Quote className="w-5 h-5" />
-                        Gestion des Témoignages
+        <Card className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm">
+            <CardHeader className="border-b border-slate-200/80 bg-white flex flex-row items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <CardTitle className="flex items-center gap-3 text-base font-semibold tracking-tight text-slate-950">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                            <Quote className="h-4 w-4" />
+                        </span>
+                        Gestion des témoignages
                     </CardTitle>
-                    <Badge variant="secondary" className="bg-white border text-orange-700 shadow-sm">
+                    <Badge variant="secondary" className="bg-slate-100 text-slate-600">
                         {testimonials.length}
                     </Badge>
                 </div>
@@ -416,7 +395,7 @@ export function TestimonialsTab() {
                     setIsDialogOpen(open)
                 }}>
                     <DialogTrigger asChild>
-                        <Button className="bg-orange-600 hover:bg-orange-700 text-white shadow-sm gap-2">
+                        <Button className="bg-odillon-teal hover:bg-odillon-teal/90 text-white shadow-sm gap-2">
                             <Plus className="w-4 h-4" />
                             Ajouter un témoignage
                         </Button>
@@ -555,7 +534,7 @@ export function TestimonialsTab() {
                             <DialogClose asChild>
                                 <Button variant="outline">Annuler</Button>
                             </DialogClose>
-                            <Button onClick={handleSave} className="bg-orange-600 hover:bg-orange-700 text-white">
+                            <Button onClick={handleSave} className="bg-odillon-teal hover:bg-odillon-teal/90 text-white">
                                 {editingItem ? "Enregistrer" : "Créer"}
                             </Button>
                         </DialogFooter>
@@ -572,16 +551,16 @@ export function TestimonialsTab() {
                 />
             )}
 
-            <CardContent className="pt-6 min-h-[400px]">
+            <CardContent className="bg-[#f7f9f8] p-6 min-h-[400px]">
                 {loading ? (
                     <div className="flex justify-center py-12">
-                        <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
+                        <Loader2 className="w-8 h-8 animate-spin text-odillon-teal" />
                     </div>
                 ) : testimonials.length === 0 ? (
-                    <div className="text-center py-12 bg-orange-50/50 rounded-lg border border-dashed border-orange-200">
-                        <Quote className="w-12 h-12 text-orange-200 mx-auto mb-2" />
-                        <p className="text-orange-800 font-medium">Aucun témoignage</p>
-                        <p className="text-sm text-orange-600/70">Commencez par ajouter votre premier client satisfait.</p>
+                    <div className="text-center py-12 bg-white/60 rounded-lg border border-dashed border-slate-300">
+                        <Quote className="w-12 h-12 text-slate-300 mx-auto mb-2" />
+                        <p className="text-slate-900 font-medium">Aucun témoignage</p>
+                        <p className="text-sm text-slate-600">Commencez par ajouter votre premier client satisfait.</p>
                     </div>
                 ) : (
                     <DndContext

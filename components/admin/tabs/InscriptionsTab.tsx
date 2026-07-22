@@ -306,12 +306,17 @@ export function InscriptionsTab() {
     }
 
     return (
-        <Card className="border-none shadow-md">
-            <CardHeader className="bg-gray-50/50 border-b border-gray-100 py-4">
+        <Card className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm">
+            <CardHeader className="border-b border-slate-200/80 bg-white py-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                        <CardTitle className="text-lg font-medium text-gray-700">Inscriptions</CardTitle>
-                        <Badge variant="secondary" className="bg-white border shadow-sm text-xs font-normal tabular-nums">
+                    <div className="flex items-center gap-3">
+                        <CardTitle className="flex items-center gap-3 text-base font-semibold tracking-tight text-slate-950">
+                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                                <ClipboardList className="h-4 w-4" />
+                            </span>
+                            Inscriptions
+                        </CardTitle>
+                        <Badge variant="secondary" className="bg-slate-100 text-slate-600 tabular-nums">
                             {visibles.length}
                         </Badge>
                         {stats.enAttente > 0 && (
@@ -322,9 +327,9 @@ export function InscriptionsTab() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-500 tabular-nums hidden md:inline">
+                        <span className="text-xs text-slate-500 tabular-nums hidden md:inline">
                             Encaissé :{" "}
-                            <strong className="text-gray-700">
+                            <strong className="text-slate-700">
                                 {formatMontant(stats.encaisse, "XAF", { zero: "montant" })}
                             </strong>
                         </span>
@@ -390,7 +395,7 @@ export function InscriptionsTab() {
                 </div>
             </CardHeader>
 
-            <CardContent className="p-6 bg-gray-50/30 min-h-[400px]">
+            <CardContent className="p-6 bg-[#f7f9f8] min-h-[400px]">
                 {loading ? (
                     <div className="flex justify-center py-12">
                         <Loader2 className="w-8 h-8 animate-spin text-odillon-teal" />
@@ -497,7 +502,7 @@ export function InscriptionsTab() {
                                                 size="sm"
                                                 variant="ghost"
                                                 onClick={() => ouvrirEdition(i)}
-                                                className="h-9 w-9 p-0 text-blue-500 hover:text-blue-600 hover:bg-blue-50"
+                                                className="h-9 w-9 p-0 text-odillon-teal hover:text-odillon-teal hover:bg-odillon-teal/[0.08]"
                                                 aria-label="Gérer le paiement"
                                                 title="Gérer le paiement"
                                             >

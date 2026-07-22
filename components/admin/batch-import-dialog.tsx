@@ -23,10 +23,15 @@ interface ParsedArticle {
 
 interface BatchImportDialogProps {
     onArticlesCreated: () => void
+    open?: boolean
+    onOpenChange?: (open: boolean) => void
 }
 
-export function BatchImportDialog({ onArticlesCreated }: BatchImportDialogProps) {
-    const [open, setOpen] = useState(false)
+export function BatchImportDialog({ onArticlesCreated, open: openProp, onOpenChange }: BatchImportDialogProps) {
+    // Contrôlable de l'extérieur (ouverture depuis un menu) ou autonome (trigger interne)
+    const [internalOpen, setInternalOpen] = useState(false)
+    const open = openProp ?? internalOpen
+    const setOpen = onOpenChange ?? setInternalOpen
     const [step, setStep] = useState<"upload" | "processing" | "review">("upload")
     const [file, setFile] = useState<File | null>(null)
     const [parsedArticles, setParsedArticles] = useState<ParsedArticle[]>([])
@@ -121,12 +126,14 @@ export function BatchImportDialog({ onArticlesCreated }: BatchImportDialogProps)
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline" className="gap-2 border-odillon-teal/50 text-odillon-teal hover:bg-odillon-teal/5">
-                    <FileType className="w-4 h-4" />
-                    Import ID (IA)
-                </Button>
-            </DialogTrigger>
+            {openProp === undefined && (
+                <DialogTrigger asChild>
+                    <Button variant="outline" className="gap-2 border-odillon-teal/50 text-odillon-teal hover:bg-odillon-teal/5">
+                        <FileType className="w-4 h-4" />
+                        Import ID (IA)
+                    </Button>
+                </DialogTrigger>
+            )}
             <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col bg-white">
                 <DialogHeader>
                     <DialogTitle>Import Intelligent d'Articles</DialogTitle>

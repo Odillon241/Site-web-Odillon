@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/select"
 import { Loader2, Plus, Trash2, Eye, EyeOff, Users, Upload, Linkedin, Mail, Pencil, Crop, X, Info, Building2 } from "lucide-react"
 import { toast } from "sonner"
+import { AdminItemActions, AdminDeleteButton } from "@/components/admin/ui/admin-panel"
 import { ImageCropper } from "../ImageCropper"
 import getCroppedImg from "@/lib/image"
 
@@ -119,13 +120,6 @@ function SortableTeamCard({ member, handleEdit, toggleMemberActive, deleteMember
                                 <Users className="w-16 h-16" />
                             </div>
                         )}
-                        <div className="absolute top-2 right-2">
-                            {member.is_active ? (
-                                <Badge className="bg-green-100 text-green-700 hover:bg-green-200 border-none shadow-sm backdrop-blur-sm">Actif</Badge>
-                            ) : (
-                                <Badge variant="secondary" className="backdrop-blur-sm">Inactif</Badge>
-                            )}
-                        </div>
                     </div>
                     <div className="p-4" onPointerDown={(e) => e.stopPropagation()}>
                         {/* Stop propagation so buttons work without dragging */}
@@ -138,34 +132,15 @@ function SortableTeamCard({ member, handleEdit, toggleMemberActive, deleteMember
                             </Badge>
                         )}
 
-                        <div className="flex gap-2 pt-2 border-t border-gray-50 mt-2">
-                            <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => handleEdit(member)}
-                                className="h-8 w-8 p-0 text-blue-500 hover:text-blue-600 hover:bg-blue-50"
-                            >
-                                <Pencil className="w-3.5 h-3.5" />
-                            </Button>
-
-                            <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => toggleMemberActive(member.id)}
-                                className="flex-1 h-8 text-xs"
-                            >
-                                {member.is_active ? (
-                                    <><EyeOff className="w-3 h-3 mr-2" /> Masquer</>
-                                ) : (
-                                    <><Eye className="w-3 h-3 mr-2" /> Afficher</>
-                                )}
-                            </Button>
-
+                        <AdminItemActions
+                            className="mt-2"
+                            visible={member.is_active}
+                            onToggleVisible={() => toggleMemberActive(member.id)}
+                            onEdit={() => handleEdit(member)}
+                        >
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50">
-                                        <Trash2 className="w-3.5 h-3.5" />
-                                    </Button>
+                                    <AdminDeleteButton />
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                     <AlertDialogHeader>
@@ -182,7 +157,7 @@ function SortableTeamCard({ member, handleEdit, toggleMemberActive, deleteMember
                                     </AlertDialogFooter>
                                 </AlertDialogContent>
                             </AlertDialog>
-                        </div>
+                        </AdminItemActions>
                     </div>
                 </CardContent>
             </Card>
@@ -416,11 +391,16 @@ export function TeamTab() {
     }
 
     return (
-        <Card className="border-none shadow-md">
-            <CardHeader className="bg-gray-50/50 border-b border-gray-100 flex flex-row items-center justify-between py-4">
-                <div className="flex items-center gap-2">
-                    <CardTitle className="text-lg font-medium text-gray-700">Équipe & Direction</CardTitle>
-                    <Badge variant="secondary" className="bg-white border shadow-sm text-xs font-normal">
+        <Card className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between border-b border-slate-200/80 bg-white py-4">
+                <div className="flex items-center gap-3">
+                    <CardTitle className="flex items-center gap-3 text-base font-semibold tracking-tight text-slate-950">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-odillon-teal/15 bg-odillon-teal/[0.07] text-odillon-teal">
+                            <Users className="h-4 w-4" />
+                        </span>
+                        Équipe & Direction
+                    </CardTitle>
+                    <Badge variant="secondary" className="bg-slate-100 text-slate-600">
                         {team.length} membres
                     </Badge>
                 </div>
@@ -599,7 +579,7 @@ export function TeamTab() {
                 />
             )}
 
-            <CardContent className="p-6 bg-gray-50/30 min-h-[400px]">
+            <CardContent className="p-6 bg-[#f7f9f8] min-h-[400px]">
                 {/* Info Organigramme */}
                 <div className="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-lg">
                     <div className="flex items-start gap-3">
