@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -109,6 +109,17 @@ export default function AdminSettingsPage() {
       }).format(new Date()),
     []
   )
+
+  // Compteur des messages non lus (status = 'new') : requête dédiée réutilisable
+  // pour garder le badge de la sidebar synchronisé après chaque action sur un message.
+  const refreshUnreadCount = useCallback(async () => {
+    const supabase = createClient()
+    const { count } = await supabase
+      .from('contact_messages')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'new')
+    setDashboardStats((prev) => ({ ...prev, messages: count ?? 0 }))
+  }, [])
 
   // Fetch Dashboard Stats
   useEffect(() => {
@@ -386,7 +397,7 @@ export default function AdminSettingsPage() {
             {activeTab === 'team' && <TeamTab />}
             {activeTab === 'about' && <AboutTab />}
             {activeTab === 'newsletter' && <NewsletterTab />}
-            {activeTab === 'messages' && <MessagesTab />}
+            {activeTab === 'messages' && <MessagesTab onMessagesChange={refreshUnreadCount} />}
             {activeTab === 'news' && <NewsTab />}
           </div>
         </div>

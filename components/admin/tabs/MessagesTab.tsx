@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
     Loader2,
     Trash2,
@@ -52,7 +53,8 @@ import {
     CheckCircle2,
     MessageCircle,
     MessageSquare,
-    ExternalLink
+    ExternalLink,
+    X
 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -76,7 +78,13 @@ const statusConfig = {
     archived: { label: 'Archivé', color: 'bg-gray-400', icon: Archive },
 }
 
-export function MessagesTab() {
+interface MessagesTabProps {
+    /** Appelé après toute mutation (lecture, changement de statut, suppression) pour
+     *  resynchroniser le badge de messages non lus de la sidebar. */
+    onMessagesChange?: () => void
+}
+
+export function MessagesTab({ onMessagesChange }: MessagesTabProps) {
     const [messages, setMessages] = useState<ContactMessage[]>([])
     const [filteredMessages, setFilteredMessages] = useState<ContactMessage[]>([])
     const [loading, setLoading] = useState(true)
@@ -85,6 +93,9 @@ export function MessagesTab() {
     const [deleteId, setDeleteId] = useState<string | null>(null)
     const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null)
     const [updatingStatus, setUpdatingStatus] = useState<string | null>(null)
+    const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+    const [bulkLoading, setBulkLoading] = useState(false)
+    const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false)
 
     useEffect(() => {
         fetchMessages()
@@ -94,9 +105,15 @@ export function MessagesTab() {
         filterMessages()
     }, [searchQuery, messages, statusFilter])
 
+    // Réinitialise la sélection quand le périmètre visible change, pour ne jamais
+    // appliquer une action groupée à des messages masqués par le filtre/la recherche.
+    useEffect(() => {
+        setSelectedIds(new Set())
+    }, [searchQuery, statusFilter])
+
     const fetchMessages = async () => {
         try {
-            const response = await fetch('/api/contact')
+            const response = await fetch('/api/contact?limit=100')
             if (response.ok) {
                 const data = await response.json()
                 setMessages(data.messages || [])
@@ -143,6 +160,7 @@ export function MessagesTab() {
             if (response.ok) {
                 toast.success(`Statut mis à jour: ${statusConfig[newStatus as keyof typeof statusConfig]?.label}`)
                 fetchMessages()
+                onMessagesChange?.()
             } else {
                 toast.error("Erreur lors de la mise à jour du statut")
             }
@@ -166,6 +184,7 @@ export function MessagesTab() {
                 toast.success("Message supprimé définitivement")
                 setSelectedMessage(null)
                 fetchMessages()
+                onMessagesChange?.()
             } else {
                 toast.error("Erreur lors de la suppression")
             }
@@ -174,6 +193,102 @@ export function MessagesTab() {
             toast.error("Erreur lors de la suppression")
         } finally {
             setDeleteId(null)
+        }
+    }
+
+    // --- Sélection multiple & actions groupées ---
+
+    const toggleSelect = (id: string) => {
+        setSelectedIds((prev) => {
+            const next = new Set(prev)
+            if (next.has(id)) {
+                next.delete(id)
+            } else {
+                next.add(id)
+            }
+            return next
+        })
+    }
+
+    const allVisibleSelected =
+        filteredMessages.length > 0 &&
+        filteredMessages.every((msg) => selectedIds.has(msg.id))
+    const someVisibleSelected =
+        filteredMessages.some((msg) => selectedIds.has(msg.id)) && !allVisibleSelected
+
+    const toggleSelectAll = () => {
+        setSelectedIds((prev) => {
+            if (allVisibleSelected) {
+                // Tout est déjà coché → on désélectionne les messages visibles
+                const next = new Set(prev)
+                filteredMessages.forEach((msg) => next.delete(msg.id))
+                return next
+            }
+            // On coche l'ensemble des messages visibles
+            const next = new Set(prev)
+            filteredMessages.forEach((msg) => next.add(msg.id))
+            return next
+        })
+    }
+
+    const clearSelection = () => setSelectedIds(new Set())
+
+    const handleBulkStatus = async (newStatus: string) => {
+        const ids = Array.from(selectedIds)
+        if (ids.length === 0) return
+
+        setBulkLoading(true)
+        try {
+            const response = await fetch('/api/contact/bulk', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids, status: newStatus }),
+            })
+
+            if (response.ok) {
+                toast.success(
+                    `${ids.length} message${ids.length > 1 ? 's' : ''} — ${statusConfig[newStatus as keyof typeof statusConfig]?.label}`
+                )
+                clearSelection()
+                fetchMessages()
+                onMessagesChange?.()
+            } else {
+                toast.error("Erreur lors de la mise à jour groupée")
+            }
+        } catch (error) {
+            console.error('Error bulk updating status:', error)
+            toast.error("Erreur lors de la mise à jour groupée")
+        } finally {
+            setBulkLoading(false)
+        }
+    }
+
+    const handleBulkDelete = async () => {
+        const ids = Array.from(selectedIds)
+        if (ids.length === 0) return
+
+        setBulkLoading(true)
+        try {
+            const response = await fetch('/api/contact/bulk', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids }),
+            })
+
+            if (response.ok) {
+                toast.success(`${ids.length} message${ids.length > 1 ? 's' : ''} supprimé${ids.length > 1 ? 's' : ''}`)
+                clearSelection()
+                fetchMessages()
+                onMessagesChange?.()
+            } else {
+                toast.error("Erreur lors de la suppression groupée")
+            }
+        } catch (error) {
+            console.error('Error bulk deleting:', error)
+            toast.error("Erreur lors de la suppression groupée")
+        } finally {
+            setBulkLoading(false)
+            setBulkDeleteOpen(false)
         }
     }
 
@@ -295,9 +410,85 @@ export function MessagesTab() {
                             />
                         </div>
                     </div>
+
+                    {/* Barre d'actions groupées */}
+                    {selectedIds.size > 0 && (
+                        <div className="flex flex-wrap items-center gap-2 border-b border-odillon-teal/15 bg-odillon-teal/[0.05] px-4 py-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                            <span className="mr-1 text-sm font-medium text-slate-700">
+                                {selectedIds.size} sélectionné{selectedIds.size > 1 ? 's' : ''}
+                            </span>
+                            {bulkLoading && <Loader2 className="h-4 w-4 animate-spin text-odillon-teal" />}
+                            <div className="flex flex-wrap items-center gap-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={bulkLoading}
+                                    onClick={() => handleBulkStatus('read')}
+                                    className="border-slate-200 bg-white text-slate-700 hover:border-amber-300 hover:text-amber-600"
+                                >
+                                    <MailOpen className="mr-1.5 h-3.5 w-3.5" />
+                                    Marquer lu
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={bulkLoading}
+                                    onClick={() => handleBulkStatus('replied')}
+                                    className="border-slate-200 bg-white text-slate-700 hover:border-emerald-300 hover:text-emerald-600"
+                                >
+                                    <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" />
+                                    Marquer répondu
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={bulkLoading}
+                                    onClick={() => handleBulkStatus('archived')}
+                                    className="border-slate-200 bg-white text-slate-700 hover:border-slate-400 hover:text-slate-600"
+                                >
+                                    <Archive className="mr-1.5 h-3.5 w-3.5" />
+                                    Archiver
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={bulkLoading}
+                                    onClick={() => setBulkDeleteOpen(true)}
+                                    className="border-red-200 bg-white text-red-500 hover:border-red-300 hover:bg-red-50 hover:text-red-600"
+                                >
+                                    <Trash2 className="mr-1.5 h-3.5 w-3.5" />
+                                    Supprimer
+                                </Button>
+                            </div>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                disabled={bulkLoading}
+                                onClick={clearSelection}
+                                className="ml-auto text-slate-500 hover:text-slate-700"
+                            >
+                                <X className="mr-1.5 h-3.5 w-3.5" />
+                                Annuler
+                            </Button>
+                        </div>
+                    )}
                     <Table>
                         <TableHeader>
                             <TableRow className="hover:bg-transparent">
+                                <TableHead className="w-[44px]">
+                                    <Checkbox
+                                        checked={
+                                            allVisibleSelected
+                                                ? true
+                                                : someVisibleSelected
+                                                    ? "indeterminate"
+                                                    : false
+                                        }
+                                        onCheckedChange={toggleSelectAll}
+                                        disabled={filteredMessages.length === 0}
+                                        aria-label="Tout sélectionner"
+                                    />
+                                </TableHead>
                                 <TableHead className="w-[50px]">Statut</TableHead>
                                 <TableHead>Expéditeur</TableHead>
                                 <TableHead>Sujet</TableHead>
@@ -308,7 +499,7 @@ export function MessagesTab() {
                         <TableBody>
                             {filteredMessages.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="py-10 text-center text-slate-500">
+                                    <TableCell colSpan={6} className="py-10 text-center text-slate-500">
                                         <MessageCircle className="w-12 h-12 mx-auto mb-2 text-slate-300" />
                                         {searchQuery || statusFilter !== "all"
                                             ? "Aucun message trouvé"
@@ -321,8 +512,16 @@ export function MessagesTab() {
                                     return (
                                         <TableRow
                                             key={message.id}
-                                            className={message.status === 'new' ? 'bg-odillon-teal/[0.035]' : ''}
+                                            data-state={selectedIds.has(message.id) ? "selected" : undefined}
+                                            className={`data-[state=selected]:bg-odillon-teal/[0.06] ${message.status === 'new' ? 'bg-odillon-teal/[0.035]' : ''}`}
                                         >
+                                            <TableCell>
+                                                <Checkbox
+                                                    checked={selectedIds.has(message.id)}
+                                                    onCheckedChange={() => toggleSelect(message.id)}
+                                                    aria-label={`Sélectionner le message de ${message.name}`}
+                                                />
+                                            </TableCell>
                                             <TableCell>
                                                 <Badge
                                                     variant="secondary"
@@ -546,6 +745,33 @@ export function MessagesTab() {
                         <AlertDialogCancel>Annuler</AlertDialogCancel>
                         <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-600">
                             Supprimer
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
+            {/* Bulk Delete Confirmation Dialog */}
+            <AlertDialog open={bulkDeleteOpen} onOpenChange={(open) => !bulkLoading && setBulkDeleteOpen(open)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            Supprimer {selectedIds.size} message{selectedIds.size > 1 ? 's' : ''} ?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Cette action est irréversible. {selectedIds.size > 1 ? 'Les messages sélectionnés seront' : 'Le message sélectionné sera'} définitivement supprimé{selectedIds.size > 1 ? 's' : ''} de la base de données.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel disabled={bulkLoading}>Annuler</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={(e) => {
+                                e.preventDefault()
+                                handleBulkDelete()
+                            }}
+                            disabled={bulkLoading}
+                            className="bg-red-500 hover:bg-red-600"
+                        >
+                            {bulkLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Supprimer'}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
