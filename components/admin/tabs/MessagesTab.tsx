@@ -381,7 +381,7 @@ export function MessagesTab() {
                     {selectedMessage && (
                         <>
                             <DialogHeader>
-                                <div className="flex items-start justify-between gap-4">
+                                <div className="flex items-start justify-between gap-4 pr-8">
                                     <div>
                                         <DialogTitle className="text-xl">{selectedMessage.subject}</DialogTitle>
                                         <DialogDescription className="mt-1">
