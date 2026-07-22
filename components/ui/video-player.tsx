@@ -7,6 +7,16 @@ import Image from "next/image"
 
 export type VideoType = "youtube" | "vimeo" | "direct"
 
+/**
+ * Ratio d'affichage du cadre vidéo.
+ * - "16:9" / "9:16" / "1:1" : format imposé
+ * - "auto" : détecte automatiquement l'orientation (fichiers directs),
+ *   avec repli sur 16:9 le temps que les métadonnées se chargent.
+ * Prop optionnelle : si omise, le composant conserve son comportement
+ * historique (le ratio est piloté par la classe passée via `className`).
+ */
+export type VideoAspectRatio = "16:9" | "9:16" | "1:1" | "auto"
+
 export interface VideoPlayerProps {
   url: string
   type?: VideoType
@@ -18,6 +28,7 @@ export interface VideoPlayerProps {
   loop?: boolean
   presenterName?: string
   presenterPosition?: string
+  aspectRatio?: VideoAspectRatio
 }
 
 // Fonction pour détecter automatiquement le type de vidéo
@@ -84,13 +95,66 @@ export function VideoPlayer({
   loop = false,
   presenterName,
   presenterPosition,
+  aspectRatio,
 }: VideoPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(autoplay)
   const [isLoaded, setIsLoaded] = useState(autoplay)
+  // Ratio réel détecté (largeur / hauteur) pour les fichiers directs en mode "auto"
+  const [detectedRatio, setDetectedRatio] = useState<number | null>(null)
 
   // Détecter automatiquement le type même si un type est fourni (pour corriger les erreurs)
   const detectedType = detectVideoType(url)
   const videoType = type && type !== "direct" ? type : detectedType
+
+  // Le composant gère lui-même son ratio uniquement si la prop est fournie.
+  // Sinon, comportement historique inchangé (ratio piloté par `className`).
+  const managedRatio = aspectRatio !== undefined
+
+  // En mode "auto", lire les métadonnées du fichier direct pour connaître son orientation
+  useEffect(() => {
+    if (!managedRatio || aspectRatio !== "auto") return
+    if (videoType !== "direct" || !url) return
+
+    setDetectedRatio(null)
+    const probe = document.createElement("video")
+    probe.preload = "metadata"
+    const handleMeta = () => {
+      if (probe.videoWidth && probe.videoHeight) {
+        setDetectedRatio(probe.videoWidth / probe.videoHeight)
+      }
+    }
+    probe.addEventListener("loadedmetadata", handleMeta)
+    probe.src = url
+
+    return () => {
+      probe.removeEventListener("loadedmetadata", handleMeta)
+      probe.removeAttribute("src")
+    }
+  }, [managedRatio, aspectRatio, videoType, url])
+
+  // Ratio numérique effectif (repli 16:9 tant que rien n'est détecté)
+  const ratio =
+    aspectRatio === "16:9" ? 16 / 9 :
+    aspectRatio === "9:16" ? 9 / 16 :
+    aspectRatio === "1:1" ? 1 :
+    detectedRatio ?? 16 / 9
+  const isPortrait = ratio < 1
+
+  // Classe de dimensionnement de la racine en mode géré :
+  // - paysage : occupe toute la largeur, la hauteur suit le ratio
+  // - portrait : hauteur plafonnée, largeur intrinsèque, centré
+  const rootSizingClass = managedRatio
+    ? isPortrait
+      ? "mx-auto h-[min(70vh,560px)] w-auto max-w-full"
+      : "w-full"
+    : ""
+  const rootStyle = managedRatio ? { aspectRatio: String(ratio) } : undefined
+
+  // En mode géré, les blocs internes remplissent la racine (dont le ratio est fixé).
+  // Sinon, ils conservent leur `aspect-video` d'origine.
+  const innerBlockClass = managedRatio
+    ? "absolute inset-0 h-full w-full"
+    : "relative aspect-video w-full"
   const youtubeId = videoType === "youtube" ? getYouTubeId(url) : null
   const vimeoId = videoType === "vimeo" ? getVimeoId(url) : null
 
@@ -117,11 +181,18 @@ export function VideoPlayer({
     : null
 
   return (
-    <div className={cn("relative w-full overflow-hidden rounded-lg bg-gray-900", className)}>
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-lg bg-gray-900",
+        managedRatio ? rootSizingClass : "w-full",
+        className
+      )}
+      style={rootStyle}
+    >
       {/* Thumbnail avec bouton play (avant la lecture) */}
       {!isPlaying && (
         <div
-          className="relative aspect-video w-full cursor-pointer group"
+          className={cn(innerBlockClass, "cursor-pointer group")}
           onClick={handlePlay}
           role="button"
           tabIndex={0}
@@ -170,7 +241,7 @@ export function VideoPlayer({
 
       {/* Iframe vidéo (après clic) */}
       {isPlaying && (
-        <div className="relative aspect-video w-full">
+        <div className={innerBlockClass}>
           {videoType === "youtube" && youtubeEmbedUrl && (
             <iframe
               src={youtubeEmbedUrl}
