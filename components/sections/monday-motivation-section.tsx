@@ -97,28 +97,27 @@ export function MondayMotivationSection({ video, className }: MondayMotivationSe
             </div>
           </BlurFade>
 
-          {/* Colonne droite - Video avec cadre premium */}
+          {/* Colonne droite - Video avec cadre premium (s'adapte au 16:9 et au 9:16) */}
           <FadeIn delay={0.2}>
-            <div className="relative">
-              {/* Gradient frame derriere */}
+            <div className="relative flex justify-center">
+              {/* Lueur dégradée derrière la vidéo */}
               <div
-                className="absolute -inset-3 bg-gradient-to-br from-[#00a795]/20 via-[#C4D82E]/10 to-[#00a795]/5 rounded-lg blur-sm"
+                className="absolute -inset-3 bg-gradient-to-br from-[#00a795]/20 via-[#C4D82E]/10 to-[#00a795]/5 rounded-2xl blur-md"
                 aria-hidden="true"
               />
 
-              {/* Container video */}
-              <div className="relative rounded-lg overflow-hidden shadow-2xl border border-gray-200/80 ring-1 ring-black/5 bg-white">
-                <VideoPlayer
-                  url={video.url}
-                  type={video.type}
-                  thumbnail={video.thumbnail || undefined}
-                  title={video.title}
-                  className="w-full aspect-video"
-                  autoplay={true}
-                  muted={true}
-                  loop={true}
-                />
-              </div>
+              {/* Le cadre épouse le format réel de la vidéo (paysage ou portrait) */}
+              <VideoPlayer
+                url={video.url}
+                type={video.type}
+                thumbnail={video.thumbnail || undefined}
+                title={video.title}
+                className="relative shadow-2xl border border-gray-200/80 ring-1 ring-black/5"
+                aspectRatio="auto"
+                autoplay={true}
+                muted={true}
+                loop={true}
+              />
             </div>
           </FadeIn>
         </div>
