@@ -164,6 +164,63 @@
     position: relative;
   }
 
+  /* Barre de défilement — la barre native de Windows (large, grise, à flèches)
+     longeait la topbar sombre et jurait avec la palette. On la ramène à un
+     curseur fin dans l'encre du site (#0A1F2C) posé sur une piste transparente,
+     qui vire au teal de la marque au survol. Un seul jeu de règles : la barre du
+     document est stylée via body (Chromium propage le scroller de html à body),
+     donc distinguer document et conteneurs internes serait illusoire.
+
+     Firefox, qui ne connaît pas ces pseudo-éléments, reçoit la variante native
+     fine ; chez Chromium ces mêmes propriétés désactiveraient le rendu ciselé
+     ci-dessous, d'où la garde @supports. */
+  @supports not selector(::-webkit-scrollbar) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(10, 31, 44, 0.28) transparent;
+    }
+  }
+
+  *::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+  }
+
+  *::-webkit-scrollbar-track,
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* La bordure transparente + background-clip ramènent le curseur visible à 5px
+     tout en gardant une cible de clic confortable sur les 11px. */
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba(10, 31, 44, 0.24);
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    border-radius: 9999px;
+    transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 167, 149, 0.7);
+  }
+
+  *::-webkit-scrollbar-thumb:active {
+    background-color: rgba(0, 167, 149, 0.9);
+  }
+
+  /* Windows ajoute des boutons fléchés en haut et en bas : on les retire. */
+  *::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *::-webkit-scrollbar-thumb {
+      transition: none;
+    }
+  }
 
   h1 {
     font-family: var(--font-libre-baskerville), 'Libre Baskerville', Georgia, serif;
@@ -223,41 +280,6 @@
   }
 }
 
-/* Animation du stylo pour le slogan */
-@keyframes penWrite {
-  0%, 100% {
-    transform: rotate(0deg) translateY(0);
-  }
-  25% {
-    transform: rotate(-8deg) translateY(-3px);
-  }
-  50% {
-    transform: rotate(0deg) translateY(0);
-  }
-  75% {
-    transform: rotate(8deg) translateY(-2px);
-  }
-}
-
-@keyframes writingLine {
-  0%, 100% {
-    stroke-dashoffset: 8;
-    opacity: 0.3;
-  }
-  50% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-  }
-}
-
-.animate-pen-write {
-  animation: penWrite 1.5s ease-in-out infinite;
-}
-
-.animate-writing-line {
-  animation: writingLine 1.5s ease-in-out infinite;
-}
-
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
@@ -301,5 +323,107 @@ html {
 
   to {
     left: 100%;
+  }
+}
+
+/* Blog — révélation au chargement.
+   Le contenu est visible par défaut : l'animation ne fait qu'enrichir l'état
+   final, elle ne conditionne jamais l'affichage. */
+@keyframes blog-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.blog-rise {
+  animation: blog-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blog-rise {
+    animation: none;
+  }
+}
+
+/* Heros de rubrique (contact, formations…) — même vocabulaire que le hero du
+   blog, mais indépendant de celui-ci : trame ancrée dans l'angle supérieur
+   gauche, qui s'éteint avant d'atteindre le contenu de droite. */
+.od-hero-grid {
+  --od-hero-grid-color: rgba(0, 167, 149, 0.09);
+  background-image:
+    linear-gradient(var(--od-hero-grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--od-hero-grid-color) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(115% 100% at 0% 0%, black 0%, transparent 70%);
+  mask-image: radial-gradient(115% 100% at 0% 0%, black 0%, transparent 70%);
+}
+
+/* Révélation au chargement, réglable par `--od-rise-delay`. Animation CSS pure :
+   elle se joue toujours, contrairement à un reveal conditionné par une classe. */
+@keyframes od-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.od-rise {
+  animation: od-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--od-rise-delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-rise {
+    animation: none;
+  }
+}
+
+/* Cible tactile — porte la zone cliquable à 44×44 (WCAG 2.5.5) sans toucher à
+   la boîte visible, via un pseudo-élément centré.
+   Réservé aux contrôles ISOLÉS. Sur des liens empilés à moins de 44px les uns
+   des autres, les zones se chevaucheraient et les taps partiraient au mauvais
+   endroit : là, il faut de vraies marges internes (`py-3`) et pas ce raccourci. */
+.od-tap {
+  position: relative;
+}
+
+.od-tap::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
+}
+
+/* Blog — trame d'accueil du hero : écho de la grille ambiante du site
+   (.grid-bg), mais cadrée sur la zone de texte. Le masque la fait disparaître
+   là où la photographie de fond domine, pour structurer sans salir l'image. */
+.blog-hero-grid {
+  --blog-grid-color: rgba(0, 167, 149, 0.09);
+  background-image:
+    linear-gradient(var(--blog-grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blog-grid-color) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: linear-gradient(to bottom, black, transparent 88%);
+  mask-image: linear-gradient(to bottom, black, transparent 88%);
+}
+
+@media (min-width: 768px) {
+  .blog-hero-grid {
+    -webkit-mask-image: linear-gradient(to right, black 0%, rgba(0, 0, 0, 0.85) 38%, transparent 68%);
+    mask-image: linear-gradient(to right, black 0%, rgba(0, 0, 0, 0.85) 38%, transparent 68%);
   }
 }

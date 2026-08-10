@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react"
 import Link from "next/link"
 import { Calendar } from "@/components/ui/calendar"
+import { typoFr } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { CalendarDays, Clock, MapPin, User, GraduationCap, ArrowRight, Wallet, Users } from "lucide-react"
@@ -119,70 +120,161 @@ export function FormationsCalendar({ formations }: { formations: Formation[] }) 
         [formations]
     )
 
+    // Le hero annonce le programme réellement à venir : une session dont la
+    // date est passée ne doit ni être comptée, ni proposée à l'inscription.
+    const sessionsAVenir = useMemo(() => {
+        const aujourdhui = new Date()
+        aujourdhui.setHours(0, 0, 0, 0)
+        return formations
+            .filter(f => toDate(f.date_fin || f.date_debut) >= aujourdhui)
+            .sort((a, b) => a.date_debut.localeCompare(b.date_debut))
+    }, [formations])
+
+    const prochaine = sessionsAVenir[0] ?? null
+
+    const modalites = useMemo(() => {
+        const codes = new Set(sessionsAVenir.map(f => f.modalite).filter(Boolean) as string[])
+        // En milieu de phrase : « présentiel et distanciel », pas de capitales.
+        return Array.from(codes).map(code => (MODALITE_LABELS[code] || code).toLowerCase())
+    }, [sessionsAVenir])
+
     const visible = useMemo(() => {
         if (!selectedDate) return formations
         return formations.filter(f => isSameDay(toDate(f.date_debut), selectedDate))
     }, [formations, selectedDate])
 
     return (
-        <section className="od-section py-16 md:py-24">
-            <div className="od-container">
-                <div className="text-center max-w-3xl mx-auto mb-12">
-                    <div className="od-eyebrow justify-center mb-4">
-                        <GraduationCap className="w-4 h-4" />
-                        Formations professionnelles
-                    </div>
-                    <h1 className="od-heading-display text-4xl md:text-5xl mb-4">
-                        Calendrier des formations
-                    </h1>
-                    <p className="text-base md:text-lg text-gray-600">
-                        Découvrez nos prochaines sessions de formation et inscrivez-vous pour développer
-                        les compétences de votre entreprise.
-                    </p>
-                </div>
+        <>
+            {/* ===== HERO =====
+                Un calendrier ne se raconte pas, il se date : le hero ouvre donc
+                sur la prochaine session nommée, tenue à droite par un filet. */}
+            <header className="relative overflow-hidden">
+                <div aria-hidden="true" className="od-hero-grid absolute inset-0" />
 
-                <div className="grid lg:grid-cols-[minmax(0,360px)_1fr] gap-8 lg:gap-12 items-start">
-                    <div className="lg:sticky lg:top-28">
-                        <div className="od-surface mx-auto flex w-fit max-w-full justify-center p-4 lg:mx-0">
-                            <Calendar
-                                mode="single"
-                                selected={selectedDate}
-                                onSelect={setSelectedDate}
-                                month={month}
-                                onMonthChange={setMonth}
-                                modifiers={{ hasFormation: formationDays }}
-                                modifiersClassNames={{
-                                    hasFormation: "bg-odillon-teal/15 text-odillon-teal font-bold rounded-full",
-                                }}
-                            />
-                        </div>
-                        {selectedDate && (
-                            <Button
-                                variant="ghost"
-                                onClick={() => setSelectedDate(undefined)}
-                                className="mt-3 w-full text-odillon-teal hover:text-odillon-teal/80"
-                            >
-                                Voir toutes les formations
-                            </Button>
-                        )}
-                    </div>
+                <div className="relative od-container py-12 md:py-16 lg:py-20">
+                    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-16">
+                        <div className="od-rise max-w-2xl">
+                            <h1 className="font-baskvill italic text-[clamp(2.5rem,6vw,3.75rem)] leading-[1.06] tracking-[-0.02em] text-odillon-dark text-balance">
+                                Formations
+                            </h1>
+                            <p className="mt-5 max-w-[56ch] text-base sm:text-lg leading-relaxed text-[#4A5C64] text-pretty">
+                                Des sessions courtes animées par les consultants du cabinet : gouvernance,
+                                maîtrise des risques, droit des affaires et gestion des ressources humaines.
+                                Sélectionnez une date dans le calendrier pour ne voir que ce jour-là.
+                            </p>
 
-                    <div className="space-y-5">
-                        {visible.length === 0 ? (
-                            <div className="od-surface-muted text-center py-16 border-dashed">
-                                <GraduationCap className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                                <p className="text-gray-500">
-                                    {selectedDate
-                                        ? "Aucune formation programmée à cette date."
-                                        : "Aucune formation programmée pour le moment."}
+                            {sessionsAVenir.length > 0 && (
+                                <p className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[#4A5C64]">
+                                    <span className="font-medium text-odillon-dark">
+                                        {sessionsAVenir.length} session{sessionsAVenir.length > 1 ? "s" : ""} à venir
+                                    </span>
+                                    {modalites.length > 0 && (
+                                        <>
+                                            <span aria-hidden="true" className="text-odillon-teal/40">/</span>
+                                            <span>{modalites.join(" et ")}</span>
+                                        </>
+                                    )}
                                 </p>
-                            </div>
-                        ) : (
-                            visible.map(f => <FormationCard key={f.id} f={f} />)
-                        )}
+                            )}
+                        </div>
+
+                        <div className="od-rise [--od-rise-delay:90ms] border-t border-odillon-teal/15 pt-6 lg:w-72 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+                            {prochaine ? (
+                                <>
+                                    <p className="od-eyebrow">Prochaine session</p>
+                                    <p className="mt-3 text-sm font-medium tabular-nums text-odillon-teal">
+                                        {formatDateRange(prochaine.date_debut, prochaine.date_fin)}
+                                    </p>
+                                    <p className="mt-1.5 text-base font-semibold leading-snug text-odillon-dark text-balance">
+                                        {typoFr(prochaine.titre)}
+                                    </p>
+                                    {prochaine.lieu && (
+                                        <p className="mt-1 text-sm text-[#4A5C64]">{prochaine.lieu}</p>
+                                    )}
+
+                                    {(prochaine.inscriptions_ouvertes ?? true) && !estComplet(prochaine) ? (
+                                        <Link
+                                            href={`/formations/${prochaine.id}/inscription`}
+                                            className="group mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-odillon-teal hover:text-odillon-teal/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-odillon-teal"
+                                        >
+                                            S&apos;inscrire
+                                            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                                        </Link>
+                                    ) : (
+                                        <p className="mt-4 text-sm font-medium text-[#4A5C64]">
+                                            {estComplet(prochaine) ? "Session complète" : "Inscriptions fermées"}
+                                        </p>
+                                    )}
+                                </>
+                            ) : (
+                                <>
+                                    <p className="od-eyebrow">Programme</p>
+                                    <p className="mt-3 max-w-[30ch] text-sm text-[#4A5C64]">
+                                        Aucune session n&apos;est programmée pour le moment.
+                                    </p>
+                                    <Link
+                                        href="/contact"
+                                        className="group mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-odillon-teal hover:text-odillon-teal/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-odillon-teal"
+                                    >
+                                        Être informé des prochaines dates
+                                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                                    </Link>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </header>
+
+            <section className="od-section py-14 md:py-20">
+                <div className="od-container">
+                    <div className="grid lg:grid-cols-[minmax(0,360px)_1fr] gap-8 lg:gap-12 items-start">
+                        {/* Le calendrier reste ancré en haut de sa colonne : ni sticky
+                            (il suivrait le défilement dès que la liste de droite est
+                            longue), ni dimensionné au contenu (sa largeur changerait
+                            d'un mois à l'autre). */}
+                        <div>
+                            <div className="od-surface mx-auto flex w-fit max-w-full justify-center p-4 lg:mx-0 lg:w-full">
+                                <Calendar
+                                    mode="single"
+                                    selected={selectedDate}
+                                    onSelect={setSelectedDate}
+                                    month={month}
+                                    onMonthChange={setMonth}
+                                    modifiers={{ hasFormation: formationDays }}
+                                    modifiersClassNames={{
+                                        hasFormation: "bg-odillon-teal/15 text-odillon-teal font-bold rounded-full",
+                                    }}
+                                />
+                            </div>
+                            {selectedDate && (
+                                <Button
+                                    variant="ghost"
+                                    onClick={() => setSelectedDate(undefined)}
+                                    className="mt-3 w-full text-odillon-teal hover:text-odillon-teal/80"
+                                >
+                                    Voir toutes les formations
+                                </Button>
+                            )}
+                        </div>
+
+                        <div className="space-y-5">
+                            {visible.length === 0 ? (
+                                <div className="od-surface-muted text-center py-16 border-dashed">
+                                    <GraduationCap className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                    <p className="text-gray-500">
+                                        {selectedDate
+                                            ? "Aucune formation programmée à cette date."
+                                            : "Aucune formation programmée pour le moment."}
+                                    </p>
+                                </div>
+                            ) : (
+                                visible.map(f => <FormationCard key={f.id} f={f} />)
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </>
     )
 }

@@ -70,14 +70,16 @@ export function Footer() {
                 <span className="w-8 h-[2px] bg-odillon-lime rounded-full" />
                 Expertises
               </h3>
-              <ul className="space-y-3">
+              {/* L'espacement inter-liens est repris en marge interne : chaque
+                  lien fait ≥44px de haut sans que la colonne s'allonge. */}
+              <ul className="space-y-0">
                 {expertises.map((item, idx) => {
                   const IconComponent = item.icon
                   return (
                     <li key={item.name}>
                       <Link
                         href={item.href}
-                        className="group flex items-center gap-3 text-white/80 hover:text-odillon-lime transition-all duration-300"
+                        className="group flex items-center gap-3 -mx-2 px-2 py-1.5 rounded-lg text-white/80 hover:text-odillon-lime transition-all duration-300"
                       >
                         <span className="p-2 rounded-lg bg-white/10 group-hover:bg-white/20 transition-all border border-white/10 group-hover:border-odillon-lime/30">
                           <IconComponent className="w-4 h-4 text-odillon-lime" />
@@ -98,12 +100,12 @@ export function Footer() {
                 <span className="w-8 h-[2px] bg-odillon-lime rounded-full" />
                 Navigation
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-0">
                 {quickLinks.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="group flex items-center text-white/80 hover:text-odillon-lime transition-all duration-300"
+                      className="group flex items-center -mx-2 px-2 py-3 rounded-lg text-white/80 hover:text-odillon-lime transition-all duration-300"
                     >
                       <ChevronRight className="w-4 h-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all text-odillon-lime" />
                       <span>{link.name}</span>
@@ -130,16 +132,16 @@ export function Footer() {
                     </div>
                     <span className="text-xs text-white/60 block">Téléphone</span>
                   </div>
-                  <div className="space-y-1 pl-12">
+                  <div className="pl-12">
                     <a
                       href="tel:+24111747574"
-                      className="block text-white font-medium hover:text-odillon-lime transition-colors"
+                      className="-mx-2 block rounded-md px-2 py-3 text-white font-medium hover:text-odillon-lime transition-colors"
                     >
                       +241 11 74 75 74
                     </a>
                     <a
                       href="tel:+24174759515"
-                      className="block text-white font-medium hover:text-odillon-lime transition-colors"
+                      className="-mx-2 block rounded-md px-2 py-3 text-white font-medium hover:text-odillon-lime transition-colors"
                     >
                       +241 74 75 95 15
                     </a>
@@ -154,16 +156,16 @@ export function Footer() {
                     </div>
                     <span className="text-xs text-white/60 block">Email</span>
                   </div>
-                  <div className="space-y-1 pl-12">
+                  <div className="pl-12">
                     <a
                       href="mailto:contact@odillon.fr"
-                      className="block text-white font-medium hover:text-odillon-lime transition-colors"
+                      className="-mx-2 block rounded-md px-2 py-3 text-white font-medium hover:text-odillon-lime transition-colors"
                     >
                       contact@odillon.fr
                     </a>
                     <a
                       href="mailto:odillon2017@gmail.com"
-                      className="block text-white font-medium hover:text-odillon-lime transition-colors"
+                      className="-mx-2 block rounded-md px-2 py-3 text-white font-medium hover:text-odillon-lime transition-colors"
                     >
                       odillon2017@gmail.com
                     </a>
@@ -214,13 +216,13 @@ export function Footer() {
             <div className="flex flex-wrap items-center justify-center md:justify-end gap-3 sm:gap-4 md:gap-6">
               <Link
                 href="/mentions-legales"
-                className="text-xs sm:text-sm hover:text-white transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-odillon-lime hover:after:w-full after:transition-all"
+                className="text-xs sm:text-sm hover:text-white transition-colors relative py-3.5 after:absolute after:bottom-3.5 after:left-0 after:w-0 after:h-[1px] after:bg-odillon-lime hover:after:w-full after:transition-all"
               >
                 Mentions Légales
               </Link>
               <Link
                 href="/politique-confidentialite"
-                className="text-xs sm:text-sm hover:text-white transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-odillon-lime hover:after:w-full after:transition-all"
+                className="text-xs sm:text-sm hover:text-white transition-colors relative py-3.5 after:absolute after:bottom-3.5 after:left-0 after:w-0 after:h-[1px] after:bg-odillon-lime hover:after:w-full after:transition-all"
               >
                 Politique de Confidentialité
               </Link>
@@ -229,7 +231,7 @@ export function Footer() {
                 href="https://www.odillon.fr"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-odillon-lime text-odillon-dark rounded-full hover:bg-white hover:text-odillon-teal transition-all group text-xs sm:text-sm"
+                className="od-tap flex items-center gap-1.5 px-3 py-1.5 bg-odillon-lime text-odillon-dark rounded-full hover:bg-white hover:text-odillon-teal transition-all group text-xs sm:text-sm"
               >
                 odillon.fr
                 <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />

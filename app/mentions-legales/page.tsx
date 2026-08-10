@@ -3,7 +3,7 @@ import { HeaderPro } from "@/components/layout/header-pro"
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { Card, CardContent } from "@/components/ui/card"
-import { Scale, Shield, Building, Info, MapPin } from "lucide-react"
+import { Scale, Shield, Building, Info } from "lucide-react"
 import Link from "next/link"
 
 export default function MentionsLegalesPage() {
@@ -23,7 +23,7 @@ export default function MentionsLegalesPage() {
                             Mentions <span className="text-odillon-teal">Légales</span>
                         </h1>
                         <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                            Informations obligatoires concernant l&apos;éditeur, l&apos;hébergeur et les conditions d&apos;utilisation du site Odillon.
+                            Informations obligatoires concernant l&apos;éditeur et les conditions d&apos;utilisation du site Odillon.
                         </p>
                     </div>
                 </FadeIn>
@@ -72,27 +72,9 @@ export default function MentionsLegalesPage() {
                                     <section>
                                         <div className="flex items-center gap-4 mb-6">
                                             <div className="w-10 h-10 rounded-lg bg-odillon-teal/10 flex items-center justify-center text-odillon-teal">
-                                                <MapPin className="w-5 h-5" />
-                                            </div>
-                                            <h2 className="text-2xl font-bold text-slate-900">2. Hébergement</h2>
-                                        </div>
-                                        <div className="bg-slate-50/50 p-6 rounded-lg border border-slate-100">
-                                            <p className="text-slate-700 font-semibold mb-2">Vercel Inc.</p>
-                                            <p className="text-slate-600 text-sm leading-relaxed">
-                                                340 S Lemon Ave #4133 Walnut, CA 91789, USA<br />
-                                                <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="text-odillon-teal hover:underline inline-flex items-center gap-1 mt-2">
-                                                    Consulter le site web
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </section>
-
-                                    <section>
-                                        <div className="flex items-center gap-4 mb-6">
-                                            <div className="w-10 h-10 rounded-lg bg-odillon-teal/10 flex items-center justify-center text-odillon-teal">
                                                 <Info className="w-5 h-5" />
                                             </div>
-                                            <h2 className="text-2xl font-bold text-slate-900">3. Propriété intellectuelle</h2>
+                                            <h2 className="text-2xl font-bold text-slate-900">2. Propriété intellectuelle</h2>
                                         </div>
                                         <div className="space-y-4 text-slate-600 leading-relaxed">
                                             <p>
@@ -109,7 +91,7 @@ export default function MentionsLegalesPage() {
                                             <div className="w-10 h-10 rounded-lg bg-odillon-teal/10 flex items-center justify-center text-odillon-teal">
                                                 <Shield className="w-5 h-5" />
                                             </div>
-                                            <h2 className="text-2xl font-bold text-slate-900">4. Protection des données</h2>
+                                            <h2 className="text-2xl font-bold text-slate-900">3. Protection des données</h2>
                                         </div>
                                         <div className="p-6 rounded-lg bg-odillon-teal/5 border border-odillon-teal/10">
                                             <p className="text-slate-700 leading-relaxed italic">
@@ -131,7 +113,7 @@ export default function MentionsLegalesPage() {
                                             <div className="w-10 h-10 rounded-lg bg-odillon-teal/10 flex items-center justify-center text-odillon-teal">
                                                 <Scale className="w-5 h-5" />
                                             </div>
-                                            <h2 className="text-2xl font-bold text-slate-900">5. Droit applicable</h2>
+                                            <h2 className="text-2xl font-bold text-slate-900">4. Droit applicable</h2>
                                         </div>
                                         <p className="text-slate-600 leading-relaxed">
                                             Tout litige en relation avec l&apos;utilisation du site https://www.odillon.fr est soumis au <strong>droit gabonais</strong>. Il est fait attribution exclusive de juridiction aux tribunaux compétents de <strong>Libreville</strong>.

@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { Loader2, Plus, Trash2, Save, Award, Shield, Lightbulb, Heart, Target, Sparkles, Gem, Flame, HeartHandshake } from "lucide-react"
+import { Loader2, Plus, Trash2, Save, Award, Shield, ShieldCheck, Lightbulb, Heart, Target, Sparkles, Gem, Flame, HeartHandshake } from "lucide-react"
 import { toast } from "sonner"
 import { AdminPanel, AdminEmptyState } from "@/components/admin/ui/admin-panel"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -19,9 +19,10 @@ interface ValueItem {
 }
 
 const AVAILABLE_ICONS = [
-    { value: "Gem", label: "Gem (Talent)", icon: Gem },
-    { value: "Flame", label: "Flame (Challenge)", icon: Flame },
-    { value: "HeartHandshake", label: "HeartHandshake (Proximité)", icon: HeartHandshake },
+    { value: "Gem", label: "Gem (Le Talent)", icon: Gem },
+    { value: "ShieldCheck", label: "ShieldCheck (La Rigueur)", icon: ShieldCheck },
+    { value: "Flame", label: "Flame (Le Challenge)", icon: Flame },
+    { value: "HeartHandshake", label: "HeartHandshake (La Proximité)", icon: HeartHandshake },
     { value: "Award", label: "Award (Récompense)", icon: Award },
     { value: "Shield", label: "Shield (Sécurité)", icon: Shield },
     { value: "Lightbulb", label: "Lightbulb (Innovation)", icon: Lightbulb },
@@ -218,7 +219,7 @@ export function AboutTab() {
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <Label className="text-slate-700">Sous-titre (Valeur)</Label>
+                                            <Label className="text-slate-700">Badge (animal totem)</Label>
                                             <Input
                                                 value={item.value}
                                                 onChange={(e) => updateValue(index, 'value', e.target.value)}

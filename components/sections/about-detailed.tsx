@@ -8,6 +8,7 @@ import {
   Gem,
   Flame,
   HeartHandshake,
+  ShieldCheck,
   ArrowRight,
   CheckCircle,
   Target,
@@ -15,46 +16,42 @@ import {
   ChevronDown
 } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import { TeamGrid } from "@/components/sections/team-grid"
 import { VideoPlayer } from "@/components/ui/video-player"
 import { Video } from "@/types/admin"
 import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { JourneyTimeline, type JourneyItem } from "@/components/sections/about-home"
+import {
+  valeurs,
+  chapeauValeurs,
+  presentation,
+  chiffresCles,
+  domainesIntervention
+} from "@/lib/identite"
 
 const aboutJourney: JourneyItem[] = [
   { year: "2017", title: "FONDATION", description: "Création de la Société ODILLON, spécialisée en Ingénierie d'Entreprises." }
 ]
 
-const initialValues = [
-  {
-    icon: Gem,
-    title: "Talent",
-    value: "Compétences",
-    description: "Notre équipe se définit par l'expression de ses compétences transversales matérialisées par le professionnalisme, la rigueur et la discipline.",
-    gradient: "from-[#00a795]/20 to-[#00a795]/5"
-  },
-  {
-    icon: Flame,
-    title: "Challenge",
-    value: "Détermination",
-    description: "Notre détermination et notre motivation à toujours proposer des solutions innovantes mieux adaptées aux besoins de nos clients.",
-    gradient: "from-[#C4D82E]/20 to-[#C4D82E]/5"
-  },
-  {
-    icon: HeartHandshake,
-    title: "Proximité",
-    value: "Qualité",
-    description: "Notre implication à fournir des services de qualité exceptionnelle aux clients.",
-    gradient: "from-[#00a795]/20 to-[#00a795]/5"
-  }
-]
-
 import { useEffect, useState } from "react"
 
 const ICON_MAP: Record<string, any> = {
-  Gem, Flame, HeartHandshake, Target, Sparkles,
-  Award: Gem, Shield: Flame, Lightbulb: HeartHandshake, Heart: HeartHandshake
+  Gem, Flame, HeartHandshake, ShieldCheck, Target, Sparkles,
+  Award: Gem, Shield: ShieldCheck, Lightbulb: HeartHandshake, Heart: HeartHandshake
 }
+
+/* Valeurs du livret d'accueil : l'animal totem sert de badge, comme dans le
+   document imprimé. Une surcharge Supabase (`about_values_json`) reste possible
+   depuis l'administration ; elle prime alors sur ces valeurs de référence. */
+const initialValues = valeurs.map((v) => ({
+  icon: ICON_MAP[v.icon] ?? Gem,
+  image: v.image,
+  title: v.title,
+  value: v.totem,
+  description: v.description,
+  keywords: v.keywords
+}))
 
 export function AboutDetailed() {
   const [missionTitle, setMissionTitle] = useState("Notre Mission")
@@ -77,6 +74,10 @@ export function AboutDetailed() {
           if (s.about_values_json && Array.isArray(s.about_values_json) && s.about_values_json.length > 0) {
             const mappedValues = s.about_values_json.map((v: any, idx: number) => ({
               ...v,
+              // Une valeur enregistrée avant l'ajout des aquarelles n'a pas de
+              // champ `image` : on la retrouve par son libellé dans le livret.
+              image: v.image ?? valeurs.find((ref) => ref.title === v.title)?.image,
+              keywords: v.keywords ?? valeurs.find((ref) => ref.title === v.title)?.keywords,
               icon: ICON_MAP[v.icon] || Gem,
               gradient: idx % 2 === 0 ? "from-[#00a795]/20 to-[#00a795]/5" : "from-[#C4D82E]/20 to-[#C4D82E]/5"
             }))
@@ -140,7 +141,7 @@ export function AboutDetailed() {
                 />
                 {/* Overlay dégradé + titre */}
                 <div className="pointer-events-none absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/25 to-transparent p-6 sm:p-10 lg:p-14">
-                  <h1 className="font-baskvill not-italic font-bold text-2xl sm:text-4xl lg:text-5xl text-white mb-2 leading-tight drop-shadow">
+                  <h1 className="font-baskvill italic font-bold text-2xl sm:text-4xl lg:text-5xl text-white mb-2 leading-tight drop-shadow">
                     À propos d&apos;{" "}
                     <span className="bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
                       ODILLON
@@ -163,7 +164,7 @@ export function AboutDetailed() {
             /* ----- Fallback : hero dégradé sans vidéo ----- */
             <FadeIn delay={0.1}>
               <div className="text-center max-w-4xl mx-auto py-10 md:py-16">
-                <h1 className="font-baskvill not-italic font-bold text-3xl sm:text-4xl lg:text-5xl text-gray-900 mb-3 leading-tight">
+                <h1 className="font-baskvill italic font-bold text-3xl sm:text-4xl lg:text-5xl text-gray-900 mb-3 leading-tight">
                   À propos d&apos;{" "}
                   <span className="bg-gradient-to-r from-odillon-teal to-odillon-lime bg-clip-text text-transparent">
                     ODILLON
@@ -179,15 +180,56 @@ export function AboutDetailed() {
           {/* ----- Présentation épurée et repliable ----- */}
           <FadeIn delay={0.25}>
             <div className="mt-12 md:mt-16 max-w-3xl mx-auto">
+              {/* Kicker de section, repris du livret d'accueil */}
+              <p className="text-center uppercase tracking-[0.22em] text-xs font-semibold text-odillon-teal mb-4">
+                Qui sommes-nous ?
+              </p>
+
               {/* Accroche */}
               <p className="text-lg md:text-2xl text-gray-800 leading-relaxed text-center font-medium mb-8">
-                Fondée en mai 2017, ODILLON accompagne les entreprises dans leurs projets de conseil, d’ingénierie organisationnelle et d’optimisation de la performance.
+                {presentation.accroche}
               </p>
+
+              {/* Repères chiffrés */}
+              <dl className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-gray-200/70 border border-gray-200/70 rounded-lg overflow-hidden mb-10">
+                {chiffresCles.map((repere) => (
+                  <div key={repere.valeur} className="bg-white/80 px-5 py-6 text-center sm:text-left">
+                    <dt className="font-baskvill not-italic text-2xl md:text-3xl text-odillon-teal mb-1">
+                      {repere.valeur}
+                    </dt>
+                    <dd className="text-sm text-gray-600 leading-snug">{repere.legende}</dd>
+                  </div>
+                ))}
+              </dl>
 
               {/* Paragraphe clé visible */}
               <p className="text-base md:text-lg text-gray-600 leading-relaxed">
-                Nous concevons et déployons des solutions fiables, innovantes et durables, adaptées aux réalités, aux enjeux et aux ambitions de chaque organisation. Notre mission est d&apos;aider les entreprises à renforcer leur efficacité opérationnelle, améliorer leur gouvernance et atteindre leurs objectifs stratégiques.
+                {presentation.mission}
               </p>
+
+              {/* Domaines d'intervention */}
+              <div className="mt-10">
+                <h2 className="font-baskvill not-italic text-xl md:text-2xl text-gray-900 mb-1">
+                  Nos domaines d&apos;intervention
+                </h2>
+                <span className="block w-12 h-[2px] bg-odillon-lime rounded-full mb-6" />
+                <ul className="space-y-3">
+                  {domainesIntervention.map((domaine) => (
+                    <li key={domaine.accent} className="flex gap-3 text-base md:text-lg text-gray-600 leading-relaxed">
+                      <span className="mt-[0.6em] w-1.5 h-1.5 rounded-full bg-odillon-teal flex-shrink-0" />
+                      <span>
+                        <strong className="font-semibold text-gray-900">{domaine.accent}</strong>
+                        {domaine.suite}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Formule de synthèse du livret d'accueil */}
+              <blockquote className="mt-10 border-l-2 border-odillon-lime pl-5 py-1 font-baskvill italic text-base md:text-lg text-gray-700 leading-relaxed">
+                {presentation.citation}
+              </blockquote>
 
               {/* Contenu repliable */}
               <AnimatePresence initial={false}>
@@ -315,13 +357,16 @@ export function AboutDetailed() {
           <div className="text-center mb-20">
             <FadeIn delay={0.2}>
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-baskvill italic">Nos Valeurs</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto text-lg leading-relaxed">
-                Les piliers fondamentaux qui structurent notre approche et garantissent l'impact de nos actions.
+              <p className="text-gray-600 max-w-3xl mx-auto text-lg leading-relaxed">
+                {chapeauValeurs}
               </p>
             </FadeIn>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 auto-rows-[220px] sm:auto-rows-[250px] md:auto-rows-[280px]">
+          {/* auto-rows-fr : les cartes s'égalisent sur la plus haute de la ligne.
+              Une hauteur fixe ne tient pas ici — les descriptions du livret sont
+              longues et les colonnes étroites à partir de quatre valeurs. */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 auto-rows-fr">
             {values.map((valeur, idx) => {
               const ValeurIcon = valeur.icon
               const isEven = idx % 2 === 0
@@ -329,35 +374,71 @@ export function AboutDetailed() {
               const spanClass = "md:col-span-1 md:row-span-1"
 
               return (
-                <BlurFade key={valeur.title} delay={0.1 * (idx + 1)} className={spanClass}>
+                /* Révélation en CSS pur : BlurFade laissait ces cartes bloquées
+                   à opacity 0, donc invisibles (et leurs images jamais chargées,
+                   le lazy-loading n'étant jamais déclenché). */
+                <div
+                  key={valeur.title}
+                  className={`${spanClass} od-rise`}
+                  style={{ "--od-rise-delay": `${0.1 * (idx + 1)}s` } as React.CSSProperties}
+                >
                   <SpotlightCard
-                    className="h-full w-full bg-white border border-gray-100 shadow-sm rounded-lg p-8 overflow-hidden group"
+                    className="h-full w-full bg-white border border-gray-100 shadow-sm rounded-lg p-6 sm:p-7 overflow-hidden group"
                     spotlightColor={isEven ? "rgba(0, 167, 149, 0.05)" : "rgba(196, 216, 46, 0.05)"}
                   >
+                    {/* Composition en flux depuis le haut : la vignette ayant une
+                        hauteur fixe, les titres s'alignent d'une carte à l'autre.
+                        Seuls les mots-clés sont calés en pied (mt-auto), ce qui
+                        donne une ligne de base commune malgré des descriptions
+                        de longueurs inégales. */}
                     <div className="relative z-10 flex flex-col h-full">
-                      <div className="flex items-start justify-between mb-6">
-                        <div className={`p-3 rounded-lg ${isEven ? 'bg-odillon-teal/10 text-odillon-teal' : 'bg-odillon-lime/10 text-odillon-lime'}`}>
-                          <ValeurIcon size={24} strokeWidth={2} />
+                      {/* Aquarelle du totem (livret) ; l'icône reste le repli
+                          si une valeur est surchargée depuis l'administration. */}
+                      {valeur.image ? (
+                        <div className="w-20 h-20 rounded-lg overflow-hidden border border-gray-100">
+                          <Image
+                            src={valeur.image}
+                            alt={`${valeur.title} — ${valeur.value}`}
+                            width={144}
+                            height={144}
+                            className="w-full h-full object-cover"
+                          />
                         </div>
-                        <div
-                          className={`text-xs font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full ${isEven ? 'bg-odillon-teal/10 text-odillon-teal' : 'bg-odillon-lime/20 text-odillon-lime'}`}
-                        >
-                          {valeur.value}
+                      ) : (
+                        <div className={`w-20 h-20 rounded-lg flex items-center justify-center ${isEven ? 'bg-odillon-teal/10 text-odillon-teal' : 'bg-odillon-lime/10 text-odillon-lime'}`}>
+                          <ValeurIcon size={28} strokeWidth={2} />
                         </div>
-                      </div>
+                      )}
 
-                      <div className="mt-auto">
-                        <h3 className="text-xl font-bold text-gray-900 mb-2 font-baskvill italic">
-                          {valeur.title}
-                        </h3>
+                      {/* Groupement serré : le titre et son totem forment un bloc */}
+                      <h3 className="mt-5 text-xl font-bold text-gray-900 font-baskvill italic leading-tight">
+                        {valeur.title}
+                      </h3>
+                      {/* Teal et lime de marque assombris : à 11px, les teintes
+                          d'origine tombaient à ~3:1 et ~1,7:1 sur blanc. Ces
+                          variantes tiennent 5,2:1 et 4,9:1. */}
+                      <p className={`mt-1 text-xs font-semibold uppercase tracking-[0.18em] ${isEven ? 'text-[#0f7a6e]' : 'text-[#6b7818]'}`}>
+                        {valeur.value}
+                      </p>
 
-                        <p className="text-gray-600 leading-relaxed text-sm">
-                          {valeur.description}
+                      {/* Séparation généreuse avant le corps de texte */}
+                      <p className="mt-4 text-gray-600 leading-relaxed text-sm">
+                        {valeur.description}
+                      </p>
+
+                      {valeur.keywords && (
+                        /* min-h = padding haut (1.25rem) + deux interlignes
+                           (2 × 1rem pour text-xs), box-sizing compris : les
+                           mots-clés les plus longs passent à la ligne, et sans
+                           cette réserve le filet de cette carte remonterait
+                           seul de 16px. */
+                        <p className="mt-auto pt-5 min-h-[3.25rem] text-xs italic text-gray-500 border-t border-gray-100">
+                          {valeur.keywords}
                         </p>
-                      </div>
+                      )}
                     </div>
                   </SpotlightCard>
-                </BlurFade>
+                </div>
               )
             })}
           </div>

@@ -27,20 +27,20 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
       id="accueil"
       className="od-page relative flex min-h-[85vh] flex-col overflow-hidden"
     >
-      {/* Subtle grid background pattern */}
+      {/* Modern architectural background */}
+      <div className="pointer-events-none absolute inset-0 bg-[#f7fafc]" />
       <GridPattern
-        width={50}
-        height={50}
-        className="absolute inset-0 fill-[#00a795]/[0.015] stroke-[#00a795]/[0.03]"
+        width={64}
+        height={64}
+        x={-20}
+        y={-20}
+        className="absolute inset-0 fill-[#00a795]/[0.025] stroke-[#00a795]/[0.11] [mask-image:linear-gradient(to_bottom,black_5%,black_72%,transparent_100%)]"
       />
-      {/* Fade out grid at edges */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white pointer-events-none" />
-
-      {/* Subtle background illustration */}
-      <div
-        className="absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat opacity-[0.045] mix-blend-multiply pointer-events-none"
-        style={{ backgroundImage: 'url("/images/hero-bg-subtle.png")' }}
-      />
+      <div className="pointer-events-none absolute -right-40 top-16 h-[34rem] w-[34rem] rounded-full border border-odillon-teal/10 bg-[radial-gradient(circle_at_center,rgba(0,167,149,0.10),rgba(0,167,149,0.025)_42%,transparent_68%)]" />
+      <div className="pointer-events-none absolute -right-20 top-36 h-[24rem] w-[24rem] rounded-full border border-odillon-lime/15" />
+      <div className="pointer-events-none absolute -left-36 bottom-10 h-80 w-80 rounded-full bg-[radial-gradient(circle_at_center,rgba(196,216,46,0.12),transparent_68%)] blur-2xl" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,rgba(255,255,255,0.78)_0%,rgba(255,255,255,0.18)_48%,rgba(255,255,255,0.72)_100%)]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-white to-transparent" />
 
       {/* News Ticker / Saline */}
       <div className="relative z-10 w-full">
@@ -55,31 +55,6 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 xl:gap-16 items-center w-full">
           {/* Left Column - Text Content */}
           <div className="order-1 flex max-w-2xl flex-col gap-5 sm:gap-6">
-
-            {/* Main Headline */}
-            <FadeIn delay={0.15} direction="up">
-              <h1 className="font-baskvill leading-[1.1] text-odillon-dark">
-                {/* "Odillon" as logotype */}
-                <span className="block not-italic font-bold tracking-tight text-[1.75rem] min-[380px]:text-[2rem] sm:text-[2.7rem] lg:text-[3.1rem]">
-                  Odillon
-                </span>
-                {/* "vous accompagne" italic, slightly smaller */}
-                <span className="block italic font-semibold text-slate-700 mt-0.5 text-[1.05rem] min-[380px]:text-[1.2rem] sm:text-[1.6rem] lg:text-[1.9rem]">
-                  vous accompagne
-                </span>
-                {/* "en Afrique francophone" with gradient underline on "francophone" */}
-                <span className="block italic font-semibold mt-0.5 text-[1.05rem] min-[380px]:text-[1.2rem] sm:text-[1.6rem] lg:text-[1.9rem]">
-                  en Afrique{" "}
-                  <span className="relative inline-block">
-                    <span className="relative z-10 text-odillon-dark">francophone</span>
-                    <span
-                      className="absolute -bottom-0.5 left-0 right-0 h-[2.5px] rounded-full"
-                      style={{ background: "linear-gradient(to right, #C4D82E, #1A9B8E)" }}
-                    />
-                  </span>
-                </span>
-              </h1>
-            </FadeIn>
 
             {/* Description */}
             <FadeIn delay={0.37} direction="up">
@@ -134,7 +109,11 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
                     />
                   ) : images.length > 0 ? (
                     <div className="relative w-full aspect-[4/3]">
-                      <BackgroundSlideshow images={images} interval={6000} />
+                      <BackgroundSlideshow
+                        images={images}
+                        interval={6000}
+                        sizes="(min-width: 1024px) 50vw, 100vw"
+                      />
                     </div>
                   ) : (
                     <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-[#00a795] to-[#0A1F2C] flex items-center justify-center">

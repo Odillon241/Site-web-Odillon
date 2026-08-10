@@ -8,12 +8,15 @@ interface BackgroundSlideshowProps {
   images: { src: string; alt: string }[]
   interval?: number
   className?: string
+  /** Largeur de rendu réelle du conteneur, transmise à next/image */
+  sizes?: string
 }
 
 export function BackgroundSlideshow({
   images: rawImages,
   interval = 5000,
-  className = ""
+  className = "",
+  sizes = "100vw"
 }: BackgroundSlideshowProps) {
   // Filter out images with empty or missing src
   const images = rawImages.filter(img => img.src && img.src.trim() !== '')
@@ -52,7 +55,7 @@ export function BackgroundSlideshow({
             alt={images[currentIndex].alt}
             fill
             className="object-cover"
-            sizes="100vw"
+            sizes={sizes}
             priority={currentIndex === 0}
             quality={75}
             loading={currentIndex === 0 ? "eager" : "lazy"}

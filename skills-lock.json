@@ -115,6 +115,12 @@
       "skillPath": "skills/internal-comms/SKILL.md",
       "computedHash": "cf3dba93fd569d7380505db211f89a467869c1a2ef301941148d06f33ed17332"
     },
+    "make-interfaces-feel-better": {
+      "source": "jakubkrehel/make-interfaces-feel-better",
+      "sourceType": "github",
+      "skillPath": "skills/make-interfaces-feel-better/SKILL.md",
+      "computedHash": "f0924279cb953f8396eb037734a82822816c738b3f491a0465c191488c6449a2"
+    },
     "mcp-builder": {
       "source": "anthropics/skills",
       "sourceType": "github",

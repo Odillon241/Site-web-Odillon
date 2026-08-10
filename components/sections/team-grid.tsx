@@ -5,6 +5,12 @@ import { FadeIn } from "@/components/magicui/fade-in"
 import { Mail, Linkedin } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import {
+    POLE_DIRECTION,
+    branchesOrganigramme,
+    polesDirects,
+    polesHerites
+} from "@/lib/identite"
 
 interface TeamMemberDB {
     id: string
@@ -53,38 +59,57 @@ function OrgAvatar({ photoUrl, name, size = "normal" }: { photoUrl?: string; nam
 // Composant boîte de l'organigramme avec photos
 function OrgBox({
     title,
+    surtitre,
     members,
     variant = "default",
     className = ""
 }: {
     title: string
+    surtitre?: string
     members: TeamMemberDB[]
-    variant?: "direction" | "default"
+    variant?: "direction" | "branche" | "default"
     className?: string
 }) {
     const isDirection = variant === "direction"
+    const isBranche = variant === "branche"
 
-    if (members.length === 0) return null
+    /* Trois niveaux de lecture, repris de l'organigramme officiel : direction
+       générale en sombre, départements en ambre, pôles et sections en teal. */
+    const cadre = isDirection
+        ? "border-odillon-dark"
+        : isBranche
+            ? "border-amber-200"
+            : "border-odillon-teal/20"
+
+    const entete = isDirection
+        ? "bg-odillon-dark text-white border-odillon-dark"
+        : isBranche
+            ? "bg-amber-50 text-amber-900 border-amber-100"
+            : "bg-odillon-teal/[0.07] text-odillon-dark border-odillon-teal/10"
 
     return (
         <div className={`
             relative bg-white border-2 rounded-lg shadow-md hover:shadow-lg transition-shadow
-            ${isDirection ? "border-odillon-teal" : "border-gray-200"}
+            ${cadre}
             ${className}
         `}>
             {/* Titre */}
-            <div className={`
-                px-4 py-2.5 text-center font-semibold border-b rounded-t-lg
-                ${isDirection
-                    ? "bg-odillon-teal text-white border-odillon-teal"
-                    : "bg-gray-50 text-gray-800 border-gray-100"
-                }
-            `}>
-                {title}
+            <div className={`px-4 py-2.5 text-center font-semibold border-b rounded-t-lg ${entete}`}>
+                {surtitre && (
+                    <span className={`block text-[10px] uppercase tracking-[0.18em] font-bold mb-0.5 ${isDirection ? "text-white/70" : "text-odillon-teal/70"}`}>
+                        {surtitre}
+                    </span>
+                )}
+                <span className={isDirection ? "text-base tracking-wide uppercase" : "text-sm"}>{title}</span>
             </div>
 
-            {/* Membres avec photos */}
+            {/* Membres avec photos. Un pôle sans membre reste visible : le
+                livret présente la structure complète, pas seulement les postes
+                pourvus. */}
             <div className="p-4 space-y-3">
+                {members.length === 0 && (
+                    <p className="text-xs text-gray-400 text-center py-2">Pôle en structuration</p>
+                )}
                 {members.map((member) => (
                     <div key={member.id} className="flex items-center gap-3">
                         <OrgAvatar
@@ -150,18 +175,12 @@ export function TeamGrid() {
         fetchTeam()
     }, [])
 
-    // Grouper par pôle
-    const directionGenerale = team.filter(m => m.pole === "Direction Générale")
-    const poleAdministratif = team.filter(m => m.pole === "Pôle Administratif")
-    const poleAudit = team.filter(m => m.pole === "Pôle Audit et Conformité")
-    const poleQualite = team.filter(m => m.pole === "Pôle Qualité et Développement")
-    const poleInformatique = team.filter(m => m.pole === "Pôle Informatique et Communication")
+    /* Rattachement d'un membre à un pôle du livret. Les intitulés hérités sont
+       traduits au passage, le temps que la colonne `pole` soit migrée. */
+    const membresDe = (pole: string) =>
+        team.filter(m => (m.pole && polesHerites[m.pole]) === pole || m.pole === pole)
 
-    const autresPoles = [
-        { title: "Audit et Conformité", members: poleAudit },
-        { title: "Qualité et Développement", members: poleQualite },
-        { title: "Informatique et Communication", members: poleInformatique },
-    ].filter(p => p.members.length > 0)
+    const directionGenerale = membresDe(POLE_DIRECTION)
 
     // Si aucun membre dans l'organigramme
     if (!loading && team.length === 0) {
@@ -178,88 +197,68 @@ export function TeamGrid() {
     }
 
     return (
-        <div className="max-w-5xl mx-auto px-4">
+        <div className="max-w-6xl mx-auto px-4">
             <FadeIn>
                 <div className="relative">
                     {/* ========== DIRECTION GÉNÉRALE ========== */}
-                    {directionGenerale.length > 0 && (
-                        <>
-                            <div className="flex justify-center">
-                                <OrgBox
-                                    title="Direction Générale"
-                                    members={directionGenerale}
-                                    variant="direction"
-                                    className="w-full max-w-72"
-                                />
-                            </div>
+                    <div className="flex justify-center">
+                        <OrgBox
+                            title="Direction Générale"
+                            members={directionGenerale}
+                            variant="direction"
+                            className="w-full max-w-72"
+                        />
+                    </div>
 
-                            {/* Ligne verticale vers Pôle Administratif */}
-                            {(poleAdministratif.length > 0 || autresPoles.length > 0) && (
+                    <div className="flex justify-center">
+                        <div className="w-0.5 h-10 bg-gradient-to-b from-odillon-teal to-gray-300" />
+                    </div>
+
+                    {/* ===== DÉPARTEMENT TECHNIQUE · SECRÉTARIAT GÉNÉRAL ===== */}
+                    <div className="grid gap-8 md:gap-10 lg:grid-cols-2">
+                        {branchesOrganigramme.map((branche) => (
+                            <div key={branche.pole}>
                                 <div className="flex justify-center">
-                                    <div className="w-0.5 h-10 bg-gradient-to-b from-odillon-teal to-gray-300" />
+                                    <OrgBox
+                                        title={branche.pole}
+                                        members={membresDe(branche.pole)}
+                                        variant="branche"
+                                        className="w-full max-w-xs"
+                                    />
                                 </div>
-                            )}
-                        </>
-                    )}
 
-                    {/* ========== PÔLE ADMINISTRATIF ========== */}
-                    {poleAdministratif.length > 0 && (
-                        <>
-                            <div className="flex justify-center">
-                                <OrgBox
-                                    title="Pôle Administratif"
-                                    members={poleAdministratif}
-                                    className="w-full max-w-64"
-                                />
-                            </div>
-
-                            {/* Ligne vers les autres pôles */}
-                            {autresPoles.length > 0 && (
+                                {/* Rattachements de la branche */}
                                 <div className="flex justify-center">
                                     <div className="w-0.5 h-6 bg-gray-300" />
                                 </div>
-                            )}
-                        </>
-                    )}
-
-                    {/* ========== AUTRES PÔLES ========== */}
-                    {autresPoles.length > 0 && (
-                        <>
-                            {/* Ligne horizontale qui connecte les pôles */}
-                            <div className="relative h-0.5 mx-auto" style={{ width: "75%" }}>
-                                <div className="absolute inset-0 bg-gray-300" />
-                            </div>
-
-                            <div
-                                className="relative grid gap-4 md:gap-6 mt-0 mx-auto w-full md:w-[85%]"
-                                style={{
-                                    gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, 220px), 1fr))`
-                                }}
-                            >
-                                {/* Lignes verticales vers chaque pôle - Desktop */}
-                                {autresPoles.map((_, idx) => {
-                                    const position = ((idx + 0.5) / autresPoles.length) * 100
-                                    return (
-                                        <div
-                                            key={idx}
-                                            className="hidden md:block absolute -top-0 w-0.5 h-6 bg-gray-300"
-                                            style={{ left: `${position}%`, transform: 'translateX(-50%)' }}
-                                        />
-                                    )
-                                })}
-
-                                {autresPoles.map((pole) => (
-                                    <div key={pole.title} className="flex justify-center pt-6">
+                                <div className="grid gap-3 sm:grid-cols-3">
+                                    {branche.enfants.map((enfant) => (
                                         <OrgBox
-                                            title={pole.title}
-                                            members={pole.members}
-                                            className="w-full max-w-[220px]"
+                                            key={enfant}
+                                            title={enfant}
+                                            members={membresDe(enfant)}
+                                            className="w-full"
                                         />
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
-                        </>
-                    )}
+                        ))}
+                    </div>
+
+                    {/* ===== PÔLES RATTACHÉS À LA DIRECTION GÉNÉRALE ===== */}
+                    <div className="flex justify-center mt-12">
+                        <div className="w-0.5 h-8 bg-gray-300" />
+                    </div>
+                    <div className="grid gap-4 md:gap-5 sm:grid-cols-3">
+                        {polesDirects.map((pole) => (
+                            <OrgBox
+                                key={pole}
+                                title={pole}
+                                members={membresDe(pole)}
+                                className="w-full"
+                            />
+                        ))}
+                    </div>
                 </div>
             </FadeIn>
         </div>

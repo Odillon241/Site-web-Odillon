@@ -1,6 +1,7 @@
 
 import dynamic from "next/dynamic"
 import { HeaderPro } from "@/components/layout/header-pro"
+import { SiteOpening } from "@/components/layout/site-opening"
 import { Footer } from "@/components/layout/footer"
 import { Hero } from "@/components/sections/hero"
 import { ServicesHome } from "@/components/sections/services-home"
@@ -86,6 +87,7 @@ export default async function Home({
 
   return (
     <>
+      <SiteOpening />
       <ScrollToTop />
       <HeaderPro />
       <main className="min-h-screen pt-[88px] md:pt-[104px]">

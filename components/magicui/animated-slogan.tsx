@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { m, useInView } from "framer-motion"
+import Image from "next/image"
+import { m, useInView, useReducedMotion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 interface AnimatedSloganProps {
@@ -10,31 +11,59 @@ interface AnimatedSloganProps {
   iconPosition?: number // Position de l'icône dans le texte (index du mot après lequel insérer l'icône)
 }
 
-// Icône de stylo animée
-function AnimatedPenIcon({ className }: { className?: string }) {
+interface AnimatedWritingHandProps {
+  className?: string
+  isWriting: boolean
+}
+
+function AnimatedWritingHand({ className, isWriting }: AnimatedWritingHandProps) {
+  const shouldReduceMotion = useReducedMotion()
+  const isMoving = isWriting && !shouldReduceMotion
+
   return (
-    <span className={cn("inline-flex items-center justify-center mx-3 align-middle", className)}>
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="w-[0.85em] h-[0.85em] animate-pen-write"
+    <m.span
+      initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+      animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+      transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+      className={cn(
+        "mx-1.5 inline-flex h-[1.8em] w-[1.55em] items-center justify-center align-middle sm:mx-2 md:h-[1.7em] md:w-[1.46em]",
+        className
+      )}
+      aria-hidden="true"
+    >
+      <m.span
+        animate={
+          isMoving
+            ? {
+                x: [0, 3, -1, 2, 0],
+                y: [0, -2, 1, -1, 0],
+                rotate: [0, -2, 1.2, -1, 0],
+              }
+            : { x: 0, y: 0, rotate: 0 }
+        }
+        transition={
+          isMoving
+            ? {
+                duration: 1.35,
+                repeat: Infinity,
+                ease: "easeInOut",
+                times: [0, 0.25, 0.5, 0.75, 1],
+              }
+            : { type: "spring", duration: 0.3, bounce: 0 }
+        }
+        className="inline-flex size-full origin-[18%_82%] will-change-transform"
       >
-        {/* Corps du stylo */}
-        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-        <path d="m15 5 4 4" />
-        {/* Trait d'écriture animé */}
-        <path
-          d="M2 22h8"
-          className="animate-writing-line"
-          strokeDasharray="8"
-          strokeDashoffset="8"
+        <Image
+          src="/images/hand-drawing-future-icon.png"
+          alt=""
+          width={805}
+          height={937}
+          sizes="(max-width: 640px) 40px, 84px"
+          className="size-full object-contain drop-shadow-[0_8px_12px_rgba(0,0,0,0.18)]"
+          draggable={false}
         />
-      </svg>
-    </span>
+      </m.span>
+    </m.span>
   )
 }
 
@@ -105,15 +134,7 @@ export function AnimatedSlogan({
       )}
     >
       <span className="drop-shadow-lg">{displayedBefore}</span>
-      {showIcon && (
-        <m.span
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3, type: "spring", stiffness: 200 }}
-        >
-          <AnimatedPenIcon />
-        </m.span>
-      )}
+      {showIcon && <AnimatedWritingHand isWriting={!isComplete} />}
       <span className="drop-shadow-lg">{displayedAfter}</span>
       {!isComplete && (
         <span

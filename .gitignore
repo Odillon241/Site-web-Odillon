@@ -57,3 +57,6 @@ conversion-log.txt
 
 # test scripts (keep in scripts/ if needed)
 test-*.js
+
+# worktrees git locaux créés par les agents (copies complètes du dépôt)
+.claude/worktrees/

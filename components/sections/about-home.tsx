@@ -4,36 +4,11 @@ import { useState, useEffect, useRef } from "react"
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
-import {
-  Gem,
-  Flame,
-  HeartHandshake,
-  Milestone
-} from "lucide-react"
+import { Milestone } from "lucide-react"
 import { m, useScroll, useSpring } from "framer-motion"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-
-const coreValues = [
-  {
-    icon: Gem,
-    title: "Talent",
-    description: "Notre équipe se définit par l'expression de ses compétences transversales matérialisées par le professionnalisme, la rigueur et la discipline.",
-    color: "#00a795"
-  },
-  {
-    icon: Flame,
-    title: "Challenge",
-    description: "Notre détermination et notre motivation à toujours proposer des solutions innovantes mieux adaptées aux besoins de nos clients.",
-    color: "#C4D82E"
-  },
-  {
-    icon: HeartHandshake,
-    title: "Proximité",
-    description: "Notre implication à fournir des services de qualité exceptionnelle aux clients.",
-    color: "#00a795"
-  }
-]
+import { valeurs, chapeauValeurs, presentation } from "@/lib/identite"
 
 export type JourneyItem = { year: string; title: string; description: string }
 
@@ -71,7 +46,7 @@ export function AboutHome() {
             <BlurFade delay={0.1}>
               <div className="inline-flex items-center space-x-3 text-odillon-teal font-medium mb-6">
                 <span className="w-12 h-[1px] bg-odillon-teal"></span>
-                <span className="uppercase tracking-widest text-sm font-semibold">À propos</span>
+                <span className="uppercase tracking-widest text-sm font-semibold">Qui sommes-nous</span>
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-odillon-dark mb-4 sm:mb-6 font-baskvill italic leading-tight">
                 Votre partenaire <br />
@@ -80,10 +55,10 @@ export function AboutHome() {
             </BlurFade>
             <BlurFade delay={0.2}>
               <p className="text-lg text-gray-600 leading-relaxed mb-4">
-                Fondée en mai 2017, ODILLON accompagne les entreprises dans leurs projets de conseil, d’ingénierie organisationnelle et d’optimisation de la performance.
+                {presentation.accroche}
               </p>
               <p className="text-lg text-gray-600 leading-relaxed mb-4">
-                Nous concevons et déployons des solutions fiables, innovantes et durables, adaptées aux réalités, aux enjeux et aux ambitions de chaque organisation. Notre mission est d&apos;aider les entreprises à renforcer leur efficacité opérationnelle, améliorer leur gouvernance et atteindre leurs objectifs stratégiques.
+                {presentation.mission}
               </p>
               <div className="flex flex-col gap-2 mb-8">
                 <div className="inline-flex items-center gap-2 text-odillon-teal font-semibold">
@@ -112,6 +87,7 @@ export function AboutHome() {
                       src={expertiseImageUrl}
                       alt="Équipe Odillon"
                       fill
+                      sizes="(min-width: 1024px) 50vw, 100vw"
                       className="object-cover"
                     />
                   ) : (
@@ -134,24 +110,29 @@ export function AboutHome() {
         <BlurFade delay={0.5}>
           <div className="text-center mb-8 sm:mb-12">
             <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 font-baskvill italic">Nos Valeurs Fondamentales</h3>
-            <p className="text-gray-500 max-w-2xl mx-auto">Les principes qui guident chaque action et façonnent notre engagement.</p>
+            <p className="text-gray-500 max-w-3xl mx-auto leading-relaxed">{chapeauValeurs}</p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {coreValues.map((value) => {
-              const ValueIcon = value.icon
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {valeurs.map((value) => {
               return (
                 <div key={value.title} className="p-6 rounded-lg bg-white/60 backdrop-blur-md border border-gray-200/80 shadow-lg shadow-slate-200/30 hover:shadow-xl hover:border-odillon-teal/30 hover:-translate-y-1 transition-all duration-300 text-center group">
+                  {/* Aquarelle du totem, reprise du livret d'accueil */}
                   <div
-                    className="w-12 h-12 mx-auto rounded-lg border-2 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
-                    style={{
-                      background: `linear-gradient(135deg, ${value.color}12 0%, ${value.color}06 100%)`,
-                      borderColor: `${value.color}25`
-                    }}
+                    className="w-20 h-20 mx-auto rounded-lg border overflow-hidden mb-4 group-hover:scale-105 transition-transform"
+                    style={{ borderColor: `${value.color}25` }}
                   >
-                    <ValueIcon className="w-6 h-6" style={{ color: value.color }} />
+                    <Image
+                      src={value.image}
+                      alt={`${value.title} — ${value.totem}`}
+                      width={160}
+                      height={160}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  <h4 className="font-bold text-gray-900 mb-2">{value.title}</h4>
+                  <h4 className="font-bold text-gray-900 mb-1">{value.title}</h4>
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-gray-400 mb-3">{value.totem}</p>
                   <p className="text-sm text-gray-600">{value.description}</p>
+                  <p className="mt-3 text-xs italic text-gray-500">{value.keywords}</p>
                 </div>
               )
             })}

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { affectationsPossibles } from "@/lib/identite"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -53,14 +54,13 @@ interface TeamMember {
     display_order: number
 }
 
-// Liste des pôles de l'organigramme
-const POLES_OPTIONS = [
-    { value: "Direction Générale", label: "Direction Générale" },
-    { value: "Pôle Administratif", label: "Pôle Administratif" },
-    { value: "Pôle Audit et Conformité", label: "Pôle Audit et Conformité" },
-    { value: "Pôle Qualité et Développement", label: "Pôle Qualité et Développement" },
-    { value: "Pôle Informatique et Communication", label: "Pôle Informatique et Communication" },
-]
+/* Affectations possibles, reprises de l'organigramme structurel de février 2026
+   (lib/identite.ts). Ce sont les seules valeurs que l'organigramme public sait
+   rattacher : un libellé saisi hors de cette liste rend le membre invisible. */
+const POLES_OPTIONS = affectationsPossibles.map((pole) => ({
+    value: pole,
+    label: pole,
+}))
 
 import {
     DndContext,
@@ -464,11 +464,25 @@ export function TeamTab() {
                                                 {pole.label}
                                             </SelectItem>
                                         ))}
+                                        {/* Ancien intitulé encore enregistré pour ce membre : on le
+                                            propose pour qu'il reste visible et puisse être reclassé. */}
+                                        {newMember.pole && !affectationsPossibles.includes(newMember.pole) && (
+                                            <SelectItem value={newMember.pole}>
+                                                {newMember.pole} — ancien intitulé, à reclasser
+                                            </SelectItem>
+                                        )}
                                     </SelectContent>
                                 </Select>
-                                <p className="text-xs text-gray-500">
-                                    Si un pôle est sélectionné, ce membre apparaîtra dans l'organigramme de la page À propos.
-                                </p>
+                                {newMember.pole && !affectationsPossibles.includes(newMember.pole) ? (
+                                    <p className="text-xs text-amber-700">
+                                        Ce membre est encore rattaché à un pôle de l'ancien organigramme.
+                                        Choisissez son entité dans la liste ci-dessus.
+                                    </p>
+                                ) : (
+                                    <p className="text-xs text-gray-500">
+                                        Si un pôle est sélectionné, ce membre apparaîtra dans l'organigramme de la page À propos.
+                                    </p>
+                                )}
                             </div>
 
                             <div className="space-y-2">

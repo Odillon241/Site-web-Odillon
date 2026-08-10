@@ -20,7 +20,7 @@ function LogoItem({ company }: { company: CompanyLogo }) {
             width={120}
             height={80}
             sizes="(max-width: 640px) 80px, (max-width: 768px) 100px, 120px"
-            className="object-contain max-w-full max-h-full"
+            className="object-contain w-auto h-auto max-w-full max-h-full"
             onError={() => setImageError(true)}
           />
         </div>

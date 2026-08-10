@@ -5,6 +5,7 @@ import Link from "next/link"
 // `m` et non `motion` : l'application est enveloppée dans un LazyMotion
 // (voir lib/motion-features.ts), qui rejette les composants `motion` au runtime.
 import { m } from "framer-motion"
+import { typoFr } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
@@ -70,6 +71,25 @@ function formatPeriode(f: Formation) {
     return `${formatDate(f.date_debut)} → ${formatDate(f.date_fin)}`
 }
 
+/** Période en toutes lettres, sans répéter le mois ni l'année quand ils sont
+    communs aux deux bornes : « du 14 au 15 septembre 2026 ». */
+function periodeEnPhrase(f: Formation) {
+    if (!f.date_fin || f.date_fin === f.date_debut) return `le ${formatDate(f.date_debut)}`
+
+    const debut = new Date(f.date_debut + "T00:00:00")
+    const fin = new Date(f.date_fin + "T00:00:00")
+    const memeAnnee = debut.getFullYear() === fin.getFullYear()
+    const memeMois = memeAnnee && debut.getMonth() === fin.getMonth()
+
+    const bornDebut = memeMois
+        ? debut.toLocaleDateString("fr-FR", { day: "numeric" })
+        : debut.toLocaleDateString("fr-FR", memeAnnee
+            ? { day: "numeric", month: "long" }
+            : { day: "numeric", month: "long", year: "numeric" })
+
+    return `du ${bornDebut} au ${formatDate(f.date_fin)}`
+}
+
 /** Récapitulatif de la session, affiché en permanence à côté du formulaire. */
 function RecapSession({ formation }: { formation: Formation }) {
     const restantes = placesRestantes(formation)
@@ -88,7 +108,7 @@ function RecapSession({ formation }: { formation: Formation }) {
                 )}
             </div>
 
-            <h2 className="text-xl font-semibold text-odillon-dark mb-2 text-balance">{formation.titre}</h2>
+            <h2 className="text-xl font-semibold text-odillon-dark mb-2 text-balance">{typoFr(formation.titre)}</h2>
             <p className="text-sm text-gray-600 leading-relaxed mb-5 text-pretty">{formation.description}</p>
 
             <div className="space-y-2.5 text-sm text-gray-600 border-t border-gray-100 pt-4">
@@ -201,6 +221,21 @@ export function FormationInscriptionForm({ formation }: { formation: Formation }
     const champs = formation.champs_personnalises || []
     const complet = estComplet(formation)
     const ouvert = (formation.inscriptions_ouvertes ?? true) && !complet && !ferme
+    const restantes = placesRestantes(formation)
+
+    // Les faits de la session en une phrase : le récapitulatif latéral porte
+    // déjà le détail tabulé, le hero n'a pas à le répéter en ligne d'icônes.
+    const phraseSession = [
+        `Session ${periodeEnPhrase(formation)}${formation.lieu ? `, à ${formation.lieu}` : ""}.`,
+        complet
+            ? "Toutes les places ont été réservées."
+            : restantes !== null && restantes > 0
+                ? `Il reste ${restantes} place${restantes > 1 ? "s" : ""}.`
+                : null,
+        ouvert ? "Remplissez le formulaire ci-dessous pour réserver la vôtre." : null,
+    ]
+        .filter(Boolean)
+        .join(" ")
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -317,219 +352,224 @@ export function FormationInscriptionForm({ formation }: { formation: Formation }
     }
 
     return (
-        <section className="od-section py-16 md:py-24">
-            <div className="od-container">
-                <m.div
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="max-w-3xl mb-10"
-                >
-                    <Link
-                        href="/calendrier-formations"
-                        className="od-eyebrow mb-4 hover:text-odillon-teal transition-colors inline-flex"
-                    >
-                        <ArrowLeft className="w-4 h-4" />
-                        Calendrier des formations
-                    </Link>
-                    <h1 className="od-heading-display text-3xl md:text-4xl mb-3 text-balance">
-                        Inscription à une formation
-                    </h1>
-                    <p className="text-base text-gray-600 text-pretty">
-                        Remplissez ce formulaire pour réserver votre place. Nous reviendrons vers vous pour confirmer
-                        votre inscription.
-                    </p>
-                </m.div>
+        <>
+            {/* ===== HERO =====
+                Le titre nomme la session : sur une page d'inscription, savoir à
+                quoi l'on s'inscrit prime sur le nom de l'action elle-même. */}
+            <header className="relative overflow-hidden">
+                <div aria-hidden="true" className="od-hero-grid absolute inset-0" />
 
-                <div className="grid lg:grid-cols-[1fr_minmax(0,380px)] gap-8 lg:gap-12 items-start">
-                    <m.div
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: 0.1 }}
-                        className="order-2 lg:order-1"
-                    >
-                        {!ouvert ? (
-                            <div className="od-surface-muted text-center py-16 px-6 border-dashed">
-                                <GraduationCap className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                                <h2 className="text-lg font-semibold text-odillon-dark mb-2">
-                                    {complet || ferme ? "Session complète" : "Inscriptions fermées"}
-                                </h2>
-                                <p className="text-gray-500 mb-6 text-pretty max-w-md mx-auto">
-                                    {complet || ferme
-                                        ? "Toutes les places de cette session ont été réservées. Contactez-nous pour être informé de la prochaine date."
-                                        : "Les inscriptions à cette session ne sont pas ouvertes pour le moment."}
-                                </p>
-                                <Button asChild className="bg-odillon-teal hover:bg-odillon-teal/90 text-white active:scale-[0.96] transition-transform">
-                                    <Link href={`/contact?formation=${encodeURIComponent(formation.titre)}`}>
-                                        Nous contacter
-                                    </Link>
-                                </Button>
-                            </div>
-                        ) : (
-                            <form onSubmit={handleSubmit} className="od-surface p-6 md:p-8 space-y-6">
-                                <div className="space-y-5">
-                                    <h2 className="text-lg font-semibold text-odillon-dark">Vos coordonnées</h2>
-
-                                    <div className="grid sm:grid-cols-2 gap-4">
-                                        <div className="space-y-2">
-                                            <label htmlFor="nom" className="text-sm font-medium text-gray-700">
-                                                Nom complet <span className="text-red-500">*</span>
-                                            </label>
-                                            <Input
-                                                id="nom"
-                                                value={form.nom}
-                                                onChange={(e) => setForm({ ...form, nom: e.target.value })}
-                                                required
-                                                autoComplete="name"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                                                Adresse e-mail <span className="text-red-500">*</span>
-                                            </label>
-                                            <Input
-                                                id="email"
-                                                type="email"
-                                                value={form.email}
-                                                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                                                required
-                                                autoComplete="email"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="grid sm:grid-cols-2 gap-4">
-                                        <div className="space-y-2">
-                                            <label htmlFor="telephone" className="text-sm font-medium text-gray-700">
-                                                Téléphone
-                                            </label>
-                                            <Input
-                                                id="telephone"
-                                                type="tel"
-                                                value={form.telephone}
-                                                onChange={(e) => setForm({ ...form, telephone: e.target.value })}
-                                                autoComplete="tel"
-                                                placeholder="+241 ..."
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label htmlFor="societe" className="text-sm font-medium text-gray-700">
-                                                Société
-                                            </label>
-                                            <Input
-                                                id="societe"
-                                                value={form.societe}
-                                                onChange={(e) => setForm({ ...form, societe: e.target.value })}
-                                                autoComplete="organization"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <label htmlFor="fonction" className="text-sm font-medium text-gray-700">
-                                            Fonction
-                                        </label>
-                                        <Input
-                                            id="fonction"
-                                            value={form.fonction}
-                                            onChange={(e) => setForm({ ...form, fonction: e.target.value })}
-                                            autoComplete="organization-title"
-                                        />
-                                    </div>
-                                </div>
-
-                                {champs.length > 0 && (
-                                    <div className="space-y-5 border-t border-gray-100 pt-6">
-                                        <h2 className="text-lg font-semibold text-odillon-dark">
-                                            Informations complémentaires
-                                        </h2>
-                                        {champs.map((champ) => (
-                                            <ChampDynamique
-                                                key={champ.id}
-                                                champ={champ}
-                                                valeur={reponses[champ.id]}
-                                                onChange={(v) => setReponses({ ...reponses, [champ.id]: v })}
-                                            />
-                                        ))}
-                                    </div>
-                                )}
-
-                                {formation.prix !== 0 && (
-                                    <div className="space-y-5 border-t border-gray-100 pt-6">
-                                        <h2 className="text-lg font-semibold text-odillon-dark">Règlement</h2>
-                                        <div className="space-y-2">
-                                            <label htmlFor="mode_paiement" className="text-sm font-medium text-gray-700">
-                                                Mode de règlement souhaité
-                                            </label>
-                                            <Select
-                                                value={form.mode_paiement}
-                                                onValueChange={(v) => setForm({ ...form, mode_paiement: v })}
-                                            >
-                                                <SelectTrigger id="mode_paiement">
-                                                    <SelectValue placeholder="Sélectionner" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {MODE_PAIEMENT_OPTIONS.map((m) => (
-                                                        <SelectItem key={m.value} value={m.value}>
-                                                            {m.label}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                            <p className="text-xs text-gray-500">
-                                                Le règlement s'effectue hors ligne. Les instructions vous seront
-                                                transmises par e-mail.
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {erreur && (
-                                    <m.div
-                                        initial={{ opacity: 0, y: -4 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                        className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4"
-                                        role="alert"
-                                    >
-                                        <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-                                        <p className="text-sm text-red-800 text-pretty">{erreur}</p>
-                                    </m.div>
-                                )}
-
-                                <Button
-                                    type="submit"
-                                    disabled={envoi}
-                                    className="w-full bg-odillon-teal hover:bg-odillon-teal/90 text-white h-11 gap-2 active:scale-[0.96] transition-transform"
-                                >
-                                    {envoi ? (
-                                        <>
-                                            <Loader2 className="w-4 h-4 animate-spin" />
-                                            Envoi en cours...
-                                        </>
-                                    ) : (
-                                        "Confirmer mon inscription"
-                                    )}
-                                </Button>
-
-                                <p className="text-xs text-gray-500 text-center text-pretty">
-                                    Vos données sont utilisées uniquement pour la gestion de votre inscription et ne sont
-                                    jamais transmises à des tiers.
-                                </p>
-                            </form>
-                        )}
-                    </m.div>
-
-                    <m.div
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: 0.2 }}
-                        className="order-1 lg:order-2"
-                    >
-                        <RecapSession formation={formation} />
-                    </m.div>
+                <div className="relative od-container py-10 md:py-14 lg:py-16">
+                    <div className="od-rise max-w-3xl">
+                        <Link
+                            href="/calendrier-formations"
+                            className="od-eyebrow inline-flex transition-colors hover:text-odillon-teal/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-odillon-teal"
+                        >
+                            <ArrowLeft className="w-4 h-4" />
+                            Calendrier des formations
+                        </Link>
+                        <h1 className="font-air not-italic mt-4 text-3xl md:text-4xl font-semibold leading-[1.15] tracking-[-0.01em] text-odillon-dark text-balance">
+                            {typoFr(formation.titre)}
+                        </h1>
+                        <p className="mt-4 max-w-[62ch] text-base leading-relaxed text-[#4A5C64] text-pretty">
+                            {phraseSession}
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </header>
+
+            <section className="od-section py-12 md:py-16">
+                <div className="od-container">
+                    <div className="grid lg:grid-cols-[1fr_minmax(0,380px)] gap-8 lg:gap-12 items-start">
+                        <m.div
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, delay: 0.1 }}
+                            className="order-2 lg:order-1"
+                        >
+                            {!ouvert ? (
+                                <div className="od-surface-muted text-center py-16 px-6 border-dashed">
+                                    <GraduationCap className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                    <h2 className="text-lg font-semibold text-odillon-dark mb-2">
+                                        {complet || ferme ? "Session complète" : "Inscriptions fermées"}
+                                    </h2>
+                                    <p className="text-gray-500 mb-6 text-pretty max-w-md mx-auto">
+                                        {complet || ferme
+                                            ? "Toutes les places de cette session ont été réservées. Contactez-nous pour être informé de la prochaine date."
+                                            : "Les inscriptions à cette session ne sont pas ouvertes pour le moment."}
+                                    </p>
+                                    <Button asChild className="bg-odillon-teal hover:bg-odillon-teal/90 text-white active:scale-[0.96] transition-transform">
+                                        <Link href={`/contact?formation=${encodeURIComponent(formation.titre)}`}>
+                                            Nous contacter
+                                        </Link>
+                                    </Button>
+                                </div>
+                            ) : (
+                                <form onSubmit={handleSubmit} className="od-surface p-6 md:p-8 space-y-6">
+                                    <div className="space-y-5">
+                                        <h2 className="text-lg font-semibold text-odillon-dark">Vos coordonnées</h2>
+
+                                        <div className="grid sm:grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label htmlFor="nom" className="text-sm font-medium text-gray-700">
+                                                    Nom complet <span className="text-red-500">*</span>
+                                                </label>
+                                                <Input
+                                                    id="nom"
+                                                    value={form.nom}
+                                                    onChange={(e) => setForm({ ...form, nom: e.target.value })}
+                                                    required
+                                                    autoComplete="name"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label htmlFor="email" className="text-sm font-medium text-gray-700">
+                                                    Adresse e-mail <span className="text-red-500">*</span>
+                                                </label>
+                                                <Input
+                                                    id="email"
+                                                    type="email"
+                                                    value={form.email}
+                                                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                                                    required
+                                                    autoComplete="email"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="grid sm:grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label htmlFor="telephone" className="text-sm font-medium text-gray-700">
+                                                    Téléphone
+                                                </label>
+                                                <Input
+                                                    id="telephone"
+                                                    type="tel"
+                                                    value={form.telephone}
+                                                    onChange={(e) => setForm({ ...form, telephone: e.target.value })}
+                                                    autoComplete="tel"
+                                                    placeholder="+241 ..."
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label htmlFor="societe" className="text-sm font-medium text-gray-700">
+                                                    Société
+                                                </label>
+                                                <Input
+                                                    id="societe"
+                                                    value={form.societe}
+                                                    onChange={(e) => setForm({ ...form, societe: e.target.value })}
+                                                    autoComplete="organization"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label htmlFor="fonction" className="text-sm font-medium text-gray-700">
+                                                Fonction
+                                            </label>
+                                            <Input
+                                                id="fonction"
+                                                value={form.fonction}
+                                                onChange={(e) => setForm({ ...form, fonction: e.target.value })}
+                                                autoComplete="organization-title"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {champs.length > 0 && (
+                                        <div className="space-y-5 border-t border-gray-100 pt-6">
+                                            <h2 className="text-lg font-semibold text-odillon-dark">
+                                                Informations complémentaires
+                                            </h2>
+                                            {champs.map((champ) => (
+                                                <ChampDynamique
+                                                    key={champ.id}
+                                                    champ={champ}
+                                                    valeur={reponses[champ.id]}
+                                                    onChange={(v) => setReponses({ ...reponses, [champ.id]: v })}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {formation.prix !== 0 && (
+                                        <div className="space-y-5 border-t border-gray-100 pt-6">
+                                            <h2 className="text-lg font-semibold text-odillon-dark">Règlement</h2>
+                                            <div className="space-y-2">
+                                                <label htmlFor="mode_paiement" className="text-sm font-medium text-gray-700">
+                                                    Mode de règlement souhaité
+                                                </label>
+                                                <Select
+                                                    value={form.mode_paiement}
+                                                    onValueChange={(v) => setForm({ ...form, mode_paiement: v })}
+                                                >
+                                                    <SelectTrigger id="mode_paiement">
+                                                        <SelectValue placeholder="Sélectionner" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {MODE_PAIEMENT_OPTIONS.map((m) => (
+                                                            <SelectItem key={m.value} value={m.value}>
+                                                                {m.label}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                                <p className="text-xs text-gray-500">
+                                                    Le règlement s'effectue hors ligne. Les instructions vous seront
+                                                    transmises par e-mail.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {erreur && (
+                                        <m.div
+                                            initial={{ opacity: 0, y: -4 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ duration: 0.2 }}
+                                            className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4"
+                                            role="alert"
+                                        >
+                                            <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                                            <p className="text-sm text-red-800 text-pretty">{erreur}</p>
+                                        </m.div>
+                                    )}
+
+                                    <Button
+                                        type="submit"
+                                        disabled={envoi}
+                                        className="w-full bg-odillon-teal hover:bg-odillon-teal/90 text-white h-11 gap-2 active:scale-[0.96] transition-transform"
+                                    >
+                                        {envoi ? (
+                                            <>
+                                                <Loader2 className="w-4 h-4 animate-spin" />
+                                                Envoi en cours...
+                                            </>
+                                        ) : (
+                                            "Confirmer mon inscription"
+                                        )}
+                                    </Button>
+
+                                    <p className="text-xs text-gray-500 text-center text-pretty">
+                                        Vos données sont utilisées uniquement pour la gestion de votre inscription et ne sont
+                                        jamais transmises à des tiers.
+                                    </p>
+                                </form>
+                            )}
+                        </m.div>
+
+                        <m.div
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, delay: 0.2 }}
+                            className="order-1 lg:order-2"
+                        >
+                            <RecapSession formation={formation} />
+                        </m.div>
+                    </div>
+                </div>
+            </section>
+        </>
     )
 }

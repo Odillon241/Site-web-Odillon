@@ -6,6 +6,13 @@ import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import { GridPattern } from "@/components/ui/grid-pattern"
 import { CtaBanner } from "@/components/sections/cta-banner"
 import { VideoSection } from "@/components/sections/video-section"
 import { VideosSection } from "@/components/sections/videos-section"
@@ -161,10 +168,21 @@ export function ServicesDetailed() {
   return (
     <section className="od-page relative overflow-x-clip">
       {/* Hero Section */}
-      <div className="od-section relative overflow-hidden py-16 md:py-20 lg:py-24" role="banner" aria-label="Section héro des offres">
-        {/* Background enrichi */}
+      <div className="od-section relative overflow-hidden bg-[#f7fafc] py-16 md:py-20 lg:py-24" role="banner" aria-label="Section héro des offres">
+        {/* Modern architectural background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(57,131,122,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(57,131,122,0.045)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:linear-gradient(to_bottom,black,transparent_78%)]" />
+          <GridPattern
+            width={64}
+            height={64}
+            x={-20}
+            y={-20}
+            className="absolute inset-0 fill-[#00a795]/[0.025] stroke-[#00a795]/[0.11] [mask-image:linear-gradient(to_bottom,black_5%,black_78%,transparent_100%)]"
+          />
+          <div className="absolute -right-36 -top-24 h-[32rem] w-[32rem] rounded-full border border-odillon-teal/10 bg-[radial-gradient(circle_at_center,rgba(0,167,149,0.10),rgba(0,167,149,0.025)_42%,transparent_68%)]" />
+          <div className="absolute -right-4 top-10 h-[21rem] w-[21rem] rounded-full border border-odillon-lime/15" />
+          <div className="absolute -left-28 -bottom-40 h-80 w-80 rounded-full bg-[radial-gradient(circle_at_center,rgba(196,216,46,0.13),transparent_68%)] blur-2xl" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.86)_0%,rgba(255,255,255,0.34)_52%,transparent_78%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white/80 to-transparent" />
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-odillon-teal/25 to-transparent" />
         </div>
 
@@ -281,18 +299,54 @@ export function ServicesDetailed() {
                         </div>
                       </div>
 
-                      <ul className="space-y-2.5 mb-5 relative z-10">
+                      <Accordion
+                        type="single"
+                        collapsible
+                        className="relative z-10 mb-5"
+                        aria-label={`Prestations ${service.title}`}
+                      >
                         {service.services.map((item) => (
-                          <li key={item.slug} className="flex gap-2.5 text-sm text-gray-700 leading-relaxed">
-                            <span
-                              className="mt-2 h-1.5 w-1.5 rounded-full flex-shrink-0"
-                              style={{ backgroundColor: service.color }}
-                              aria-hidden="true"
-                            />
-                            <span>{item.name}</span>
-                          </li>
+                          <AccordionItem key={item.slug} value={item.slug}>
+                            <AccordionTrigger>
+                              <span className="flex items-start gap-2.5 text-left">
+                                <span
+                                  className="mt-2 size-1.5 shrink-0 rounded-full"
+                                  style={{ backgroundColor: service.color }}
+                                  aria-hidden="true"
+                                />
+                                <span>{item.name}</span>
+                              </span>
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <div className="flex flex-col gap-3 pl-4">
+                                <p className="text-muted-foreground leading-relaxed">
+                                  {item.description}
+                                </p>
+                                <div className="flex flex-col gap-2">
+                                  <p className="text-xs font-semibold uppercase tracking-wide text-foreground">
+                                    Services proposés
+                                  </p>
+                                  <ul className="flex flex-col gap-2">
+                                    {item.details.map((detail) => (
+                                      <li
+                                        key={detail.title}
+                                        className="flex items-start gap-2 text-sm leading-relaxed text-muted-foreground"
+                                      >
+                                        <span
+                                          className="mt-2 size-1.5 shrink-0 rounded-full"
+                                          style={{ backgroundColor: service.color }}
+                                          aria-hidden="true"
+                                        />
+                                        <span>{detail.title}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
                         ))}
-                      </ul>
+                      </Accordion>
 
                       {/* Footer CTA */}
                       <div className="mt-auto pt-4 border-t border-gray-50 relative z-10">

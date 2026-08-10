@@ -4,11 +4,11 @@ const HeaderPro = dynamic(() => import("@/components/layout/header-pro").then(mo
 import { Footer } from "@/components/layout/footer"
 import { createClient } from "@/lib/supabase/server"
 import { BlogPageClient } from "@/components/blog/blog-page-client"
-import { NewsletterSection } from "@/components/sections/newsletter-section"
+import { BlogNewsletter } from "@/components/blog/blog-newsletter"
 
 export const metadata: Metadata = {
-    title: "Blog | Odillon - Actualités et Conseils en Stratégie d'Entreprise",
-    description: "Découvrez nos derniers articles sur la gouvernance, le management des risques, les ressources humaines et bien plus.",
+    title: "Publications | Odillon - Analyses et repères en ingénierie d'entreprises",
+    description: "Analyses, repères méthodologiques et retours de mission de nos consultants sur la gouvernance, la maîtrise des risques et le capital humain.",
 }
 
 export default async function BlogPage() {
@@ -29,9 +29,9 @@ export default async function BlogPage() {
     return (
         <>
             <HeaderPro />
-            <main className="min-h-screen pt-[88px] md:pt-[104px] bg-gray-50/30">
+            <main className="min-h-screen pt-[88px] md:pt-[104px]">
                 <BlogPageClient articles={articles || []} settings={settings} />
-                <NewsletterSection />
+                <BlogNewsletter />
             </main>
             <Footer />
         </>

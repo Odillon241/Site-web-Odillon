@@ -2,6 +2,7 @@
 
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { Button } from "@/components/ui/button"
+import { m, useReducedMotion } from "framer-motion"
 import Image from "next/image"
 import {
     Search,
@@ -10,11 +11,9 @@ import {
     TrendingDown,
     ClipboardList,
     Eye,
-    ArrowRight,
-    Check
+    ArrowRight
 } from "lucide-react"
 import Link from "next/link"
-import { cn } from "@/lib/utils"
 
 const riskManagementSteps = [
     {
@@ -62,6 +61,33 @@ const riskManagementSteps = [
 ]
 
 export function RiskManagementSection() {
+    const shouldReduceMotion = useReducedMotion()
+
+    const gridVariants = {
+        hidden: {},
+        visible: {
+            transition: {
+                staggerChildren: shouldReduceMotion ? 0 : 0.1,
+                delayChildren: shouldReduceMotion ? 0 : 0.08
+            }
+        }
+    }
+
+    const cardVariants = {
+        hidden: shouldReduceMotion
+            ? { opacity: 1 }
+            : { opacity: 0, y: 24, filter: "blur(4px)" },
+        visible: {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            transition: {
+                duration: shouldReduceMotion ? 0 : 0.5,
+                ease: [0.22, 1, 0.36, 1] as const
+            }
+        }
+    }
+
     return (
         <section id="risques" className="relative py-20 sm:py-28 lg:py-36 overflow-hidden bg-white">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
@@ -130,47 +156,71 @@ export function RiskManagementSection() {
                         </h3>
                     </BlurFade>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <m.div
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        variants={gridVariants}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, amount: 0.12 }}
+                    >
                         {riskManagementSteps.map((step, idx) => {
                             const Icon = step.icon
                             return (
-                                <BlurFade
+                                <m.article
                                     key={step.title}
-                                    delay={0.1 + (0.05 * idx)}
+                                    variants={cardVariants}
+                                    whileHover={shouldReduceMotion ? undefined : { y: -6 }}
+                                    transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+                                    className="group relative h-full overflow-hidden rounded-2xl bg-[linear-gradient(145deg,rgba(255,255,255,0.98),rgba(248,250,252,0.92))] p-8 shadow-[0_1px_0_rgba(15,23,42,0.05),0_12px_36px_rgba(15,23,42,0.045)] ring-1 ring-inset ring-slate-200/70 transition-[box-shadow,background-color] duration-300 hover:bg-white hover:shadow-[0_1px_0_rgba(15,23,42,0.05),0_22px_50px_rgba(15,23,42,0.10)]"
                                 >
-                                    <div className="group relative bg-slate-50/50 hover:bg-white border border-slate-100 hover:border-slate-200 p-8 rounded-2xl transition-all duration-300">
-                                        <div className="flex items-start justify-between mb-6">
-                                            <div 
-                                                className="w-10 h-10 rounded-lg flex items-center justify-center transition-colors"
-                                                style={{ backgroundColor: `${step.color}10`, color: step.color }}
-                                            >
-                                                <Icon className="w-5 h-5" strokeWidth={1.5} />
-                                            </div>
-                                            <span className="text-[10px] font-black text-slate-200 group-hover:text-odillon-teal/20 transition-colors uppercase tracking-widest">
-                                                Étape 0{idx + 1}
-                                            </span>
+                                    <m.span
+                                        aria-hidden="true"
+                                        className="absolute inset-x-8 top-0 h-[2px] origin-left rounded-full"
+                                        style={{ backgroundColor: step.color }}
+                                        variants={{
+                                            hidden: { scaleX: shouldReduceMotion ? 1 : 0, opacity: 0.25 },
+                                            visible: {
+                                                scaleX: 1,
+                                                opacity: 0.8,
+                                                transition: { duration: shouldReduceMotion ? 0 : 0.45, delay: shouldReduceMotion ? 0 : 0.16 }
+                                            }
+                                        }}
+                                    />
+
+                                    <div className="flex items-start justify-between mb-6">
+                                        <div
+                                            className="flex h-11 w-11 items-center justify-center rounded-xl ring-1 ring-inset ring-black/[0.035] transition-[transform,box-shadow] duration-300 group-hover:-rotate-3 group-hover:scale-105 group-hover:shadow-md"
+                                            style={{ backgroundColor: `${step.color}12`, color: step.color }}
+                                        >
+                                            <Icon className="w-5 h-5" strokeWidth={1.5} />
                                         </div>
-
-                                        <h4 className="text-lg font-bold text-slate-900 mb-3 font-baskvill italic group-hover:text-odillon-teal transition-colors">
-                                            {step.title}
-                                        </h4>
-                                        <p className="text-sm text-slate-500 leading-relaxed mb-6">
-                                            {step.description}
-                                        </p>
-
-                                        <ul className="space-y-2.5">
-                                            {step.features.map((feature, i) => (
-                                                <li key={i} className="flex items-center text-xs font-medium text-slate-600">
-                                                    <div className="w-1 h-1 rounded-full mr-3 shrink-0" style={{ backgroundColor: step.color }} />
-                                                    {feature}
-                                                </li>
-                                            ))}
-                                        </ul>
+                                        <span className="font-mono text-[10px] font-bold tabular-nums text-slate-300 transition-colors duration-300 group-hover:text-odillon-teal/45 uppercase tracking-[0.16em]">
+                                            Étape 0{idx + 1}
+                                        </span>
                                     </div>
-                                </BlurFade>
+
+                                    <h4 className="text-lg font-bold text-slate-900 mb-3 font-baskvill italic group-hover:text-odillon-teal transition-colors duration-300">
+                                        {step.title}
+                                    </h4>
+                                    <p className="text-sm text-slate-500 leading-relaxed mb-6 text-pretty">
+                                        {step.description}
+                                    </p>
+
+                                    <ul className="space-y-2.5">
+                                        {step.features.map((feature, i) => (
+                                            <li key={i} className="flex items-center text-xs font-medium text-slate-600">
+                                                <span
+                                                    className="mr-3 h-1 w-1 shrink-0 rounded-full transition-transform duration-300 group-hover:scale-150"
+                                                    style={{ backgroundColor: step.color }}
+                                                />
+                                                {feature}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </m.article>
                             )
                         })}
-                    </div>
+                    </m.div>
                 </div>
             </div>
         </section>

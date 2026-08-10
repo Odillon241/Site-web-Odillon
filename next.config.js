@@ -71,7 +71,10 @@ const nextConfig = {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
+    // Les fichiers Supabase Storage sont horodatés dans leur nom : une nouvelle
+    // photo produit une nouvelle URL. Un TTL long évite de re-télécharger les
+    // mêmes images à chaque rendu (source des TimeoutError de l'optimiseur).
+    minimumCacheTTL: 604800, // 7 jours
   },
   async redirects() {
     return [
