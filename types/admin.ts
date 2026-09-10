@@ -5,6 +5,7 @@ export interface Photo {
     details: string | null
     location: string | null
     month: number | null
+    year?: number | null
     theme_id: string | null
     section_id: string | null
     is_active: boolean

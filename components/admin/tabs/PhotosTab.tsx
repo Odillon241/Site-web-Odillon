@@ -123,6 +123,7 @@ export function PhotosTab() {
 
     // Filters
     const [searchTerm, setSearchTerm] = useState("")
+    const [filterYear, setFilterYear] = useState<number | null>(null)
     const [filterMonth, setFilterMonth] = useState<number | null>(null)
     const [filterStatus, setFilterStatus] = useState<string>("all")
 
@@ -138,6 +139,7 @@ export function PhotosTab() {
         details: "" as string,
         location: "" as string,
         month: null as number | null,
+        year: new Date().getFullYear() as number | null,
         theme_id: null as string | null,
         section_id: null as string | null,
         activity_type: null as string | null
@@ -150,6 +152,9 @@ export function PhotosTab() {
         "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
         "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
     ]
+
+    const currentYear = new Date().getFullYear()
+    const years = Array.from({ length: 15 }, (_, i) => currentYear - i)
 
     // ─────────────────────────────────────────────────────────────────────────
     // EFFECTS
@@ -188,6 +193,7 @@ export function PhotosTab() {
         try {
             setLoading(true)
             const params = new URLSearchParams()
+            if (filterYear) params.append("year", filterYear.toString())
             if (filterMonth) params.append("month", filterMonth.toString())
             params.append("section", activeSection)
 
@@ -390,6 +396,7 @@ export function PhotosTab() {
                             details: newPhoto.details || null,
                             location: newPhoto.location || null,
                             month: newPhoto.month,
+                            year: newPhoto.year,
                             theme_id: newPhoto.theme_id || null,
                             activity_type: newPhoto.activity_type || null,
                             section_id: activeSection,
@@ -398,7 +405,10 @@ export function PhotosTab() {
                         })
                     })
 
-                    if (!photoRes.ok) throw new Error(`Erreur création ${file.name}`)
+                    if (!photoRes.ok) {
+                        const errorData = await photoRes.json().catch(() => ({}))
+                        throw new Error(`Erreur création ${file.name}: ${errorData.error || photoRes.statusText}`)
+                    }
 
                     successCount++
                 } catch (err) {
@@ -418,6 +428,7 @@ export function PhotosTab() {
                     details: "",
                     location: "",
                     month: null,
+                    year: new Date().getFullYear(),
                     theme_id: null,
                     section_id: null,
                     activity_type: null
@@ -626,6 +637,7 @@ export function PhotosTab() {
                     description: editingPhoto.description,
                     details: editingPhoto.details,
                     month: editingPhoto.month,
+                    year: editingPhoto.year,
                     theme_id: editingPhoto.theme_id,
                     location: editingPhoto.location,
                     activity_type: editingPhoto.activity_type
@@ -697,6 +709,9 @@ export function PhotosTab() {
         if (searchTerm && !photo.description.toLowerCase().includes(searchTerm.toLowerCase())) {
             return false
         }
+        if (filterYear && photo.year !== filterYear) {
+            return false
+        }
         if (filterMonth && photo.month !== filterMonth) {
             return false
         }
@@ -713,7 +728,7 @@ export function PhotosTab() {
     // This gives admin control instead of adapting to database order
 
     // "Album list" view = stacked album cards (no individual-photo selection here)
-    const isAlbumListView = activeSection === 'phototheque' && !selectedAlbum && !searchTerm && !filterMonth && filterStatus === 'all'
+    const isAlbumListView = activeSection === 'phototheque' && !selectedAlbum && !searchTerm && !filterYear && !filterMonth && filterStatus === 'all'
 
     return (
         <div className="space-y-6">
@@ -903,23 +918,63 @@ export function PhotosTab() {
                                     </div>
                                 )}
 
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium">Mois (Optionnel)</label>
-                                        <Select
-                                            value={newPhoto.month?.toString()}
-                                            onValueChange={(val) => setNewPhoto({ ...newPhoto, month: parseInt(val) })}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Choisir" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {months.map((m, i) => (
-                                                    <SelectItem key={i} value={(i + 1).toString()}>{m}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                {activeSection === 'phototheque' && (
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium">Année *</label>
+                                            <Select
+                                                value={newPhoto.year?.toString() || ""}
+                                                onValueChange={(val) => setNewPhoto({ ...newPhoto, year: parseInt(val) })}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Choisir" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {years.map((y) => (
+                                                        <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium">Mois (Optionnel)</label>
+                                            <Select
+                                                value={newPhoto.month?.toString() || "none"}
+                                                onValueChange={(val) => setNewPhoto({ ...newPhoto, month: val === "none" ? null : parseInt(val) })}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Choisir" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="none">Aucun</SelectItem>
+                                                    {months.map((m, i) => (
+                                                        <SelectItem key={i} value={(i + 1).toString()}>{m}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
                                     </div>
+                                )}
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    {activeSection === 'hero' && (
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium">Mois (Optionnel)</label>
+                                            <Select
+                                                value={newPhoto.month?.toString()}
+                                                onValueChange={(val) => setNewPhoto({ ...newPhoto, month: parseInt(val) })}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Choisir" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {months.map((m, i) => (
+                                                        <SelectItem key={i} value={(i + 1).toString()}>{m}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    )}
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium">Thème (Optionnel)</label>
                                         <Select
@@ -998,6 +1053,20 @@ export function PhotosTab() {
                             />
                         </div>
 
+                        {activeSection === 'phototheque' && (
+                            <Select value={filterYear?.toString() || "all"} onValueChange={(val) => setFilterYear(val === "all" ? null : parseInt(val))}>
+                                <SelectTrigger className="w-[120px] border-slate-200 bg-slate-50/80">
+                                    <SelectValue placeholder="Année" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">Toutes les années</SelectItem>
+                                    {years.map((y) => (
+                                        <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        )}
+
                         <Select value={filterMonth?.toString() || "all"} onValueChange={(val) => setFilterMonth(val === "all" ? null : parseInt(val))}>
                             <SelectTrigger className="w-[140px] border-slate-200 bg-slate-50/80">
                                 <SelectValue placeholder="Mois" />
@@ -1021,12 +1090,13 @@ export function PhotosTab() {
                             </SelectContent>
                         </Select>
 
-                        {(searchTerm || filterMonth || filterStatus !== 'all') && (
+                        {(searchTerm || filterYear || filterMonth || filterStatus !== 'all') && (
                             <Button
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => {
                                     setSearchTerm("")
+                                    setFilterYear(null)
                                     setFilterMonth(null)
                                     setFilterStatus("all")
                                 }}
@@ -1175,12 +1245,12 @@ export function PhotosTab() {
                                     </div>
                                     <h3 className="text-lg font-medium text-gray-900">Aucune photo</h3>
                                     <p className="text-gray-500 max-w-sm mt-1">
-                                        {searchTerm || filterMonth
+                                        {searchTerm || filterYear || filterMonth
                                             ? "Aucun résultat pour vos filtres. Essayez de réinitialiser la recherche."
                                             : "Cette section est vide pour le moment. Ajoutez votre première photo !"}
                                     </p>
-                                    {(searchTerm || filterMonth) && (
-                                        <Button variant="link" onClick={() => { setSearchTerm(""); setFilterMonth(null); }} className="mt-2 text-odillon-teal">
+                                    {(searchTerm || filterYear || filterMonth) && (
+                                        <Button variant="link" onClick={() => { setSearchTerm(""); setFilterYear(null); setFilterMonth(null); }} className="mt-2 text-odillon-teal">
                                             Effacer les filtres
                                         </Button>
                                     )}
@@ -1285,10 +1355,10 @@ export function PhotosTab() {
                                                 </p>
 
                                                 <div className="flex flex-wrap gap-1.5 mt-2">
-                                                    {photo.month && (
+                                                    {(photo.month || photo.year) && (
                                                         <Badge variant="outline" className="h-5 border-slate-200 bg-slate-50 py-0 text-[10px] font-normal text-slate-600">
                                                             <CalendarDays className="w-3 h-3 mr-1 text-odillon-teal" />
-                                                            {months[photo.month - 1]}
+                                                            {photo.month ? `${months[photo.month - 1]} ${photo.year ?? ""}`.trim() : photo.year}
                                                         </Badge>
                                                     )}
                                                     {photo.theme_id && (
@@ -1390,23 +1460,64 @@ export function PhotosTab() {
                                 />
                             </div>
 
-                            <div className="space-y-2">
-                                <Label>Mois</Label>
-                                <Select
-                                    value={editingPhoto.month?.toString() || "none"}
-                                    onValueChange={(val) => setEditingPhoto({ ...editingPhoto, month: val === "none" ? null : parseInt(val) })}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Mois" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="none">Aucun</SelectItem>
-                                        {months.map((m, i) => (
-                                            <SelectItem key={i} value={(i + 1).toString()}>{m}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
+                            {activeSection === 'phototheque' && (
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label>Année</Label>
+                                        <Select
+                                            value={editingPhoto.year?.toString() || "none"}
+                                            onValueChange={(val) => setEditingPhoto({ ...editingPhoto, year: val === "none" ? null : parseInt(val) })}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Année" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="none">Aucune</SelectItem>
+                                                {years.map((y) => (
+                                                    <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Mois</Label>
+                                        <Select
+                                            value={editingPhoto.month?.toString() || "none"}
+                                            onValueChange={(val) => setEditingPhoto({ ...editingPhoto, month: val === "none" ? null : parseInt(val) })}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Mois" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="none">Aucun</SelectItem>
+                                                {months.map((m, i) => (
+                                                    <SelectItem key={i} value={(i + 1).toString()}>{m}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeSection === 'hero' && (
+                                <div className="space-y-2">
+                                    <Label>Mois</Label>
+                                    <Select
+                                        value={editingPhoto.month?.toString() || "none"}
+                                        onValueChange={(val) => setEditingPhoto({ ...editingPhoto, month: val === "none" ? null : parseInt(val) })}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Mois" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="none">Aucun</SelectItem>
+                                            {months.map((m, i) => (
+                                                <SelectItem key={i} value={(i + 1).toString()}>{m}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            )}
 
                             <div className="space-y-2">
                                 <Label>Thème</Label>
@@ -1672,10 +1783,14 @@ export function PhotosTab() {
                                                     <span>{selectedPhotoForPreview.location}</span>
                                                 </div>
                                             )}
-                                            {selectedPhotoForPreview.month && (
+                                            {(selectedPhotoForPreview.month || selectedPhotoForPreview.year) && (
                                                 <div className="flex items-center gap-2">
                                                     <CalendarDays className="w-4 h-4" />
-                                                    <span>{["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"][selectedPhotoForPreview.month - 1]}</span>
+                                                    <span>
+                                                        {selectedPhotoForPreview.month
+                                                            ? `${["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"][selectedPhotoForPreview.month - 1]} ${selectedPhotoForPreview.year ?? ""}`.trim()
+                                                            : selectedPhotoForPreview.year}
+                                                    </span>
                                                 </div>
                                             )}
                                             {selectedPhotoForPreview.activity_type && (

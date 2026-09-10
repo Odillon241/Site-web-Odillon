@@ -7,7 +7,9 @@ export const dynamic = 'force-dynamic'
 // GET - Récupérer toutes les photos
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
+
   const month = searchParams.get('month')
+  const year = searchParams.get('year')
   const theme = searchParams.get('theme')
   const active = searchParams.get('active')
   const section = searchParams.get('section')
@@ -23,6 +25,11 @@ export async function GET(request: Request) {
   // Filtrer par statut actif
   if (active === 'true') {
     query = query.eq('is_active', true)
+  }
+
+  // Filtrer par année
+  if (year) {
+    query = query.eq('year', parseInt(year))
   }
 
   // Filtrer par mois
@@ -43,9 +50,15 @@ export async function GET(request: Request) {
   // Filtrer par section
   if (section) {
     if (section === 'hero') {
-      query = query.eq('section_id', 'a2aca9ff-af21-4e5c-8f5a-89d00c5a671b')
+      query = query.eq(
+        'section_id',
+        'a2aca9ff-af21-4e5c-8f5a-89d00c5a671b'
+      )
     } else if (section === 'phototheque') {
-      query = query.eq('section_id', 'e6032db2-f94e-4a09-9de4-aab229687219')
+      query = query.eq(
+        'section_id',
+        'e6032db2-f94e-4a09-9de4-aab229687219'
+      )
     } else {
       query = query.eq('section_id', section)
     }
@@ -54,7 +67,10 @@ export async function GET(request: Request) {
   const { data, error } = await query
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    )
   }
 
   return NextResponse.json({ photos: data })
@@ -65,16 +81,48 @@ export async function POST(request: Request) {
   const supabase = await createClient()
 
   // Vérifier l'authentification
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   if (!user) {
-    return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+    return NextResponse.json(
+      { error: 'Non authentifié' },
+      { status: 401 }
+    )
   }
 
   const body = await request.json()
 
+  // Vérifier que l'année est présente
+  if (body.year === null || body.year === undefined || body.year === '') {
+    return NextResponse.json(
+      { error: "L'année de l'événement est obligatoire." },
+      { status: 400 }
+    )
+  }
+
+  // Conversion propre des valeurs numériques
+  body.year = Number(body.year)
+
+  if (body.month !== null && body.month !== undefined && body.month !== '') {
+    body.month = Number(body.month)
+  } else {
+    body.month = null
+  }
+
+  // La colonne 'day' n'existe pas dans la table 'photos' :
+  // on ignore toute valeur envoyée pour éviter une erreur Postgrest.
+  delete body.day
+
   // Map section slugs to UUIDs
-  if (body.section_id === 'hero') body.section_id = 'a2aca9ff-af21-4e5c-8f5a-89d00c5a671b'
-  if (body.section_id === 'phototheque') body.section_id = 'e6032db2-f94e-4a09-9de4-aab229687219'
+  if (body.section_id === 'hero') {
+    body.section_id = 'a2aca9ff-af21-4e5c-8f5a-89d00c5a671b'
+  }
+
+  if (body.section_id === 'phototheque') {
+    body.section_id = 'e6032db2-f94e-4a09-9de4-aab229687219'
+  }
 
   const { data, error } = await supabase
     .from('photos')
@@ -83,12 +131,17 @@ export async function POST(request: Request) {
     .single()
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    )
   }
 
   revalidateTag('photos', 'max')
   revalidateTag('active-photos', 'max')
 
-  return NextResponse.json({ photo: data }, { status: 201 })
+  return NextResponse.json(
+    { photo: data },
+    { status: 201 }
+  )
 }
-
