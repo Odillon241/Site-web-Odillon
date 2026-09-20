@@ -48,7 +48,17 @@ export async function POST(request: NextRequest) {
     const timestamp = Date.now()
     const fileName = `${timestamp}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
 
-    const bucketName = (formData.get('bucket') as string) || 'hero-photos'
+    // Liste blanche des buckets Storage utilisables depuis cet endpoint :
+    // n'importe quel nom de bucket ne doit pas pouvoir être fourni par le client.
+    const ALLOWED_BUCKETS = ['hero-photos', 'logos']
+    const requestedBucket = (formData.get('bucket') as string) || 'hero-photos'
+    if (!ALLOWED_BUCKETS.includes(requestedBucket)) {
+      return NextResponse.json(
+        { error: 'Bucket de stockage invalide' },
+        { status: 400 }
+      )
+    }
+    const bucketName = requestedBucket
 
     // Upload vers Supabase Storage
     console.log(`Uploading to bucket: ${bucketName}, filename: ${fileName}`)

@@ -1,12 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
 
 /**
  * Route de diagnostic pour vérifier les headers en production
  * Accessible via: GET /api/debug-headers
- * 
- * Utile pour déboguer les problèmes de sous-domaine
+ *
+ * Utile pour déboguer les problèmes de sous-domaine.
+ * Réservée aux utilisateurs authentifiés : elle expose des détails
+ * internes de routage (host, headers de proxy, NODE_ENV).
  */
 export async function GET(request: NextRequest) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+  }
+
   // Récupérer tous les headers pertinents pour le routage
   const headers: Record<string, string | null> = {
     'host': request.headers.get('host'),

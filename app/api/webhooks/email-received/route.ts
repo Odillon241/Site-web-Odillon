@@ -162,28 +162,33 @@ export async function POST(request: NextRequest) {
     const headersList = await headers()
     const webhookSecret = process.env.RESEND_WEBHOOK_SECRET
 
-    if (webhookSecret) {
-      const svixId = headersList.get('svix-id')
-      const svixTimestamp = headersList.get('svix-timestamp')
-      const svixSignature = headersList.get('svix-signature')
+    if (!webhookSecret) {
+      // Sans secret configuré, impossible de vérifier l'authenticité de la
+      // requête : elle écrirait en base via la service role key sans aucun
+      // contrôle. On refuse plutôt que d'accepter en clair (fail closed).
+      console.error('[SECURITY] RESEND_WEBHOOK_SECRET non configuré - webhook refusé')
+      return NextResponse.json(
+        { error: 'Webhook not configured' },
+        { status: 503 }
+      )
+    }
 
-      // Construire la signature complète
-      const fullSignature = svixTimestamp && svixSignature
-        ? `t=${svixTimestamp},${svixSignature}`
-        : null
+    const svixTimestamp = headersList.get('svix-timestamp')
+    const svixSignature = headersList.get('svix-signature')
 
-      const isValid = await verifyWebhookSignature(rawBody, fullSignature, webhookSecret)
+    // Construire la signature complète
+    const fullSignature = svixTimestamp && svixSignature
+      ? `t=${svixTimestamp},${svixSignature}`
+      : null
 
-      if (!isValid) {
-        logSecurityEvent('webhook_invalid', clientIP, 'Signature webhook invalide')
-        return NextResponse.json(
-          { error: 'Invalid webhook signature' },
-          { status: 401 }
-        )
-      }
-    } else {
-      // En production, la signature devrait être obligatoire
-      console.warn('[SECURITY] RESEND_WEBHOOK_SECRET non configuré - webhook non vérifié')
+    const isValid = await verifyWebhookSignature(rawBody, fullSignature, webhookSecret)
+
+    if (!isValid) {
+      logSecurityEvent('webhook_invalid', clientIP, 'Signature webhook invalide')
+      return NextResponse.json(
+        { error: 'Invalid webhook signature' },
+        { status: 401 }
+      )
     }
 
     // 4. Parser le body

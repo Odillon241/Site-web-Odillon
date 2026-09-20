@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { createApi } from 'unsplash-js'
 import { z } from 'zod'
+import { createClient } from '@/lib/supabase/server'
 
 // Schema for the AI response
 const ArticleSchema = z.object({
@@ -17,6 +18,12 @@ const ArticlesResponseSchema = z.object({
 
 export async function POST(req: Request) {
     try {
+        const supabase = await createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) {
+            return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+        }
+
         const { text } = await req.json()
 
         if (!text) {
