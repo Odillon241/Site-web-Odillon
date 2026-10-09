@@ -145,6 +145,11 @@ function SortableVideoCard({ video, onEdit, onDelete }: SortableVideoCardProps) 
                                                 Section: {video.section}
                                             </Badge>
                                         )}
+                                        {video.video_date && (
+                                            <Badge variant="secondary" className="text-xs bg-slate-100 text-slate-700 border border-slate-200">
+                                                {new Date(video.video_date + "T00:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                                            </Badge>
+                                        )}
                                         <Badge variant={video.is_active ? "default" : "outline"} className={video.is_active ? "bg-emerald-600 text-white hover:bg-emerald-600/90" : "border-slate-200 bg-white text-slate-600"}>
                                             {video.is_active ? "Actif" : "Inactif"}
                                         </Badge>
@@ -200,6 +205,7 @@ export function VideosTab() {
         presenter_name: string
         presenter_position: string
         activity_type: string
+        video_date: string
     }>({
         title: "",
         url: "",
@@ -212,7 +218,8 @@ export function VideosTab() {
         source: "url",
         presenter_name: "",
         presenter_position: "",
-        activity_type: ""
+        activity_type: "",
+        video_date: ""
     });
 
     const sensors = useSensors(
@@ -337,7 +344,8 @@ export function VideosTab() {
             source: "url",
             presenter_name: "",
             presenter_position: "",
-            activity_type: ""
+            activity_type: "",
+            video_date: ""
         });
         setEditingVideo(null);
     }
@@ -363,7 +371,8 @@ export function VideosTab() {
                 section: formData.section && formData.section !== "none" ? formData.section : null,
                 presenter_name: formData.presenter_name || null,
                 presenter_position: formData.presenter_position || null,
-                activity_type: formData.activity_type && formData.activity_type !== "none" ? formData.activity_type : null
+                activity_type: formData.activity_type && formData.activity_type !== "none" ? formData.activity_type : null,
+                video_date: formData.video_date || null
             }
 
             const isEditing = !!editingVideo;
@@ -423,7 +432,8 @@ export function VideosTab() {
             source: video.type === 'direct' ? 'file' : 'url',
             presenter_name: video.presenter_name || "",
             presenter_position: video.presenter_position || "",
-            activity_type: video.activity_type || ""
+            activity_type: video.activity_type || "",
+            video_date: video.video_date || ""
         });
         setIsAddDialogOpen(true);
     };
@@ -667,6 +677,18 @@ export function VideosTab() {
                                     </SelectContent>
                                 </Select>
                             </div>
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label>Date (Optionnel)</Label>
+                            <Input
+                                type="date"
+                                value={formData.video_date}
+                                onChange={(e) => setFormData({ ...formData, video_date: e.target.value })}
+                            />
+                            <p className="text-xs text-gray-500">
+                                Pour Monday Motivation : la date de la semaine concernée. Sert à classer les vidéos par ordre chronologique.
+                            </p>
                         </div>
 
                         <div className="grid gap-2">

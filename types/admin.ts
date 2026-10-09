@@ -39,6 +39,8 @@ export interface Video {
     presenter_name?: string | null
     presenter_position?: string | null
     activity_type?: string | null
+    video_date?: string | null
+    created_at?: string
 }
 
 export interface PhotoSection {

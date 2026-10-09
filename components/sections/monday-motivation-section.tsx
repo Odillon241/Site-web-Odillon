@@ -1,12 +1,13 @@
 "use client"
 
 import { useMemo } from "react"
+import Link from "next/link"
 import { Video } from "@/types/admin"
 import { VideoPlayer } from "@/components/ui/video-player"
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, Sparkles } from "lucide-react"
+import { Calendar, Sparkles, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface MondayMotivationSectionProps {
@@ -14,7 +15,7 @@ interface MondayMotivationSectionProps {
   className?: string
 }
 
-function getWeekInfo(): string {
+function getCurrentWeekInfo(): string {
   const now = new Date()
   const dayOfWeek = now.getDay()
   const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek
@@ -29,7 +30,16 @@ function getWeekInfo(): string {
 }
 
 export function MondayMotivationSection({ video, className }: MondayMotivationSectionProps) {
-  const weekInfo = useMemo(() => getWeekInfo(), [])
+  // Si la vidéo a une date renseignée, on l'affiche telle quelle (elle peut
+  // dater d'une semaine passée) ; sinon on retombe sur "cette semaine".
+  const currentWeekInfo = useMemo(() => getCurrentWeekInfo(), [])
+  const weekInfo = video?.video_date
+    ? new Date(video.video_date + "T00:00:00").toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      })
+    : currentWeekInfo
 
   if (!video) return null
 
@@ -94,6 +104,14 @@ export function MondayMotivationSection({ video, className }: MondayMotivationSe
                   )}
                 </div>
               )}
+
+              <Link
+                href="/monday-motivation"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-odillon-teal transition-colors hover:text-odillon-teal/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-odillon-teal"
+              >
+                Voir toutes les vidéos
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              </Link>
             </div>
           </BlurFade>
 

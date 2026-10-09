@@ -74,8 +74,17 @@ export default async function Home({
   const heroVideo = videosData?.find(v => v.page === 'Accueil' && v.section === 'Hero' && v.is_active) || null
   // Vidéo de contenu (pour la section vidéo séparée)
   const contentVideo = videosData?.find(v => v.page === 'Accueil' && v.section === 'Contenu' && v.is_active) || null
-  // Vidéo Monday Motivation (actualité de la semaine)
-  const mondayMotivationVideo = videosData?.find(v => v.page === 'Accueil' && v.section === 'MondayMotivation' && v.is_active) || null
+  // Vidéo Monday Motivation (actualité de la semaine) : la plus récente par
+  // date renseignée, pas la première trouvée — plusieurs vidéos peuvent être
+  // actives à la fois (archive consultable sur /monday-motivation).
+  const mondayMotivationVideos = (videosData || [])
+    .filter(v => v.page === 'Accueil' && v.section === 'MondayMotivation' && v.is_active)
+    .sort((a, b) => {
+      const dateA = a.video_date || a.created_at || ''
+      const dateB = b.video_date || b.created_at || ''
+      return dateB.localeCompare(dateA)
+    })
+  const mondayMotivationVideo = mondayMotivationVideos[0] || null
 
   // Fetch site settings for CTA
   const { data: requestSettings } = await supabase
