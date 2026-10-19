@@ -35,6 +35,64 @@ npm run build
 npm start
 ```
 
+## 🚀 Déploiement sur Infomaniak
+
+Le build **ne doit pas** être fait sur le serveur : l'hébergement Node.js plafonne la mémoire et `next build` y plante (`OOMErrorHandler` / `SIGABRT`), ce qui laisse un `.next` incomplet et met le site hors ligne. On build sur son PC et on envoie uniquement le résultat.
+
+> ⛔ Ne jamais cliquer sur **« Construire »** dans le Manager Infomaniak, ni lancer `npm run build` en SSH. `pm2` n'est pas disponible sur cet hébergement.
+
+### 1. Sur son PC (PowerShell, dans le dossier du projet)
+
+```powershell
+git push origin main
+
+# Build de production. L'URL du site doit être passée ici : les variables
+# NEXT_PUBLIC_* sont figées dans le build et le .env local contient localhost.
+$env:NEXT_PUBLIC_SITE_URL = "https://odillon.fr"
+npx next build --webpack
+
+# Archive du build (sans cache ni fichiers de dev)
+tar -czf next-build.tgz --exclude=.next/cache --exclude=.next/dev --exclude=.next/types --exclude=.next/diagnostics .next
+```
+
+### 2. Envoyer l'archive
+
+```powershell
+scp next-build.tgz <UTILISATEUR_SSH>@<HOTE_SSH>:sites/odillon.fr/
+```
+
+`<UTILISATEUR_SSH>` et `<HOTE_SSH>` se trouvent dans le Manager, page **FTP / SSH** (hôte de la carte Node.js, utilisateur dans la liste du bas). Le mot de passe est demandé à la saisie. L'envoi est réussi quand la ligne affiche `100%`.
+
+> Le « FTP Web » du Manager peut être bloqué par un antivirus (`ftp.hosting-ik.com`). `scp` n'est pas concerné.
+
+### 3. Installer le build (console SSH du Manager)
+
+```bash
+cd ~/sites/odillon.fr
+git pull origin main
+rm -rf .next
+tar -xzf next-build.tgz
+rm next-build.tgz
+ls .next/BUILD_ID
+```
+
+- Si `package.json` a changé, lancer `npm install` avant de redémarrer.
+- La dernière commande doit afficher `.next/BUILD_ID`. Sinon, ne pas redémarrer.
+
+### 4. Redémarrer
+
+Manager, **Tableau de bord**, section « Exécution de l'application » : **Redémarrer** (ou **Courir** si l'application est arrêtée). La console doit afficher `Next.js 16.2.9` puis `Prêt en ... ms`.
+
+Le message « Aucune construction enregistrée » est normal : le Manager ne suit que les builds lancés avec son propre bouton.
+
+### Vérification
+
+```powershell
+curl.exe -s https://odillon.fr/ | Select-String "Voir toutes"
+```
+
+Et ouvrir `https://odillon.fr` dans le navigateur. Si le site affiche une page de maintenance Infomaniak, l'application n'est pas démarrée : vérifier la console de la section « Exécution ».
+
 ## 🔧 Gestion du dépôt Git
 
 ### Configurer `main` comme branche principale
@@ -80,28 +138,6 @@ git pull origin main
 # Configurer main comme branche par défaut
 git remote set-head origin main
 git branch --set-upstream-to=origin/main main
-```
-
-#### Mise à jour du dépôt sur Infomaniak
-
-```bash
-# Se connecter en SSH puis aller dans le dossier du site
-cd sites/odillon.fr
-
-# Si le pull échoue à cause de fichiers locaux modifiés (ex: package-lock.json)
-git checkout -- package-lock.json
-
-# Récupérer les dernières modifications
-git pull origin main
-
-# Réinstaller les dépendances
-npm install
-
-# Rebuilder
-npm run build
-
-# Redémarrer l'application
-pm2 restart odillon-site
 ```
 
 > **Astuce** : Si `git pull` échoue avec l'erreur "Your local changes would be overwritten by merge", c'est généralement `package-lock.json` qui a été modifié par un `npm install` sur le serveur. Lancez `git checkout -- package-lock.json` avant le pull pour résoudre le conflit.

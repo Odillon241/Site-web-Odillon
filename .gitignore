@@ -60,3 +60,6 @@ test-*.js
 
 # worktrees git locaux créés par les agents (copies complètes du dépôt)
 .claude/worktrees/
+
+# Archive de build envoyée sur Infomaniak (voir README)
+next-build.tgz

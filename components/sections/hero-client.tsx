@@ -7,7 +7,7 @@ import { LogoRotator } from "@/components/ui/logo-rotator";
 import Link from "next/link";
 import { CompanyLogo, Video } from "@/types/admin";
 import { VideoPlayer } from "@/components/ui/video-player";
-import { ArrowRight, Phone } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { NewsTicker } from "@/components/sections/news-ticker";
 
@@ -73,13 +73,6 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
                 >
                   Découvrir notre approche
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link
-                  href="#contact"
-                  className="inline-flex items-center justify-center gap-2 rounded-md border border-odillon-dark/15 bg-white/70 px-6 py-3.5 text-sm font-semibold text-odillon-dark shadow-sm shadow-odillon-dark/[0.03] transition-all duration-300 hover:-translate-y-0.5 hover:border-odillon-teal/40 hover:bg-odillon-teal/5 hover:text-odillon-teal sm:text-base"
-                >
-                  <Phone className="w-4 h-4" />
-                  Nous contacter
                 </Link>
               </div>
             </FadeIn>
