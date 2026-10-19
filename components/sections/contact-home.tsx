@@ -115,7 +115,7 @@ export function ContactHome() {
   }
 
   return (
-    <section id="contact" className="relative py-14 sm:py-20 lg:py-32 overflow-hidden">
+    <section id="contact" className="relative py-16 sm:py-20 lg:py-24 overflow-hidden">
       {/* Background Decor */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 right-0 w-1/2 h-1/2 bg-odillon-teal/5 rounded-full blur-[120px] -translate-y-1/2" />
@@ -130,7 +130,7 @@ export function ContactHome() {
                 <span className="w-8 h-[1px] bg-odillon-teal"></span>
                 <span className="uppercase tracking-widest text-xs sm:text-sm">Contact</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-petrov-sans leading-tight">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-baskvill italic leading-tight">
                 Transformons votre <br />
                 <span className="text-odillon-teal">vision en réalité</span>.
               </h2>

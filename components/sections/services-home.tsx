@@ -38,7 +38,7 @@ const mainServices = polesProduits.map((pole, idx) => {
 
 export function ServicesHome() {
   return (
-    <section id="services" className="relative py-20 sm:py-28 lg:py-36 overflow-hidden bg-white">
+    <section id="services" className="relative py-16 sm:py-20 lg:py-24 overflow-hidden bg-white">
       {/* Background Decor - Minimalist */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
       
@@ -53,7 +53,7 @@ export function ServicesHome() {
                   Nos produits
                 </span>
               </div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-baskvill tracking-tight leading-[1.2]">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-6 font-baskvill italic leading-tight">
                 Structurer, sécuriser et développer votre entreprise.
               </h2>
             </BlurFade>
@@ -74,7 +74,7 @@ export function ServicesHome() {
         </div>
 
         {/* Bento Grid Layout - Clean & Structured */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 mb-16 sm:mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
           {mainServices.map((service, idx) => {
             const Icon = service.icon
             return (
@@ -96,8 +96,7 @@ export function ServicesHome() {
                     {/* Content */}
                     <div className="flex-grow">
                       <p
-                        className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3"
-                        style={{ color: service.color }}
+                        className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3 text-slate-500"
                       >
                         {service.tagline}
                       </p>
@@ -117,7 +116,7 @@ export function ServicesHome() {
                     </div>
 
                     {/* Footer link */}
-                    <div className="mt-auto pt-6 border-t border-slate-100 flex items-center text-xs font-bold uppercase tracking-widest text-slate-400 group-hover:text-odillon-teal transition-colors">
+                    <div className="mt-auto pt-6 border-t border-slate-100 flex items-center text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-odillon-teal transition-colors">
                       Voir les produits
                       <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-2" />
                     </div>

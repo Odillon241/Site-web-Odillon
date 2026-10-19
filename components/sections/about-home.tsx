@@ -38,7 +38,7 @@ export function AboutHome() {
   }, [])
 
   return (
-    <section id="apropos" className="relative py-14 sm:py-20 lg:py-32 overflow-hidden">
+    <section id="apropos" className="relative py-16 sm:py-20 lg:py-24 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         {/* Header Section */}
         <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center mb-14 md:mb-24">
@@ -48,7 +48,7 @@ export function AboutHome() {
                 <span className="w-12 h-[1px] bg-odillon-teal"></span>
                 <span className="uppercase tracking-widest text-sm font-semibold">Qui sommes-nous</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-odillon-dark mb-4 sm:mb-6 font-baskvill italic leading-tight">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-odillon-dark mb-4 sm:mb-6 font-baskvill italic leading-tight">
                 Votre partenaire <br />
                 <span className="text-odillon-teal">stratégique de confiance</span>.
               </h2>

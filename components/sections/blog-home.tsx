@@ -33,7 +33,7 @@ export function BlogHome({ articles }: { articles: Article[] }) {
     if (!articles || articles.length === 0) return null;
 
     return (
-        <section className="relative py-14 sm:py-20 lg:py-32 overflow-hidden bg-gray-50/50">
+        <section className="relative py-16 sm:py-20 lg:py-24 overflow-hidden bg-gray-50/50">
             {/* Background Decor */}
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute top-0 left-1/4 w-1/3 h-1/3 bg-odillon-teal/5 rounded-full blur-[120px]" />
@@ -47,7 +47,7 @@ export function BlogHome({ articles }: { articles: Article[] }) {
                         <Badge variant="odillon" className="mb-4">
                             Ressources
                         </Badge>
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-petrov-sans">
+                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-baskvill italic">
                             Notre sélection <span className="text-odillon-teal">d'articles</span>
                         </h2>
                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">

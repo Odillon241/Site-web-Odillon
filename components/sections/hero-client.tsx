@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { m, useReducedMotion } from "framer-motion";
 import { FadeIn } from "@/components/magicui/fade-in";
 import { BackgroundSlideshow } from "@/components/ui/background-slideshow";
 import { AnimatedSlogan } from "@/components/magicui/animated-slogan";
@@ -17,8 +19,53 @@ interface HeroClientProps {
   video?: Video | null;
 }
 
+const DOMAINES = [
+  "gouvernance",
+  "ressources humaines",
+  "conseil juridique",
+  "entrepreneuriat",
+  "formation",
+];
 
+// Titre principal : les domaines défilent sous « Votre partenaire en ».
+// Tous les mots occupent la même cellule de grille, donc la largeur ne bouge pas.
+function TitreHero() {
+  const reduireMouvement = useReducedMotion();
+  const [index, setIndex] = useState(0);
 
+  useEffect(() => {
+    if (reduireMouvement) return;
+    const id = setInterval(() => setIndex((i) => (i + 1) % DOMAINES.length), 2600);
+    return () => clearInterval(id);
+  }, [reduireMouvement]);
+
+  return (
+    <h1 className="font-baskvill text-[2rem] font-bold leading-[1.1] text-odillon-dark sm:text-5xl xl:text-[3.5rem]">
+      <span className="sr-only">
+        Votre partenaire en gouvernance, ressources humaines, conseil juridique, entrepreneuriat et formation
+      </span>
+      <span aria-hidden="true">
+        Votre partenaire en
+        <span className="mt-1 grid italic text-odillon-teal">
+          {DOMAINES.map((mot, i) => (
+            <m.span
+              key={mot}
+              className="whitespace-nowrap [grid-area:1/1]"
+              initial={false}
+              animate={{
+                opacity: i === index ? 1 : 0,
+                y: i === index ? 0 : i < index ? -14 : 14,
+              }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {mot}
+            </m.span>
+          ))}
+        </span>
+      </span>
+    </h1>
+  );
+}
 
 
 export function HeroClient({ images, logos, video }: HeroClientProps) {
@@ -55,6 +102,10 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 xl:gap-16 items-center w-full">
           {/* Left Column - Text Content */}
           <div className="order-1 flex max-w-2xl flex-col gap-5 sm:gap-6">
+
+            <FadeIn delay={0.2} direction="up">
+              <TitreHero />
+            </FadeIn>
 
             {/* Description */}
             <FadeIn delay={0.37} direction="up">

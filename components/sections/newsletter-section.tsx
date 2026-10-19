@@ -68,7 +68,7 @@ export function NewsletterSection() {
     }
 
     return (
-        <section className="py-20 bg-gray-50/30">
+        <section className="py-12 sm:py-16 bg-gray-50/30">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <m.div
                     initial={{ opacity: 0, y: 40 }}

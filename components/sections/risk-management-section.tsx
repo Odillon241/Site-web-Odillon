@@ -89,7 +89,7 @@ export function RiskManagementSection() {
     }
 
     return (
-        <section id="risques" className="relative py-20 sm:py-28 lg:py-36 overflow-hidden bg-white">
+        <section id="risques" className="relative py-16 sm:py-20 lg:py-24 overflow-hidden bg-white">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
                 
                 {/* Top Section: Split Layout with Image */}

@@ -88,7 +88,7 @@ export function TestimonialsSection({
                     <Badge variant="odillon" className="mb-4">
                         {badge}
                     </Badge>
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 font-baskvill italic leading-tight">
                         {title}
                     </h2>
                 </div>
