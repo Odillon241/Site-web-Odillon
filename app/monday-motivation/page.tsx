@@ -94,7 +94,7 @@ export default function MondayMotivationPage() {
     <>
       <HeaderPro />
 
-      <main className="od-page pt-[88px] md:pt-[104px]">
+      <main id="contenu" tabIndex={-1} className="outline-none od-page pt-14 md:pt-16">
         <section className="od-section scroll-mt-24 border-t-0 py-12 md:py-16">
           <div className="od-container">
             <div className="max-w-2xl mb-10 md:mb-12">

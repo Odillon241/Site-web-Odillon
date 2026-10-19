@@ -58,7 +58,7 @@ export default async function ArticlePage({ params }: Props) {
     return (
         <>
             <HeaderPro />
-            <main className="min-h-screen pt-[88px] md:pt-[104px]">
+            <main id="contenu" tabIndex={-1} className="outline-none min-h-screen pt-14 md:pt-16">
                 {/* En-tête de l'article */}
                 <header className="mx-auto w-full max-w-3xl px-4 pt-10 sm:px-6 lg:px-8 lg:pt-16">
                     <div className="blog-rise">

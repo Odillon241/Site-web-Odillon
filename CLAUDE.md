@@ -241,7 +241,7 @@ Standard Next.js deployment works out of the box. Ensure environment variables a
 - **Async Cookies**: Server Components that use `cookies()` must be async in Next.js 16+ (see `lib/supabase/server.ts:5`)
 - **Photo Fallbacks**: `lib/photo-themes.ts` includes default Unsplash photos as fallbacks
 - **Backup Files**: Multiple backup/temp component files exist in `components/sections/` (suffixed with `-backup`, `-temp`, etc.) - these are not used in production
-- **Fixed Header**: The site has a fixed header requiring content padding: `pt-[88px] md:pt-[104px]` (see `app/page.tsx:18`)
+- **Fixed Header**: The site has a fixed header requiring content padding: `pt-14 md:pt-16` (56px / 64px, see `app/page.tsx`)
 
 ## Development Notes
 

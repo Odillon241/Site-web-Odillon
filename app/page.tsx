@@ -99,7 +99,7 @@ export default async function Home({
       <SiteOpening />
       <ScrollToTop />
       <HeaderPro />
-      <main className="min-h-screen pt-[88px] md:pt-[104px]">
+      <main id="contenu" tabIndex={-1} className="outline-none min-h-screen pt-14 md:pt-16">
         <Hero logos={logos || []} video={heroVideo} />
         <MondayMotivationSection video={mondayMotivationVideo} />
         <ServicesHome />
@@ -116,9 +116,9 @@ export default async function Home({
         />
         <AboutHome />
         <BlogHome articles={latestArticles || []} />
+        <NewsletterSection />
         <TestimonialsSection page="Accueil" limit={3} />
         <FaqHome />
-        <NewsletterSection />
         <ContactHome />
       </main>
       <Footer />

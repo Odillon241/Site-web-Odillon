@@ -157,7 +157,7 @@ export function BlogPageClient({ articles, settings }: BlogPageClientProps) {
             {/* Barre de filtres — collante sous l'en-tête du site.
                 Les rubriques sont repliées dans un menu ; les deux contrôles portent
                 une surface pleine pour se lire comme des contrôles, pas comme du texte. */}
-            <div className="sticky top-[88px] z-30 border-b border-[#0A1F2C]/10 bg-[#FAFDFC]/95 backdrop-blur-md md:top-[104px]">
+            <div className="sticky top-14 z-30 border-b border-[#0A1F2C]/10 bg-[#FAFDFC]/95 backdrop-blur-md md:top-16">
                 <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:gap-8 sm:px-6 lg:px-8">
                     {categories.length > 0 && (
                         <DropdownMenu>

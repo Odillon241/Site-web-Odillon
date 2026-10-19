@@ -13,7 +13,7 @@ export function AboutPageClient() {
 
       <ScrollToTop />
       <HeaderPro />
-      <main className="relative min-h-screen pt-[88px] md:pt-[104px]">
+      <main id="contenu" tabIndex={-1} className="outline-none relative min-h-screen pt-14 md:pt-16">
         <AboutDetailed />
       </main>
       <Footer />

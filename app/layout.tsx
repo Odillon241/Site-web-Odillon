@@ -52,6 +52,12 @@ export default function RootLayout({
   return (
     <html lang="fr" translate="no" className="scroll-smooth" suppressHydrationWarning>
       <body className={cn(satoshiFont.className, satoshiFont.variable, libreBaskerville.variable, "antialiased")} suppressHydrationWarning>
+        <a
+          href="#contenu"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-odillon-dark focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-odillon-teal"
+        >
+          Aller au contenu
+        </a>
         {/* Grid background pattern */}
         <div className="grid-bg" />
         {/* Lightweight CSS gradient background - replaces heavy THREE.js LiquidEther */}

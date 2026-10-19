@@ -24,7 +24,7 @@ export default async function CalendrierFormationsPage() {
         <>
             <ScrollToTop />
             <HeaderPro />
-            <main className="min-h-screen pt-[88px] md:pt-[104px]">
+            <main id="contenu" tabIndex={-1} className="outline-none min-h-screen pt-14 md:pt-16">
                 <FormationsCalendar formations={(formations as Formation[]) || []} />
             </main>
             <Footer />

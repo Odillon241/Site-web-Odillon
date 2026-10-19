@@ -83,10 +83,10 @@ export function NewsletterSection() {
 
                     <div className="relative z-10 mx-auto max-w-2xl text-center">
                         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-gray-900 mb-4 font-baskvill italic">
-                            Envie de conseil ?
+                            Restez informé
                         </h2>
                         <p className="mx-auto mt-4 mb-8 max-w-xl text-lg text-gray-600 font-light">
-                            Vous êtes arrivé au bon endroit. Entrez vos coordonnées pour obtenir de l&apos;inspiration professionnelle, des solutions tendance et des conseils en matière de conseil fournis dans votre boîte de réception.
+                            Recevez nos nouveaux articles et nos actualités directement par email.
                         </p>
 
                         <form onSubmit={handleSubmit} className="mt-8 flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">

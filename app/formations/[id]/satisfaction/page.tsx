@@ -79,7 +79,7 @@ export default async function SatisfactionPage({
         <>
             <ScrollToTop />
             <HeaderPro />
-            <main className="min-h-screen pt-[88px] md:pt-[104px]">{contenu}</main>
+            <main id="contenu" tabIndex={-1} className="outline-none min-h-screen pt-14 md:pt-16">{contenu}</main>
             <Footer />
         </>
     )

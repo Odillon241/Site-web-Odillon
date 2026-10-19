@@ -8,7 +8,7 @@ import Link from "next/link"
 
 export default function PolitiqueConfidentialitePage() {
     return (
-        <main className="min-h-screen relative bg-slate-50/50 pt-[88px] md:pt-[104px]">
+        <main id="contenu" tabIndex={-1} className="outline-none min-h-screen relative bg-slate-50/50 pt-14 md:pt-16">
             <HeaderPro />
 
             <div className="mx-auto max-w-5xl px-6 py-16 lg:px-8">

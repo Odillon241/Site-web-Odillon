@@ -33,7 +33,7 @@ export function GlobalNewsTicker() {
 
   // Fixed position container that always takes 60px height
   return (
-    <div className="fixed top-[88px] md:top-[104px] left-0 right-0 z-40 h-[60px]">
+    <div className="fixed top-14 md:top-16 left-0 right-0 z-40 h-[60px]">
       <NewsTicker className="h-full w-full" />
     </div>
   )

@@ -14,7 +14,7 @@ export default function Page() {
     <>
       <ScrollToTop />
       <HeaderPro />
-      <main className="relative min-h-screen pt-[88px] md:pt-[104px] pb-10 md:pb-14">
+      <main id="contenu" tabIndex={-1} className="outline-none relative min-h-screen pt-14 md:pt-16 pb-10 md:pb-14">
         <ProduitsPage />
       </main>
       <Footer />
