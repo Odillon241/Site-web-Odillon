@@ -38,7 +38,7 @@ export function PhotoSections({ page }: PhotoSectionsProps = {}) {
       const path = window.location.pathname
       if (path === '/') {
         setCurrentPage('home')
-      } else if (path.startsWith('/offres') || path.startsWith('/expertise')) {
+      } else if (path.startsWith('/produits') || path.startsWith('/expertise')) {
         setCurrentPage('services')
       } else if (path.startsWith('/a-propos')) {
         setCurrentPage('about')

@@ -110,7 +110,7 @@ export default async function Home({
           title={settings.expertise_cta_title || "Découvrez notre expertise approfondie et nos méthodologies éprouvées"}
           description={settings.expertise_cta_description || ""}
           buttonText={settings.expertise_cta_button_text || "En savoir plus sur notre expertise"}
-          buttonHref={settings.expertise_cta_button_link || "/offres"}
+          buttonHref={settings.expertise_cta_button_link || "/produits"}
           badgeText={settings.expertise_cta_badge_text || "Expertise"}
           imageUrl={settings.services_cta_image_url} // Reusing this field as per admin implementation
         />

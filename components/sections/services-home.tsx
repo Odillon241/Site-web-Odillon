@@ -6,51 +6,35 @@ import {
   Landmark,
   Scale,
   Users,
+  Rocket,
   ArrowRight,
-  GraduationCap,
   Check
 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { polesProduits, businessPlan, type IconePole } from "@/lib/produits-data"
+
+const icones: Record<IconePole, typeof Landmark> = { Landmark, Users, Scale, Rocket }
+const spans = ["lg:col-span-4", "lg:col-span-4", "lg:col-span-6", "lg:col-span-6"]
 
 const mainServices = [
+  ...polesProduits.map((pole) => ({
+    icon: icones[pole.icone],
+    title: pole.titre,
+    slug: pole.id,
+    tagline: pole.accroche,
+    color: pole.couleur,
+    highlights: pole.groupes.flatMap((g) => g.produits).slice(0, 3),
+  })),
   {
-    icon: Landmark,
-    title: "Gouvernance",
-    slug: "gouvernance",
-    tagline: "Structuration et Restructuration d'Entreprises",
-    color: "#00a795",
-    highlights: ["Règles de bonne gouvernance", "Conseil d'Administration", "Risques opérationnels"],
-    span: "lg:col-span-4"
+    icon: icones[businessPlan.icone],
+    title: businessPlan.titre,
+    slug: businessPlan.id,
+    tagline: businessPlan.accroche,
+    color: businessPlan.couleur,
+    highlights: businessPlan.packs.map((p) => p.nom),
   },
-  {
-    icon: Scale,
-    title: "Juridique",
-    slug: "juridique",
-    tagline: "Accompagnement Juridique Externalisé",
-    color: "#C4D82E",
-    highlights: ["Service externalisé", "Contrats", "Négociation"],
-    span: "lg:col-span-4"
-  },
-  {
-    icon: Users,
-    title: "Capital Humain",
-    slug: "ressources-humaines",
-    tagline: "Administration et Ressources Humaines",
-    color: "#C4D82E",
-    highlights: ["Développement RH", "Évaluation", "Rémunérations"],
-    span: "lg:col-span-6"
-  },
-  {
-    icon: GraduationCap,
-    title: "Formation",
-    slug: "formations",
-    tagline: "Formation Professionnelle",
-    color: "#00a795",
-    highlights: ["Master Class", "Coaching professionnel", "Formations en ligne"],
-    span: "lg:col-span-6"
-  }
-]
+].map((service, idx) => ({ ...service, span: spans[idx] ?? "lg:col-span-6" }))
 
 export function ServicesHome() {
   return (
@@ -84,8 +68,8 @@ export function ServicesHome() {
               variant="outline"
               className="group border-slate-200 hover:border-odillon-teal hover:bg-odillon-teal/5 text-slate-900 font-bold rounded-lg px-8 h-12 transition-all duration-300"
             >
-              <Link href="/offres">
-                Voir toutes nos offres
+              <Link href="/produits">
+                Voir tous nos produits
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
@@ -102,7 +86,7 @@ export function ServicesHome() {
                 delay={0.05 * (idx + 1)}
                 className={cn("h-full", service.span)}
               >
-                <Link href={`/offres#${service.slug}`} className="block h-full group">
+                <Link href={`/produits#${service.slug}`} className="block h-full group">
                   <div className="relative h-full bg-slate-50/50 hover:bg-white border border-slate-100 hover:border-slate-200 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500 rounded-2xl p-8 sm:p-10 flex flex-col overflow-hidden">
                     {/* Icon - Static & Clean */}
                     <div 

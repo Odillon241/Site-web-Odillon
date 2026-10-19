@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Phone, Mail, MapPin, ExternalLink, ChevronRight, Briefcase, Scale, Users, GraduationCap } from "lucide-react"
+import { Phone, Mail, MapPin, ExternalLink, ChevronRight, Briefcase, Scale, Users, Rocket } from "lucide-react"
 import { BlurFade } from "@/components/magicui/blur-fade"
 
 
@@ -8,15 +8,15 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   const expertises = [
-    { name: 'Gouvernance', icon: Briefcase, href: '/offres#gouvernance' },
-    { name: 'Juridique', icon: Scale, href: '/offres#juridique' },
-    { name: 'Capital Humain', icon: Users, href: '/offres#ressources-humaines' },
-    { name: 'Formation', icon: GraduationCap, href: '/offres#formations' },
+    { name: 'Gouvernance', icon: Briefcase, href: '/produits#gouvernance' },
+    { name: 'Ressources Humaines', icon: Users, href: '/produits#ressources-humaines' },
+    { name: 'Juridique', icon: Scale, href: '/produits#juridique' },
+    { name: 'Business Plan', icon: Rocket, href: '/produits#business-plan' },
   ]
 
   const quickLinks = [
     { name: 'Accueil', href: '/#accueil' },
-    { name: 'Offres', href: '/offres' },
+    { name: 'Produits', href: '/produits' },
     { name: 'Photothèque', href: '/phototheque' },
     { name: 'Blog', href: '/blog' },
     { name: 'Formations', href: '/calendrier-formations' },

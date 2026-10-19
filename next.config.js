@@ -78,22 +78,13 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      { source: '/offres/gouvernance', destination: '/offres#gouvernance', permanent: false },
-      { source: '/offres/gouvernance/:path*', destination: '/offres#gouvernance', permanent: false },
-      { source: '/offres/juridique', destination: '/offres#juridique', permanent: false },
-      { source: '/offres/juridique/:path*', destination: '/offres#juridique', permanent: false },
-      { source: '/offres/ressources-humaines', destination: '/offres#ressources-humaines', permanent: false },
-      { source: '/offres/ressources-humaines/:path*', destination: '/offres#ressources-humaines', permanent: false },
-      { source: '/offres/formations', destination: '/offres#formations', permanent: false },
-      { source: '/offres/formations/:path*', destination: '/offres#formations', permanent: false },
-      { source: '/offres/finances', destination: '/offres', permanent: false },
-      { source: '/offres/finances/:path*', destination: '/offres', permanent: false },
-      { source: '/offres/communication', destination: '/offres', permanent: false },
-      { source: '/offres/communication/:path*', destination: '/offres', permanent: false },
-      { source: '/offres/entreprenariat', destination: '/offres', permanent: false },
-      { source: '/offres/entreprenariat/:path*', destination: '/offres', permanent: false },
-      { source: '/offres/paie', destination: '/offres', permanent: false },
-      { source: '/offres/paie/:path*', destination: '/offres', permanent: false },
+      // « Nos offres » est devenu « Nos produits » : les anciennes URL restent valides.
+      { source: '/offres', destination: '/produits', permanent: true },
+      { source: '/offres/gouvernance/:path*', destination: '/produits#gouvernance', permanent: true },
+      { source: '/offres/juridique/:path*', destination: '/produits#juridique', permanent: true },
+      { source: '/offres/ressources-humaines/:path*', destination: '/produits#ressources-humaines', permanent: true },
+      { source: '/offres/formations/:path*', destination: '/calendrier-formations', permanent: true },
+      { source: '/offres/:path*', destination: '/produits', permanent: true },
     ]
   },
   // Configuration pour supporter les sous-domaines

@@ -16,14 +16,14 @@ const navigation = [
     icon: "Home"
   },
   {
-    name: "Nos offres",
-    href: "/offres",
+    name: "Nos produits",
+    href: "/produits",
     icon: "Briefcase",
     submenu: [
-      { name: "Gouvernance", href: "/offres#gouvernance" },
-      { name: "Juridique", href: "/offres#juridique" },
-      { name: "Capital Humain", href: "/offres#ressources-humaines" },
-      { name: "Formation", href: "/offres#formations" },
+      { name: "Gouvernance", href: "/produits#gouvernance" },
+      { name: "Ressources Humaines", href: "/produits#ressources-humaines" },
+      { name: "Juridique", href: "/produits#juridique" },
+      { name: "Business Plan", href: "/produits#business-plan" },
     ]
   },
   {

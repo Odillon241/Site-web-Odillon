@@ -1,20 +1,23 @@
-"use client"
-
 import { HeaderPro } from "@/components/layout/header-pro"
 import { Footer } from "@/components/layout/footer"
-import { ServicesDetailed } from "@/components/sections/services-detailed"
+import { ProduitsPage } from "@/components/sections/produits-page"
 import { ScrollToTop } from "@/components/magicui/scroll-to-top"
 
-export default function ServicesPage() {
+export const metadata = {
+  title: "Nos produits | Odillon - Ingénierie d'Entreprises",
+  description:
+    "Produits Odillon en Gouvernance, Ressources Humaines, Juridique et Business Plan (packs Odillon Start, Project et Grow).",
+}
+
+export default function Page() {
   return (
     <>
       <ScrollToTop />
       <HeaderPro />
       <main className="relative min-h-screen pt-[88px] md:pt-[104px] pb-10 md:pb-14">
-        <ServicesDetailed />
+        <ProduitsPage />
       </main>
       <Footer />
     </>
   )
 }
-
