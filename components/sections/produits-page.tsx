@@ -13,13 +13,8 @@ import { VideoSection } from "@/components/sections/video-section"
 import { VideosSection } from "@/components/sections/videos-section"
 import type { VideoItem } from "@/components/sections/videos-section"
 import { Video } from "@/types/admin"
-import {
-  polesProduits,
-  businessPlan,
-  nombreProduits,
-  type IconePole,
-} from "@/lib/produits-data"
-import { Landmark, Users, Scale, Rocket, ChevronRight, Check } from "lucide-react"
+import { polesProduits, nombreProduits, type IconePole } from "@/lib/produits-data"
+import { Landmark, Users, Scale, Rocket, ChevronRight } from "lucide-react"
 
 const icones: Record<IconePole, React.ComponentType<{ className?: string }>> = {
   Landmark,
@@ -149,8 +144,8 @@ export function ProduitsPage() {
           </div>
         </BlurFade>
 
-        {/* Pôles */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-16 md:mb-24">
+        {/* Une card par catégorie */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-16 md:mb-24">
           {polesProduits.map((pole, idx) => {
             const Icone = icones[pole.icone]
             const total = nombreProduits(pole)
@@ -242,57 +237,6 @@ export function ProduitsPage() {
             )
           })}
         </div>
-
-        {/* Business Plan */}
-        <section id={businessPlan.id} className="scroll-mt-28 mb-16 md:mb-24" aria-labelledby="pole-business-plan">
-          <BlurFade delay={0.2}>
-            <div className="flex items-start gap-4 mb-8 md:mb-10">
-              <div
-                className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm"
-                style={{ backgroundColor: `${businessPlan.couleur}15`, color: businessPlan.couleur }}
-              >
-                <Rocket className="w-6 h-6" aria-hidden="true" />
-              </div>
-              <div>
-                <h3 id="pole-business-plan" className="font-baskvill italic text-2xl md:text-3xl text-gray-900 leading-tight">
-                  {businessPlan.titre}
-                </h3>
-                <p className="text-xs font-semibold uppercase tracking-wider mt-1" style={{ color: businessPlan.couleur }}>
-                  {businessPlan.accroche} — {businessPlan.packs.length} packs
-                </p>
-              </div>
-            </div>
-          </BlurFade>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            {businessPlan.packs.map((pack, idx) => (
-              <BlurFade key={pack.nom} delay={0.1 + idx * 0.05}>
-                <article className="od-surface h-full flex flex-col p-6 md:p-8 transition-all duration-500 hover:border-odillon-teal/20 hover:shadow-md hover:shadow-[#0A1F2C]/[0.05]">
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-2">
-                    Pack {String(idx + 1).padStart(2, "0")}
-                  </p>
-                  <h4 className="text-lg font-bold uppercase tracking-wide text-odillon-dark mb-5">
-                    {pack.nom}
-                  </h4>
-                  <ul className="flex flex-col gap-2.5 mb-6">
-                    {pack.produits.map((produit) => (
-                      <li key={produit} className="flex items-start gap-2.5 text-sm leading-relaxed text-gray-700">
-                        <Check className="w-4 h-4 mt-0.5 shrink-0 text-odillon-teal" aria-hidden="true" />
-                        <span>{produit}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Button asChild variant="outline" size="sm" className="mt-auto w-full group/cta">
-                    <Link href="/contact">
-                      Choisir ce pack
-                      <ChevronRight className="ml-2 w-4 h-4 group-hover/cta:translate-x-0.5 transition-transform" aria-hidden="true" />
-                    </Link>
-                  </Button>
-                </article>
-              </BlurFade>
-            ))}
-          </div>
-        </section>
 
         <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen">
           <CtaBanner

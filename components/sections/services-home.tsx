@@ -12,29 +12,28 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { polesProduits, businessPlan, type IconePole } from "@/lib/produits-data"
+import { polesProduits, type IconePole } from "@/lib/produits-data"
 
 const icones: Record<IconePole, typeof Landmark> = { Landmark, Users, Scale, Rocket }
 const spans = ["lg:col-span-4", "lg:col-span-4", "lg:col-span-6", "lg:col-span-6"]
 
-const mainServices = [
-  ...polesProduits.map((pole) => ({
+// Aperçu : les sous-catégories quand il y en a (Juridique, packs Business Plan),
+// sinon les 3 premiers produits.
+const mainServices = polesProduits.map((pole, idx) => {
+  const titresGroupes = pole.groupes.flatMap((g) => (g.titre ? [g.titre] : []))
+  return {
     icon: icones[pole.icone],
     title: pole.titre,
     slug: pole.id,
     tagline: pole.accroche,
     color: pole.couleur,
-    highlights: pole.groupes.flatMap((g) => g.produits).slice(0, 3),
-  })),
-  {
-    icon: icones[businessPlan.icone],
-    title: businessPlan.titre,
-    slug: businessPlan.id,
-    tagline: businessPlan.accroche,
-    color: businessPlan.couleur,
-    highlights: businessPlan.packs.map((p) => p.nom),
-  },
-].map((service, idx) => ({ ...service, span: spans[idx] ?? "lg:col-span-6" }))
+    highlights:
+      titresGroupes.length > 0
+        ? titresGroupes.slice(0, 3)
+        : pole.groupes.flatMap((g) => g.produits).slice(0, 3),
+    span: spans[idx] ?? "lg:col-span-6",
+  }
+})
 
 export function ServicesHome() {
   return (

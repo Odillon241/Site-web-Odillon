@@ -16,11 +16,6 @@ export type PoleProduits = {
   groupes: GroupeProduits[]
 }
 
-export type PackBusinessPlan = {
-  nom: string
-  produits: string[]
-}
-
 export const polesProduits: PoleProduits[] = [
   {
     id: "gouvernance",
@@ -37,7 +32,7 @@ export const polesProduits: PoleProduits[] = [
           "Structuration de l'organigramme",
           "Formation des membres du conseil d'administration",
           "Gestion des risques",
-          "Rôles et responsabilités des instituteurs",
+          "Rôles et responsabilités des institutions",
           "Tenue du secrétariat du conseil",
           "Assistance dans le suivi du plan d'action",
           "Création et modification des sociétés",
@@ -104,40 +99,39 @@ export const polesProduits: PoleProduits[] = [
       },
     ],
   },
+  {
+    id: "business-plan",
+    titre: "Business Plan",
+    accroche: "Accompagnement à la création et au développement",
+    couleur: "#00a795",
+    icone: "Rocket",
+    groupes: [
+      {
+        titre: "Odillon Start",
+        produits: [
+          "Analyse du projet",
+          "Accompagnement à la création",
+          "Lancement de la société",
+          "Business plan",
+          "Coaching",
+        ],
+      },
+      {
+        titre: "Odillon Project",
+        produits: ["Politique commerciale", "Élaboration de l'organigramme", "Coaching"],
+      },
+      {
+        titre: "Odillon Grow",
+        produits: [
+          "Recherche de financement",
+          "Visibilité de l'activité",
+          "Analyse du chiffre d'affaires",
+          "Coaching",
+        ],
+      },
+    ],
+  },
 ]
-
-export const businessPlan = {
-  id: "business-plan",
-  titre: "Business Plan",
-  accroche: "Accompagnement à la création et au développement",
-  couleur: "#00a795",
-  icone: "Rocket" as IconePole,
-  packs: [
-    {
-      nom: "Odillon Start",
-      produits: [
-        "Analyse du projet",
-        "Accompagnement à la création",
-        "Lancement de la société",
-        "Business plan",
-        "Coaching",
-      ],
-    },
-    {
-      nom: "Odillon Project",
-      produits: ["Politique commerciale", "Élaboration de l'organigramme", "Coaching"],
-    },
-    {
-      nom: "Odillon Grow",
-      produits: [
-        "Recherche de financement",
-        "Visibilité de l'activité",
-        "Analyse du chiffre d'affaires",
-        "Coaching",
-      ],
-    },
-  ] satisfies PackBusinessPlan[],
-}
 
 export function nombreProduits(pole: PoleProduits): number {
   return pole.groupes.reduce((total, groupe) => total + groupe.produits.length, 0)
