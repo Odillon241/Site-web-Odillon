@@ -7,6 +7,7 @@ import {
   Scale,
   Users,
   Rocket,
+  GraduationCap,
   ArrowRight,
   Check
 } from "lucide-react"
@@ -14,10 +15,10 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { polesProduits, type IconePole } from "@/lib/produits-data"
 
-const icones: Record<IconePole, typeof Landmark> = { Landmark, Users, Scale, Rocket }
-const spans = ["lg:col-span-4", "lg:col-span-4", "lg:col-span-6", "lg:col-span-6"]
+const icones: Record<IconePole, typeof Landmark> = { Landmark, Users, Scale, Rocket, GraduationCap }
+const spans = ["lg:col-span-4", "lg:col-span-4", "lg:col-span-4", "lg:col-span-6", "lg:col-span-6"]
 
-// Aperçu : les sous-catégories quand il y en a (Juridique, packs Business Plan),
+// Aperçu : les sous-catégories quand il y en a (Juridique, packs Entrepreneuriat),
 // sinon les 3 premiers produits.
 const mainServices = polesProduits.map((pole, idx) => {
   const titresGroupes = pole.groupes.flatMap((g) => (g.titre ? [g.titre] : []))

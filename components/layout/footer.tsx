@@ -1,246 +1,108 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Phone, Mail, MapPin, ExternalLink, ChevronRight, Briefcase, Scale, Users, Rocket } from "lucide-react"
-import { BlurFade } from "@/components/magicui/blur-fade"
+import { Phone, Mail, MapPin } from "lucide-react"
+import { polesProduits } from "@/lib/produits-data"
 
+const liensOdillon = [
+  { name: "À propos", href: "/a-propos" },
+  { name: "Calendrier des formations", href: "/calendrier-formations" },
+  { name: "Nos événements", href: "/phototheque" },
+  { name: "Blog", href: "/blog" },
+]
+
+const titreColonne = "mb-4 text-xs font-semibold uppercase tracking-widest text-white/60"
+const lien = "inline-block py-1.5 text-white/85 transition-colors hover:text-odillon-lime"
 
 export function Footer() {
-  const currentYear = new Date().getFullYear()
-
-  const expertises = [
-    { name: 'Gouvernance', icon: Briefcase, href: '/produits#gouvernance' },
-    { name: 'Ressources Humaines', icon: Users, href: '/produits#ressources-humaines' },
-    { name: 'Juridique', icon: Scale, href: '/produits#juridique' },
-    { name: 'Business Plan', icon: Rocket, href: '/produits#business-plan' },
-  ]
-
-  const quickLinks = [
-    { name: 'Accueil', href: '/#accueil' },
-    { name: 'Produits', href: '/produits' },
-    { name: 'Photothèque', href: '/phototheque' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Formations', href: '/calendrier-formations' },
-    { name: 'À Propos', href: '/#apropos' },
-    { name: 'Contact', href: '/#contact' },
-  ]
+  const annee = new Date().getFullYear()
 
   return (
-    <footer className="relative bg-gradient-to-b from-[#008f80] to-[#006f65]" role="contentinfo">
-
-      {/* Decorative Accents */}
-      <div className="absolute top-20 right-10 w-40 md:w-72 h-40 md:h-72 bg-white/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-20 left-10 w-32 md:w-56 h-32 md:h-56 bg-odillon-lime/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-8 relative z-10">
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
-
-          {/* Brand Column */}
-          <div className="lg:col-span-4 space-y-6">
-            <BlurFade delay={0.1}>
-              <Link
-                href="/#accueil"
-                className="inline-block focus:outline-none focus:ring-2 focus:ring-odillon-teal/50 rounded-lg transition-all group"
-                aria-label="Retour à l'accueil"
-              >
-                <Image
-                  src="/images/logos/odillon-logo-white.svg?v=2"
-                  alt="Odillon"
-                  width={180}
-                  height={54}
-                  className="h-12 w-auto transition-transform group-hover:scale-105"
-                />
-              </Link>
-              <p className="text-white/80 leading-relaxed max-w-sm mt-6">
-                Cabinet de conseil en ingénierie d'entreprises,
-                spécialisé dans la structuration et le management stratégique pour une croissance durable.
-              </p>
-              {/* Decorative Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full backdrop-blur-sm border border-white/20 mt-6">
-                <span className="w-2 h-2 rounded-full bg-odillon-lime animate-pulse" />
-                <span className="text-sm text-white">Basé au Gabon 🇬🇦</span>
-              </div>
-            </BlurFade>
+    <footer className="bg-gradient-to-b from-[#008f80] to-[#006f65] text-sm" role="contentinfo">
+      <div className="mx-auto max-w-7xl px-4 pt-12 pb-8 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+          {/* Marque */}
+          <div className="lg:col-span-4">
+            <Link href="/" aria-label="Retour à l'accueil" className="inline-block">
+              <Image
+                src="/images/logos/odillon-logo-white.svg?v=2"
+                alt="Odillon"
+                width={180}
+                height={54}
+                className="h-11 w-auto"
+              />
+            </Link>
+            <p className="mt-5 max-w-xs leading-relaxed text-white/75">
+              Cabinet de conseil en ingénierie d&apos;entreprises, basé à Libreville.
+            </p>
           </div>
 
-          {/* Expertises Column */}
+          {/* Produits */}
+          <nav className="lg:col-span-3" aria-label="Produits">
+            <h3 className={titreColonne}>Produits</h3>
+            <ul>
+              {polesProduits.map((pole) => (
+                <li key={pole.id}>
+                  {/* <a> natif : déclenche hashchange, la catégorie s'ouvre aussi depuis /produits */}
+                  <a href={`/produits#${pole.id}`} className={lien}>
+                    {pole.titre}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Odillon */}
+          <nav className="lg:col-span-2" aria-label="Odillon">
+            <h3 className={titreColonne}>Odillon</h3>
+            <ul>
+              {liensOdillon.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className={lien}>
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Contact */}
           <div className="lg:col-span-3">
-            <BlurFade delay={0.2}>
-              <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-6 flex items-center gap-2">
-                <span className="w-8 h-[2px] bg-odillon-lime rounded-full" />
-                Expertises
-              </h3>
-              {/* L'espacement inter-liens est repris en marge interne : chaque
-                  lien fait ≥44px de haut sans que la colonne s'allonge. */}
-              <ul className="space-y-0">
-                {expertises.map((item, idx) => {
-                  const IconComponent = item.icon
-                  return (
-                    <li key={item.name}>
-                      <a
-                        href={item.href}
-                        className="group flex items-center gap-3 -mx-2 px-2 py-1.5 rounded-lg text-white/80 hover:text-odillon-lime transition-all duration-300"
-                      >
-                        <span className="p-2 rounded-lg bg-white/10 group-hover:bg-white/20 transition-all border border-white/10 group-hover:border-odillon-lime/30">
-                          <IconComponent className="w-4 h-4 text-odillon-lime" />
-                        </span>
-                        <span className="group-hover:translate-x-1 transition-transform">{item.name}</span>
-                      </a>
-                    </li>
-                  )
-                })}
-              </ul>
-            </BlurFade>
-          </div>
-
-          {/* Quick Links Column */}
-          <div className="lg:col-span-2">
-            <BlurFade delay={0.3}>
-              <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-6 flex items-center gap-2">
-                <span className="w-8 h-[2px] bg-odillon-lime rounded-full" />
-                Navigation
-              </h3>
-              <ul className="space-y-0">
-                {quickLinks.map((link) => (
-                  <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className="group flex items-center -mx-2 px-2 py-3 rounded-lg text-white/80 hover:text-odillon-lime transition-all duration-300"
-                    >
-                      <ChevronRight className="w-4 h-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all text-odillon-lime" />
-                      <span>{link.name}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </BlurFade>
-          </div>
-
-          {/* Contact Column */}
-          <div className="lg:col-span-3">
-            <BlurFade delay={0.4}>
-              <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-6 flex items-center gap-2">
-                <span className="w-8 h-[2px] bg-odillon-lime rounded-full" />
-                Nous Contacter
-              </h3>
-              <div className="space-y-4">
-                {/* Phone Card */}
-                <div className="p-3 rounded-lg bg-white/10 border border-white/10">
-                  <div className="flex items-center gap-4 mb-2">
-                    <div className="p-2.5 rounded-lg bg-odillon-lime text-odillon-dark shadow-sm">
-                      <Phone className="w-4 h-4" />
-                    </div>
-                    <span className="text-xs text-white/60 block">Téléphone</span>
-                  </div>
-                  <div className="pl-12">
-                    <a
-                      href="tel:+24111747574"
-                      className="-mx-2 block rounded-md px-2 py-3 text-white font-medium hover:text-odillon-lime transition-colors"
-                    >
-                      +241 11 74 75 74
-                    </a>
-                    <a
-                      href="tel:+24174759515"
-                      className="-mx-2 block rounded-md px-2 py-3 text-white font-medium hover:text-odillon-lime transition-colors"
-                    >
-                      +241 74 75 95 15
-                    </a>
-                  </div>
-                </div>
-
-                {/* Email Card */}
-                <div className="p-3 rounded-lg bg-white/10 border border-white/10">
-                  <div className="flex items-center gap-4 mb-2">
-                    <div className="p-2.5 rounded-lg bg-white text-odillon-teal shadow-sm">
-                      <Mail className="w-4 h-4" />
-                    </div>
-                    <span className="text-xs text-white/60 block">Email</span>
-                  </div>
-                  <div className="pl-12">
-                    <a
-                      href="mailto:contact@odillon.fr"
-                      className="-mx-2 block rounded-md px-2 py-3 text-white font-medium hover:text-odillon-lime transition-colors"
-                    >
-                      contact@odillon.fr
-                    </a>
-                    <a
-                      href="mailto:odillon2017@gmail.com"
-                      className="-mx-2 block rounded-md px-2 py-3 text-white font-medium hover:text-odillon-lime transition-colors"
-                    >
-                      odillon2017@gmail.com
-                    </a>
-                  </div>
-                </div>
-
-                {/* Address Card */}
-                <div className="flex items-start gap-4 p-3 rounded-lg bg-white/10 border border-white/10">
-                  <div className="p-2.5 rounded-lg bg-white/20 text-white">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-xs text-white/60 block">Adresse</span>
-                    <span className="text-white font-medium block">BP: 13 262, Libreville (Gabon)</span>
-                  </div>
-                </div>
-
-                {/* Bureaux Card */}
-                <div className="p-3 rounded-lg bg-white/10 border border-white/10">
-                  <div className="flex items-center gap-4 mb-2">
-                    <div className="p-2.5 rounded-lg bg-white/20 text-white">
-                      <MapPin className="w-4 h-4" />
-                    </div>
-                    <span className="text-xs text-white/60 block">Nos Bureaux</span>
-                  </div>
-                  <div className="space-y-1 pl-12">
-                    <span className="block text-white font-medium">Libreville - Glass (Gabon)</span>
-                  </div>
-                </div>
-              </div>
-            </BlurFade>
+            <h3 className={titreColonne}>Contact</h3>
+            <ul className="space-y-3 text-white/85">
+              <li className="flex items-start gap-3">
+                <Phone className="mt-0.5 size-4 shrink-0 text-odillon-lime" aria-hidden="true" />
+                <span>
+                  <a href="tel:+24111747574" className="transition-colors hover:text-odillon-lime">+241 11 74 75 74</a>
+                  <span className="text-white/40"> · </span>
+                  <a href="tel:+24174759515" className="transition-colors hover:text-odillon-lime">+241 74 75 95 15</a>
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Mail className="mt-0.5 size-4 shrink-0 text-odillon-lime" aria-hidden="true" />
+                <a href="mailto:contact@odillon.fr" className="transition-colors hover:text-odillon-lime">
+                  contact@odillon.fr
+                </a>
+              </li>
+              <li className="flex items-start gap-3">
+                <MapPin className="mt-0.5 size-4 shrink-0 text-odillon-lime" aria-hidden="true" />
+                <span>Glass, Libreville · BP 13262, Gabon</span>
+              </li>
+            </ul>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="relative mt-16 pt-8">
-          {/* Decorative Separator */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 flex items-center gap-4">
-            <span className="w-24 h-[1px] bg-gradient-to-r from-transparent to-white/30" />
-            <span className="w-2 h-2 rounded-full bg-odillon-lime/50" />
-            <span className="w-24 h-[1px] bg-gradient-to-l from-transparent to-white/30" />
-          </div>
-
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/70">
-            <p className="flex items-center gap-1">
-              © {currentYear} Copyright par <span className="font-semibold text-white">ODILLON</span>. Tous les droits sont réservés.
-            </p>
-            <div className="flex flex-wrap items-center justify-center md:justify-end gap-3 sm:gap-4 md:gap-6">
-              <Link
-                href="/mentions-legales"
-                className="text-xs sm:text-sm hover:text-white transition-colors relative py-3.5 after:absolute after:bottom-3.5 after:left-0 after:w-0 after:h-[1px] after:bg-odillon-lime hover:after:w-full after:transition-all"
-              >
-                Mentions Légales
-              </Link>
-              <Link
-                href="/politique-confidentialite"
-                className="text-xs sm:text-sm hover:text-white transition-colors relative py-3.5 after:absolute after:bottom-3.5 after:left-0 after:w-0 after:h-[1px] after:bg-odillon-lime hover:after:w-full after:transition-all"
-              >
-                Politique de Confidentialité
-              </Link>
-
-              <a
-                href="https://www.odillon.fr"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="od-tap flex items-center gap-1.5 px-3 py-1.5 bg-odillon-lime text-odillon-dark rounded-full hover:bg-white hover:text-odillon-teal transition-all group text-xs sm:text-sm"
-              >
-                odillon.fr
-                <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
-              </a>
-            </div>
+        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/15 pt-6 text-xs text-white/60 md:flex-row">
+          <p>© {annee} Odillon. Tous droits réservés.</p>
+          <div className="flex items-center gap-5">
+            <Link href="/mentions-legales" className="py-2 transition-colors hover:text-white">
+              Mentions légales
+            </Link>
+            <Link href="/politique-confidentialite" className="py-2 transition-colors hover:text-white">
+              Politique de confidentialité
+            </Link>
           </div>
         </div>
       </div>
     </footer>
   )
 }
-

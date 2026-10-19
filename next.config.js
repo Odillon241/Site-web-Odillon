@@ -83,7 +83,8 @@ const nextConfig = {
       { source: '/offres/gouvernance/:path*', destination: '/produits#gouvernance', permanent: true },
       { source: '/offres/juridique/:path*', destination: '/produits#juridique', permanent: true },
       { source: '/offres/ressources-humaines/:path*', destination: '/produits#ressources-humaines', permanent: true },
-      { source: '/offres/formations/:path*', destination: '/calendrier-formations', permanent: true },
+      { source: '/offres/formations/:path*', destination: '/produits#formation', permanent: true },
+      { source: '/offres/entreprenariat/:path*', destination: '/produits#entrepreneuriat', permanent: true },
       { source: '/offres/:path*', destination: '/produits', permanent: true },
     ]
   },

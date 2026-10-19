@@ -6,7 +6,7 @@ import { ScrollToTop } from "@/components/magicui/scroll-to-top"
 export const metadata = {
   title: "Nos produits | Odillon - Ingénierie d'Entreprises",
   description:
-    "Produits Odillon en Gouvernance, Ressources Humaines, Juridique et Business Plan (packs Odillon Start, Project et Grow).",
+    "Produits Odillon : gouvernance, administration RH, juridique, entrepreneuriat (packs Odillon Start, Project et Grow) et formation.",
 }
 
 export default function Page() {

@@ -21,9 +21,10 @@ const navigation = [
     icon: "Briefcase",
     submenu: [
       { name: "Gouvernance", href: "/produits#gouvernance" },
-      { name: "Ressources Humaines", href: "/produits#ressources-humaines" },
+      { name: "Administration RH", href: "/produits#ressources-humaines" },
       { name: "Juridique", href: "/produits#juridique" },
-      { name: "Business Plan", href: "/produits#business-plan" },
+      { name: "Entrepreneuriat", href: "/produits#entrepreneuriat" },
+      { name: "Formation", href: "/produits#formation" },
     ]
   },
   {

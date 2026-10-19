@@ -15,13 +15,14 @@ import { VideosSection } from "@/components/sections/videos-section"
 import type { VideoItem } from "@/components/sections/videos-section"
 import { Video } from "@/types/admin"
 import { polesProduits, nombreProduits, type IconePole } from "@/lib/produits-data"
-import { Landmark, Users, Scale, Rocket, ChevronRight } from "lucide-react"
+import { Landmark, Users, Scale, Rocket, GraduationCap, ChevronRight, Download } from "lucide-react"
 
 const icones: Record<IconePole, React.ComponentType<{ className?: string }>> = {
   Landmark,
   Users,
   Scale,
   Rocket,
+  GraduationCap,
 }
 
 function detecterTypeVideo(url: string, type: string): "youtube" | "vimeo" | "direct" {
@@ -203,7 +204,7 @@ export function ProduitsPage() {
                       </span>
                     </span>
                     <span className="hidden shrink-0 rounded-full bg-gray-50 px-3 py-1 text-xs font-medium tabular-nums text-gray-500 sm:inline-flex">
-                      {total} produits
+                      {total} {pole.unite ?? "produits"}
                     </span>
                   </AccordionTrigger>
 
@@ -230,6 +231,24 @@ export function ProduitsPage() {
                           couleur={pole.couleur}
                           className="sm:grid-cols-2"
                         />
+                      )}
+
+                      {pole.liens && (
+                        <div className="mt-8 flex flex-wrap gap-3">
+                          {pole.liens.map((lien, i) => (
+                            <Button key={lien.href} asChild variant={i === 0 ? "default" : "outline"} size="sm" className="h-10 px-5">
+                              <a href={lien.href} download={lien.telechargement ? "" : undefined}>
+                                {lien.telechargement ? (
+                                  <Download className="mr-2 size-4" aria-hidden="true" />
+                                ) : null}
+                                {lien.libelle}
+                                {!lien.telechargement ? (
+                                  <ChevronRight className="ml-1.5 size-4" aria-hidden="true" />
+                                ) : null}
+                              </a>
+                            </Button>
+                          ))}
+                        </div>
                       )}
                     </div>
                   </AccordionPrimitive.Content>

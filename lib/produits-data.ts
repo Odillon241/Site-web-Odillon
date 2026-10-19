@@ -1,10 +1,18 @@
-// Catalogue des produits Odillon — source : « RESUME LUCRECE.xlsx », feuille « Catalogue ».
+// Catalogue des produits Odillon.
+// Sources : « RESUME LUCRECE.xlsx » (feuille « Catalogue »), listes mises à jour
+// par le client, et catalogue de formations 2026-2027 (Mallet Consulting).
 
-export type IconePole = "Landmark" | "Users" | "Scale" | "Rocket"
+export type IconePole = "Landmark" | "Users" | "Scale" | "Rocket" | "GraduationCap"
 
 export type GroupeProduits = {
   titre?: string
   produits: string[]
+}
+
+export type LienPole = {
+  libelle: string
+  href: string
+  telechargement?: boolean
 }
 
 export type PoleProduits = {
@@ -14,7 +22,12 @@ export type PoleProduits = {
   couleur: string
   icone: IconePole
   groupes: GroupeProduits[]
+  // Libellé du compteur (« produits » par défaut).
+  unite?: string
+  liens?: LienPole[]
 }
+
+export const CATALOGUE_FORMATIONS_PDF = "/documents/catalogue-formations-2026-2027.pdf"
 
 export const polesProduits: PoleProduits[] = [
   {
@@ -26,44 +39,32 @@ export const polesProduits: PoleProduits[] = [
     groupes: [
       {
         produits: [
-          "Rédaction des procédures",
-          "Mise en place du plan stratégique",
-          "Structuration du conseil d'administration",
-          "Structuration de l'organigramme",
           "Formation des membres du conseil d'administration",
-          "Gestion des risques",
-          "Rôles et responsabilités des institutions",
-          "Tenue du secrétariat du conseil",
-          "Assistance dans le suivi du plan d'action",
-          "Création et modification des sociétés",
-          "Rédaction des chartes de conformité",
-          "Définition de la cartographie des risques",
+          "Rédaction ou révision des procédures",
+          "Structuration de l'organigramme",
+          "Tenue du secrétariat du conseil d'administration",
+          "Audit de la gouvernance",
         ],
       },
     ],
   },
   {
     id: "ressources-humaines",
-    titre: "Ressources Humaines",
-    accroche: "Audit, rémunération, compétences et recrutement",
+    titre: "Administration RH",
+    accroche: "Recrutement, compétences, paie et audit social",
     couleur: "#C4D82E",
     icone: "Users",
     groupes: [
       {
         produits: [
-          "Audit RH",
+          "Recrutement",
           "Enquête salariale",
-          "Grille de rémunération",
-          "Évaluation des emplois",
           "Gestion des emplois et des compétences",
-          "Rédaction des fiches de poste",
           "Bilan social",
+          "Audit social",
+          "Évaluation des emplois",
+          "Externalisation de la paie",
           "Externalisation de la fonction RH",
-          "Audit des avantages sociaux",
-          "Recensement des salariés",
-          "Gestion des talents",
-          "Assistance au recrutement",
-          "Accompagnement des équipes (montée en expérience)",
         ],
       },
     ],
@@ -99,8 +100,8 @@ export const polesProduits: PoleProduits[] = [
     ],
   },
   {
-    id: "business-plan",
-    titre: "Business Plan",
+    id: "entrepreneuriat",
+    titre: "Entrepreneuriat",
     accroche: "Création et développement d'entreprise, en 3 packs",
     couleur: "#00a795",
     icone: "Rocket",
@@ -128,6 +129,41 @@ export const polesProduits: PoleProduits[] = [
           "Coaching",
         ],
       },
+    ],
+  },
+  {
+    id: "formation",
+    titre: "Formation",
+    accroche: "Catalogue 2026-2027, en partenariat avec Mallet Consulting",
+    couleur: "#C4D82E",
+    icone: "GraduationCap",
+    unite: "formations",
+    groupes: [
+      {
+        produits: [
+          "Accueil et qualité de service",
+          "Management de la performance",
+          "Le bilan social",
+          "Gestion des conflits",
+          "Recruter efficacement",
+          "Devenir manager",
+          "Le leadership inclusif",
+          "La gestion des risques RH",
+          "Asseoir son leadership",
+          "Le droit du travail pour le manager",
+          "La digitalisation RH",
+          "L'administration des ressources humaines",
+          "Gestion des carrières",
+          "Gestion du temps et des priorités",
+          "Le leadership féminin",
+          "Conduite du changement",
+          "La gestion des archives",
+        ],
+      },
+    ],
+    liens: [
+      { libelle: "Télécharger le catalogue (PDF)", href: CATALOGUE_FORMATIONS_PDF, telechargement: true },
+      { libelle: "Voir les dates et s'inscrire", href: "/calendrier-formations" },
     ],
   },
 ]
