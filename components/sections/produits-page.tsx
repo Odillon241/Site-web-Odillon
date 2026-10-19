@@ -1,12 +1,13 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
 import { m } from "framer-motion"
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import * as AccordionPrimitive from "@radix-ui/react-accordion"
+import { Accordion, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { cn } from "@/lib/utils"
 import { GridPattern } from "@/components/ui/grid-pattern"
 import { CtaBanner } from "@/components/sections/cta-banner"
 import { VideoSection } from "@/components/sections/video-section"
@@ -29,9 +30,52 @@ function detecterTypeVideo(url: string, type: string): "youtube" | "vimeo" | "di
   return type as "youtube" | "vimeo" | "direct"
 }
 
+function ListeProduits({
+  produits,
+  couleur,
+  className,
+}: {
+  produits: string[]
+  couleur: string
+  className?: string
+}) {
+  return (
+    <ul className={cn("grid gap-x-10 gap-y-3", className)}>
+      {produits.map((produit) => (
+        <li key={produit} className="flex items-start gap-3 text-[0.95rem] leading-relaxed text-gray-700">
+          <span
+            className="mt-[0.6rem] size-1.5 shrink-0 rounded-full"
+            style={{ backgroundColor: couleur }}
+            aria-hidden="true"
+          />
+          <span>{produit}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+const idsPoles = polesProduits.map((p) => p.id)
+
 export function ProduitsPage() {
   const [video, setVideo] = useState<Video | null>(null)
   const [videosTemoignages, setVideosTemoignages] = useState<VideoItem[]>([])
+  const [ouverts, setOuverts] = useState<string[]>([])
+
+  // Un lien /produits#gouvernance (menu, pied de page, accueil) ouvre la catégorie visée.
+  useEffect(() => {
+    const ouvrirDepuisHash = () => {
+      const id = window.location.hash.slice(1)
+      if (!idsPoles.includes(id)) return
+      setOuverts((prev) => (prev.includes(id) ? prev : [...prev, id]))
+      requestAnimationFrame(() =>
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })
+      )
+    }
+    ouvrirDepuisHash()
+    window.addEventListener("hashchange", ouvrirDepuisHash)
+    return () => window.removeEventListener("hashchange", ouvrirDepuisHash)
+  }, [])
 
   useEffect(() => {
     const chargerVideos = async () => {
@@ -105,23 +149,17 @@ export function ProduitsPage() {
 
             <FadeIn delay={0.4}>
               <p className="text-lg md:text-xl lg:text-2xl text-gray-600 leading-relaxed max-w-3xl mx-auto font-light">
-                Gouvernance, Ressources Humaines, Juridique et Business Plan :
-                des produits concrets pour structurer, développer et pérenniser votre organisation.
+                Pour structurer, développer et pérenniser votre organisation.
               </p>
             </FadeIn>
 
             <FadeIn delay={0.6} className="mt-10 md:mt-12">
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                <Button size="lg" className="h-12 px-8 text-base" asChild>
-                  <Link href="/contact">Démarrer un projet</Link>
-                </Button>
-                <Button variant="outline" size="lg" className="h-12 px-8 text-base group" asChild>
-                  <a href="#catalogue">
-                    Explorer nos produits
-                    <ChevronRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </a>
-                </Button>
-              </div>
+              <Button size="lg" className="h-12 px-8 text-base group" asChild>
+                <a href="#catalogue">
+                  Voir le catalogue
+                  <ChevronRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </a>
+              </Button>
             </FadeIn>
           </div>
         </div>
@@ -130,121 +168,84 @@ export function ProduitsPage() {
       <VideoSection video={video} />
 
       <div id="catalogue" className="od-container relative z-10 scroll-mt-28 pt-8 md:pt-12">
-        <BlurFade delay={0.2}>
-          <div className="text-center mb-8 md:mb-12">
-            <Badge variant="odillon" className="mb-3">
-              Nos pôles d&apos;expertise
-            </Badge>
-            <h2 className="font-baskvill italic text-2xl md:text-3xl text-gray-900 mb-3">
-              Nos produits
-            </h2>
-            <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
-              Gouvernance • Ressources Humaines • Juridique • Business Plan
-            </p>
-          </div>
-        </BlurFade>
-
-        {/* Une card par catégorie */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-16 md:mb-24">
+        {/* Une ligne par catégorie : un clic déplie la liste de ses produits */}
+        <Accordion
+          type="multiple"
+          value={ouverts}
+          onValueChange={setOuverts}
+          className="mx-auto flex max-w-5xl flex-col gap-4 mb-16 md:mb-24"
+        >
           {polesProduits.map((pole, idx) => {
             const Icone = icones[pole.icone]
             const total = nombreProduits(pole)
+            const avecGroupes = pole.groupes.some((g) => g.titre)
 
             return (
               <BlurFade key={pole.id} delay={0.1 + idx * 0.05}>
-                <article
+                <AccordionItem
+                  value={pole.id}
                   id={pole.id}
-                  className="h-full scroll-mt-28 group/card"
-                  aria-labelledby={`pole-${pole.id}`}
+                  className="od-surface scroll-mt-28 overflow-hidden transition-shadow duration-300 hover:border-odillon-teal/25 data-[state=open]:border-odillon-teal/25 data-[state=open]:shadow-md data-[state=open]:shadow-[#0A1F2C]/[0.05]"
                 >
-                  <div className="od-surface relative flex h-full flex-col overflow-hidden transition-all duration-500 hover:border-odillon-teal/20 hover:shadow-md hover:shadow-[#0A1F2C]/[0.05]">
-                    <div
-                      className="absolute -right-16 -top-16 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover/card:opacity-20 transition-opacity duration-500"
-                      style={{ backgroundColor: pole.couleur }}
-                      aria-hidden="true"
-                    />
+                  <AccordionTrigger className="gap-4 px-5 py-5 text-left hover:no-underline md:px-7 md:py-6 [&>svg]:size-5 [&>svg]:text-gray-400">
+                    <span className="flex min-w-0 flex-1 items-center gap-4">
+                      <span
+                        className="flex size-12 shrink-0 items-center justify-center rounded-lg"
+                        style={{ backgroundColor: `${pole.couleur}18`, color: pole.couleur }}
+                      >
+                        <Icone className="size-6" aria-hidden="true" />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block font-baskvill text-xl italic leading-tight text-gray-900 md:text-2xl">
+                          {pole.titre}
+                        </span>
+                        <span className="mt-1 block text-sm font-normal text-gray-500">{pole.accroche}</span>
+                      </span>
+                    </span>
+                    <span className="hidden shrink-0 rounded-full bg-gray-50 px-3 py-1 text-xs font-medium tabular-nums text-gray-500 sm:inline-flex">
+                      {total} produits
+                    </span>
+                  </AccordionTrigger>
 
-                    <div className="p-6 md:p-8 flex flex-col flex-1">
-                      <div className="flex items-start gap-4 mb-6">
-                        <div
-                          className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm group-hover/card:scale-105 transition-transform duration-500"
-                          style={{ backgroundColor: `${pole.couleur}15`, color: pole.couleur }}
-                        >
-                          <Icone className="w-6 h-6" aria-hidden="true" />
-                        </div>
-                        <div className="flex-1 min-w-0 pt-0.5">
-                          <h3
-                            id={`pole-${pole.id}`}
-                            className="font-baskvill italic text-xl md:text-2xl text-gray-900 leading-tight"
-                          >
-                            {pole.titre}
-                          </h3>
-                          <p className="text-xs font-semibold uppercase tracking-wider mt-1" style={{ color: pole.couleur }}>
-                            {pole.accroche}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="relative z-10 flex flex-col gap-5 mb-6">
-                        {pole.groupes.map((groupe, gIdx) => (
-                          <div key={groupe.titre ?? gIdx}>
-                            {groupe.titre && (
-                              <p className="text-[11px] font-bold uppercase tracking-widest text-odillon-dark/70 mb-2.5">
+                  {/* forceMount : les produits restent dans le HTML (référencement), masqués en CSS une fois fermés */}
+                  <AccordionPrimitive.Content
+                    forceMount
+                    className="overflow-hidden data-[state=closed]:hidden data-[state=open]:animate-accordion-down"
+                  >
+                    <div className="mx-5 border-t border-gray-100 pb-6 pt-6 md:mx-7 md:pb-8">
+                      {avecGroupes ? (
+                        <div className="grid gap-8 md:grid-cols-3">
+                          {pole.groupes.map((groupe) => (
+                            <div key={groupe.titre}>
+                              <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-odillon-dark/70">
                                 {groupe.titre}
                               </p>
-                            )}
-                            <ul className="flex flex-col gap-2.5">
-                              {groupe.produits.map((produit) => (
-                                <li key={produit} className="flex items-start gap-2.5 text-sm leading-relaxed text-gray-700">
-                                  <span
-                                    className="mt-2 size-1.5 shrink-0 rounded-full"
-                                    style={{ backgroundColor: pole.couleur }}
-                                    aria-hidden="true"
-                                  />
-                                  <span>{produit}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="mt-auto pt-4 border-t border-gray-50 relative z-10">
-                        <Button
-                          asChild
-                          variant="outline"
-                          size="sm"
-                          className="mb-3 w-full group/cta border transition-all hover:brightness-95"
-                          style={{
-                            backgroundColor: `${pole.couleur}15`,
-                            borderColor: `${pole.couleur}80`,
-                            color: pole.couleur,
-                          }}
-                        >
-                          <Link href="/contact">
-                            Discutons de votre projet
-                            <ChevronRight className="ml-2 w-4 h-4 group-hover/cta:translate-x-0.5 transition-transform" aria-hidden="true" />
-                          </Link>
-                        </Button>
-                        <span className="text-[10px] uppercase tracking-widest text-gray-400 font-medium">
-                          {total} produit{total > 1 ? "s" : ""}
-                        </span>
-                      </div>
+                              <ListeProduits produits={groupe.produits} couleur={pole.couleur} />
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <ListeProduits
+                          produits={pole.groupes.flatMap((g) => g.produits)}
+                          couleur={pole.couleur}
+                          className="sm:grid-cols-2"
+                        />
+                      )}
                     </div>
-                  </div>
-                </article>
+                  </AccordionPrimitive.Content>
+                </AccordionItem>
               </BlurFade>
             )
           })}
-        </div>
+        </Accordion>
 
         <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen">
           <CtaBanner
-            title="Prêt à transformer votre entreprise ?"
-            description="Discutons de vos enjeux et découvrez comment nos produits peuvent propulser votre organisation vers l'excellence."
+            title="Un projet en tête ?"
+            description="Dites-nous où vous en êtes : nous vous orientons vers les produits adaptés à votre situation."
             buttonText="Discutons de votre projet"
             buttonHref="/contact"
-            badgeText="Excellence"
+            badgeText="Contact"
           />
         </div>
 

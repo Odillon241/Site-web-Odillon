@@ -77,7 +77,7 @@ export function Footer() {
                   const IconComponent = item.icon
                   return (
                     <li key={item.name}>
-                      <Link
+                      <a
                         href={item.href}
                         className="group flex items-center gap-3 -mx-2 px-2 py-1.5 rounded-lg text-white/80 hover:text-odillon-lime transition-all duration-300"
                       >
@@ -85,7 +85,7 @@ export function Footer() {
                           <IconComponent className="w-4 h-4 text-odillon-lime" />
                         </span>
                         <span className="group-hover:translate-x-1 transition-transform">{item.name}</span>
-                      </Link>
+                      </a>
                     </li>
                   )
                 })}

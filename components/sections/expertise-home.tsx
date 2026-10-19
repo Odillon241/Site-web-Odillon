@@ -64,10 +64,10 @@ export function ExpertiseHome() {
 
             <BlurFade delay={0.5}>
               <Link
-                href="/produits"
+                href="/a-propos"
                 className="inline-flex items-center text-odillon-teal font-semibold group"
               >
-                Découvrir notre approche
+                En savoir plus sur Odillon
                 <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
               </Link>
             </BlurFade>

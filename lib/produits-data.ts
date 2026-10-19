@@ -20,7 +20,7 @@ export const polesProduits: PoleProduits[] = [
   {
     id: "gouvernance",
     titre: "Gouvernance",
-    accroche: "Structuration et Restructuration d'Entreprises",
+    accroche: "Structuration et restructuration d'entreprises",
     couleur: "#00a795",
     icone: "Landmark",
     groupes: [
@@ -45,7 +45,7 @@ export const polesProduits: PoleProduits[] = [
   {
     id: "ressources-humaines",
     titre: "Ressources Humaines",
-    accroche: "Administration et Ressources Humaines",
+    accroche: "Audit, rémunération, compétences et recrutement",
     couleur: "#C4D82E",
     icone: "Users",
     groupes: [
@@ -71,7 +71,7 @@ export const polesProduits: PoleProduits[] = [
   {
     id: "juridique",
     titre: "Juridique",
-    accroche: "Accompagnement Juridique Externalisé",
+    accroche: "Conseil, droit du travail et droit des affaires",
     couleur: "#C4D82E",
     icone: "Scale",
     groupes: [
@@ -81,12 +81,11 @@ export const polesProduits: PoleProduits[] = [
           "Dialogue social et conventions (rédactions partenaires)",
           "Rédaction et analyse des contrats",
           "Audit et conformité (tous types de contrats)",
-          "Amélioration du règlement intérieur",
         ],
       },
       {
         titre: "Droit du travail",
-        produits: ["Contrat de travail", "Règlement intérieur"],
+        produits: ["Contrat de travail", "Rédaction et amélioration du règlement intérieur"],
       },
       {
         titre: "Droit des affaires",
@@ -102,7 +101,7 @@ export const polesProduits: PoleProduits[] = [
   {
     id: "business-plan",
     titre: "Business Plan",
-    accroche: "Accompagnement à la création et au développement",
+    accroche: "Création et développement d'entreprise, en 3 packs",
     couleur: "#00a795",
     icone: "Rocket",
     groupes: [
@@ -112,7 +111,7 @@ export const polesProduits: PoleProduits[] = [
           "Analyse du projet",
           "Accompagnement à la création",
           "Lancement de la société",
-          "Business plan",
+          "Rédaction du business plan",
           "Coaching",
         ],
       },

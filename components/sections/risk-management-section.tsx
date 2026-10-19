@@ -137,8 +137,8 @@ export function RiskManagementSection() {
                                     asChild
                                     className="bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg px-8 h-12 transition-all"
                                 >
-                                    <Link href="/produits">
-                                        Découvrir notre approche
+                                    <Link href="/produits#gouvernance">
+                                        Nos produits de gouvernance
                                         <ArrowRight className="ml-2 w-4 h-4" />
                                     </Link>
                                 </Button>

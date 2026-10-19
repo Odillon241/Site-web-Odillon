@@ -173,13 +173,13 @@ export function HeaderPro() {
                       className="absolute top-full left-0 mt-2 w-64 rounded-xl border border-odillon-teal/10 bg-white py-2 shadow-lg shadow-[#0A1F2C]/10"
                     >
                       {item.submenu.map((subitem) => (
-                        <Link
+                        <a
                           key={subitem.name}
                           href={subitem.href}
                           className="block px-4 py-3 text-sm text-gray-700 hover:bg-odillon-teal/5 hover:text-odillon-teal transition-colors"
                         >
                           {subitem.name}
-                        </Link>
+                        </a>
                       ))}
                     </m.div>
                   )}
@@ -263,14 +263,14 @@ export function HeaderPro() {
                     {item.submenu && (
                       <div className="pl-12 space-y-1">
                         {item.submenu.map((subitem) => (
-                          <Link
+                          <a
                             key={subitem.name}
                             href={subitem.href}
                             onClick={() => setMobileMenuOpen(false)}
                             className="block px-4 py-3 text-sm text-gray-600 hover:text-odillon-teal rounded-md hover:bg-gray-50 transition-colors"
                           >
                             {subitem.name}
-                          </Link>
+                          </a>
                         ))}
                       </div>
                     )}

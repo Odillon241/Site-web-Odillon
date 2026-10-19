@@ -49,15 +49,12 @@ export function ServicesHome() {
               <div className="inline-flex items-center space-x-2 mb-6">
                 <span className="w-8 h-px bg-odillon-teal"></span>
                 <span className="text-odillon-teal text-xs font-bold uppercase tracking-[0.2em]">
-                  Nos Piliers d&apos;Expertise
+                  Nos produits
                 </span>
               </div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-baskvill tracking-tight leading-[1.2]">
-                L&apos;expertise stratégique au service de votre transformation.
+                Structurer, sécuriser et développer votre entreprise.
               </h2>
-              <p className="text-lg text-slate-600 leading-relaxed max-w-2xl">
-                Quatre domaines d&apos;intervention pour structurer votre organisation et sécuriser votre croissance de manière pérenne.
-              </p>
             </BlurFade>
           </div>
 
@@ -68,7 +65,7 @@ export function ServicesHome() {
               className="group border-slate-200 hover:border-odillon-teal hover:bg-odillon-teal/5 text-slate-900 font-bold rounded-lg px-8 h-12 transition-all duration-300"
             >
               <Link href="/produits">
-                Voir tous nos produits
+                Voir le catalogue
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
@@ -120,7 +117,7 @@ export function ServicesHome() {
 
                     {/* Footer link */}
                     <div className="mt-auto pt-6 border-t border-slate-100 flex items-center text-xs font-bold uppercase tracking-widest text-slate-400 group-hover:text-odillon-teal transition-colors">
-                      En savoir plus
+                      Voir les produits
                       <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-2" />
                     </div>
                   </div>
