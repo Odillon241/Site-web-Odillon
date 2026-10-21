@@ -2,7 +2,8 @@
 
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { Button } from "@/components/ui/button"
-import { m, useReducedMotion } from "framer-motion"
+import { useRef, useState } from "react"
+import { AnimatePresence, m, useReducedMotion } from "framer-motion"
 import Image from "next/image"
 import {
     Search,
@@ -60,40 +61,152 @@ const riskManagementSteps = [
     }
 ]
 
+// Sélecteur d'étapes (motif « onglets » WAI-ARIA) : flèches, Début et Fin
+// déplacent la sélection, le détail de l'étape s'affiche à côté.
+function MethodologieInteractive() {
+    const reduireMouvement = useReducedMotion()
+    const [actif, setActif] = useState(0)
+    const onglets = useRef<Array<HTMLButtonElement | null>>([])
+    const etape = riskManagementSteps[actif]
+    const Icone = etape.icon
+
+    const selectionner = (i: number) => {
+        const n = riskManagementSteps.length
+        const cible = (i + n) % n
+        setActif(cible)
+        onglets.current[cible]?.focus()
+    }
+
+    const surTouche = (e: React.KeyboardEvent) => {
+        const actions: Record<string, number> = {
+            ArrowDown: actif + 1,
+            ArrowRight: actif + 1,
+            ArrowUp: actif - 1,
+            ArrowLeft: actif - 1,
+            Home: 0,
+            End: riskManagementSteps.length - 1,
+        }
+        if (e.key in actions) {
+            e.preventDefault()
+            selectionner(actions[e.key])
+        }
+    }
+
+    return (
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-10">
+            <div
+                role="tablist"
+                aria-label="Étapes de la méthodologie"
+                aria-orientation="vertical"
+                onKeyDown={surTouche}
+                className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0 lg:pb-0"
+            >
+                {riskManagementSteps.map((s, i) => {
+                    const estActif = i === actif
+                    return (
+                        <button
+                            key={s.title}
+                            ref={(el) => { onglets.current[i] = el }}
+                            type="button"
+                            role="tab"
+                            id={`methodo-onglet-${i}`}
+                            aria-selected={estActif}
+                            aria-controls="methodo-panneau"
+                            tabIndex={estActif ? 0 : -1}
+                            onClick={() => setActif(i)}
+                            className={`group flex shrink-0 items-center gap-4 rounded-xl px-4 py-3 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-odillon-teal lg:px-5 lg:py-4 ${
+                                estActif
+                                    ? "bg-odillon-dark text-white shadow-lg shadow-odillon-dark/10"
+                                    : "bg-slate-50 text-slate-600 hover:bg-slate-100"
+                            }`}
+                        >
+                            <span
+                                className={`font-mono text-xs font-bold tabular-nums ${
+                                    estActif ? "text-odillon-lime" : "text-slate-400"
+                                }`}
+                            >
+                                0{i + 1}
+                            </span>
+                            <span className="font-baskvill text-lg font-bold italic">{s.title}</span>
+                        </button>
+                    )
+                })}
+            </div>
+
+            <div
+                role="tabpanel"
+                id="methodo-panneau"
+                aria-labelledby={`methodo-onglet-${actif}`}
+                className="relative overflow-hidden rounded-2xl bg-[linear-gradient(145deg,#ffffff,#f8fafc)] p-8 ring-1 ring-inset ring-slate-200/70 sm:p-10"
+            >
+                <AnimatePresence mode="wait" initial={false}>
+                    <m.div
+                        key={etape.title}
+                        initial={reduireMouvement ? false : { opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={reduireMouvement ? undefined : { opacity: 0, y: -12 }}
+                        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                        <div className="mb-6 flex items-center justify-between">
+                            <div
+                                className="flex size-14 items-center justify-center rounded-xl"
+                                style={{ backgroundColor: `${etape.color}18`, color: etape.color }}
+                            >
+                                <Icone className="size-7" strokeWidth={1.5} aria-hidden="true" />
+                            </div>
+                            <span className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-slate-400">
+                                Étape {actif + 1} / {riskManagementSteps.length}
+                            </span>
+                        </div>
+
+                        <h4 className="mb-3 font-baskvill text-3xl font-bold italic text-slate-900">{etape.title}</h4>
+                        <p className="mb-8 max-w-xl text-base leading-relaxed text-slate-600 text-pretty">{etape.description}</p>
+
+                        <ul className="flex flex-wrap gap-2">
+                            {etape.features.map((f) => (
+                                <li
+                                    key={f}
+                                    className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700"
+                                >
+                                    {f}
+                                </li>
+                            ))}
+                        </ul>
+                    </m.div>
+                </AnimatePresence>
+
+                <div className="mt-10 flex items-center justify-between gap-4 border-t border-slate-100 pt-6">
+                    <div className="flex gap-1.5" aria-hidden="true">
+                        {riskManagementSteps.map((s, i) => (
+                            <span
+                                key={s.title}
+                                className={`h-1.5 rounded-full transition-all duration-300 ${
+                                    i === actif ? "w-8 bg-odillon-teal" : i < actif ? "w-3 bg-odillon-teal/40" : "w-3 bg-slate-200"
+                                }`}
+                            />
+                        ))}
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => setActif((actif + 1) % riskManagementSteps.length)}
+                        className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-odillon-teal outline-none transition-colors hover:bg-odillon-teal/5 focus-visible:ring-2 focus-visible:ring-odillon-teal"
+                    >
+                        {actif === riskManagementSteps.length - 1 ? "Recommencer" : "Étape suivante"}
+                        <ArrowRight className="size-4" aria-hidden="true" />
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 export function RiskManagementSection() {
-    const shouldReduceMotion = useReducedMotion()
-
-    const gridVariants = {
-        hidden: {},
-        visible: {
-            transition: {
-                staggerChildren: shouldReduceMotion ? 0 : 0.1,
-                delayChildren: shouldReduceMotion ? 0 : 0.08
-            }
-        }
-    }
-
-    const cardVariants = {
-        hidden: shouldReduceMotion
-            ? { opacity: 1 }
-            : { opacity: 0, y: 24, filter: "blur(4px)" },
-        visible: {
-            opacity: 1,
-            y: 0,
-            filter: "blur(0px)",
-            transition: {
-                duration: shouldReduceMotion ? 0 : 0.5,
-                ease: [0.22, 1, 0.36, 1] as const
-            }
-        }
-    }
-
     return (
         <section id="risques" className="relative py-16 sm:py-20 lg:py-24 overflow-hidden bg-white">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
                 
                 {/* Top Section: Split Layout with Image */}
-                <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-24 sm:mb-32">
+                <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-16 sm:mb-20">
                     <BlurFade delay={0.1}>
                         <div className="relative group">
                             <div className="absolute -inset-4 bg-odillon-teal/5 rounded-[2rem] -rotate-1 group-hover:rotate-0 transition-transform duration-500" />
@@ -147,80 +260,18 @@ export function RiskManagementSection() {
                     </div>
                 </div>
 
-                {/* Bottom Section: Methodology Grid */}
+                {/* Bottom Section: Methodology Selector */}
                 <div className="relative">
-                    <BlurFade delay={0.3} className="mb-12">
+                    <BlurFade delay={0.3} className="mb-8 sm:mb-10">
                         <h3 className="text-xl font-bold text-slate-900 font-baskvill italic flex items-center gap-4">
-                            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-odillon-teal text-white text-xs">6</span>
+                            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-odillon-teal text-white text-xs not-italic">6</span>
                             Étapes de notre méthodologie
                         </h3>
                     </BlurFade>
 
-                    <m.div
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                        variants={gridVariants}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.12 }}
-                    >
-                        {riskManagementSteps.map((step, idx) => {
-                            const Icon = step.icon
-                            return (
-                                <m.article
-                                    key={step.title}
-                                    variants={cardVariants}
-                                    whileHover={shouldReduceMotion ? undefined : { y: -6 }}
-                                    transition={{ type: "spring", duration: 0.3, bounce: 0 }}
-                                    className="group relative h-full overflow-hidden rounded-2xl bg-[linear-gradient(145deg,rgba(255,255,255,0.98),rgba(248,250,252,0.92))] p-8 shadow-[0_1px_0_rgba(15,23,42,0.05),0_12px_36px_rgba(15,23,42,0.045)] ring-1 ring-inset ring-slate-200/70 transition-[box-shadow,background-color] duration-300 hover:bg-white hover:shadow-[0_1px_0_rgba(15,23,42,0.05),0_22px_50px_rgba(15,23,42,0.10)]"
-                                >
-                                    <m.span
-                                        aria-hidden="true"
-                                        className="absolute inset-x-8 top-0 h-[2px] origin-left rounded-full"
-                                        style={{ backgroundColor: step.color }}
-                                        variants={{
-                                            hidden: { scaleX: shouldReduceMotion ? 1 : 0, opacity: 0.25 },
-                                            visible: {
-                                                scaleX: 1,
-                                                opacity: 0.8,
-                                                transition: { duration: shouldReduceMotion ? 0 : 0.45, delay: shouldReduceMotion ? 0 : 0.16 }
-                                            }
-                                        }}
-                                    />
-
-                                    <div className="flex items-start justify-between mb-6">
-                                        <div
-                                            className="flex h-11 w-11 items-center justify-center rounded-xl ring-1 ring-inset ring-black/[0.035] transition-[transform,box-shadow] duration-300 group-hover:-rotate-3 group-hover:scale-105 group-hover:shadow-md"
-                                            style={{ backgroundColor: `${step.color}12`, color: step.color }}
-                                        >
-                                            <Icon className="w-5 h-5" strokeWidth={1.5} />
-                                        </div>
-                                        <span className="font-mono text-[10px] font-bold tabular-nums text-slate-300 transition-colors duration-300 group-hover:text-odillon-teal/45 uppercase tracking-[0.16em]">
-                                            Étape 0{idx + 1}
-                                        </span>
-                                    </div>
-
-                                    <h4 className="text-lg font-bold text-slate-900 mb-3 font-baskvill italic group-hover:text-odillon-teal transition-colors duration-300">
-                                        {step.title}
-                                    </h4>
-                                    <p className="text-sm text-slate-500 leading-relaxed mb-6 text-pretty">
-                                        {step.description}
-                                    </p>
-
-                                    <ul className="space-y-2.5">
-                                        {step.features.map((feature, i) => (
-                                            <li key={i} className="flex items-center text-xs font-medium text-slate-600">
-                                                <span
-                                                    className="mr-3 h-1 w-1 shrink-0 rounded-full transition-transform duration-300 group-hover:scale-150"
-                                                    style={{ backgroundColor: step.color }}
-                                                />
-                                                {feature}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </m.article>
-                            )
-                        })}
-                    </m.div>
+                    <BlurFade delay={0.35}>
+                        <MethodologieInteractive />
+                    </BlurFade>
                 </div>
             </div>
         </section>

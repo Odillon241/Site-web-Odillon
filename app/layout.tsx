@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import { satoshiFont, libreBaskerville } from "./fonts"
 import { MotionProvider } from "@/components/providers/motion-provider"
 import { Toaster } from "@/components/ui/sonner"
+import { WhatsAppButton } from "@/components/layout/whatsapp-button"
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.odillon.fr'),
@@ -65,6 +66,7 @@ export default function RootLayout({
         <MotionProvider>
           {children}
           <Toaster />
+          <WhatsAppButton />
         </MotionProvider>
       </body>
     </html>

@@ -7,6 +7,8 @@ import { Hero } from "@/components/sections/hero"
 import { ExpertiseHome } from "@/components/sections/expertise-home"
 import { VideoSection } from "@/components/sections/video-section"
 import { MondayMotivationSection } from "@/components/sections/monday-motivation-section"
+import { ProchaineFormation } from "@/components/sections/prochaine-formation"
+import { estComplet, type Formation } from "@/types/formation"
 import { createClient } from "@/lib/supabase/server"
 
 // Produits, À propos, Blog et Contact ont chacun leur onglet : l'accueil ne les
@@ -70,6 +72,19 @@ export default async function Home({
     })
   const mondayMotivationVideo = mondayMotivationVideos[0] || null
 
+  // Prochaine session ouverte aux inscriptions (le bandeau disparaît s'il n'y en a pas)
+  const aujourdHui = new Date().toISOString().slice(0, 10)
+  const { data: sessions } = await supabase
+    .from('formations')
+    .select('*')
+    .eq('is_active', true)
+    .gte('date_debut', aujourdHui)
+    .order('date_debut', { ascending: true })
+    .limit(10)
+  const prochaineFormation = ((sessions as Formation[]) || []).find(
+    (f) => f.inscriptions_ouvertes !== false && !estComplet(f)
+  ) || null
+
   return (
     <>
       <SiteOpening />
@@ -77,6 +92,7 @@ export default async function Home({
       <HeaderPro />
       <main id="contenu" tabIndex={-1} className="outline-none min-h-screen pt-14 md:pt-16">
         <Hero logos={logos || []} video={heroVideo} />
+        <ProchaineFormation formation={prochaineFormation} />
         <MondayMotivationSection video={mondayMotivationVideo} />
         <ExpertiseHome />
         <RiskManagementSection />

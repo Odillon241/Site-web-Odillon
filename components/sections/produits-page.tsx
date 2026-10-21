@@ -233,8 +233,12 @@ export function ProduitsPage() {
                         />
                       )}
 
+                      {pole.mention && (
+                        <p className="mt-6 text-sm text-gray-500">{pole.mention}</p>
+                      )}
+
                       {pole.liens && (
-                        <div className="mt-8 flex flex-wrap gap-3">
+                        <div className="mt-6 flex flex-wrap gap-3">
                           {pole.liens.map((lien, i) => (
                             <Button key={lien.href} asChild variant={i === 0 ? "default" : "outline"} size="sm" className="h-10 px-5">
                               <a href={lien.href} download={lien.telechargement ? "" : undefined}>
@@ -261,10 +265,10 @@ export function ProduitsPage() {
         <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen">
           <CtaBanner
             title="Un projet en tête ?"
-            description="Dites-nous où vous en êtes : nous vous orientons vers les produits adaptés à votre situation."
-            buttonText="Discutons de votre projet"
-            buttonHref="/contact"
-            badgeText="Contact"
+            description="Un premier échange de 30 minutes pour vous orienter vers les produits adaptés à votre situation."
+            buttonText="Prendre rendez-vous"
+            buttonHref="/rendez-vous"
+            badgeText="Rendez-vous"
           />
         </div>
 

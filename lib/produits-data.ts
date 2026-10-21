@@ -24,6 +24,8 @@ export type PoleProduits = {
   groupes: GroupeProduits[]
   // Libellé du compteur (« produits » par défaut).
   unite?: string
+  // Précision affichée sous la liste (partenariat, conditions…).
+  mention?: string
   liens?: LienPole[]
 }
 
@@ -33,7 +35,7 @@ export const polesProduits: PoleProduits[] = [
   {
     id: "gouvernance",
     titre: "Gouvernance",
-    accroche: "Structuration et restructuration d'entreprises",
+    accroche: "Vous voulez structurer la direction de votre entreprise",
     couleur: "#00a795",
     icone: "Landmark",
     groupes: [
@@ -51,7 +53,7 @@ export const polesProduits: PoleProduits[] = [
   {
     id: "ressources-humaines",
     titre: "Administration RH",
-    accroche: "Recrutement, compétences, paie et audit social",
+    accroche: "Vous voulez recruter, rémunérer et faire grandir vos équipes",
     couleur: "#C4D82E",
     icone: "Users",
     groupes: [
@@ -72,7 +74,7 @@ export const polesProduits: PoleProduits[] = [
   {
     id: "juridique",
     titre: "Juridique",
-    accroche: "Conseil, droit du travail et droit des affaires",
+    accroche: "Vous voulez sécuriser vos contrats et votre conformité",
     couleur: "#C4D82E",
     icone: "Scale",
     groupes: [
@@ -102,7 +104,7 @@ export const polesProduits: PoleProduits[] = [
   {
     id: "entrepreneuriat",
     titre: "Entrepreneuriat",
-    accroche: "Création et développement d'entreprise, en 3 packs",
+    accroche: "Vous créez ou développez votre entreprise : 3 packs",
     couleur: "#00a795",
     icone: "Rocket",
     groupes: [
@@ -134,10 +136,11 @@ export const polesProduits: PoleProduits[] = [
   {
     id: "formation",
     titre: "Formation",
-    accroche: "Catalogue 2026-2027, en partenariat avec Mallet Consulting",
+    accroche: "Vous voulez faire monter vos équipes en compétences",
     couleur: "#C4D82E",
     icone: "GraduationCap",
     unite: "formations",
+    mention: "Catalogue 2026-2027, en partenariat avec Mallet Consulting.",
     groupes: [
       {
         produits: [

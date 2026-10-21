@@ -9,7 +9,7 @@ import { LogoRotator } from "@/components/ui/logo-rotator";
 import Link from "next/link";
 import { CompanyLogo, Video } from "@/types/admin";
 import { VideoPlayer } from "@/components/ui/video-player";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CalendarCheck } from "lucide-react";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { NewsTicker } from "@/components/sections/news-ticker";
 
@@ -119,11 +119,18 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
             <FadeIn delay={0.52} direction="up">
               <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
                 <Link
-                  href="/a-propos"
+                  href="/rendez-vous"
                   className="group inline-flex items-center justify-center gap-2 rounded-md bg-odillon-teal px-6 py-3.5 text-sm font-semibold text-white shadow-sm shadow-odillon-teal/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-odillon-teal/90 hover:shadow-md hover:shadow-odillon-teal/20 sm:text-base"
                 >
-                  Découvrir notre approche
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <CalendarCheck className="w-4 h-4" aria-hidden="true" />
+                  Prendre rendez-vous
+                </Link>
+                <Link
+                  href="/produits"
+                  className="group inline-flex items-center justify-center gap-2 rounded-md border border-odillon-dark/15 bg-white/70 px-6 py-3.5 text-sm font-semibold text-odillon-dark transition-all duration-300 hover:-translate-y-0.5 hover:border-odillon-teal/40 hover:text-odillon-teal sm:text-base"
+                >
+                  Voir nos produits
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </Link>
               </div>
             </FadeIn>

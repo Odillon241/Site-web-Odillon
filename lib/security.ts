@@ -341,9 +341,15 @@ export function validateTextField(
     }
   }
 
+  // Seuls les champs repris dans des en-têtes d'email doivent perdre leurs
+  // retours à la ligne ; le message les garde (le gabarit d'email les convertit en <br>).
+  const sanitized = fieldName === 'message'
+    ? trimmed.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+    : sanitizeEmailHeader(trimmed)
+
   return {
     isValid: true,
-    sanitized: sanitizeEmailHeader(trimmed)
+    sanitized
   }
 }
 
