@@ -83,7 +83,8 @@ export const polesProduits: PoleProduits[] = [
         produits: [
           "Dialogue social et conventions (rédactions partenaires)",
           "Rédaction et analyse des contrats",
-          "Audit et conformité (tous types de contrats)",
+          "Audit et conformité",
+          "Création et modification des sociétés",
         ],
       },
       {

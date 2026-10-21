@@ -48,7 +48,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-white/15 pt-5 text-xs text-white/60 md:flex-row">
-          <p>© {annee} Odillon. Tous droits réservés.</p>
+          <p className="md:pl-20">© {annee} Odillon. Tous droits réservés.</p>
           <div className="flex items-center gap-5 md:pr-20">
             <Link href="/mentions-legales" className="py-2 transition-colors hover:text-white">
               Mentions légales
