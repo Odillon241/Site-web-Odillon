@@ -91,7 +91,7 @@ export function FaqHome() {
                             Vous avez une autre question ?
                         </p>
                         <a
-                            href="#contact"
+                            href="/contact"
                             className="inline-flex items-center text-odillon-teal font-semibold hover:text-odillon-teal/80 transition-colors"
                         >
                             Contactez-nous directement

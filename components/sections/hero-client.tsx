@@ -119,7 +119,7 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
             <FadeIn delay={0.52} direction="up">
               <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
                 <Link
-                  href="#apropos"
+                  href="/a-propos"
                   className="group inline-flex items-center justify-center gap-2 rounded-md bg-odillon-teal px-6 py-3.5 text-sm font-semibold text-white shadow-sm shadow-odillon-teal/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-odillon-teal/90 hover:shadow-md hover:shadow-odillon-teal/20 sm:text-base"
                 >
                   Découvrir notre approche

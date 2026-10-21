@@ -78,6 +78,8 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Lien historique du bandeau d'accueil (réglage en base) : la page n'a jamais existé.
+      { source: '/expertise', destination: '/produits', permanent: true },
       // « Nos offres » est devenu « Nos produits » : les anciennes URL restent valides.
       { source: '/offres', destination: '/produits', permanent: true },
       { source: '/offres/gouvernance/:path*', destination: '/produits#gouvernance', permanent: true },
