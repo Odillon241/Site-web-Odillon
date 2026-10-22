@@ -65,27 +65,29 @@ export function CtaBanner({
                 src={ctaImageUrl || defaultImageUrl}
                 width={1200}
                 height={500}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-[70%_center]"
                 priority={false}
               />
-              <div className="absolute inset-0 bg-gray-900/60 mix-blend-multiply"></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div>
+              {/* Bandeau lumineux : un voile blanc sous le texte seulement, la
+                  photo reste claire à droite. Sur mobile le texte couvre toute
+                  la largeur, le voile aussi. */}
+              <div className="absolute inset-0 bg-white/80 sm:bg-transparent sm:bg-gradient-to-r sm:from-white/95 sm:via-white/75 sm:to-transparent"></div>
             </div>
 
             <div className="relative z-10 flex items-center min-h-[280px] sm:min-h-[340px] md:min-h-[400px]">
               <div className="max-w-2xl px-5 sm:px-8 md:px-12 py-8 sm:py-10 md:py-12">
                 {badgeText && (
-                  <span className="inline-block py-1 px-3 rounded bg-white/10 backdrop-blur-sm text-white text-xs font-medium uppercase tracking-wider mb-6 border border-white/20">
+                  <span className="inline-block py-1 px-3 rounded bg-odillon-teal/10 text-odillon-teal text-xs font-semibold uppercase tracking-wider mb-6 border border-odillon-teal/20">
                     {badgeText}
                   </span>
                 )}
 
-                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold tracking-tight text-white mb-4 sm:mb-6 font-petrov-sans">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold tracking-tight text-odillon-dark mb-4 sm:mb-6 font-petrov-sans">
                   {title}
                 </h2>
 
                 {description && (
-                  <p className="text-sm sm:text-base md:text-lg text-gray-200 mb-6 sm:mb-8 leading-relaxed max-w-lg">
+                  <p className="text-sm sm:text-base md:text-lg text-gray-700 mb-6 sm:mb-8 leading-relaxed max-w-lg">
                     {description}
                   </p>
                 )}
@@ -93,7 +95,7 @@ export function CtaBanner({
                 <Button
                   asChild
                   size="lg"
-                  className="bg-white text-odillon-dark hover:bg-gray-100 border-0 text-base px-8 py-6 rounded-full shadow-lg transition-all hover:scale-105"
+                  className="bg-odillon-teal text-white hover:bg-odillon-teal/90 border-0 text-base px-8 py-6 rounded-full shadow-lg transition-all hover:scale-105"
                 >
                   <Link href={buttonHref} className="inline-flex items-center gap-2">
                     {buttonText}
