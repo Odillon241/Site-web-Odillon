@@ -546,14 +546,16 @@ export function VideosTab() {
             </CardContent>
 
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                <DialogContent className="sm:max-w-[500px]">
+                {/* En-tête et boutons fixes, seuls les champs défilent : le formulaire
+                    dépasse la hauteur d'un écran d'ordinateur portable. */}
+                <DialogContent className="grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden sm:max-w-[560px]">
                     <DialogHeader>
                         <DialogTitle>{editingVideo ? 'Modifier la vidéo' : 'Ajouter une vidéo'}</DialogTitle>
                         <DialogDescription>
                             {editingVideo ? 'Modifiez les informations de la vidéo.' : 'Ajoutez une nouvelle vidéo à votre collection.'}
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
+                    <div className="-mx-6 grid gap-4 overflow-y-auto border-y border-slate-100 px-6 py-4">
                         <div className="grid gap-2">
                             <Label htmlFor="title">Titre *</Label>
                             <Input
@@ -735,7 +737,7 @@ export function VideosTab() {
                             />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid gap-4 sm:grid-cols-2">
                             <div className="grid gap-2">
                                 <Label htmlFor="presenter_name">Nom du Présentateur</Label>
                                 <Input
