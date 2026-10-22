@@ -20,7 +20,6 @@ import Image from "next/image"
 import { TeamGrid } from "@/components/sections/team-grid"
 import { VideoPlayer } from "@/components/ui/video-player"
 import { Video } from "@/types/admin"
-import { SpotlightCard } from "@/components/ui/spotlight-card"
 import { JourneyTimeline, type JourneyItem } from "@/components/sections/about-home"
 import {
   valeurs,
@@ -291,7 +290,7 @@ export function AboutDetailed() {
                   href="/produits"
                   className="inline-flex items-center gap-2 px-7 py-3.5 border border-gray-300 hover:border-odillon-teal/50 hover:bg-odillon-teal/5 text-gray-700 hover:text-odillon-teal font-medium rounded-lg transition-all"
                 >
-                  Découvrir nos services
+                  Découvrir nos produits
                 </Link>
               </div>
             </div>
@@ -352,97 +351,66 @@ export function AboutDetailed() {
         </div>
 
 
-        {/* Values Section - Depth & Flow */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <FadeIn delay={0.2}>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 font-baskvill italic">Nos Valeurs</h2>
-              <p className="text-gray-600 max-w-3xl mx-auto text-lg leading-relaxed">
-                {chapeauValeurs}
-              </p>
-            </FadeIn>
-          </div>
+        {/* Nos valeurs — mise en page du livret d'accueil (§1.2) : une valeur
+            par ligne, l'aquarelle du totem dans un cadre pointillé à gauche. */}
+        <section aria-labelledby="titre-valeurs" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <FadeIn delay={0.2}>
+            <p className="od-eyebrow">Ce qui nous relie</p>
+            <h2 id="titre-valeurs" className="mt-2 font-baskvill text-3xl font-bold text-[#145c55] md:text-4xl lg:text-5xl">
+              Nos valeurs
+            </h2>
+            <p className="mt-5 max-w-3xl text-base leading-relaxed text-gray-600 md:text-lg">
+              {chapeauValeurs.split(/(Talent|Rigueur|Challenge|Proximité)/).map((morceau, i) =>
+                i % 2 === 1 ? <strong key={i} className="font-semibold text-gray-900">{morceau}</strong> : morceau
+              )}
+            </p>
+          </FadeIn>
 
-          {/* auto-rows-fr : les cartes s'égalisent sur la plus haute de la ligne.
-              Une hauteur fixe ne tient pas ici — les descriptions du livret sont
-              longues et les colonnes étroites à partir de quatre valeurs. */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 auto-rows-fr">
+          <ol className="mt-10 divide-y divide-gray-200 border-y border-gray-200">
             {values.map((valeur, idx) => {
               const ValeurIcon = valeur.icon
-              const isEven = idx % 2 === 0
-
-              const spanClass = "md:col-span-1 md:row-span-1"
 
               return (
-                /* Révélation en CSS pur : BlurFade laissait ces cartes bloquées
-                   à opacity 0, donc invisibles (et leurs images jamais chargées,
-                   le lazy-loading n'étant jamais déclenché). */
-                <div
+                <li
                   key={valeur.title}
-                  className={`${spanClass} od-rise`}
+                  className="od-rise grid items-center gap-5 py-7 sm:grid-cols-[10rem_1fr] sm:gap-8 md:grid-cols-[12rem_1fr] md:gap-10"
                   style={{ "--od-rise-delay": `${0.1 * (idx + 1)}s` } as React.CSSProperties}
                 >
-                  <SpotlightCard
-                    className="h-full w-full bg-white border border-gray-100 shadow-sm rounded-lg p-6 sm:p-7 overflow-hidden group"
-                    spotlightColor={isEven ? "rgba(0, 167, 149, 0.05)" : "rgba(196, 216, 46, 0.05)"}
-                  >
-                    {/* Composition en flux depuis le haut : la vignette ayant une
-                        hauteur fixe, les titres s'alignent d'une carte à l'autre.
-                        Seuls les mots-clés sont calés en pied (mt-auto), ce qui
-                        donne une ligne de base commune malgré des descriptions
-                        de longueurs inégales. */}
-                    <div className="relative z-10 flex flex-col h-full">
-                      {/* Aquarelle du totem (livret) ; l'icône reste le repli
-                          si une valeur est surchargée depuis l'administration. */}
+                  <div className="mx-auto w-40 rounded-sm border border-dashed border-odillon-teal/50 bg-[#eef6f5] p-2 sm:w-full">
+                    <div className="relative flex aspect-square items-center justify-center bg-[#fdfcf7]">
                       {valeur.image ? (
-                        <div className="w-20 h-20 rounded-lg overflow-hidden border border-gray-100">
-                          <Image
-                            src={valeur.image}
-                            alt={`${valeur.title} — ${valeur.value}`}
-                            width={144}
-                            height={144}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
+                        <Image
+                          src={valeur.image}
+                          alt={`${valeur.value}, totem de ${valeur.title.toLowerCase()}`}
+                          fill
+                          sizes="(min-width: 768px) 192px, 160px"
+                          className="object-contain"
+                        />
                       ) : (
-                        <div className={`w-20 h-20 rounded-lg flex items-center justify-center ${isEven ? 'bg-odillon-teal/10 text-odillon-teal' : 'bg-odillon-lime/10 text-odillon-lime'}`}>
-                          <ValeurIcon size={28} strokeWidth={2} />
-                        </div>
-                      )}
-
-                      {/* Groupement serré : le titre et son totem forment un bloc */}
-                      <h3 className="mt-5 text-xl font-bold text-gray-900 font-baskvill italic leading-tight">
-                        {valeur.title}
-                      </h3>
-                      {/* Teal et lime de marque assombris : à 11px, les teintes
-                          d'origine tombaient à ~3:1 et ~1,7:1 sur blanc. Ces
-                          variantes tiennent 5,2:1 et 4,9:1. */}
-                      <p className={`mt-1 text-xs font-semibold uppercase tracking-[0.18em] ${isEven ? 'text-[#0f7a6e]' : 'text-[#6b7818]'}`}>
-                        {valeur.value}
-                      </p>
-
-                      {/* Séparation généreuse avant le corps de texte */}
-                      <p className="mt-4 text-gray-600 leading-relaxed text-sm">
-                        {valeur.description}
-                      </p>
-
-                      {valeur.keywords && (
-                        /* min-h = padding haut (1.25rem) + deux interlignes
-                           (2 × 1rem pour text-xs), box-sizing compris : les
-                           mots-clés les plus longs passent à la ligne, et sans
-                           cette réserve le filet de cette carte remonterait
-                           seul de 16px. */
-                        <p className="mt-auto pt-5 min-h-[3.25rem] text-xs italic text-gray-500 border-t border-gray-100">
-                          {valeur.keywords}
-                        </p>
+                        <ValeurIcon size={40} strokeWidth={1.5} className="text-odillon-teal" />
                       )}
                     </div>
-                  </SpotlightCard>
-                </div>
+                  </div>
+
+                  <div>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                      <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-odillon-teal text-sm font-semibold text-white">
+                        {idx + 1}
+                      </span>
+                      <h3 className="font-baskvill text-2xl font-bold text-[#145c55] md:text-3xl">{valeur.title}</h3>
+                      {/* Lime de marque assombri : à 12px, la teinte d'origine tombe à ~1,7:1 sur blanc. */}
+                      <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6b7818]">{valeur.value}</span>
+                    </div>
+                    <p className="mt-3 leading-relaxed text-gray-600 md:text-lg">{valeur.description}</p>
+                    {valeur.keywords && (
+                      <p className="mt-2 text-sm italic text-gray-500">{valeur.keywords}</p>
+                    )}
+                  </div>
+                </li>
               )
             })}
-          </div>
-        </div>
+          </ol>
+        </section>
 
         {/* Team Section (Organigramme) */}
         <div className="py-8">
@@ -495,7 +463,7 @@ export function AboutDetailed() {
                 href="/produits"
                 className="w-full sm:w-auto px-8 py-4 bg-transparent border border-white/20 hover:bg-white/5 text-white font-semibold rounded-lg transition-all flex items-center justify-center"
               >
-                Découvrir nos services
+                Découvrir nos produits
               </Link>
             </div>
           </div>
