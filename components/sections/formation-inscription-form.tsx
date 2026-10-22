@@ -6,6 +6,7 @@ import Link from "next/link"
 // (voir lib/motion-features.ts), qui rejette les composants `motion` au runtime.
 import { m } from "framer-motion"
 import { typoFr } from "@/lib/utils"
+import { ContactPartenaireFormation } from "@/components/sections/partenaire-formation"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
@@ -145,6 +146,8 @@ function RecapSession({ formation }: { formation: Formation }) {
                     </div>
                 )}
             </div>
+
+            <ContactPartenaireFormation className="mt-5 border-t border-gray-100 pt-4" />
         </div>
     )
 }

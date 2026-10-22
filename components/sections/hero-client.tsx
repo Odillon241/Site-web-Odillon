@@ -109,10 +109,15 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
 
             {/* Description */}
             <FadeIn delay={0.37} direction="up">
-              <p className="max-w-xl text-[0.925rem] leading-[1.82] text-slate-600 sm:text-base">
-                <strong className="font-semibold text-odillon-dark">Fondée en 2017,</strong>{" "}
-                ODILLON accompagne les entreprises dans leurs projets de conseil, d&apos;ingénierie organisationnelle et d&apos;optimisation de la performance. Nous concevons et déployons des solutions fiables, innovantes et durables, adaptées aux réalités et aux ambitions de chaque organisation.
-              </p>
+              <div className="max-w-xl space-y-3 text-[0.925rem] leading-[1.82] text-slate-600 sm:text-base">
+                <p>
+                  <strong className="font-semibold text-odillon-dark">Fondée en mai 2017,</strong>{" "}
+                  ODILLON accompagne les entreprises dans leurs projets de restructuration, les assiste en matière juridique, de structuration organisationnelle, d’accompagnement dans leur développement et dans l’optimisation de la performance.
+                </p>
+                <p>
+                  Nous concevons et déployons des solutions fiables, innovantes et durables sur mesure, adaptées à vos réalités et à vos besoins spécifiques.
+                </p>
+              </div>
             </FadeIn>
 
             {/* CTA Buttons */}
@@ -129,7 +134,7 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
                   href="/produits"
                   className="group inline-flex items-center justify-center gap-2 rounded-md border border-odillon-dark/15 bg-white/70 px-6 py-3.5 text-sm font-semibold text-odillon-dark transition-all duration-300 hover:-translate-y-0.5 hover:border-odillon-teal/40 hover:text-odillon-teal sm:text-base"
                 >
-                  Voir nos produits
+                  Découvrir nos produits
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </Link>
               </div>
@@ -208,7 +213,7 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
               }}
             />
             <div className="relative z-10 w-full flex items-center justify-center min-h-[60px] sm:min-h-[75px] md:min-h-[90px]">
-              <AnimatedSlogan text="Together we the future" iconPosition={2} />
+              <AnimatedSlogan text="Together we the future." iconPosition={2} />
             </div>
           </div>
 

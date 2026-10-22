@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { m } from "framer-motion"
 import { FadeIn } from "@/components/magicui/fade-in"
 import { BlurFade } from "@/components/magicui/blur-fade"
@@ -14,7 +15,7 @@ import { VideoSection } from "@/components/sections/video-section"
 import { VideosSection } from "@/components/sections/videos-section"
 import type { VideoItem } from "@/components/sections/videos-section"
 import { Video } from "@/types/admin"
-import { polesProduits, nombreProduits, type IconePole } from "@/lib/produits-data"
+import { polesProduits, nombreProduits, type IconePole, type PoleProduits } from "@/lib/produits-data"
 import { Landmark, Users, Scale, Rocket, GraduationCap, ChevronRight, Download } from "lucide-react"
 
 const icones: Record<IconePole, React.ComponentType<{ className?: string }>> = {
@@ -53,6 +54,66 @@ function ListeProduits({
         </li>
       ))}
     </ul>
+  )
+}
+
+// Programme en plusieurs phases : une carte illustrée par module.
+function ModulesIllustres({ pole }: { pole: PoleProduits }) {
+  return (
+    <ol className="grid gap-6 md:grid-cols-3">
+      {pole.groupes.map((groupe) => (
+        <li key={groupe.titre} className="flex flex-col overflow-hidden rounded-lg border border-gray-100 bg-white">
+          {groupe.illustration && (
+            <div className="relative aspect-[3/2] bg-gray-100">
+              <Image
+                src={groupe.illustration.src}
+                alt={groupe.illustration.alt}
+                fill
+                sizes="(min-width: 768px) 300px, 100vw"
+                className="object-cover"
+              />
+            </div>
+          )}
+          <div className="flex-1 p-5">
+            {groupe.etape && (
+              <p className="text-[11px] font-bold uppercase tracking-widest text-odillon-teal">{groupe.etape}</p>
+            )}
+            <p className="mb-3 mt-1 font-baskvill text-xl italic text-odillon-dark">{groupe.titre}</p>
+            <ListeProduits produits={groupe.produits} couleur={pole.couleur} />
+          </div>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+// Le catalogue du partenaire est montré tel quel : chaque page ouvre le PDF à cette page.
+function ApercuCatalogue({ catalogue }: { catalogue: NonNullable<PoleProduits["catalogue"]> }) {
+  return (
+    <div>
+      <p className="mb-4 text-sm text-gray-600">Cliquez sur une page pour consulter le catalogue en plein écran.</p>
+      <ul className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {catalogue.pages.map((page, i) => (
+          <li key={page.src}>
+            <a
+              href={`${catalogue.href}#page=${i + 1}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block overflow-hidden rounded-md shadow-sm ring-1 ring-black/10 transition duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-odillon-teal"
+            >
+              <Image
+                src={page.src}
+                alt={page.alt}
+                width={1241}
+                height={1755}
+                sizes="(min-width: 640px) 230px, 45vw"
+                className="h-auto w-full"
+              />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
 
@@ -180,6 +241,7 @@ export function ProduitsPage() {
             const Icone = icones[pole.icone]
             const total = nombreProduits(pole)
             const avecGroupes = pole.groupes.some((g) => g.titre)
+            const avecIllustrations = pole.groupes.some((g) => g.illustration)
 
             return (
               <BlurFade key={pole.id} delay={0.1 + idx * 0.05}>
@@ -204,7 +266,7 @@ export function ProduitsPage() {
                       </span>
                     </span>
                     <span className="hidden shrink-0 rounded-full bg-gray-50 px-3 py-1 text-xs font-medium tabular-nums text-gray-500 sm:inline-flex">
-                      {total} {pole.unite ?? "produits"}
+                      {pole.badge ?? `${total} produits`}
                     </span>
                   </AccordionTrigger>
 
@@ -214,7 +276,11 @@ export function ProduitsPage() {
                     className="overflow-hidden data-[state=closed]:hidden data-[state=open]:animate-accordion-down"
                   >
                     <div className="mx-5 border-t border-gray-100 pb-6 pt-6 md:mx-7 md:pb-8">
-                      {avecGroupes ? (
+                      {pole.catalogue ? (
+                        <ApercuCatalogue catalogue={pole.catalogue} />
+                      ) : avecIllustrations ? (
+                        <ModulesIllustres pole={pole} />
+                      ) : avecGroupes ? (
                         <div className="grid gap-8 md:grid-cols-3">
                           {pole.groupes.map((groupe) => (
                             <div key={groupe.titre}>

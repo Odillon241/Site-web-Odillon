@@ -10,7 +10,8 @@ import { AlertCircle, CalendarCheck, CheckCircle2, Clock, Loader2, MapPin } from
 import { cn } from "@/lib/utils"
 
 const CRENEAUX = ["Matin (8h – 12h)", "Après-midi (13h – 16h30)"]
-const FORMATS = ["Au bureau (Glass, Libreville)", "Par téléphone", "En visioconférence"]
+// Odillon se déplace chez le client : pas de rendez-vous au cabinet.
+const FORMATS = ["Dans vos locaux (nous nous déplaçons)", "En visioconférence"]
 const SUJETS = [...polesProduits.map((p) => p.titre), "Autre"]
 
 // Le premier jour réservable est demain ; samedi et dimanche sont refusés.
@@ -35,7 +36,7 @@ function dateLisible(iso: string): string {
 }
 
 const libelle = "mb-2 block text-sm font-semibold text-gray-700"
-const champ = "h-12 bg-gray-50/50 border-gray-200 focus-visible:ring-odillon-teal"
+const champ = "h-11 bg-gray-50/50 border-gray-200 focus-visible:ring-odillon-teal"
 
 function Choix({
   nom,
@@ -53,12 +54,12 @@ function Choix({
   return (
     <fieldset>
       <legend className={libelle}>{legende} *</legend>
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="grid gap-2">
         {options.map((option) => (
           <label
             key={option}
             className={cn(
-              "flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 text-sm transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-odillon-teal",
+              "flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-2.5 text-sm transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-odillon-teal",
               valeur === option
                 ? "border-odillon-teal bg-odillon-teal/5 font-semibold text-odillon-dark"
                 : "border-gray-200 bg-gray-50/50 text-gray-600 hover:border-gray-300"
@@ -169,8 +170,21 @@ export function RendezVousForm() {
   }
 
   return (
-    <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-12">
-      <form onSubmit={envoyer} className="od-surface space-y-6 p-6 md:p-8" noValidate={false}>
+    <div>
+      <ul className="mb-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-600">
+        {[
+          { icone: Clock, texte: "Un premier échange de 30 minutes" },
+          { icone: MapPin, texte: "Dans vos locaux ou en visio" },
+          { icone: CalendarCheck, texte: "Confirmation sous 24h ouvrées" },
+        ].map(({ icone: Icone, texte }) => (
+          <li key={texte} className="flex items-center gap-2">
+            <Icone className="size-4 text-odillon-teal" aria-hidden="true" />
+            {texte}
+          </li>
+        ))}
+      </ul>
+
+      <form onSubmit={envoyer} className="od-surface space-y-5 p-5 md:p-7" noValidate={false}>
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
             <label htmlFor="rdv-nom" className={libelle}>Nom complet *</label>
@@ -190,6 +204,7 @@ export function RendezVousForm() {
           </div>
         </div>
 
+        <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor="rdv-sujet" className={libelle}>Sujet *</label>
           <select
@@ -197,7 +212,7 @@ export function RendezVousForm() {
             required
             value={form.sujet}
             onChange={(e) => maj("sujet")(e.target.value)}
-            className="h-12 w-full rounded-md border border-gray-200 bg-gray-50/50 px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-odillon-teal"
+            className="h-11 w-full rounded-md border border-gray-200 bg-gray-50/50 px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-odillon-teal"
           >
             <option value="" disabled>Choisir un sujet</option>
             {SUJETS.map((s) => (
@@ -215,18 +230,21 @@ export function RendezVousForm() {
             min={demainIso()}
             value={form.date}
             onChange={(e) => maj("date")(e.target.value)}
-            className={cn(champ, "sm:max-w-xs")}
+            className={champ}
             aria-describedby="rdv-date-aide"
           />
-          <p id="rdv-date-aide" className="mt-2 text-xs text-gray-500">Du lundi au vendredi.</p>
+          <p id="rdv-date-aide" className="mt-1.5 text-xs text-gray-500">Du lundi au vendredi.</p>
+        </div>
         </div>
 
-        <Choix nom="creneau" legende="Créneau" options={CRENEAUX} valeur={form.creneau} onChange={maj("creneau")} />
-        <Choix nom="format" legende="Format" options={FORMATS} valeur={form.format} onChange={maj("format")} />
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Choix nom="creneau" legende="Créneau" options={CRENEAUX} valeur={form.creneau} onChange={maj("creneau")} />
+          <Choix nom="format" legende="Format" options={FORMATS} valeur={form.format} onChange={maj("format")} />
+        </div>
 
         <div>
           <label htmlFor="rdv-message" className={libelle}>Votre besoin en quelques mots</label>
-          <Textarea id="rdv-message" rows={4} value={form.message} onChange={(e) => maj("message")(e.target.value)} className="resize-none bg-gray-50/50 border-gray-200" />
+          <Textarea id="rdv-message" rows={3} value={form.message} onChange={(e) => maj("message")(e.target.value)} className="resize-none bg-gray-50/50 border-gray-200" />
         </div>
 
         {erreur && (
@@ -236,7 +254,7 @@ export function RendezVousForm() {
           </div>
         )}
 
-        <Button type="submit" disabled={envoi} className="h-12 w-full text-base font-semibold">
+        <Button type="submit" disabled={envoi} className="h-11 w-full text-base font-semibold">
           {envoi ? (
             <>
               <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" />
@@ -251,24 +269,6 @@ export function RendezVousForm() {
           <Link href="/politique-confidentialite" className="underline hover:text-odillon-teal">politique de confidentialité</Link>.
         </p>
       </form>
-
-      <aside className="space-y-5 lg:sticky lg:top-24">
-        {[
-          { icone: Clock, titre: "30 minutes", texte: "Un premier échange pour comprendre votre besoin." },
-          { icone: CalendarCheck, titre: "Confirmation rapide", texte: "Nous confirmons le créneau sous 24h ouvrées." },
-          { icone: MapPin, titre: "Où vous voulez", texte: "Au bureau à Glass, par téléphone ou en visio." },
-        ].map(({ icone: Icone, titre, texte }) => (
-          <div key={titre} className="flex items-start gap-4">
-            <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-odillon-teal/10 text-odillon-teal">
-              <Icone className="size-5" aria-hidden="true" />
-            </span>
-            <div>
-              <p className="font-semibold text-odillon-dark">{titre}</p>
-              <p className="text-sm text-gray-600">{texte}</p>
-            </div>
-          </div>
-        ))}
-      </aside>
     </div>
   )
 }

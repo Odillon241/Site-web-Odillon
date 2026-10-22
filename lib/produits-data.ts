@@ -4,8 +4,16 @@
 
 export type IconePole = "Landmark" | "Users" | "Scale" | "Rocket" | "GraduationCap"
 
+export type Illustration = {
+  src: string
+  alt: string
+}
+
 export type GroupeProduits = {
   titre?: string
+  // Étape d'un programme en plusieurs phases (« Phase 1 »…).
+  etape?: string
+  illustration?: Illustration
   produits: string[]
 }
 
@@ -22,14 +30,25 @@ export type PoleProduits = {
   couleur: string
   icone: IconePole
   groupes: GroupeProduits[]
-  // Libellé du compteur (« produits » par défaut).
-  unite?: string
+  // Remplace le compteur « N produits » de l'en-tête.
+  badge?: string
+  // Catalogue consultable page par page à la place d'une liste de produits.
+  catalogue?: { href: string; pages: Illustration[] }
   // Précision affichée sous la liste (partenariat, conditions…).
   mention?: string
   liens?: LienPole[]
 }
 
 export const CATALOGUE_FORMATIONS_PDF = "/documents/catalogue-formations-2026-2027.pdf"
+
+// Coordonnées reprises de la page « Contactez-nous » du catalogue 2026-2027.
+export const PARTENAIRE_FORMATION = {
+  nom: "Mallet Consulting",
+  telephone: "+241 62 22 36 36",
+  telephoneHref: "tel:+24162223636",
+  email: "malletconsulting26@gmail.com",
+  adresse: "13262 Akanda, Entraco",
+} as const
 
 export const polesProduits: PoleProduits[] = [
   {
@@ -81,7 +100,7 @@ export const polesProduits: PoleProduits[] = [
       {
         titre: "Conseil & conformité",
         produits: [
-          "Dialogue social et conventions (rédactions partenaires)",
+          "Dialogue social et conventions (partenaire de négociation)",
           "Rédaction et analyse des contrats",
           "Audit et conformité",
           "Création et modification des sociétés",
@@ -105,12 +124,18 @@ export const polesProduits: PoleProduits[] = [
   {
     id: "entrepreneuriat",
     titre: "Entrepreneuriat",
-    accroche: "Vous créez ou développez votre entreprise : 3 packs",
+    accroche: "Découvrez notre programme d'accompagnement en trois modules",
     couleur: "#00a795",
     icone: "Rocket",
+    badge: "3 modules",
     groupes: [
       {
         titre: "Odillon Start",
+        etape: "Phase 1 · Créer",
+        illustration: {
+          src: "/images/entrepreneuriat/odillon-start.jpg",
+          alt: "Porteur de projet annotant son plan d'affaires à côté d'un ordinateur",
+        },
         produits: [
           "Analyse du projet",
           "Accompagnement à la création",
@@ -121,10 +146,20 @@ export const polesProduits: PoleProduits[] = [
       },
       {
         titre: "Odillon Project",
+        etape: "Phase 2 · Structurer",
+        illustration: {
+          src: "/images/entrepreneuriat/odillon-project.jpg",
+          alt: "Équipe organisant ses priorités sur un tableau de notes adhésives",
+        },
         produits: ["Politique commerciale", "Élaboration de l'organigramme", "Coaching"],
       },
       {
         titre: "Odillon Grow",
+        etape: "Phase 3 · Développer",
+        illustration: {
+          src: "/images/entrepreneuriat/odillon-grow.jpg",
+          alt: "Tableau de bord affichant la progression de l'activité",
+        },
         produits: [
           "Recherche de financement",
           "Visibilité de l'activité",
@@ -137,37 +172,22 @@ export const polesProduits: PoleProduits[] = [
   {
     id: "formation",
     titre: "Formation",
-    accroche: "Vous voulez faire monter vos équipes en compétences",
+    accroche: "Mallet Consulting : notre partenaire formation",
     couleur: "#C4D82E",
     icone: "GraduationCap",
-    unite: "formations",
-    mention: "Catalogue 2026-2027, en partenariat avec Mallet Consulting.",
-    groupes: [
-      {
-        produits: [
-          "Accueil et qualité de service",
-          "Management de la performance",
-          "Le bilan social",
-          "Gestion des conflits",
-          "Recruter efficacement",
-          "Devenir manager",
-          "Le leadership inclusif",
-          "La gestion des risques RH",
-          "Asseoir son leadership",
-          "Le droit du travail pour le manager",
-          "La digitalisation RH",
-          "L'administration des ressources humaines",
-          "Gestion des carrières",
-          "Gestion du temps et des priorités",
-          "Le leadership féminin",
-          "Conduite du changement",
-          "La gestion des archives",
-        ],
-      },
-    ],
+    badge: "Catalogue 2026-2027",
+    catalogue: {
+      href: CATALOGUE_FORMATIONS_PDF,
+      pages: [1, 2, 3, 4].map((n) => ({
+        src: `/images/catalogue-formations/page-${n}.jpg`,
+        alt: `Catalogue des formations 2026-2027 de Mallet Consulting, page ${n} sur 4`,
+      })),
+    },
+    mention: "Liste non exhaustive de formations : nous adaptons notre programme à vos besoins.",
+    groupes: [],
     liens: [
-      { libelle: "Télécharger le catalogue (PDF)", href: CATALOGUE_FORMATIONS_PDF, telechargement: true },
-      { libelle: "Voir les dates et s'inscrire", href: "/calendrier-formations" },
+      { libelle: "Télécharger le catalogue 2026-2027", href: CATALOGUE_FORMATIONS_PDF, telechargement: true },
+      { libelle: "Voir le calendrier et s'inscrire", href: "/calendrier-formations" },
     ],
   },
 ]

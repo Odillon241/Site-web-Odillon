@@ -2,11 +2,14 @@
 
 import { useMemo, useState } from "react"
 import Link from "next/link"
+import { fr } from "date-fns/locale"
 import { Calendar } from "@/components/ui/calendar"
 import { typoFr } from "@/lib/utils"
+import { CATALOGUE_FORMATIONS_PDF } from "@/lib/produits-data"
+import { ContactPartenaireFormation } from "@/components/sections/partenaire-formation"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { CalendarDays, Clock, MapPin, User, GraduationCap, ArrowRight, Wallet, Users } from "lucide-react"
+import { CalendarDays, Clock, MapPin, User, GraduationCap, ArrowRight, Wallet, Users, Download } from "lucide-react"
 import {
     type Formation,
     MODALITE_LABELS,
@@ -158,10 +161,19 @@ export function FormationsCalendar({ formations }: { formations: Formation[] }) 
                                 Formations
                             </h1>
                             <p className="mt-5 max-w-[56ch] text-base sm:text-lg leading-relaxed text-[#4A5C64] text-pretty">
-                                Des sessions courtes animées par les consultants du cabinet : gouvernance,
-                                maîtrise des risques, droit des affaires et gestion des ressources humaines.
-                                Sélectionnez une date dans le calendrier pour ne voir que ce jour-là.
+                                Les sessions du catalogue 2026-2027, animées avec Mallet Consulting, notre
+                                partenaire formation. Sélectionnez une date dans le calendrier pour ne voir
+                                que ce jour-là.
                             </p>
+
+                            <a
+                                href={CATALOGUE_FORMATIONS_PDF}
+                                download=""
+                                className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-odillon-teal hover:text-odillon-teal/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-odillon-teal"
+                            >
+                                <Download className="w-4 h-4" aria-hidden="true" />
+                                Télécharger le catalogue 2026-2027
+                            </a>
 
                             {sessionsAVenir.length > 0 && (
                                 <p className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[#4A5C64]">
@@ -237,6 +249,7 @@ export function FormationsCalendar({ formations }: { formations: Formation[] }) 
                             <div className="od-surface mx-auto flex w-fit max-w-full justify-center p-4 lg:mx-0 lg:w-full">
                                 <Calendar
                                     mode="single"
+                                    locale={fr}
                                     selected={selectedDate}
                                     onSelect={setSelectedDate}
                                     month={month}
@@ -256,6 +269,7 @@ export function FormationsCalendar({ formations }: { formations: Formation[] }) 
                                     Voir toutes les formations
                                 </Button>
                             )}
+                            <ContactPartenaireFormation className="od-surface mt-5 p-5" />
                         </div>
 
                         <div className="space-y-5">
