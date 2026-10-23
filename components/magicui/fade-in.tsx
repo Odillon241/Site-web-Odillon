@@ -1,6 +1,6 @@
 "use client"
 
-import { m, useInView } from "framer-motion"
+import { m, useInView, useReducedMotion } from "framer-motion"
 import { useRef } from "react"
 
 interface FadeInProps {
@@ -19,13 +19,19 @@ export function FadeIn({
   className = "",
 }: FadeInProps) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: false, margin: "-100px" })
+  // Une seule fois, marge sur le bas seulement : voir BlurFade.
+  const isInView = useInView(ref, { once: true, margin: "0px 0px -60px 0px" })
+  const reduire = useReducedMotion()
 
   const directions = {
     up: { y: 40, x: 0 },
     down: { y: -40, x: 0 },
     left: { y: 0, x: 40 },
     right: { y: 0, x: -40 },
+  }
+
+  if (reduire) {
+    return <div className={`${fullWidth ? "w-full" : ""} ${className}`}>{children}</div>
   }
 
   return (

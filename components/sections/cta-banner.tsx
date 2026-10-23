@@ -82,7 +82,7 @@ export function CtaBanner({
                   </span>
                 )}
 
-                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold tracking-tight text-odillon-dark mb-4 sm:mb-6 font-petrov-sans">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold leading-tight text-odillon-dark mb-4 sm:mb-6 font-baskvill italic">
                   {title}
                 </h2>
 

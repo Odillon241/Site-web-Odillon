@@ -31,6 +31,16 @@ function ensureUrl(url?: string): string | undefined {
     return `https://${url}`
 }
 
+// « BINGANGOYE Nathalie » → « BN »
+function initiales(nom: string): string {
+    return nom
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((mot) => mot[0]!.toUpperCase())
+        .join("")
+}
+
 // Composant Avatar pour l'organigramme
 function OrgAvatar({ photoUrl, name, size = "normal" }: { photoUrl?: string; name: string; size?: "large" | "normal" }) {
     const sizeClasses = size === "large" ? "w-16 h-16" : "w-12 h-12"
@@ -46,10 +56,12 @@ function OrgAvatar({ photoUrl, name, size = "normal" }: { photoUrl?: string; nam
                     className="w-full h-full object-cover"
                 />
             ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-                    <svg className="w-1/2 h-1/2 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
+                /* Sans photo : les initiales plutôt qu'une silhouette grise. */
+                <div
+                    aria-hidden="true"
+                    className={`w-full h-full flex items-center justify-center bg-gradient-to-br from-odillon-teal to-[#0f7a6e] font-semibold text-white ${size === "large" ? "text-lg" : "text-sm"}`}
+                >
+                    {initiales(name)}
                 </div>
             )}
         </div>
@@ -90,11 +102,12 @@ function OrgBox({
     return (
         <div className={`
             relative bg-white border-2 rounded-lg shadow-md hover:shadow-lg transition-shadow
+            ${members.length === 0 ? "self-start" : ""}
             ${cadre}
             ${className}
         `}>
-            {/* Titre */}
-            <div className={`px-4 py-2.5 text-center font-semibold border-b rounded-t-lg ${entete}`}>
+            {/* Titre ; un pôle sans membre se réduit à son intitulé. */}
+            <div className={`px-4 py-2.5 text-center font-semibold rounded-t-lg ${members.length > 0 ? "border-b" : "rounded-b-lg"} ${entete}`}>
                 {surtitre && (
                     <span className={`block text-[10px] uppercase tracking-[0.18em] font-bold mb-0.5 ${isDirection ? "text-white/70" : "text-odillon-teal/70"}`}>
                         {surtitre}
@@ -106,10 +119,8 @@ function OrgBox({
             {/* Membres avec photos. Un pôle sans membre reste visible : le
                 livret présente la structure complète, pas seulement les postes
                 pourvus. */}
+            {members.length > 0 && (
             <div className="p-4 space-y-3">
-                {members.length === 0 && (
-                    <p className="text-xs text-gray-400 text-center py-2">Pôle en structuration</p>
-                )}
                 {members.map((member) => (
                     <div key={member.id} className="flex items-center gap-3">
                         <OrgAvatar
@@ -118,9 +129,12 @@ function OrgBox({
                             size={isDirection ? "large" : "normal"}
                         />
                         <div className="flex-1 min-w-0">
-                            <p className={`font-semibold text-gray-900 truncate ${isDirection ? "text-sm" : "text-xs"}`}>
+                            <p className={`font-semibold text-gray-900 break-words ${isDirection ? "text-sm" : "text-xs"}`}>
                                 {member.name}
                             </p>
+                            {member.role && (
+                                <p className="mt-0.5 line-clamp-2 text-[11px] text-gray-500">{member.role}</p>
+                            )}
                             <div className="flex items-center gap-1.5 mt-1">
                                 {ensureUrl(member.linkedin_url) && (
                                     <Link
@@ -146,6 +160,7 @@ function OrgBox({
                     </div>
                 ))}
             </div>
+            )}
         </div>
     )
 }

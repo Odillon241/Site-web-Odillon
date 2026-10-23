@@ -1,6 +1,6 @@
 "use client"
 
-import { m, useInView } from "framer-motion"
+import { m, useInView, useReducedMotion } from "framer-motion"
 import { useRef } from "react"
 
 interface BlurFadeProps {
@@ -10,6 +10,12 @@ interface BlurFadeProps {
   className?: string
 }
 
+/**
+ * Apparition au défilement, une seule fois : un contenu déjà vu ne disparaît
+ * plus quand on remonte. La marge est exprimée sur le seul bas de l'écran, ce
+ * qui déclenche aussi les blocs plus hauts que la fenêtre (un formulaire, par
+ * exemple), qu'une marge négative uniforme pouvait laisser invisibles.
+ */
 export function BlurFade({
   children,
   delay = 0,
@@ -17,7 +23,10 @@ export function BlurFade({
   className = ""
 }: BlurFadeProps) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: false, margin: "-50px" })
+  const isInView = useInView(ref, { once: true, margin: "0px 0px -40px 0px" })
+  const reduire = useReducedMotion()
+
+  if (reduire) return <div className={className}>{children}</div>
 
   return (
     <m.div
@@ -39,4 +48,3 @@ export function BlurFade({
     </m.div>
   )
 }
-

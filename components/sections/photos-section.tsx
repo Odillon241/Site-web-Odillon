@@ -62,7 +62,7 @@ export function PhotosSection({
               {badge}
             </Badge>
           )}
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 md:mb-3">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 md:mb-3 font-baskvill italic">
             {title}
           </h2>
         </div>

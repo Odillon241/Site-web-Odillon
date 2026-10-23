@@ -11,7 +11,7 @@ import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/captions.css";
 import "yet-another-react-lightbox/plugins/counter.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
-import type { Photo } from "./types";
+import { imageOptimisee, type Photo } from "./types";
 
 const FOND = "rgba(10, 31, 44, 0.97)"; // odillon-dark
 
@@ -32,7 +32,9 @@ export function PhotoLightbox({ photos, index, autoplay = false, onClose }: Phot
   // Pas de titre de légende : toutes les photos d'un album portent le même,
   // et il passerait sous la barre d'outils. Lieu et détails restent en bas.
   const slides = photos.map((photo) => ({
-    src: photo.url,
+    // Redimensionnée : les originaux des téléphones dépassent souvent 700 Ko.
+    src: imageOptimisee(photo.url, 1920),
+    thumbnail: imageOptimisee(photo.url, 256),
     alt: photo.description,
     description: [photo.location, photo.details].filter(Boolean).join(" · ") || undefined,
   }));
@@ -49,6 +51,19 @@ export function PhotoLightbox({ photos, index, autoplay = false, onClose }: Phot
       zoom={{ maxZoomPixelRatio: 3, scrollToZoom: true }}
       thumbnails={{ width: 96, height: 64, border: 0, borderRadius: 6, padding: 0, gap: 8, imageFit: "cover" }}
       captions={{ descriptionTextAlign: "center", descriptionMaxLines: 2 }}
+      render={{
+        // Miniatures légères plutôt que vingt photos en pleine taille.
+        thumbnail: ({ slide }) => (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={(slide as { thumbnail?: string }).thumbnail ?? (slide as { src: string }).src}
+            alt=""
+            loading="lazy"
+            draggable={false}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        ),
+      }}
       styles={{
         container: { backgroundColor: FOND },
         thumbnailsContainer: { backgroundColor: FOND },

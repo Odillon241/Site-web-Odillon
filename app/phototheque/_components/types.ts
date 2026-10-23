@@ -198,3 +198,15 @@ function formatPhotoDate(
 
   return undefined;
 }
+/**
+ * Version redimensionnée d'une photo, servie par l'optimiseur de Next.js.
+ * Seuls les hôtes autorisés dans next.config.js (Supabase, Unsplash) y
+ * passent ; une autre adresse est renvoyée telle quelle.
+ * `largeur` doit faire partie des tailles de Next : 256, 640, 1080, 1920…
+ */
+const HOTES_OPTIMISES = /^https:\/\/(([a-z0-9-]+\.)*supabase\.co|images\.unsplash\.com)\//;
+
+export function imageOptimisee(url: string, largeur: number): string {
+  if (!HOTES_OPTIMISES.test(url)) return url;
+  return `/_next/image?url=${encodeURIComponent(url)}&w=${largeur}&q=75`;
+}

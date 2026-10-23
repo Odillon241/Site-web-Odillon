@@ -215,15 +215,38 @@ export function ProduitsPage() {
               </p>
             </FadeIn>
 
-            <FadeIn delay={0.6} className="mt-10 md:mt-12">
-              <Button size="lg" className="h-12 px-8 text-base group" asChild>
-                <a href="#catalogue">
-                  Voir le catalogue
-                  <ChevronRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </a>
-              </Button>
-            </FadeIn>
           </div>
+
+          {/* Vue d'ensemble : chaque carte descend vers sa catégorie et l'ouvre
+              (le lien #id est traité par l'écouteur hashchange). */}
+          <FadeIn delay={0.6} className="mx-auto mt-10 max-w-5xl md:mt-12">
+            <nav aria-label="Catégories de produits">
+              <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+                {polesProduits.map((pole) => {
+                  const Icone = icones[pole.icone]
+                  return (
+                    <li key={pole.id}>
+                      <a
+                        href={`#${pole.id}`}
+                        // Le hash ne change pas si l'on reclique la même carte : on ouvre aussi ici.
+                        onClick={() => setOuverts((prev) => (prev.includes(pole.id) ? prev : [...prev, pole.id]))}
+                        className="group flex h-full flex-col items-center gap-3 rounded-xl border border-gray-200/80 bg-white/80 p-4 text-center shadow-sm backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-odillon-teal/30 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-odillon-teal"
+                      >
+                        <span
+                          className="flex size-11 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-105"
+                          style={{ backgroundColor: `${pole.couleur}18`, color: pole.couleur }}
+                        >
+                          <Icone className="size-5" aria-hidden="true" />
+                        </span>
+                        <span className="font-baskvill text-lg italic leading-tight text-gray-900">{pole.titre}</span>
+                        <span className="text-xs text-gray-500">{pole.badge ?? `${nombreProduits(pole)} produits`}</span>
+                      </a>
+                    </li>
+                  )
+                })}
+              </ul>
+            </nav>
+          </FadeIn>
         </div>
       </div>
 

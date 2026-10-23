@@ -306,7 +306,7 @@ export function AboutDetailed() {
         <div className="max-w-4xl mx-auto">
           <FadeIn delay={0.3}>
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">{missionTitle}</h2>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-odillon-dark mb-6 font-baskvill italic leading-tight">{missionTitle}</h2>
               <div className="space-y-6 text-lg text-gray-600 leading-relaxed whitespace-pre-wrap">
                 {missionDescription}
               </div>
@@ -415,7 +415,7 @@ export function AboutDetailed() {
         {/* Team Section (Organigramme) */}
         <div className="py-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Notre Organigramme</h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-odillon-dark mb-4 font-baskvill italic leading-tight">Notre organigramme</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">Une équipe structurée au service de votre réussite.</p>
           </div>
 
@@ -446,7 +446,7 @@ export function AboutDetailed() {
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-odillon-lime/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
 
           <div className="relative z-10 max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Prêt à écrire le prochain chapitre ?</h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 font-baskvill italic leading-tight">Prêt à écrire le prochain chapitre ?</h2>
             <p className="text-lg text-gray-300 mb-10 leading-relaxed">
               Rencontrons-nous pour une consultation initiale sans engagement. Discutons de vos ambitions et voyons comment nous pouvons vous aider à les réaliser.
             </p>

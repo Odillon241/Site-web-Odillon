@@ -9,11 +9,14 @@ export function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
+    // Sur mobile, le bouton n'apparaît qu'après un écran et demi : il ne
+    // s'ajoute pas aux autres boutons flottants dès les premiers défilements.
     const toggleVisibility = () => {
-      setIsVisible(window.scrollY > 300)
+      const seuil = window.innerWidth < 768 ? window.innerHeight * 1.5 : 300
+      setIsVisible(window.scrollY > seuil)
     }
 
-    window.addEventListener("scroll", toggleVisibility)
+    window.addEventListener("scroll", toggleVisibility, { passive: true })
     return () => window.removeEventListener("scroll", toggleVisibility)
   }, [])
 
@@ -31,12 +34,12 @@ export function ScrollToTop() {
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.5 }}
-          className="fixed bottom-8 left-8 z-40"
+          className="fixed bottom-4 left-4 z-40 md:bottom-8 md:left-8"
         >
           <Button
             onClick={scrollToTop}
             size="icon"
-            className="h-12 w-12 rounded-full bg-odillon-teal hover:bg-odillon-teal/90 text-white shadow-lg hover:shadow-xl transition-all"
+            className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-odillon-teal hover:bg-odillon-teal/90 text-white shadow-lg hover:shadow-xl transition-all"
             aria-label="Retour en haut"
           >
             <ArrowUp className="h-5 w-5" />

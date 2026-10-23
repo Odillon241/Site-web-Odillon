@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { BlurFade } from "@/components/magicui/blur-fade";
 import { Badge } from "@/components/ui/badge";
-import type { Album, Photo } from "./types";
+import { imageOptimisee, type Album, type Photo } from "./types";
 
 interface AlbumModalProps {
   album: Album | null;
@@ -69,8 +69,13 @@ export function AlbumModal({ album, onClose, onPhotoClick }: AlbumModalProps) {
                       className="break-inside-avoid relative group rounded-lg overflow-hidden cursor-zoom-in bg-white shadow-sm hover:shadow-xl transition-all duration-300 ring-1 ring-gray-950/5"
                       onClick={() => onPhotoClick(photo)}
                     >
+                      {/* <img> plutôt que next/image : la mosaïque garde le format
+                          naturel de chaque photo, inconnu à l'avance. */}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={photo.url}
+                        src={imageOptimisee(photo.url, 640)}
+                        srcSet={`${imageOptimisee(photo.url, 640)} 640w, ${imageOptimisee(photo.url, 1080)} 1080w`}
+                        sizes="(min-width: 1024px) 270px, (min-width: 640px) 50vw, 100vw"
                         alt={photo.description}
                         className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                         loading="lazy"

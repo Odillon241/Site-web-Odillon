@@ -12,6 +12,7 @@ import { VideoPlayer } from "@/components/ui/video-player";
 import { ArrowRight, CalendarCheck } from "lucide-react";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { NewsTicker } from "@/components/sections/news-ticker";
+import { chiffresCles } from "@/lib/identite";
 
 interface HeroClientProps {
   images: Array<{ src: string; alt: string }>;
@@ -219,6 +220,17 @@ export function HeroClient({ images, logos, video }: HeroClientProps) {
 
           {/* Logos Carousel - Glassmorphism */}
           <div className="od-container pb-8 sm:pb-12">
+            {/* Repères du livret d'accueil (§2.1) */}
+            <dl className="mt-8 grid divide-y divide-odillon-teal/10 sm:mt-10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+              {chiffresCles.map(({ valeur, legende }) => (
+                // flex-col-reverse : le chiffre s'affiche au-dessus de sa légende.
+                <div key={valeur} className="flex flex-col-reverse items-center gap-1 px-4 py-4 text-center sm:py-2">
+                  <dt className="text-sm text-gray-600">{legende}</dt>
+                  <dd className="font-baskvill text-3xl font-bold italic text-odillon-teal md:text-4xl">{valeur}</dd>
+                </div>
+              ))}
+            </dl>
+
             {logos && logos.length > 0 && (
               <div className="od-surface mt-6 px-3 py-5 sm:mt-8 sm:px-4 sm:py-6 md:py-8">
                 <p className="text-xs sm:text-sm text-odillon-dark/50 uppercase tracking-widest mb-4 sm:mb-6 font-medium text-center -mt-1 sm:-mt-2">
