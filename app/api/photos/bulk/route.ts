@@ -2,8 +2,71 @@ import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 
+const TYPES_ACTIVITE = ['Formations', 'Séminaires', 'Team Building', 'Ateliers', 'Événements']
+
+type MiseAJourAlbum = {
+  description?: string
+  details?: string | null
+  location?: string | null
+  year?: number | null
+  month?: number | null
+  activity_type?: string | null
+}
+
+/** Texte facultatif : chaîne vide = effacé, longueur bornée. */
+function texte(valeur: unknown, max: number): string | null | false {
+  if (valeur === null) return null
+  if (typeof valeur !== 'string' || valeur.length > max) return false
+  return valeur.trim() || null
+}
+
+/** Liste blanche des champs d'album modifiables, avec leurs contrôles. */
+function validerAlbum(payload: unknown): { update: MiseAJourAlbum } | { error: string } {
+  if (!payload || typeof payload !== 'object') return { error: 'Données invalides' }
+  const p = payload as Record<string, unknown>
+  const update: MiseAJourAlbum = {}
+
+  if (p.description !== undefined) {
+    if (typeof p.description !== 'string' || !p.description.trim()) {
+      return { error: "Le nom de l'album est requis" }
+    }
+    if (p.description.length > 200) return { error: "Le nom de l'album est trop long (200 caractères au plus)" }
+    update.description = p.description.trim()
+  }
+  if (p.details !== undefined) {
+    const v = texte(p.details, 5000)
+    if (v === false) return { error: 'Description trop longue (5 000 caractères au plus)' }
+    update.details = v
+  }
+  if (p.location !== undefined) {
+    const v = texte(p.location, 200)
+    if (v === false) return { error: 'Lieu trop long (200 caractères au plus)' }
+    update.location = v
+  }
+  if (p.year !== undefined) {
+    if (p.year !== null && !(Number.isInteger(p.year) && (p.year as number) >= 2000 && (p.year as number) <= 2100)) {
+      return { error: 'Année invalide' }
+    }
+    update.year = p.year as number | null
+  }
+  if (p.month !== undefined) {
+    if (p.month !== null && !(Number.isInteger(p.month) && (p.month as number) >= 1 && (p.month as number) <= 12)) {
+      return { error: 'Mois invalide' }
+    }
+    update.month = p.month as number | null
+  }
+  if (p.activity_type !== undefined) {
+    if (p.activity_type !== null && !TYPES_ACTIVITE.includes(p.activity_type as string)) {
+      return { error: "Type d'activité invalide" }
+    }
+    update.activity_type = p.activity_type as string | null
+  }
+
+  return { update }
+}
+
 // POST - Actions groupées sur plusieurs photos
-// Body: { action: 'move' | 'setActive' | 'delete', ids: string[], payload?: {...} }
+// Body: { action: 'move' | 'updateAlbum' | 'setActive' | 'delete', ids: string[], payload?: {...} }
 export async function POST(request: Request) {
   const supabase = await createClient()
 
@@ -40,6 +103,24 @@ export async function POST(request: Request) {
       const { error } = await supabase
         .from('photos')
         .update(update)
+        .in('id', ids)
+
+      if (error) throw error
+
+    } else if (action === 'updateAlbum') {
+      // Modifier un album : seuls les champs présents dans `payload` sont
+      // appliqués à toutes ses photos ; un champ absent reste tel quel.
+      const resultat = validerAlbum(payload)
+      if ('error' in resultat) {
+        return NextResponse.json({ error: resultat.error }, { status: 400 })
+      }
+      if (Object.keys(resultat.update).length === 0) {
+        return NextResponse.json({ error: 'Aucune modification fournie' }, { status: 400 })
+      }
+
+      const { error } = await supabase
+        .from('photos')
+        .update(resultat.update)
         .in('id', ids)
 
       if (error) throw error

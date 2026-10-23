@@ -35,6 +35,18 @@ import { Loader2, Plus, Search, Trash2, Eye, EyeOff, Camera, ImageIcon, Calendar
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Photo } from "@/types/admin"
+
+/** Champs d'un album, appliqués ensemble à toutes ses photos. */
+type FicheAlbum = {
+    description: string
+    details: string
+    location: string
+    year: number | null
+    month: number | null
+    activity_type: string | null
+}
+
+const TYPES_ACTIVITE = ["Formations", "Séminaires", "Team Building", "Ateliers", "Événements"]
 import { MONTHLY_THEMES } from "@/lib/photo-themes"
 import { toast } from "sonner"
 import { ImageCropper } from "../ImageCropper"
@@ -102,8 +114,11 @@ export function PhotosTab() {
     const [editingPhoto, setEditingPhoto] = useState<Photo | null>(null)
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
     const [isRenameAlbumDialogOpen, setIsRenameAlbumDialogOpen] = useState(false)
-    const [newAlbumName, setNewAlbumName] = useState("")
-    const [newAlbumDetails, setNewAlbumDetails] = useState("")
+    const [albumEnEdition, setAlbumEnEdition] = useState<string | null>(null)
+    const [ficheAlbum, setFicheAlbum] = useState<FicheAlbum | null>(null)
+    const [ficheAlbumInitiale, setFicheAlbumInitiale] = useState<FicheAlbum | null>(null)
+    // Champs dont la valeur diffère d'une photo à l'autre dans l'album.
+    const [champsMixtes, setChampsMixtes] = useState<Partial<Record<keyof FicheAlbum, boolean>>>({})
     const [isSaving, setIsSaving] = useState(false)
     const [editIsNewAlbum, setEditIsNewAlbum] = useState(false)
 
@@ -509,7 +524,7 @@ export function PhotosTab() {
 
     // Generic bulk call against /api/photos/bulk
     const runBulk = async (
-        action: "move" | "setActive" | "delete",
+        action: "move" | "updateAlbum" | "setActive" | "delete",
         ids: string[],
         payload?: Record<string, unknown>
     ) => {
@@ -660,39 +675,72 @@ export function PhotosTab() {
         }
     }
 
-    const openRenameAlbumDialog = () => {
-        if (selectedAlbum) {
-            setNewAlbumName(selectedAlbum)
-            // Pre-fill details from the first photo in the album if available
-            const firstPhoto = photos.find(p => p.description === selectedAlbum)
-            setNewAlbumDetails(firstPhoto?.details || "")
-            setIsRenameAlbumDialogOpen(true)
+    const openRenameAlbumDialog = (albumName: string | null = selectedAlbum) => {
+        if (!albumName) return
+        const albumPhotos = photos.filter(p => p.description === albumName)
+        const cover = albumPhotos[0]
+        const uniforme = (lire: (p: Photo) => unknown) =>
+            new Set(albumPhotos.map(p => JSON.stringify(lire(p) ?? null))).size <= 1
+        const mixtes = {
+            details: !uniforme(p => p.details || null),
+            location: !uniforme(p => p.location || null),
+            year: !uniforme(p => p.year),
+            month: !uniforme(p => p.month),
+            activity_type: !uniforme(p => p.activity_type),
         }
+        // Un champ aux valeurs différentes s'ouvre vide : ne pas y toucher
+        // conserve la valeur propre à chaque photo.
+        const fiche: FicheAlbum = {
+            description: albumName,
+            details: mixtes.details ? "" : cover?.details || "",
+            location: mixtes.location ? "" : cover?.location || "",
+            year: mixtes.year ? null : cover?.year ?? null,
+            month: mixtes.month ? null : cover?.month ?? null,
+            activity_type: mixtes.activity_type ? null : cover?.activity_type ?? null,
+        }
+        setAlbumEnEdition(albumName)
+        setFicheAlbum(fiche)
+        setFicheAlbumInitiale(fiche)
+        setChampsMixtes(mixtes)
+        setIsRenameAlbumDialogOpen(true)
     }
 
     const handleRenameAlbum = async () => {
-        if (!selectedAlbum || !newAlbumName.trim()) return
+        if (!albumEnEdition || !ficheAlbum || !ficheAlbumInitiale) return
+        if (!ficheAlbum.description.trim()) {
+            toast.error("Le nom de l'album est requis")
+            return
+        }
 
+        // Seuls les champs modifiés partent au serveur.
+        const payload: Record<string, unknown> = {}
+        ;(Object.keys(ficheAlbum) as (keyof FicheAlbum)[]).forEach(cle => {
+            if (ficheAlbum[cle] !== ficheAlbumInitiale[cle]) payload[cle] = ficheAlbum[cle]
+        })
+        if (typeof payload.description === "string") payload.description = payload.description.trim()
+        if (Object.keys(payload).length === 0) {
+            setIsRenameAlbumDialogOpen(false)
+            return
+        }
+
+        const ids = photos.filter(p => p.description === albumEnEdition).map(p => p.id)
         setIsSaving(true)
-
-        // Find all photos in this album
-        const albumPhotos = photos.filter(p => p.description === selectedAlbum)
-        const ids = albumPhotos.map(p => p.id)
-
         try {
-            await runBulk("move", ids, {
-                description: newAlbumName.trim(),
-                details: newAlbumDetails,
-            })
+            await runBulk("updateAlbum", ids, payload)
 
-            // Update local state
-            setPhotos(prev => prev.map(p => p.description === selectedAlbum ? { ...p, description: newAlbumName.trim(), details: newAlbumDetails } : p))
-            setSelectedAlbum(newAlbumName.trim()) // Switch view to new name
-            toast.success(`Album renommé (${ids.length} photo(s) mise(s) à jour)`)
+            // Même normalisation que le serveur : texte vide = effacé.
+            const local = { ...payload } as Partial<Photo>
+            if ("details" in payload) local.details = String(payload.details ?? "").trim() || null
+            if ("location" in payload) local.location = String(payload.location ?? "").trim() || null
+            setPhotos(prev => prev.map(p => ids.includes(p.id) ? { ...p, ...local } : p))
+            if (typeof payload.description === "string" && selectedAlbum === albumEnEdition) {
+                setSelectedAlbum(payload.description)
+            }
+            toast.success(`Album mis à jour (${ids.length} photo(s))`)
             setIsRenameAlbumDialogOpen(false)
         } catch (error) {
-            console.error("Error renaming album:", error)
-            toast.error(error instanceof Error ? error.message : "Erreur lors du renommage de l'album")
+            console.error("Error updating album:", error)
+            toast.error(error instanceof Error ? error.message : "Erreur lors de la mise à jour de l'album")
         } finally {
             setIsSaving(false)
         }
@@ -780,7 +828,7 @@ export function PhotosTab() {
                                     ? (
                                         <div className="flex items-center gap-2">
                                             <span>Album : {selectedAlbum}</span>
-                                            <Button variant="ghost" size="icon" onClick={openRenameAlbumDialog} className="ml-1 h-6 w-6 text-slate-400 hover:text-odillon-teal" title="Renommer l'album">
+                                            <Button variant="ghost" size="icon" onClick={() => openRenameAlbumDialog()} className="ml-1 h-6 w-6 text-slate-400 hover:text-odillon-teal" title="Modifier l'album">
                                                 <FolderEdit className="w-4 h-4" />
                                             </Button>
                                             <Button variant="ghost" size="icon" onClick={() => openDeleteAlbum(selectedAlbum)} className="h-6 w-6 text-slate-400 hover:text-red-500" title="Supprimer l'album">
@@ -1213,11 +1261,24 @@ export function PhotosTab() {
                                                                 className="relative w-full aspect-[7/8] max-w-[300px] mx-auto group perspective-1000 cursor-pointer"
                                                                 onClick={() => setSelectedAlbum(albumName)}
                                                             >
+                                                                {/* Visibles en permanence sur écran tactile, au survol sinon. */}
+                                                                <Button
+                                                                    size="icon"
+                                                                    variant="secondary"
+                                                                    className="absolute top-2 right-12 z-30 h-8 w-8 rounded-full bg-white text-odillon-teal shadow-md transition-opacity duration-200 hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
+                                                                    title="Modifier l'album"
+                                                                    aria-label={`Modifier l'album ${albumName}`}
+                                                                    onPointerDown={(e) => e.stopPropagation()}
+                                                                    onClick={(e) => { e.stopPropagation(); openRenameAlbumDialog(albumName) }}
+                                                                >
+                                                                    <FolderEdit className="w-4 h-4" />
+                                                                </Button>
                                                                 <Button
                                                                     size="icon"
                                                                     variant="destructive"
-                                                                    className="absolute top-2 right-2 z-30 h-8 w-8 rounded-full opacity-0 shadow-md transition-opacity duration-200 group-hover:opacity-100"
+                                                                    className="absolute top-2 right-2 z-30 h-8 w-8 rounded-full shadow-md transition-opacity duration-200 sm:opacity-0 sm:group-hover:opacity-100"
                                                                     title="Supprimer l'album"
+                                                                    aria-label={`Supprimer l'album ${albumName}`}
                                                                     onPointerDown={(e) => e.stopPropagation()}
                                                                     onClick={(e) => { e.stopPropagation(); openDeleteAlbum(albumName) }}
                                                                 >
@@ -1584,43 +1645,113 @@ export function PhotosTab() {
                 </Dialog>
             )}
 
-            {/* RENAME ALBUM DIALOG */}
+            {/* ALBUM EDIT DIALOG */}
             <Dialog open={isRenameAlbumDialogOpen} onOpenChange={setIsRenameAlbumDialogOpen}>
-                <DialogContent>
+                <DialogContent className="sm:max-w-[560px]">
                     <DialogHeader>
-                        <DialogTitle>Renommer l'album</DialogTitle>
+                        <DialogTitle>Modifier l'album</DialogTitle>
                         <DialogDescription>
-                            Ceci mettra à jour la description de <strong>toutes les photos</strong> de cet album.
+                            Les changements s'appliquent à <strong>toutes les photos</strong> de l'album.
                         </DialogDescription>
                     </DialogHeader>
 
-                    <div className="grid gap-4 py-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="album-name">Nom de l'album</Label>
-                            <Input
-                                id="album-name"
-                                value={newAlbumName}
-                                onChange={(e) => setNewAlbumName(e.target.value)}
-                            />
-                        </div>
+                    {ficheAlbum && (
+                        <div className="grid gap-4 py-2">
+                            <div className="space-y-2">
+                                <Label htmlFor="album-name">Nom de l'album *</Label>
+                                <Input
+                                    id="album-name"
+                                    value={ficheAlbum.description}
+                                    maxLength={200}
+                                    onChange={(e) => setFicheAlbum({ ...ficheAlbum, description: e.target.value })}
+                                />
+                            </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="album-details">Description de l'événement (pour toutes les photos)</Label>
-                            <textarea
-                                id="album-details"
-                                className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                                value={newAlbumDetails}
-                                onChange={(e) => setNewAlbumDetails(e.target.value)}
-                                placeholder="Ajoutez une description commune..."
-                            />
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                <div className="space-y-2">
+                                    <Label>Année</Label>
+                                    <Select
+                                        value={ficheAlbum.year?.toString() || "none"}
+                                        onValueChange={(val) => setFicheAlbum({ ...ficheAlbum, year: val === "none" ? null : parseInt(val) })}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Année" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="none">{champsMixtes.year ? "Plusieurs années (inchangé)" : "Aucune"}</SelectItem>
+                                            {years.map((y) => (
+                                                <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Mois</Label>
+                                    <Select
+                                        value={ficheAlbum.month?.toString() || "none"}
+                                        onValueChange={(val) => setFicheAlbum({ ...ficheAlbum, month: val === "none" ? null : parseInt(val) })}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Mois" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="none">{champsMixtes.month ? "Plusieurs mois (inchangé)" : "Aucun"}</SelectItem>
+                                            {months.map((m, i) => (
+                                                <SelectItem key={i} value={(i + 1).toString()}>{m}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="album-location">Lieu</Label>
+                                <Input
+                                    id="album-location"
+                                    value={ficheAlbum.location}
+                                    maxLength={200}
+                                    placeholder={champsMixtes.location ? "Plusieurs lieux : laisser vide pour les conserver" : "Ex : Libreville, hôtel Impérial"}
+                                    onChange={(e) => setFicheAlbum({ ...ficheAlbum, location: e.target.value })}
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label>Type d'activité</Label>
+                                <Select
+                                    value={ficheAlbum.activity_type || "none"}
+                                    onValueChange={(v) => setFicheAlbum({ ...ficheAlbum, activity_type: v === "none" ? null : v })}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Choisir" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="none">{champsMixtes.activity_type ? "Plusieurs types (inchangé)" : "Aucun"}</SelectItem>
+                                        {TYPES_ACTIVITE.map((t) => (
+                                            <SelectItem key={t} value={t}>{t}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="album-details">Description de l'événement</Label>
+                                <textarea
+                                    id="album-details"
+                                    className="flex min-h-[110px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                    value={ficheAlbum.details}
+                                    maxLength={5000}
+                                    onChange={(e) => setFicheAlbum({ ...ficheAlbum, details: e.target.value })}
+                                    placeholder={champsMixtes.details ? "Descriptions différentes selon les photos : laisser vide pour les conserver" : "Ce que le visiteur lira sur l'album..."}
+                                />
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setIsRenameAlbumDialogOpen(false)}>Annuler</Button>
                         <Button onClick={handleRenameAlbum} disabled={isSaving} className="bg-odillon-teal">
                             {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                            Renommer
+                            Enregistrer
                         </Button>
                     </DialogFooter>
                 </DialogContent>
