@@ -1,279 +1,205 @@
 "use client";
 
-import React, { useState } from "react";
-import { m, useMotionValue, useSpring, useTransform } from "framer-motion";
+import Image from "next/image";
+import { m, useReducedMotion } from "framer-motion";
+import { ArrowRight, Calendar, Camera, MapPin, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  Calendar,
-  MapPin,
-  GraduationCap,
-  Users2,
-  Lightbulb,
-  Camera,
-} from "lucide-react";
-import { BlurFade } from "@/components/magicui/blur-fade";
-import { Badge } from "@/components/ui/badge";
-import { StackedCardsInteraction } from "@/components/ui/stacked-cards-interaction";
 import type { Album } from "./types";
 
-// Activity Badge Component - Design raffiné
-const ActivityBadge: React.FC<{ type: string | null }> = ({ type }) => {
-  if (!type) return null;
+const focusRing =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-odillon-teal";
 
-  const featured = ["Formations", "Séminaires", "Ateliers"];
-  if (!featured.includes(type)) return null;
+function nombrePhotos(n: number) {
+  return `${n} photo${n > 1 ? "s" : ""}`;
+}
 
-  const styles: Record<
-    string,
-    { gradient: string; icon: React.ElementType; glow: string }
-  > = {
-    Formations: {
-      gradient:
-        "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-blue-500/30",
-      icon: GraduationCap,
-      glow: "shadow-lg shadow-blue-500/20",
-    },
-    Séminaires: {
-      gradient:
-        "bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-purple-500/30",
-      icon: Users2,
-      glow: "shadow-lg shadow-purple-500/20",
-    },
-    Ateliers: {
-      gradient:
-        "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-orange-500/30",
-      icon: Lightbulb,
-      glow: "shadow-lg shadow-orange-500/20",
-    },
-  };
-
-  const style = styles[type];
-  if (!style) return null;
-  const Icon = style.icon;
-
+/** Date et lieu sur une ligne, comme une légende de reportage. */
+function Meta({ album, className }: { album: Album; className?: string }) {
+  if (!album.date && !album.location) return null;
   return (
-    <m.div
-      initial={{ opacity: 0, scale: 0.8, y: -8 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 15 }}
-      className="absolute top-3 right-3 z-20"
-    >
-      <Badge
-        className={cn(
-          "px-3 py-1.5 text-xs font-semibold backdrop-blur-md border-0 rounded-full",
-          style.gradient,
-          style.glow
-        )}
-      >
-        <Icon className="w-3.5 h-3.5 mr-1.5" />
-        {type}
-      </Badge>
-    </m.div>
+    // <span> et non <p> : la ligne est aussi placée dans un bouton.
+    <span className={cn("flex flex-wrap items-center gap-x-3 gap-y-1", className)}>
+      {album.date && (
+        <span className="inline-flex items-center gap-1.5">
+          <Calendar className="size-3.5 shrink-0" aria-hidden="true" />
+          {album.date}
+        </span>
+      )}
+      {album.location && (
+        <span className="inline-flex min-w-0 items-center gap-1.5">
+          <MapPin className="size-3.5 shrink-0" aria-hidden="true" />
+          <span className="truncate">{album.location}</span>
+        </span>
+      )}
+    </span>
   );
-};
+}
 
-// Photo count badge
-const PhotoCountBadge: React.FC<{ count: number }> = ({ count }) => (
-  <div className="absolute top-3 left-3 z-20">
-    <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md text-white rounded-full px-2.5 py-1 text-xs font-medium">
-      <Camera className="w-3.5 h-3.5" />
-      <span>{count}</span>
-    </div>
-  </div>
-);
+/** Apparition au défilement, désactivée si l'utilisateur limite les animations. */
+function useApparition(index: number) {
+  const reduire = useReducedMotion();
+  return reduire
+    ? {}
+    : {
+        initial: { opacity: 0, y: 18 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, margin: "-40px" },
+        transition: { duration: 0.5, delay: Math.min(index, 5) * 0.06, ease: [0.22, 1, 0.36, 1] as const },
+      };
+}
 
 interface AlbumCardProps {
   album: Album;
-  onClick: () => void;
   index: number;
+  onOpen: () => void;
 }
 
-export function AlbumCard({ album, onClick, index }: AlbumCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  // 3D tilt effect
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [6, -6]), {
-    stiffness: 200,
-    damping: 20,
-  });
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-6, 6]), {
-    stiffness: 200,
-    damping: 20,
-  });
-
-  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    mouseX.set(x);
-    mouseY.set(y);
-  }
-
-  function handleMouseLeave() {
-    mouseX.set(0);
-    mouseY.set(0);
-    setIsHovered(false);
-  }
-
-  const description = [
-    album.coverPhoto.details || "Pas de description",
-    `${album.photos.length} photos`,
-  ]
-    .filter(Boolean)
-    .join(" \u2022 ");
-
-  const cardsData = album.photos.slice(0, 3).map((photo, i) => ({
-    image: photo.url,
-    title: i === 0 ? album.title : undefined,
-    description: i === 0 ? description : undefined,
-  }));
-
-  if (cardsData.length === 0) {
-    cardsData.push({
-      image: album.coverPhoto.url,
-      title: album.title,
-      description: description,
-    });
-  }
-
-  const featuredTypes = ["Formations", "Séminaires", "Ateliers"];
-  const isFeatured = featuredTypes.includes(album.activityType || "");
+export function AlbumCard({ album, index, onOpen }: AlbumCardProps) {
+  const apparition = useApparition(index);
 
   return (
-    <BlurFade delay={0.06 * Math.min(index, 10)}>
-      <m.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{
-          delay: 0.04 * Math.min(index, 10),
-          duration: 0.4,
-          ease: "easeOut",
-        }}
-        style={{
-          perspective: 800,
-        }}
+    <m.li {...apparition}>
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-label={`Ouvrir l'album ${album.title}, ${nombrePhotos(album.photos.length)}`}
+        className={cn(
+          "group relative block aspect-[4/3] w-full overflow-hidden rounded-xl bg-gray-100 text-left shadow-sm ring-1 ring-black/5 transition-shadow duration-300 hover:shadow-xl",
+          focusRing
+        )}
       >
-        <m.div
-          onMouseMove={handleMouseMove}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={handleMouseLeave}
-          onClick={onClick}
-          style={{
-            rotateX,
-            rotateY,
-            transformStyle: "preserve-3d",
-          }}
-          className={cn(
-            "relative w-full aspect-[7/8] max-w-[350px] mx-auto group cursor-pointer",
-            "rounded-lg transition-shadow duration-500 ease-out",
-            // Ombres dynamiques
-            isHovered
-              ? "shadow-2xl shadow-black/20 dark:shadow-black/40"
-              : "shadow-md shadow-black/5",
-            // Ring pour featured
-            isFeatured &&
-              cn(
-                "ring-2 ring-odillon-teal/20 max-w-[400px]",
-                isHovered && "ring-odillon-teal/50"
-              )
-          )}
-        >
-          {/* Activity badge */}
-          <ActivityBadge type={album.activityType ?? null} />
+        <Image
+          src={album.coverPhoto.url}
+          alt=""
+          fill
+          sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+        />
+        <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
 
-          {/* Photo count badge */}
-          <PhotoCountBadge count={album.photos.length} />
+        <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/45 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-md">
+          <Camera className="size-3.5" aria-hidden="true" />
+          {album.photos.length}
+        </span>
+        {album.activityType && (
+          <span className="absolute right-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-odillon-teal backdrop-blur-md">
+            {album.activityType}
+          </span>
+        )}
 
-          {/* Stacked cards */}
-          <StackedCardsInteraction
-            cards={cardsData}
-            spreadDistance={20}
-            rotationAngle={5}
-          />
+        <span className="absolute inset-x-0 bottom-0 block p-5">
+          <Meta album={album} className="text-xs text-white/75" />
+          <span className="mt-1.5 block font-baskvill text-xl italic leading-snug text-white line-clamp-2 md:text-2xl">
+            {album.title}
+          </span>
+          <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-odillon-lime transition-all duration-300 sm:translate-y-1 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 sm:group-focus-visible:translate-y-0 sm:group-focus-visible:opacity-100">
+            Voir l&apos;album
+            <ArrowRight className="size-4" aria-hidden="true" />
+          </span>
+        </span>
+      </button>
+    </m.li>
+  );
+}
 
-          <div className="absolute inset-x-2 bottom-2 z-20 pointer-events-none rounded-md bg-gradient-to-t from-black/85 via-black/58 to-transparent px-4 pb-4 pt-14">
-            <h2 className="font-baskvill italic text-[1.45rem] leading-[1.05] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.65)] line-clamp-2">
-              {album.title}
-            </h2>
-          </div>
+interface AlbumUneProps {
+  album: Album;
+  onOpen: () => void;
+  onPhotoClick: (index: number) => void;
+  onDiaporama: () => void;
+}
 
-          {/* Gradient overlay on hover */}
-          <m.div
-            className="absolute inset-0 z-10 rounded-lg pointer-events-none"
-            initial={false}
-            animate={{
-              opacity: isHovered ? 1 : 0,
-            }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
-            style={{
-              background:
-                "linear-gradient(to top, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.1) 40%, transparent 70%)",
-            }}
-          />
+/** Album le plus récent, présenté en grand en tête de page. */
+export function AlbumUne({ album, onOpen, onPhotoClick, onDiaporama }: AlbumUneProps) {
+  const apparition = useApparition(0);
+  const description = album.coverPhoto.event_description || album.coverPhoto.details;
+  // La couverture est déjà en grand : les miniatures montrent la suite de l'album.
+  const apercus = album.photos.slice(1, 5);
+  const restantes = album.photos.length - 1 - apercus.length;
 
-          {/* Date and Location Badges - redesign intégré */}
-          <div className="absolute left-3 right-3 bottom-[6.4rem] z-30 flex flex-wrap gap-1.5 pointer-events-none">
-            {album.date && (
-              <m.div
-                initial={false}
-                animate={{
-                  y: isHovered ? 0 : 4,
-                  opacity: isHovered ? 1 : 0.85,
-                }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-              >
-                <Badge className="bg-white/95 text-gray-800 border border-white/60 shadow-md backdrop-blur-xl text-[11px] rounded-full px-2.5 py-0.5">
-                  <Calendar className="w-3 h-3 mr-1 text-odillon-teal" />
-                  {album.date}
-                </Badge>
-              </m.div>
+  return (
+    <m.article
+      {...apparition}
+      className="grid overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]"
+    >
+      <button
+        type="button"
+        onClick={() => onPhotoClick(0)}
+        aria-label={`Agrandir la photo de couverture de l'album ${album.title}`}
+        className={cn("group relative aspect-[16/10] overflow-hidden bg-gray-100 lg:aspect-auto lg:min-h-[440px]", focusRing)}
+      >
+        <Image
+          src={album.coverPhoto.url}
+          alt={album.title}
+          fill
+          priority
+          sizes="(min-width: 1024px) 760px, 100vw"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+        />
+      </button>
+
+      <div className="flex flex-col p-6 md:p-8 lg:p-10">
+        <p className="od-eyebrow">Dernier album</p>
+        <h2 className="mt-3 font-baskvill text-3xl italic leading-tight text-odillon-dark md:text-4xl">{album.title}</h2>
+        <Meta album={album} className="mt-3 text-sm text-gray-500" />
+        {description && <p className="mt-4 leading-relaxed text-gray-600 line-clamp-4">{description}</p>}
+
+        {apercus.length > 0 && (
+          <ul className="mt-6 grid grid-cols-4 gap-2">
+            {apercus.map((photo, i) => {
+              const dernier = i === apercus.length - 1 && restantes > 0;
+              return (
+                <li key={photo.id}>
+                  <button
+                    type="button"
+                    onClick={() => (dernier ? onOpen() : onPhotoClick(i + 1))}
+                    aria-label={dernier ? `Voir les ${restantes + 1} autres photos de l'album` : `Agrandir la photo ${i + 2}`}
+                    className={cn("group relative block aspect-square w-full overflow-hidden rounded-lg bg-gray-100", focusRing)}
+                  >
+                    <Image
+                      src={photo.url}
+                      alt=""
+                      fill
+                      sizes="120px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    {dernier && (
+                      <span className="absolute inset-0 flex items-center justify-center bg-odillon-dark/60 text-sm font-semibold text-white">
+                        +{restantes + 1}
+                      </span>
+                    )}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+
+        <div className="mt-auto flex flex-wrap gap-3 pt-8">
+          <button
+            type="button"
+            onClick={onOpen}
+            className={cn(
+              "group inline-flex items-center gap-2 rounded-md bg-odillon-teal px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-odillon-teal/90",
+              focusRing
             )}
-            {album.location && (
-              <m.div
-                initial={false}
-                animate={{
-                  y: isHovered ? 0 : 4,
-                  opacity: isHovered ? 1 : 0.85,
-                }}
-                transition={{ duration: 0.3, ease: "easeOut", delay: 0.05 }}
-              >
-                <Badge className="bg-white/95 text-gray-800 border border-white/60 shadow-md backdrop-blur-xl text-[11px] rounded-full px-2.5 py-0.5">
-                  <MapPin className="w-3 h-3 mr-1 text-odillon-teal" />
-                  {album.location}
-                </Badge>
-              </m.div>
-            )}
-          </div>
-
-          {/* Shine effect on hover */}
-          <m.div
-            className="absolute inset-0 z-10 rounded-lg pointer-events-none overflow-hidden"
-            initial={false}
-            animate={{
-              opacity: isHovered ? 1 : 0,
-            }}
-            transition={{ duration: 0.4 }}
           >
-            <m.div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.12) 45%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.12) 55%, transparent 60%)",
-              }}
-              animate={{
-                x: isHovered ? ["-100%", "200%"] : "-100%",
-              }}
-              transition={{
-                duration: 0.8,
-                ease: "easeInOut",
-              }}
-            />
-          </m.div>
-        </m.div>
-      </m.div>
-    </BlurFade>
+            Voir l&apos;album · {nombrePhotos(album.photos.length)}
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={onDiaporama}
+            className={cn(
+              "inline-flex items-center gap-2 rounded-md border border-odillon-dark/15 px-5 py-3 text-sm font-semibold text-odillon-dark transition-colors hover:border-odillon-teal/40 hover:text-odillon-teal",
+              focusRing
+            )}
+          >
+            <Play className="size-4" aria-hidden="true" />
+            Diaporama
+          </button>
+        </div>
+      </div>
+    </m.article>
   );
 }

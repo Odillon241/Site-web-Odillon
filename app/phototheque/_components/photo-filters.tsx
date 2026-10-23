@@ -96,6 +96,8 @@ interface PhotoFiltersProps {
     filters: FilterState
   ) => void;
   albumCounts?: Record<string, number>;
+  /** Années présentes dans les albums ; à défaut, les dix dernières. */
+  annees?: number[];
   onFilterClick?: () => void;
 }
 
@@ -103,6 +105,7 @@ export function PhotoFilters({
   filters,
   onFiltersChange,
   albumCounts,
+  annees,
   onFilterClick,
 }: PhotoFiltersProps) {
   const [
@@ -194,14 +197,17 @@ export function PhotoFilters({
   const currentYear =
     new Date().getFullYear();
 
-  const years = Array.from(
-    { length: 10 },
-    (_, index) =>
-      currentYear - index
-  );
+  const years =
+    annees && annees.length > 0
+      ? annees
+      : Array.from(
+          { length: 10 },
+          (_, index) =>
+            currentYear - index
+        );
 
   return (
-    <div className="flex flex-col sm:flex-row sm:flex-wrap items-center gap-3 w-full lg:w-auto">
+    <div className="flex flex-col sm:flex-row sm:flex-wrap items-center gap-3 w-full">
 
       {/* Recherche */}
       <div className="relative group w-full sm:w-64 lg:w-72">
@@ -253,7 +259,7 @@ export function PhotoFilters({
           handleYearChange
         }
       >
-        <SelectTrigger className="w-full sm:w-32 h-10 bg-white border-gray-200 hover:border-gray-300 transition-colors shadow-sm rounded-lg">
+        <SelectTrigger className="w-full sm:w-44 h-10 bg-white border-gray-200 hover:border-gray-300 transition-colors shadow-sm rounded-lg">
           <SelectValue placeholder="Année" />
         </SelectTrigger>
 

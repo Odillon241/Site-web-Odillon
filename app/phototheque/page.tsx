@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { Search, Images } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, Images, RotateCcw } from "lucide-react";
 
 import { HeaderPro } from "@/components/layout/header-pro";
 import { Footer } from "@/components/layout/footer";
@@ -9,7 +9,7 @@ import { FadeIn } from "@/components/magicui/fade-in";
 import { VideoSection } from "@/components/sections/video-section";
 import { Video } from "@/types/admin";
 
-import { AlbumCard } from "./_components/album-card";
+import { AlbumCard, AlbumUne } from "./_components/album-card";
 import { AlbumModal } from "./_components/album-modal";
 import { PhotoLightbox } from "./_components/photo-lightbox";
 import { PhotoFilters } from "./_components/photo-filters";
@@ -32,11 +32,17 @@ export default function PhotothequePage() {
   const [selectedAlbum, setSelectedAlbum] =
     useState<Album | null>(null);
 
-  const [selectedPhoto, setSelectedPhoto] =
-    useState<Photo | null>(null);
+  // Visionneuse : -1 = fermée. Elle s'ouvre par-dessus l'album, que l'on
+  // masque le temps de la consultation (une fenêtre modale bloquerait les
+  // interactions de la visionneuse) puis que l'on retrouve à la fermeture.
+  const [visionneuse, setVisionneuse] = useState<{
+    photos: Photo[];
+    index: number;
+    autoplay: boolean;
+  }>({ photos: [], index: -1, autoplay: false });
 
-  const [lightboxIndex, setLightboxIndex] =
-    useState(0);
+  const ouvrirVisionneuse = (photos: Photo[], index: number, autoplay = false) =>
+    setVisionneuse({ photos, index, autoplay });
 
   const [video, setVideo] =
     useState<Video | null>(null);
@@ -98,60 +104,6 @@ export default function PhotothequePage() {
     fetchData();
   }, []);
 
-  const lightboxPhotos =
-    selectedAlbum?.photos || [];
-
-  const openLightbox = useCallback(
-    (photo: Photo) => {
-      const idx =
-        lightboxPhotos.findIndex(
-          (p) => p.id === photo.id
-        );
-
-      setLightboxIndex(
-        idx >= 0 ? idx : 0
-      );
-
-      setSelectedPhoto(photo);
-    },
-    [lightboxPhotos]
-  );
-
-  const navigateLightbox =
-    useCallback(
-      (
-        direction: "prev" | "next"
-      ) => {
-        if (
-          lightboxPhotos.length === 0
-        ) {
-          return;
-        }
-
-        const newIndex =
-          direction === "next"
-            ? (
-                lightboxIndex + 1
-              ) %
-              lightboxPhotos.length
-            : (
-                lightboxIndex -
-                1 +
-                lightboxPhotos.length
-              ) %
-              lightboxPhotos.length;
-
-        setLightboxIndex(newIndex);
-        setSelectedPhoto(
-          lightboxPhotos[newIndex]
-        );
-      },
-      [
-        lightboxPhotos,
-        lightboxIndex,
-      ]
-    );
-
   /**
    * FILTRES
    */
@@ -204,126 +156,21 @@ export default function PhotothequePage() {
       compareAlbumsByDateDesc
     );
 
-  /**
-   * GROUPES :
-   *
-   * 2026
-   *   Septembre
-   *   Avril
-   *
-   * 2025
-   *   Décembre
-   *   Juin
-   *
-   * 2023
-   *   Avril
-   *
-   * Autres
-   */
-  const groupedAlbumsByYear =
-    sortedAlbums.reduce(
-      (
-        acc,
-        album
-      ) => {
-        const year =
-          album.coverPhoto.year ??
-          null;
+  const [albumUne, ...autresAlbums] = sortedAlbums;
 
-        const month =
-          album.coverPhoto.month ??
-          null;
+  const filtresActifs =
+    !!filters.search ||
+    !!filters.category ||
+    filters.year !== null ||
+    filters.month !== null;
 
-        let yearGroup =
-          acc.find(
-            (group) =>
-              group.year === year
-          );
-
-        if (!yearGroup) {
-          yearGroup = {
-            year,
-            months: [],
-          };
-
-          acc.push(yearGroup);
-        }
-
-        let monthGroup =
-          yearGroup.months.find(
-            (group) =>
-              group.month === month
-          );
-
-        if (!monthGroup) {
-          monthGroup = {
-            month,
-            albums: [],
-          };
-
-          yearGroup.months.push(
-            monthGroup
-          );
-        }
-
-        monthGroup.albums.push(
-          album
-        );
-
-        return acc;
-      },
-      [] as {
-        year: number | null;
-        months: {
-          month: number | null;
-          albums: Album[];
-        }[];
-      }[]
-    );
-
-  /**
-   * Tri explicite des années
-   * et des mois.
-   */
-  groupedAlbumsByYear.sort(
-    (a, b) => {
-      if (a.year === null) {
-        return 1;
-      }
-
-      if (b.year === null) {
-        return -1;
-      }
-
-      return b.year - a.year;
-    }
-  );
-
-  groupedAlbumsByYear.forEach(
-    (yearGroup) => {
-      yearGroup.months.sort(
-        (a, b) => {
-          if (a.month === null) {
-            return 1;
-          }
-
-          if (b.month === null) {
-            return -1;
-          }
-
-          return b.month - a.month;
-        }
-      );
-
-      yearGroup.months.forEach(
-        (monthGroup) => {
-          monthGroup.albums.sort(
-            compareAlbumsByDateDesc
-          );
-        }
-      );
-    }
-  );
+  const anneesDisponibles = Array.from(
+    new Set(
+      albums
+        .map((album) => album.coverPhoto.year)
+        .filter((annee): annee is number => !!annee)
+    )
+  ).sort((a, b) => b - a);
 
   /**
    * Compteurs par catégorie.
@@ -350,146 +197,94 @@ export default function PhotothequePage() {
         <section className="od-section scroll-mt-24 border-t-0 py-12 md:py-16">
           <div className="od-container">
 
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 mb-10 md:mb-12">
-
-              <div className="max-w-2xl">
-                <div className="od-eyebrow mb-3">
-                  <Images className="w-4 h-4" />
-                  Photothèque
-                </div>
-
-                <h1 className="od-heading-display text-4xl md:text-5xl">
-                  Albums
-                </h1>
-
-                <p className="mt-3 text-sm md:text-base text-gray-600">
-                  Les albums sont classés par année et par mois,
-                  du plus récent au plus ancien.
-                </p>
+            <div className="max-w-2xl">
+              <div className="od-eyebrow mb-3">
+                <Images className="w-4 h-4" />
+                Photothèque
               </div>
 
+              <h1 className="od-heading-display text-4xl md:text-5xl">
+                Nos événements en images
+              </h1>
+
+              <p className="mt-3 text-sm md:text-base text-gray-600">
+                Formations, séminaires et temps forts du Cabinet, du plus récent au plus ancien.
+              </p>
+            </div>
+
+            <div className="mt-8 border-y border-gray-100 py-4">
               <PhotoFilters
                 filters={filters}
                 onFiltersChange={setFilters}
                 albumCounts={albumCounts}
+                annees={anneesDisponibles}
               />
+              {!loading && filtresActifs && (
+                <p className="mt-3 flex flex-wrap items-center gap-3 text-sm text-gray-500" aria-live="polite">
+                  {sortedAlbums.length} album{sortedAlbums.length > 1 ? "s" : ""} trouvé{sortedAlbums.length > 1 ? "s" : ""}
+                  <button
+                    type="button"
+                    onClick={() => setFilters({ search: "", category: null, year: null, month: null })}
+                    className="inline-flex items-center gap-1.5 font-semibold text-odillon-teal hover:text-odillon-teal/80"
+                  >
+                    <RotateCcw className="size-3.5" aria-hidden="true" />
+                    Réinitialiser
+                  </button>
+                </p>
+              )}
             </div>
 
-            {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-                {[
-                  1, 2, 3, 4,
-                  5, 6, 7, 8
-                ].map((i) => (
-                  <div
-                    key={i}
-                    className="space-y-3"
-                  >
-                    <div className="aspect-[7/8] bg-gray-100 rounded-xl animate-pulse" />
+            <div className="mt-10">
+              {loading ? (
+                <div className="space-y-8" aria-busy="true">
+                  <div className="h-[440px] rounded-2xl bg-gray-100 animate-pulse" />
+                  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="aspect-[4/3] rounded-xl bg-gray-100 animate-pulse" />
+                    ))}
                   </div>
-                ))}
-              </div>
-            ) : groupedAlbumsByYear.length > 0 ? (
-              <div className="space-y-14 md:space-y-16">
-
-                {groupedAlbumsByYear.map(
-                  (yearGroup) => (
-                    <div
-                      key={
-                        yearGroup.year ??
-                        "autres"
-                      }
-                      className="space-y-8 md:space-y-10"
-                    >
-
-                      <h2 className="od-heading-display text-3xl md:text-4xl border-b border-odillon-teal/10 pb-3">
-                        {yearGroup.year ??
-                          "Autres"}
-                      </h2>
-
-                      <div className="space-y-12">
-
-                        {yearGroup.months.map(
-                          (monthGroup) => (
-                            <div
-                              key={`${yearGroup.year ?? "autres"}-${monthGroup.month ?? "none"}`}
-                            >
-
-                              {monthGroup.month && (
-                                <h3 className="text-sm font-semibold uppercase text-gray-500 mb-6 tracking-[0.14em]">
-                                  {new Date(
-                                    2000,
-                                    monthGroup.month -
-                                      1,
-                                    1
-                                  ).toLocaleDateString(
-                                    "fr-FR",
-                                    {
-                                      month:
-                                        "long",
-                                    }
-                                  )}
-                                </h3>
-                              )}
-
-                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-
-                                {monthGroup.albums.map(
-                                  (
-                                    album,
-                                    idx
-                                  ) => (
-                                    <AlbumCard
-                                      key={
-                                        album.id
-                                      }
-                                      album={
-                                        album
-                                      }
-                                      index={
-                                        idx
-                                      }
-                                      onClick={() =>
-                                        setSelectedAlbum(
-                                          album
-                                        )
-                                      }
-                                    />
-                                  )
-                                )}
-
-                              </div>
-                            </div>
-                          )
-                        )}
-
-                      </div>
-                    </div>
-                  )
-                )}
-
-              </div>
-            ) : (
-              <FadeIn>
-                <div className="od-surface-muted text-center py-20 md:py-24">
-
-                  <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center mx-auto mb-5 border border-[#00a795]/10">
-                    <Search className="w-7 h-7 text-gray-300" />
-                  </div>
-
-                  <h3 className="od-heading-display text-2xl mb-2">
-                    Aucun album
-                  </h3>
-
-                  <p className="text-gray-500 text-sm max-w-sm mx-auto">
-                    Aucun album ne correspond aux
-                    critères sélectionnés.
-                  </p>
-
                 </div>
-              </FadeIn>
-            )}
+              ) : albumUne ? (
+                <div className="space-y-10 md:space-y-12">
+                  <AlbumUne
+                    key={albumUne.id}
+                    album={albumUne}
+                    onOpen={() => setSelectedAlbum(albumUne)}
+                    onPhotoClick={(index) => ouvrirVisionneuse(albumUne.photos, index)}
+                    onDiaporama={() => ouvrirVisionneuse(albumUne.photos, 0, true)}
+                  />
 
+                  {autresAlbums.length > 0 && (
+                    <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                      {autresAlbums.map((album, idx) => (
+                        <AlbumCard
+                          key={album.id}
+                          album={album}
+                          index={idx}
+                          onOpen={() => setSelectedAlbum(album)}
+                        />
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ) : (
+                <FadeIn>
+                  <div className="od-surface-muted text-center py-20 md:py-24">
+                    <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center mx-auto mb-5 border border-[#00a795]/10">
+                      <Search className="w-7 h-7 text-gray-300" />
+                    </div>
+
+                    <h2 className="od-heading-display text-2xl mb-2">
+                      Aucun album
+                    </h2>
+
+                    <p className="text-gray-500 text-sm max-w-sm mx-auto">
+                      Aucun album ne correspond aux critères sélectionnés.
+                    </p>
+                  </div>
+                </FadeIn>
+              )}
+            </div>
           </div>
         </section>
 
@@ -499,27 +294,20 @@ export default function PhotothequePage() {
       <Footer />
 
       <AlbumModal
-        album={selectedAlbum}
-        onClose={() =>
-          setSelectedAlbum(null)
-        }
-        onPhotoClick={
-          openLightbox
-        }
+        album={visionneuse.index >= 0 ? null : selectedAlbum}
+        onClose={() => setSelectedAlbum(null)}
+        onPhotoClick={(photo) => {
+          if (!selectedAlbum) return;
+          const index = selectedAlbum.photos.findIndex((p) => p.id === photo.id);
+          ouvrirVisionneuse(selectedAlbum.photos, Math.max(index, 0));
+        }}
       />
 
       <PhotoLightbox
-        photo={selectedPhoto}
-        photos={lightboxPhotos}
-        currentIndex={
-          lightboxIndex
-        }
-        onClose={() =>
-          setSelectedPhoto(null)
-        }
-        onNavigate={
-          navigateLightbox
-        }
+        photos={visionneuse.photos}
+        index={visionneuse.index}
+        autoplay={visionneuse.autoplay}
+        onClose={() => setVisionneuse((v) => ({ ...v, index: -1, autoplay: false }))}
       />
     </>
   );
