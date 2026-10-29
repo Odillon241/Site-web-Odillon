@@ -154,6 +154,7 @@ export const branchesOrganigramme: BrancheOrganigramme[] = [
     ],
     rattachee: {
       pole: "Direction Technique",
+      titre: "Directeur Technique",
       enfants: [
         { pole: "Administration RH" },
         portefeuille("Direction Technique"),

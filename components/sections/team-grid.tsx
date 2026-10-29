@@ -250,8 +250,9 @@ export function TeamGrid() {
                 <div className="relative">
                     {/* ========== DIRECTION GÉNÉRALE ========== */}
                     <div className="flex justify-center">
+                        {/* Intitulés de cases repris de l'organigramme officiel. */}
                         <OrgBox
-                            title="Direction Générale"
+                            title="Directeur Général"
                             members={directionGenerale}
                             variant="direction"
                             className="w-full max-w-72"
@@ -286,7 +287,7 @@ export function TeamGrid() {
                                         key={branche.rattachee.pole}
                                         entite={branche.rattachee}
                                         enfants={branche.rattachee.enfants}
-                                        surtitre={`Rattachée à la ${branche.titre ?? branche.pole}`}
+                                        surtitre={`Sous la ${branche.titre ?? branche.pole}`}
                                     />,
                                 ]
                                 : []),
