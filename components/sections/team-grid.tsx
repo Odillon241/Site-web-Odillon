@@ -8,8 +8,10 @@ import Image from "next/image"
 import {
     POLE_DIRECTION,
     branchesOrganigramme,
-    polesDirects,
-    polesHerites
+    liensFonctionnels,
+    polesHerites,
+    rattachementsDirection,
+    type EntiteOrganigramme
 } from "@/lib/identite"
 
 interface TeamMemberDB {
@@ -102,7 +104,6 @@ function OrgBox({
     return (
         <div className={`
             relative bg-white border-2 rounded-lg shadow-md hover:shadow-lg transition-shadow
-            ${members.length === 0 ? "self-start" : ""}
             ${cadre}
             ${className}
         `}>
@@ -211,6 +212,38 @@ export function TeamGrid() {
         )
     }
 
+    /* Une colonne de l'organigramme : l'entité en tête, ses services dessous,
+       reliés par un filet vertical comme sur le schéma officiel. */
+    const Colonne = ({
+        entite,
+        enfants,
+        surtitre,
+    }: {
+        entite: EntiteOrganigramme
+        enfants: EntiteOrganigramme[]
+        surtitre?: string
+    }) => (
+        <div>
+            <OrgBox
+                title={entite.titre ?? entite.pole}
+                surtitre={surtitre}
+                members={membresDe(entite.pole)}
+                variant="branche"
+                className="w-full"
+            />
+            <div className="ml-6 border-l-2 border-odillon-teal/20 pl-4 pt-3 space-y-2.5">
+                {enfants.map((enfant) => (
+                    <OrgBox
+                        key={enfant.pole}
+                        title={enfant.titre ?? enfant.pole}
+                        members={membresDe(enfant.pole)}
+                        className="w-full"
+                    />
+                ))}
+            </div>
+        </div>
+    )
+
     return (
         <div className="max-w-6xl mx-auto px-4">
             <FadeIn>
@@ -225,54 +258,49 @@ export function TeamGrid() {
                         />
                     </div>
 
+                    {/* ===== À CÔTÉ DE LA DIRECTION : ASSISTANTE, AUDIT ===== */}
                     <div className="flex justify-center">
-                        <div className="w-0.5 h-10 bg-gradient-to-b from-odillon-teal to-gray-300" />
+                        <div className="w-0.5 h-6 bg-odillon-teal/40" />
                     </div>
-
-                    {/* ===== DÉPARTEMENT TECHNIQUE · SECRÉTARIAT GÉNÉRAL ===== */}
-                    <div className="grid gap-8 md:gap-10 lg:grid-cols-2">
-                        {branchesOrganigramme.map((branche) => (
-                            <div key={branche.pole}>
-                                <div className="flex justify-center">
-                                    <OrgBox
-                                        title={branche.pole}
-                                        members={membresDe(branche.pole)}
-                                        variant="branche"
-                                        className="w-full max-w-xs"
-                                    />
-                                </div>
-
-                                {/* Rattachements de la branche */}
-                                <div className="flex justify-center">
-                                    <div className="w-0.5 h-6 bg-gray-300" />
-                                </div>
-                                <div className="grid gap-3 sm:grid-cols-3">
-                                    {branche.enfants.map((enfant) => (
-                                        <OrgBox
-                                            key={enfant}
-                                            title={enfant}
-                                            members={membresDe(enfant)}
-                                            className="w-full"
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* ===== PÔLES RATTACHÉS À LA DIRECTION GÉNÉRALE ===== */}
-                    <div className="flex justify-center mt-12">
-                        <div className="w-0.5 h-8 bg-gray-300" />
-                    </div>
-                    <div className="grid gap-4 md:gap-5 sm:grid-cols-3">
-                        {polesDirects.map((pole) => (
+                    <div className="mx-auto grid max-w-2xl items-start gap-4 sm:grid-cols-2">
+                        {rattachementsDirection.map((entite) => (
                             <OrgBox
-                                key={pole}
-                                title={pole}
-                                members={membresDe(pole)}
+                                key={entite.pole}
+                                title={entite.titre ?? entite.pole}
+                                members={membresDe(entite.pole)}
                                 className="w-full"
                             />
                         ))}
+                    </div>
+
+                    {/* ===== SECRÉTARIAT GÉNÉRAL · DGA · DIRECTION TECHNIQUE ===== */}
+                    <div className="flex justify-center">
+                        <div className="w-0.5 h-8 bg-gray-300" />
+                    </div>
+                    <div className="grid items-start gap-8 md:grid-cols-2 lg:grid-cols-3">
+                        {branchesOrganigramme.flatMap((branche) => [
+                            <Colonne key={branche.pole} entite={branche} enfants={branche.enfants} />,
+                            ...(branche.rattachee
+                                ? [
+                                    <Colonne
+                                        key={branche.rattachee.pole}
+                                        entite={branche.rattachee}
+                                        enfants={branche.rattachee.enfants}
+                                        surtitre={`Rattachée à la ${branche.titre ?? branche.pole}`}
+                                    />,
+                                ]
+                                : []),
+                        ])}
+                    </div>
+
+                    {/* Liens fonctionnels : les pointillés du schéma officiel. */}
+                    <div className="mx-auto mt-10 max-w-3xl rounded-lg border border-dashed border-odillon-teal/40 bg-odillon-teal/[0.03] px-5 py-4 text-sm text-gray-600">
+                        <p className="mb-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-odillon-teal">Liens fonctionnels</p>
+                        <ul className="list-disc space-y-1 pl-5">
+                            {liensFonctionnels.map((lien) => (
+                                <li key={lien}>{lien}</li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
             </FadeIn>

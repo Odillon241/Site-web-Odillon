@@ -94,68 +94,111 @@ export const chiffresCles = [
   { valeur: "Libreville", legende: "Glass, Gabon — siège du Cabinet" },
 ]
 
-/* ── Organigramme structurel ────────────────────────────────────────────────
-   Source : « Organigramme structurel ODILLON — Février 2026 », qui fait foi et
-   remplace le schéma reconstitué du livret §2.3 (lequel décrivait cinq pôles
-   numérotés aujourd'hui obsolètes).
+/* ── Organigramme ───────────────────────────────────────────────────────────
+   Source : présentation « ODILLON Présentation cabinet V4 », diapositive 5
+   « Organigramme », mise à jour du 26 octobre 2026. Elle remplace
+   l'organigramme structurel de février 2026.
 
-   Les libellés ci-dessous sont ceux attendus dans la colonne `pole` de la table
-   `team_members` : toute affectation doit utiliser exactement l'une de ces
-   valeurs, sans quoi le membre n'apparaît pas dans l'organigramme. */
+   La valeur `pole` de chaque entité est celle attendue dans la colonne `pole`
+   de la table `team_members` : une affectation doit reprendre exactement l'une
+   de ces valeurs, sans quoi le membre n'apparaît pas dans l'organigramme.
+   « Portefeuille client » existe dans trois entités : la valeur stockée le
+   précise entre parenthèses, l'intitulé affiché (`titre`) non. */
+
+export type EntiteOrganigramme = {
+  /** Valeur stockée dans `team_members.pole`. */
+  pole: string
+  /** Intitulé affiché ; par défaut, la valeur `pole`. */
+  titre?: string
+}
 
 /** Direction générale, au sommet de l'organigramme. */
 export const POLE_DIRECTION = "Direction Générale"
 
-/** Les deux entités rattachées à la Direction Générale, avec leurs rattachements. */
-export const branchesOrganigramme = [
-  {
-    pole: "Département Technique",
-    enfants: [
-      "Pôle Gestion du Capital Humain Clients",
-      "Pôle Systèmes d'Information",
-      "Pôle Communication & RSE",
-    ],
-  },
+/** Rattachés directement à la Direction Générale, à ses côtés. */
+export const rattachementsDirection: EntiteOrganigramme[] = [
+  { pole: "Assistante du DG" },
+  { pole: "Pôle Audit et Conformité" },
+]
+
+export type BrancheOrganigramme = EntiteOrganigramme & {
+  enfants: EntiteOrganigramme[]
+  /** Entité placée sous l'autorité de la branche (ex. : la Direction Technique sous la DGA). */
+  rattachee?: EntiteOrganigramme & { enfants: EntiteOrganigramme[] }
+}
+
+const portefeuille = (entite: string): EntiteOrganigramme => ({
+  pole: `Portefeuille client (${entite})`,
+  titre: "Portefeuille client",
+})
+
+/** Les deux branches placées sous la Direction Générale. */
+export const branchesOrganigramme: BrancheOrganigramme[] = [
   {
     pole: "Secrétariat Général",
     enfants: [
-      "Section Administration",
-      "Section Comptabilité",
-      "Section Logistique",
+      { pole: "Moyens Généraux Odillon" },
+      { pole: "Administration du personnel Odillon" },
+      { pole: "Budget et Dépenses" },
+      portefeuille("Secrétariat Général"),
     ],
+  },
+  {
+    pole: "Direction Générale Adjointe",
+    enfants: [
+      { pole: "Reporting" },
+      { pole: "Système d'information et Sécurité des données" },
+      { pole: "Formation" },
+      { pole: "Marketing & Communication" },
+      portefeuille("Direction Générale Adjointe"),
+    ],
+    rattachee: {
+      pole: "Direction Technique",
+      enfants: [
+        { pole: "Administration RH" },
+        portefeuille("Direction Technique"),
+        { pole: "Paie" },
+      ],
+    },
   },
 ]
 
-/** Pôles rattachés directement à la Direction Générale. */
-export const polesDirects = [
-  "Pôle Formation",
-  "Pôle Audit, Qualité et Conformité",
-  "Pôle Juridique",
+/**
+ * Liens fonctionnels (pointillés de l'organigramme), en plus des liens
+ * hiérarchiques : ils sont rappelés en légende sous le schéma.
+ */
+export const liensFonctionnels = [
+  "Les entités du Secrétariat Général et le Pôle Audit et Conformité travaillent en lien fonctionnel avec la Direction Générale Adjointe.",
+  "Le Système d'information et Sécurité des données travaille en lien fonctionnel avec la Direction Technique.",
 ]
 
 /** Toutes les affectations possibles, à plat, dans l'ordre de l'organigramme. */
 export const affectationsPossibles = [
   POLE_DIRECTION,
-  ...branchesOrganigramme.flatMap((b) => [b.pole, ...b.enfants]),
-  ...polesDirects,
+  ...rattachementsDirection.map((e) => e.pole),
+  ...branchesOrganigramme.flatMap((b) => [
+    b.pole,
+    ...b.enfants.map((e) => e.pole),
+    ...(b.rattachee ? [b.rattachee.pole, ...b.rattachee.enfants.map((e) => e.pole)] : []),
+  ]),
 ]
 
 /**
- * Correspondance transitoire entre les anciens intitulés de pôles et ceux de
- * l'organigramme de février 2026. Elle évite qu'un membre disparaisse tant que
- * la colonne `pole` n'a pas été migrée en base.
+ * Correspondance transitoire entre les intitulés encore présents en base et
+ * ceux de l'organigramme du 26 octobre 2026 : personne ne disparaît du site
+ * tant que la colonne `pole` n'a pas été reprise. À supprimer une fois la
+ * migration faite.
  *
- * Attention : « Pôle Informatique et Communication » regroupait des personnes
- * qui relèvent désormais d'entités distinctes (systèmes d'information d'un côté,
- * logistique de l'autre) ; seule une reprise des affectations en base permet de
- * les séparer. À supprimer une fois la migration faite
- * (voir docs/HARMONISATION_LIVRET_ACCUEIL.md).
+ * « Pôle Informatique et Communication » regroupe encore le support
+ * informatique et la logistique : il est rangé provisoirement sous le
+ * Système d'information, en attendant l'affectation de chacun.
  */
 export const polesHerites: Record<string, string> = {
   "Pôle Administratif": "Secrétariat Général",
-  "Pôle Audit et Conformité": "Pôle Audit, Qualité et Conformité",
-  "Pôle Qualité et Développement": "Pôle Gestion du Capital Humain Clients",
-  "Pôle Informatique et Communication": "Pôle Systèmes d'Information",
+  "Département Technique": "Direction Générale Adjointe",
+  "Pôle Qualité et Développement": "Assistante du DG",
+  "Pôle Informatique et Communication": "Système d'information et Sécurité des données",
+  "Pôle Audit, Qualité et Conformité": "Pôle Audit et Conformité",
 }
 
 /**
