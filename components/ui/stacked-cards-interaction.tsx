@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { estVideo } from "@/lib/media";
 import { m } from "framer-motion";
 import { useState } from "react";
 
@@ -22,11 +23,21 @@ const Card = ({
     >
       {image && (
         <div className="relative h-[65%] rounded-lg shadow-lg overflow-hidden w-[calc(100%-1rem)] mx-2 mt-2">
-          <img
-            src={image}
-            alt="card"
-            className="object-cover mt-0 w-full h-full"
-          />
+          {estVideo(image) ? (
+            <video
+              src={`${image}#t=0.1`}
+              muted
+              playsInline
+              preload="metadata"
+              className="object-cover mt-0 w-full h-full"
+            />
+          ) : (
+            <img
+              src={image}
+              alt="card"
+              className="object-cover mt-0 w-full h-full"
+            />
+          )}
         </div>
       )}
       {children && (

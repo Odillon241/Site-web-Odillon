@@ -1,3 +1,5 @@
+import { estVideo } from "@/lib/media";
+
 export interface Photo {
   id: string;
   url: string;
@@ -60,11 +62,18 @@ export function groupPhotosByEvent(photos: Photo[]): Album[] {
 
   return Array.from(albumsMap.entries()).map(
     ([title, eventPhotos]) => {
-      const sortedPhotos = [...eventPhotos].sort(
+      const triees = [...eventPhotos].sort(
         comparePhotosByDateDesc
       );
 
-      const cover = sortedPhotos[0];
+      // Une photo en couverture de préférence, placée en tête de l'album
+      // pour que l'indice 0 de la visionneuse reste la couverture.
+      const cover =
+        triees.find((p) => !estVideo(p.url)) ?? triees[0];
+      const sortedPhotos = [
+        cover,
+        ...triees.filter((p) => p !== cover),
+      ];
       const date = formatPhotoDate(cover);
 
       return {

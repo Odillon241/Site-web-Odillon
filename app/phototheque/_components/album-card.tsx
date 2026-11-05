@@ -1,16 +1,18 @@
 "use client";
 
-import Image from "next/image";
 import { m, useReducedMotion } from "framer-motion";
-import { ArrowRight, Calendar, Camera, MapPin, Play } from "lucide-react";
+import { ArrowRight, Calendar, Camera, Film, MapPin, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { compterMedias, estVideo } from "@/lib/media";
+import { Vignette } from "./vignette";
 import type { Album } from "./types";
 
 const focusRing =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-odillon-teal";
 
-function nombrePhotos(n: number) {
-  return `${n} photo${n > 1 ? "s" : ""}`;
+/** « 12 photos et 2 vidéos » */
+function nombreMedias(album: Album) {
+  return compterMedias(album.photos.map((p) => p.url));
 }
 
 /** Date et lieu sur une ligne, comme une légende de reportage. */
@@ -56,30 +58,41 @@ interface AlbumCardProps {
 
 export function AlbumCard({ album, index, onOpen }: AlbumCardProps) {
   const apparition = useApparition(index);
+  const videos = album.photos.filter((p) => estVideo(p.url)).length;
+  const photos = album.photos.length - videos;
 
   return (
     <m.li {...apparition}>
       <button
         type="button"
         onClick={onOpen}
-        aria-label={`Ouvrir l'album ${album.title}, ${nombrePhotos(album.photos.length)}`}
+        aria-label={`Ouvrir l'album ${album.title}, ${nombreMedias(album)}`}
         className={cn(
           "group relative block aspect-[4/3] w-full overflow-hidden rounded-xl bg-gray-100 text-left shadow-sm ring-1 ring-black/5 transition-shadow duration-300 hover:shadow-xl",
           focusRing
         )}
       >
-        <Image
-          src={album.coverPhoto.url}
+        <Vignette
+          url={album.coverPhoto.url}
           alt=""
-          fill
           sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+          className="transition-transform duration-700 ease-out group-hover:scale-[1.06]"
         />
         <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
 
-        <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/45 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-md">
-          <Camera className="size-3.5" aria-hidden="true" />
-          {album.photos.length}
+        <span className="absolute left-3 top-3 inline-flex items-center gap-2.5 rounded-full bg-black/45 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-md">
+          {photos > 0 && (
+            <span className="inline-flex items-center gap-1.5">
+              <Camera className="size-3.5" aria-hidden="true" />
+              {photos}
+            </span>
+          )}
+          {videos > 0 && (
+            <span className="inline-flex items-center gap-1.5">
+              <Film className="size-3.5" aria-hidden="true" />
+              {videos}
+            </span>
+          )}
         </span>
         {album.activityType && (
           <span className="absolute right-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-odillon-teal backdrop-blur-md">
@@ -125,16 +138,15 @@ export function AlbumUne({ album, onOpen, onPhotoClick, onDiaporama }: AlbumUneP
       <button
         type="button"
         onClick={() => onPhotoClick(0)}
-        aria-label={`Agrandir la photo de couverture de l'album ${album.title}`}
+        aria-label={`Agrandir la couverture de l'album ${album.title}`}
         className={cn("group relative aspect-[16/10] overflow-hidden bg-gray-100 lg:aspect-auto lg:min-h-[440px]", focusRing)}
       >
-        <Image
-          src={album.coverPhoto.url}
+        <Vignette
+          url={album.coverPhoto.url}
           alt={album.title}
-          fill
           priority
           sizes="(min-width: 1024px) 760px, 100vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+          className="transition-transform duration-700 ease-out group-hover:scale-[1.04]"
         />
       </button>
 
@@ -153,15 +165,15 @@ export function AlbumUne({ album, onOpen, onPhotoClick, onDiaporama }: AlbumUneP
                   <button
                     type="button"
                     onClick={() => (dernier ? onOpen() : onPhotoClick(i + 1))}
-                    aria-label={dernier ? `Voir les ${restantes + 1} autres photos de l'album` : `Agrandir la photo ${i + 2}`}
+                    aria-label={dernier ? `Voir les ${restantes + 1} autres éléments de l'album` : `Ouvrir ${estVideo(photo.url) ? "la vidéo" : "la photo"} ${i + 2}`}
                     className={cn("group relative block aspect-square w-full overflow-hidden rounded-lg bg-gray-100", focusRing)}
                   >
-                    <Image
-                      src={photo.url}
+                    <Vignette
+                      url={photo.url}
                       alt=""
-                      fill
                       sizes="120px"
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      lecture="petite"
+                      className="transition-transform duration-500 group-hover:scale-110"
                     />
                     {dernier && (
                       <span className="absolute inset-0 flex items-center justify-center bg-odillon-dark/60 text-sm font-semibold text-white">
@@ -184,7 +196,7 @@ export function AlbumUne({ album, onOpen, onPhotoClick, onDiaporama }: AlbumUneP
               focusRing
             )}
           >
-            Voir l&apos;album · {nombrePhotos(album.photos.length)}
+            Voir l&apos;album · {nombreMedias(album)}
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
           </button>
           <button

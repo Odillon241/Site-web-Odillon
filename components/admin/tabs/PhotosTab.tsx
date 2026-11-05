@@ -31,10 +31,12 @@ import {
 } from "@/components/ui/alert-dialog"
 import { StackedCardsInteraction } from "@/components/ui/stacked-cards-interaction"
 
-import { Loader2, Plus, Search, Trash2, Eye, EyeOff, Camera, ImageIcon, CalendarDays, RefreshCw, UploadCloud, X, ArrowLeft, Edit, FolderEdit, Save, Crop, MapPin, FolderInput, ListChecks, CheckCircle2 } from "lucide-react"
+import { Loader2, Plus, Search, Trash2, Eye, EyeOff, Camera, ImageIcon, CalendarDays, RefreshCw, UploadCloud, X, ArrowLeft, Edit, FolderEdit, Save, Crop, MapPin, FolderInput, ListChecks, CheckCircle2, Film, Play } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Photo } from "@/types/admin"
+import { createClient } from "@/lib/supabase/client"
+import { TAILLE_MAX_IMAGE, TAILLE_MAX_VIDEO, TYPES_VIDEO, compterMedias, estVideo } from "@/lib/media"
 
 /** Champs d'un album, appliqués ensemble à toutes ses photos. */
 type FicheAlbum = {
@@ -50,6 +52,45 @@ const TYPES_ACTIVITE = ["Formations", "Séminaires", "Team Building", "Ateliers"
 import { MONTHLY_THEMES } from "@/lib/photo-themes"
 import { toast } from "sonner"
 import { ImageCropper } from "../ImageCropper"
+
+/** Nom de stockage horodaté, sans caractères spéciaux, extension garantie. */
+function nomStockage(file: File): string {
+    const propre = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
+    const sousType = file.type.split('/')[1] ?? ''
+    const extension = /\.[a-z0-9]{2,4}$/i.test(propre) || !sousType
+        ? ''
+        : `.${sousType === 'quicktime' ? 'mov' : sousType}`
+    return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${propre}${extension}`
+}
+
+/**
+ * Garde les fichiers envoyables : des images partout, des vidéos en plus dans
+ * la photothèque (le carrousel d'accueil n'affiche que des photos).
+ */
+function trierFichiers(files: File[], videosPermises: boolean): File[] {
+    const refus: string[] = []
+    const gardes = files.filter((file) => {
+        const video = TYPES_VIDEO.includes(file.type)
+        if (!file.type.startsWith('image/') && !(video && videosPermises)) {
+            refus.push(`${file.name} : format non accepté`)
+            return false
+        }
+        if (file.size > (video ? TAILLE_MAX_VIDEO : TAILLE_MAX_IMAGE)) {
+            refus.push(`${file.name} : plus de ${video ? 50 : 20} Mo`)
+            return false
+        }
+        return true
+    })
+    if (refus.length > 0) {
+        toast.warning(`${refus.length} fichier(s) ignoré(s)`, { description: refus.join(" · ") })
+    }
+    return gardes
+}
+
+/** Taille lisible : « 4,2 Mo ». */
+function taille(octets: number): string {
+    return `${(octets / (1024 * 1024)).toLocaleString('fr-FR', { maximumFractionDigits: 1 })} Mo`
+}
 
 
 import {
@@ -231,7 +272,8 @@ export function PhotosTab() {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
-            setSelectedFiles(prev => [...prev, ...Array.from(e.target.files || [])])
+            const files = trierFichiers(Array.from(e.target.files), activeSection === 'phototheque')
+            setSelectedFiles(prev => [...prev, ...files])
         }
         // Reset input value to allow selecting the same file again if needed
         if (e.target) e.target.value = ''
@@ -314,17 +356,10 @@ export function PhotosTab() {
         setIsDragging(false)
 
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-            const files = Array.from(e.dataTransfer.files).filter(file =>
-                file.type.startsWith('image/')
-            )
-
-            if (files.length !== e.dataTransfer.files.length) {
-                toast.warning("Certains fichiers ont été ignorés car ce ne sont pas des images.")
-            }
-
+            const files = trierFichiers(Array.from(e.dataTransfer.files), activeSection === 'phototheque')
             setSelectedFiles(prev => [...prev, ...files])
         }
-    }, [])
+    }, [activeSection])
 
     const removeFile = (index: number) => {
         setSelectedFiles(prev => prev.filter((_, i) => i !== index))
@@ -380,26 +415,43 @@ export function PhotosTab() {
             setUploading(true)
             setUploadProgress({ current: 0, total: selectedFiles.length })
             let successCount = 0
+            const envoyes: string[] = []
 
             for (let i = 0; i < selectedFiles.length; i++) {
                 const file = selectedFiles[i]
 
                 try {
                     // 1. Upload File
-                    const formData = new FormData()
-                    formData.append("file", file)
+                    let url: string
+                    if (TYPES_VIDEO.includes(file.type)) {
+                        // Les vidéos vont droit au stockage, comme dans l'onglet
+                        // Vidéos : le serveur limite la taille des requêtes qu'il relaie.
+                        const supabase = createClient()
+                        const { data, error } = await supabase.storage
+                            .from('videos')
+                            .upload(nomStockage(file), file, {
+                                cacheControl: '3600',
+                                contentType: file.type,
+                                upsert: false
+                            })
+                        if (error) throw new Error(`Erreur upload ${file.name}: ${error.message}`)
+                        url = supabase.storage.from('videos').getPublicUrl(data.path).data.publicUrl
+                    } else {
+                        const formData = new FormData()
+                        formData.append("file", file)
 
-                    const uploadRes = await fetch("/api/upload", {
-                        method: "POST",
-                        body: formData
-                    })
+                        const uploadRes = await fetch("/api/upload", {
+                            method: "POST",
+                            body: formData
+                        })
 
-                    if (!uploadRes.ok) {
-                        const errorData = await uploadRes.json()
-                        throw new Error(`Erreur upload ${file.name}: ${errorData.error || uploadRes.statusText}`)
+                        if (!uploadRes.ok) {
+                            const errorData = await uploadRes.json().catch(() => ({}))
+                            throw new Error(`Erreur upload ${file.name}: ${errorData.error || uploadRes.statusText}`)
+                        }
+
+                        url = (await uploadRes.json()).url
                     }
-
-                    const { url } = await uploadRes.json()
 
                     // 2. Create DB Entry
                     const photoRes = await fetch("/api/photos", {
@@ -426,16 +478,19 @@ export function PhotosTab() {
                     }
 
                     successCount++
+                    envoyes.push(url)
                 } catch (err) {
                     console.error(err)
-                    toast.error(`Echec pour ${file.name}`)
+                    toast.error(`Échec pour ${file.name}`, {
+                        description: err instanceof Error ? err.message : undefined
+                    })
                 }
 
                 setUploadProgress(prev => ({ ...prev, current: i + 1 }))
             }
 
             if (successCount > 0) {
-                toast.success(`${successCount} photo(s) ajoutée(s) avec succès !`)
+                toast.success(`${compterMedias(envoyes)} ajouté(s) avec succès !`)
                 // Reset Form & Close Sheet only if at least one success
                 setSelectedFiles([])
                 setNewPhoto({
@@ -848,21 +903,23 @@ export function PhotosTab() {
                         <SheetTrigger asChild>
                             <Button className="bg-odillon-teal text-white shadow-sm transition-colors hover:bg-odillon-teal/90">
                                 <Plus className="w-4 h-4 mr-2" />
-                                Ajouter des photos
+                                {activeSection === 'phototheque' ? "Ajouter photos et vidéos" : "Ajouter des photos"}
                             </Button>
                         </SheetTrigger>
                         <SheetContent className="overflow-y-auto w-full sm:max-w-md bg-white">
                             <SheetHeader>
-                                <SheetTitle>Ajouter des photos</SheetTitle>
+                                <SheetTitle>{activeSection === 'phototheque' ? "Ajouter photos et vidéos" : "Ajouter des photos"}</SheetTitle>
                                 <SheetDescription>
-                                    Ajoutez une ou plusieurs images à la section {activeSection === 'hero' ? "Carrousel" : "Photothèque"}.
+                                    {activeSection === 'phototheque'
+                                        ? "Sélectionnez autant de photos et de vidéos que vous voulez, en une seule fois : elles rejoignent le même album."
+                                        : "Ajoutez une ou plusieurs images au carrousel de l'accueil."}
                                 </SheetDescription>
                             </SheetHeader>
 
                             <div className="grid gap-6 py-6">
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                        Fichiers Images *
+                                        {activeSection === 'phototheque' ? "Photos et vidéos *" : "Fichiers images *"}
                                     </label>
 
                                     {/* DRAG & DROP ZONE */}
@@ -877,7 +934,7 @@ export function PhotosTab() {
                                     >
                                         <Input
                                             type="file"
-                                            accept="image/*"
+                                            accept={activeSection === 'phototheque' ? `image/*,${TYPES_VIDEO.join(',')}` : "image/*"}
                                             multiple
                                             onChange={handleFileChange}
                                             ref={fileInputRef}
@@ -888,9 +945,17 @@ export function PhotosTab() {
                                                 <UploadCloud className="h-6 w-6 text-odillon-teal" />
                                             </div>
                                             <span className="text-sm text-gray-600 font-medium">
-                                                {isDragging ? "Déposez les fichiers ici" : "Cliquez ou glissez vos images"}
+                                                {isDragging
+                                                    ? "Déposez les fichiers ici"
+                                                    : activeSection === 'phototheque'
+                                                        ? "Cliquez ou glissez vos photos et vidéos"
+                                                        : "Cliquez ou glissez vos images"}
                                             </span>
-                                            <span className="text-xs text-gray-400">PNG, JPG, WEBP jusqu'à 5MB</span>
+                                            <span className="text-xs text-gray-400">
+                                                {activeSection === 'phototheque'
+                                                    ? "Photos JPG, PNG, WebP (20 Mo max.) · vidéos MP4, WebM, MOV (50 Mo max.) · plusieurs à la fois"
+                                                    : "PNG, JPG, WebP jusqu'à 20 Mo · plusieurs à la fois"}
+                                            </span>
                                         </div>
                                     </div>
 
@@ -898,12 +963,21 @@ export function PhotosTab() {
                                     {selectedFiles.length > 0 && (
                                         <div className="space-y-2 mt-4 max-h-[200px] overflow-y-auto pr-2">
                                             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                                {selectedFiles.length} fichier(s) sélectionné(s)
+                                                {compterMedias(selectedFiles.map(nomStockage))} sélectionné(s)
                                             </p>
-                                            {selectedFiles.map((file, idx) => (
-                                                <div key={idx} className="flex items-center justify-between rounded-md border border-slate-200 bg-slate-50 p-2 text-sm">
-                                                    <span className="max-w-[200px] truncate text-slate-700">{file.name}</span>
-                                                    <div className="flex items-center gap-1">
+                                            {selectedFiles.map((file, idx) => {
+                                                const video = TYPES_VIDEO.includes(file.type)
+                                                return (
+                                                <div key={idx} className="flex items-center justify-between gap-2 rounded-md border border-slate-200 bg-slate-50 p-2 text-sm">
+                                                    <span className="flex min-w-0 items-center gap-2 text-slate-700">
+                                                        {video
+                                                            ? <Film className="h-4 w-4 shrink-0 text-odillon-teal" aria-label="Vidéo" />
+                                                            : <ImageIcon className="h-4 w-4 shrink-0 text-slate-400" aria-label="Photo" />}
+                                                        <span className="truncate">{file.name}</span>
+                                                        <span className="shrink-0 text-xs text-slate-400">{taille(file.size)}</span>
+                                                    </span>
+                                                    <div className="flex shrink-0 items-center gap-1">
+                                                        {!video && (
                                                         <Button
                                                             size="sm"
                                                             variant="ghost"
@@ -913,6 +987,7 @@ export function PhotosTab() {
                                                         >
                                                             <Crop className="w-3 h-3" />
                                                         </Button>
+                                                        )}
                                                         <Button
                                                             size="sm"
                                                             variant="ghost"
@@ -923,7 +998,8 @@ export function PhotosTab() {
                                                         </Button>
                                                     </div>
                                                 </div>
-                                            ))}
+                                                )
+                                            })}
                                         </div>
                                     )}
                                 </div>
@@ -1252,7 +1328,7 @@ export function PhotosTab() {
                                                 const cardsData = albumPhotos.slice(0, 3).map((photo, i) => ({
                                                     image: photo.url,
                                                     title: i === 0 ? albumName : undefined,
-                                                    description: i === 0 ? (coverPhoto.details ? `${coverPhoto.details} (${albumPhotos.length} photos)` : `${albumPhotos.length} photos`) : undefined
+                                                    description: i === 0 ? (coverPhoto.details ? `${coverPhoto.details} (${compterMedias(albumPhotos.map(p => p.url))})` : compterMedias(albumPhotos.map(p => p.url))) : undefined
                                                 }));
 
                                                 return (
@@ -1331,12 +1407,30 @@ export function PhotosTab() {
                                                 className="relative aspect-[4/3] cursor-pointer overflow-hidden bg-slate-100"
                                                 onClick={() => selectionMode ? toggleSelected(photo.id) : setSelectedPhotoForPreview(photo)}
                                             >
+                                                {estVideo(photo.url) ? (
+                                                    <>
+                                                        {/* Première image de la vidéo en guise de vignette. */}
+                                                        <video
+                                                            src={`${photo.url}#t=0.1`}
+                                                            muted
+                                                            playsInline
+                                                            preload="metadata"
+                                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                                        />
+                                                        <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                                                            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm">
+                                                                <Play className="ml-0.5 h-5 w-5 fill-current" />
+                                                            </span>
+                                                        </span>
+                                                    </>
+                                                ) : (
                                                 <img
                                                     src={photo.url}
                                                     alt={photo.description}
                                                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                                     loading="lazy"
                                                 />
+                                                )}
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                                                 {/* Status Badge */}
@@ -1885,12 +1979,22 @@ export function PhotosTab() {
                         >
                             {/* Image */}
                             <div className="relative flex-1 flex items-center justify-center mb-6">
+                                {estVideo(selectedPhotoForPreview.url) ? (
+                                    <video
+                                        src={selectedPhotoForPreview.url}
+                                        controls
+                                        autoPlay
+                                        playsInline
+                                        className="max-h-[calc(100vh-250px)] max-w-full rounded-lg shadow-2xl"
+                                    />
+                                ) : (
                                 <img
                                     src={selectedPhotoForPreview.url}
                                     alt={selectedPhotoForPreview.description}
                                     className="max-h-[calc(100vh-250px)] max-w-full object-contain rounded-lg shadow-2xl"
                                     draggable={false}
                                 />
+                                )}
                             </div>
 
                             {/* Info Card */}

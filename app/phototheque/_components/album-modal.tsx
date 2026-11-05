@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowLeft, MapPin, Search, Camera } from "lucide-react";
+import { ArrowLeft, MapPin, Search, Camera, Play } from "lucide-react";
+import { compterMedias, estVideo } from "@/lib/media";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -41,7 +42,7 @@ export function AlbumModal({ album, onClose, onPhotoClick }: AlbumModalProps) {
                         {album.title}
                       </DialogTitle>
                       <Badge variant="secondary" className="bg-odillon-teal/10 text-odillon-teal hover:bg-odillon-teal/20 border-none font-medium">
-                        {album.photos.length} photo{album.photos.length > 1 ? "s" : ""}
+                        {compterMedias(album.photos.map((p) => p.url))}
                       </Badge>
                     </div>
 
@@ -69,25 +70,47 @@ export function AlbumModal({ album, onClose, onPhotoClick }: AlbumModalProps) {
                       className="break-inside-avoid relative group rounded-lg overflow-hidden cursor-zoom-in bg-white shadow-sm hover:shadow-xl transition-all duration-300 ring-1 ring-gray-950/5"
                       onClick={() => onPhotoClick(photo)}
                     >
-                      {/* <img> plutôt que next/image : la mosaïque garde le format
-                          naturel de chaque photo, inconnu à l'avance. */}
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={imageOptimisee(photo.url, 640)}
-                        srcSet={`${imageOptimisee(photo.url, 640)} 640w, ${imageOptimisee(photo.url, 1080)} 1080w`}
-                        sizes="(min-width: 1024px) 270px, (min-width: 640px) 50vw, 100vw"
-                        alt={photo.description}
-                        className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                        loading="lazy"
-                      />
+                      {estVideo(photo.url) ? (
+                        // Première image de la vidéo ; la lecture se fait dans la visionneuse.
+                        <video
+                          src={`${photo.url}#t=0.1`}
+                          muted
+                          playsInline
+                          preload="metadata"
+                          aria-label={photo.description}
+                          className="w-full h-auto transition-transform duration-700 ease-out group-hover:scale-105"
+                        />
+                      ) : (
+                        <>
+                          {/* <img> plutôt que next/image : la mosaïque garde le format
+                              naturel de chaque photo, inconnu à l'avance. */}
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={imageOptimisee(photo.url, 640)}
+                            srcSet={`${imageOptimisee(photo.url, 640)} 640w, ${imageOptimisee(photo.url, 1080)} 1080w`}
+                            sizes="(min-width: 1024px) 270px, (min-width: 640px) 50vw, 100vw"
+                            alt={photo.description}
+                            className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                            loading="lazy"
+                          />
+                        </>
+                      )}
 
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
 
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="w-12 h-12 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-300">
-                          <Search className="w-5 h-5 text-white" />
+                      {estVideo(photo.url) ? (
+                        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                            <Play className="ml-0.5 w-5 h-5 fill-current text-white" />
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="w-12 h-12 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-300">
+                            <Search className="w-5 h-5 text-white" />
+                          </div>
+                        </div>
+                      )}
 
                       {photo.location && (
                         <div className="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -105,7 +128,7 @@ export function AlbumModal({ album, onClose, onPhotoClick }: AlbumModalProps) {
               {album.photos.length === 0 && (
                 <div className="flex flex-col items-center justify-center h-full py-20 text-gray-400">
                   <Camera className="w-12 h-12 mb-3 opacity-30" />
-                  <p className="text-sm">Aucune photo dans cet album</p>
+                  <p className="text-sm">Cet album est vide</p>
                 </div>
               )}
             </div>
