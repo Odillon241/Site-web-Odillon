@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import { m } from "framer-motion"
 import { FadeIn } from "@/components/magicui/fade-in"
@@ -57,33 +57,155 @@ function ListeProduits({
   )
 }
 
-// Programme en plusieurs phases : une carte illustrée par module.
-function ModulesIllustres({ pole }: { pole: PoleProduits }) {
+/* Programme en plusieurs phases : un sélecteur d'étapes, puis la phase choisie
+   en détail (présentation, services, livrables, résultat attendu). Toutes les
+   phases restent dans le HTML pour le référencement ; seule l'active est visible. */
+function ProgrammePhases({ pole }: { pole: PoleProduits }) {
+  const [active, setActive] = useState(0)
+  const onglets = useRef<(HTMLButtonElement | null)[]>([])
+  const phases = pole.groupes
+
+  const choisir = (i: number) => {
+    setActive(i)
+    onglets.current[i]?.focus()
+  }
+
+  const auClavier = (e: React.KeyboardEvent, i: number) => {
+    const n = phases.length
+    if (e.key === "ArrowRight") choisir((i + 1) % n)
+    else if (e.key === "ArrowLeft") choisir((i - 1 + n) % n)
+    else if (e.key === "Home") choisir(0)
+    else if (e.key === "End") choisir(n - 1)
+    else return
+    e.preventDefault()
+  }
+
   return (
-    <ol className="grid gap-6 md:grid-cols-3">
-      {pole.groupes.map((groupe) => (
-        <li key={groupe.titre} className="flex flex-col overflow-hidden rounded-lg border border-gray-100 bg-white">
-          {groupe.illustration && (
-            <div className="relative aspect-[3/2] bg-gray-100">
-              <Image
-                src={groupe.illustration.src}
-                alt={groupe.illustration.alt}
-                fill
-                sizes="(min-width: 768px) 300px, 100vw"
-                className="object-cover"
-              />
+    <div>
+      <div role="tablist" aria-label="Phases de l'accompagnement" className="relative grid grid-cols-3 gap-2 sm:gap-3">
+        {/* Fil reliant les étapes, derrière les onglets. */}
+        <span aria-hidden="true" className="absolute inset-x-[16%] top-1/2 hidden h-px bg-odillon-teal/20 sm:block" />
+        {phases.map((phase, i) => {
+          const choisie = i === active
+          return (
+            <button
+              key={phase.titre}
+              ref={(el) => { onglets.current[i] = el }}
+              type="button"
+              role="tab"
+              id={`phase-onglet-${i}`}
+              aria-selected={choisie}
+              aria-controls={`phase-panneau-${i}`}
+              tabIndex={choisie ? 0 : -1}
+              onClick={() => setActive(i)}
+              onKeyDown={(e) => auClavier(e, i)}
+              className={cn(
+                "relative flex flex-col items-center rounded-lg border px-2 py-3 text-center transition-colors duration-200 sm:px-4 sm:py-4",
+                "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-odillon-teal",
+                choisie
+                  ? "border-odillon-teal bg-odillon-teal text-white shadow-md shadow-odillon-teal/20"
+                  : "border-gray-200 bg-white text-gray-700 hover:border-odillon-teal/40 hover:text-odillon-teal"
+              )}
+            >
+              <span className={cn("text-[10px] font-bold uppercase tracking-widest sm:text-[11px]", choisie ? "text-white/75" : "text-odillon-teal")}>
+                {phase.etape}
+              </span>
+              <span className="mt-0.5 text-sm font-bold tracking-wide sm:text-lg">{phase.titre}</span>
+              <span className={cn("font-baskvill text-sm italic sm:text-base", choisie ? "text-white/90" : "text-gray-500")}>
+                {phase.verbe}
+              </span>
+            </button>
+          )
+        })}
+      </div>
+
+      {phases.map((phase, i) => (
+        <div
+          key={phase.titre}
+          role="tabpanel"
+          id={`phase-panneau-${i}`}
+          aria-labelledby={`phase-onglet-${i}`}
+          // Classe conditionnelle plutôt que l'attribut hidden, que `grid` écraserait.
+          className={cn("mt-8", i === active ? "block" : "hidden")}
+        >
+          {/* Présentation */}
+          <div className="grid items-center gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:gap-8">
+            {phase.illustration && (
+              <div className="relative aspect-[3/2] overflow-hidden rounded-lg bg-gray-100">
+                <Image
+                  src={phase.illustration.src}
+                  alt={phase.illustration.alt}
+                  fill
+                  sizes="(min-width: 768px) 380px, 100vw"
+                  className="object-cover"
+                />
+              </div>
+            )}
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-odillon-teal">
+                {phase.etape} · {phase.verbe}
+              </p>
+              <h3 className="mt-1 font-baskvill text-2xl italic text-odillon-dark md:text-3xl">Offre {phase.titre}</h3>
+              {phase.finalite && <p className="mt-1 text-sm font-medium text-gray-500">{phase.finalite}</p>}
+              {phase.description?.map((paragraphe) => (
+                <p key={paragraphe.slice(0, 40)} className="mt-3 text-[0.95rem] leading-relaxed text-gray-700">
+                  {paragraphe}
+                </p>
+              ))}
+            </div>
+          </div>
+
+          {/* Services */}
+          <h4 className="mb-4 mt-10 text-[11px] font-bold uppercase tracking-widest text-odillon-dark/70">
+            Services proposés
+          </h4>
+          {phase.sections ? (
+            <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {phase.sections.map((section, s) => (
+                <li key={section.titre} className="rounded-lg border border-gray-100 bg-[#f7fafc] p-5">
+                  <p className="mb-3 flex items-baseline gap-2 font-semibold text-odillon-dark">
+                    {phase.sections!.length > 2 && (
+                      <span className="text-sm tabular-nums text-odillon-teal">{s + 1}.</span>
+                    )}
+                    {section.titre}
+                  </p>
+                  <ListeProduits produits={section.produits} couleur={pole.couleur} className="gap-y-2 [&_li]:text-sm" />
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <ListeProduits produits={phase.produits} couleur={pole.couleur} className="sm:grid-cols-2" />
+          )}
+
+          {/* Livrables */}
+          {phase.livrables && (
+            <>
+              <h4 className="mb-4 mt-10 text-[11px] font-bold uppercase tracking-widest text-odillon-dark/70">
+                Livrables · à l&apos;issue de cette phase, le promoteur dispose de
+              </h4>
+              <ol className="grid gap-3 sm:grid-cols-2">
+                {phase.livrables.map((livrable, l) => (
+                  <li key={livrable} className="flex items-start gap-3 text-[0.95rem] leading-relaxed text-gray-700">
+                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-odillon-teal/10 text-xs font-bold tabular-nums text-odillon-teal">
+                      {l + 1}
+                    </span>
+                    {livrable}
+                  </li>
+                ))}
+              </ol>
+            </>
+          )}
+
+          {/* Résultat attendu */}
+          {phase.resultat && (
+            <div className="mt-10 rounded-lg border-l-4 border-odillon-lime bg-odillon-teal/[0.06] px-5 py-4 md:px-6 md:py-5">
+              <p className="text-[11px] font-bold uppercase tracking-widest text-odillon-teal">Résultat attendu</p>
+              <p className="mt-1.5 font-baskvill text-lg italic leading-snug text-odillon-dark md:text-xl">{phase.resultat}</p>
             </div>
           )}
-          <div className="flex-1 p-5">
-            {groupe.etape && (
-              <p className="text-[11px] font-bold uppercase tracking-widest text-odillon-teal">{groupe.etape}</p>
-            )}
-            <p className="mb-3 mt-1 font-baskvill text-xl italic text-odillon-dark">{groupe.titre}</p>
-            <ListeProduits produits={groupe.produits} couleur={pole.couleur} />
-          </div>
-        </li>
+        </div>
       ))}
-    </ol>
+    </div>
   )
 }
 
@@ -302,7 +424,7 @@ export function ProduitsPage() {
                       {pole.catalogue ? (
                         <ApercuCatalogue catalogue={pole.catalogue} />
                       ) : avecIllustrations ? (
-                        <ModulesIllustres pole={pole} />
+                        <ProgrammePhases pole={pole} />
                       ) : avecGroupes ? (
                         <div className="grid gap-8 md:grid-cols-3">
                           {pole.groupes.map((groupe) => (

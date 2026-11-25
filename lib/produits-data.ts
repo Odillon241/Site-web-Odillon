@@ -9,12 +9,25 @@ export type Illustration = {
   alt: string
 }
 
+export type SectionServices = {
+  titre: string
+  produits: string[]
+}
+
 export type GroupeProduits = {
   titre?: string
   // Étape d'un programme en plusieurs phases (« Phase 1 »…).
   etape?: string
+  // Verbe court du sélecteur de phase (« Créer ») et finalité en une ligne.
+  verbe?: string
+  finalite?: string
   illustration?: Illustration
+  description?: string[]
   produits: string[]
+  // Services regroupés par thème, à la place de la liste simple.
+  sections?: SectionServices[]
+  livrables?: string[]
+  resultat?: string
 }
 
 export type LienPole = {
@@ -124,48 +137,170 @@ export const polesProduits: PoleProduits[] = [
   {
     id: "entrepreneuriat",
     titre: "Entrepreneuriat",
-    accroche: "Découvrez notre programme d'accompagnement en trois modules",
+    accroche: "Notre accompagnement en trois phases : structurer, créer, développer",
     couleur: "#00a795",
     icone: "Rocket",
-    badge: "3 modules",
+    badge: "3 phases",
     groupes: [
       {
-        titre: "Odillon Start",
-        etape: "Phase 1 · Créer",
-        illustration: {
-          src: "/images/entrepreneuriat/odillon-start.jpg",
-          alt: "Porteur de projet annotant son plan d'affaires à côté d'un ordinateur",
-        },
-        produits: [
-          "Analyse du projet",
-          "Accompagnement à la création",
-          "Lancement de la société",
-          "Rédaction du business plan",
-          "Coaching",
-        ],
-      },
-      {
-        titre: "Odillon Project",
-        etape: "Phase 2 · Structurer",
+        titre: "PROJECT",
+        etape: "Phase 1",
+        verbe: "Structurer",
+        finalite: "Concevoir et structurer le projet",
         illustration: {
           src: "/images/entrepreneuriat/odillon-project.jpg",
           alt: "Équipe organisant ses priorités sur un tableau de notes adhésives",
         },
-        produits: ["Politique commerciale", "Élaboration de l'organigramme", "Coaching"],
+        description: [
+          "L'offre PROJECT accompagne le porteur de projet dans la conception et la structuration de son idée, avant tout engagement : le projet est analysé, chiffré et organisé pour être prêt à devenir une entreprise.",
+        ],
+        produits: [
+          "Analyse du projet",
+          "Rédaction du business plan",
+          "Politique commerciale",
+          "Élaboration de l'organigramme",
+          "Coaching",
+        ],
+        resultat: "Préparer son projet : une idée analysée, structurée et chiffrée, prête à devenir une entreprise.",
       },
       {
-        titre: "Odillon Grow",
-        etape: "Phase 3 · Développer",
+        titre: "START",
+        etape: "Phase 2",
+        verbe: "Créer",
+        finalite: "Création, lancement et démarrage de l'activité",
+        illustration: {
+          src: "/images/entrepreneuriat/odillon-start.jpg",
+          alt: "Porteur de projet annotant son plan d'affaires à côté d'un ordinateur",
+        },
+        description: [
+          "L'offre START accompagne le promoteur dans le passage du projet à la réalité entrepreneuriale. Elle vise à concrétiser le projet préalablement structuré, à mettre en place les conditions nécessaires au démarrage de l'activité et à sécuriser les premiers mois d'exploitation.",
+          "L'objectif est de permettre à l'entrepreneur de démarrer son activité dans un cadre juridique, administratif, organisationnel et financier maîtrisé.",
+        ],
+        produits: [],
+        sections: [
+          {
+            titre: "Création juridique et formalisation",
+            produits: [
+              "Accompagnement dans le choix de la forme juridique",
+              "Assistance à la constitution du dossier de création",
+              "Orientation dans les formalités d'immatriculation",
+              "Accompagnement dans l'obtention des autorisations et agréments nécessaires",
+              "Identification des obligations fiscales et sociales",
+              "Mise en place des documents administratifs de base",
+            ],
+          },
+          {
+            titre: "Installation et organisation opérationnelle",
+            produits: [
+              "Identification des besoins matériels et logistiques",
+              "Accompagnement dans l'installation de l'activité",
+              "Mise en place des outils de gestion",
+              "Définition des processus opérationnels",
+              "Organisation des circuits administratifs et financiers",
+              "Mise en place des premiers tableaux de bord",
+            ],
+          },
+          {
+            titre: "Mise en place de la gestion financière",
+            produits: [
+              "Accompagnement à l'ouverture du compte bancaire professionnel",
+              "Mise en place des outils de suivi de trésorerie",
+              "Organisation de la facturation et du recouvrement",
+              "Définition des procédures de dépenses",
+              "Suivi des premiers investissements",
+              "Mise en place d'un dispositif de suivi budgétaire",
+            ],
+          },
+          {
+            titre: "Organisation des ressources humaines",
+            produits: [
+              "Identification des besoins en personnel",
+              "Définition des premiers postes et fiches de fonction",
+              "Assistance au recrutement",
+              "Mise en place des contrats et documents RH",
+              "Identification des obligations sociales",
+              "Sensibilisation aux règles de droit du travail",
+            ],
+          },
+          {
+            titre: "Identité commerciale et communication",
+            produits: [
+              "Définition de l'identité de marque",
+              "Élaboration des supports de présentation",
+              "Création des outils de communication commerciale",
+              "Mise en place de la présence digitale",
+              "Développement des premiers supports de prospection",
+              "Préparation du lancement commercial",
+            ],
+          },
+          {
+            titre: "Lancement commercial",
+            produits: [
+              "Définition du plan d'action commercial",
+              "Identification des premiers prospects",
+              "Préparation des offres commerciales",
+              "Accompagnement dans les premières négociations",
+              "Développement des partenariats",
+              "Suivi des premières ventes et prestations",
+            ],
+          },
+          {
+            titre: "Coaching et suivi post-lancement",
+            produits: [
+              "Coaching du promoteur",
+              "Accompagnement dans la prise de décision",
+              "Suivi des premiers résultats",
+              "Identification des difficultés rencontrées",
+              "Ajustement du dispositif opérationnel",
+              "Évaluation de la viabilité du démarrage",
+            ],
+          },
+        ],
+        livrables: [
+          "Une entreprise juridiquement constituée",
+          "Un dossier administratif et réglementaire structuré",
+          "Une organisation opérationnelle fonctionnelle",
+          "Des outils de gestion administrative et financière",
+          "Une identité commerciale et des supports de communication",
+          "Un plan d'action commercial opérationnel",
+          "Un tableau de bord de suivi des premiers mois",
+        ],
+        resultat: "Passer du projet à l'entreprise : créer, installer, lancer et réussir les premiers pas de son activité.",
+      },
+      {
+        titre: "GROW",
+        etape: "Phase 3",
+        verbe: "Développer",
+        finalite: "Consolider et développer l'activité",
         illustration: {
           src: "/images/entrepreneuriat/odillon-grow.jpg",
           alt: "Tableau de bord affichant la progression de l'activité",
         },
-        produits: [
-          "Recherche de financement",
-          "Visibilité de l'activité",
-          "Analyse du chiffre d'affaires",
-          "Coaching",
+        description: [
+          "GROW est une phase d'accompagnement opérationnel et stratégique, au cours de laquelle le cabinet ne se limite plus au conseil : il accompagne concrètement l'entrepreneur dans la mise en œuvre de sa stratégie de développement.",
         ],
+        produits: [],
+        sections: [
+          {
+            titre: "Les quatre dimensions de GROW",
+            produits: [
+              "G – Growth : accélérer la croissance",
+              "R – Restructuring : renforcer et structurer l'organisation",
+              "O – Opportunities : saisir les opportunités de marché",
+              "W – Winning Performance : construire une performance durable",
+            ],
+          },
+          {
+            titre: "Accompagnement proposé",
+            produits: [
+              "Recherche de financement",
+              "Visibilité de l'activité",
+              "Analyse du chiffre d'affaires",
+              "Coaching",
+            ],
+          },
+        ],
+        resultat: "Passer d'une entreprise qui fonctionne à une entreprise qui se développe, se structure et crée durablement de la valeur.",
       },
     ],
   },
@@ -193,5 +328,9 @@ export const polesProduits: PoleProduits[] = [
 ]
 
 export function nombreProduits(pole: PoleProduits): number {
-  return pole.groupes.reduce((total, groupe) => total + groupe.produits.length, 0)
+  return pole.groupes.reduce(
+    (total, groupe) =>
+      total + groupe.produits.length + (groupe.sections ?? []).reduce((n, s) => n + s.produits.length, 0),
+    0
+  )
 }
