@@ -106,6 +106,12 @@ export function AboutDetailed() {
 
       } catch (err) {
         console.error("Failed to load data", err)
+      } finally {
+        // Arrivée par le sous-menu (/a-propos#valeurs…) : les vidéos et textes
+        // chargés ci-dessus ont décalé la page après le saut du navigateur.
+        // On réaligne la section visée une fois le contenu en place.
+        const cible = window.location.hash && document.getElementById(window.location.hash.slice(1))
+        if (cible) requestAnimationFrame(() => cible.scrollIntoView({ block: "start" }))
       }
     }
     fetchData()
@@ -303,7 +309,8 @@ export function AboutDetailed() {
 
 
         {/* Mission / Vision - Clean Typography */}
-        <div className="max-w-4xl mx-auto">
+        {/* Ancres #mission, #valeurs, #organigramme : sous-menu « À propos » de l'en-tête. */}
+        <div id="mission" className="max-w-4xl mx-auto scroll-mt-24">
           <FadeIn delay={0.3}>
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-odillon-dark mb-6 font-baskvill italic leading-tight">{missionTitle}</h2>
@@ -353,7 +360,7 @@ export function AboutDetailed() {
 
         {/* Nos valeurs — mise en page du livret d'accueil (§1.2) : une valeur
             par ligne, l'aquarelle du totem dans un cadre pointillé à gauche. */}
-        <section aria-labelledby="titre-valeurs" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="valeurs" aria-labelledby="titre-valeurs" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
           <FadeIn delay={0.2}>
             <p className="od-eyebrow">Ce qui nous relie</p>
             <h2 id="titre-valeurs" className="mt-2 font-baskvill text-3xl font-bold text-[#145c55] md:text-4xl lg:text-5xl">
@@ -413,7 +420,7 @@ export function AboutDetailed() {
         </section>
 
         {/* Team Section (Organigramme) */}
-        <div className="py-8">
+        <div id="organigramme" className="py-8 scroll-mt-16">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-odillon-dark mb-4 font-baskvill italic leading-tight">Notre organigramme</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">Une équipe structurée au service de votre réussite.</p>

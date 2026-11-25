@@ -16,9 +16,9 @@ export type SectionServices = {
 
 export type GroupeProduits = {
   titre?: string
-  // Étape d'un programme en plusieurs phases (« Phase 1 »…).
+  // Étape d'un programme en plusieurs modules (« Module 1 »…).
   etape?: string
-  // Verbe court du sélecteur de phase (« Créer ») et finalité en une ligne.
+  // Verbe court du sélecteur de module (« Créer ») et finalité en une ligne.
   verbe?: string
   finalite?: string
   illustration?: Illustration
@@ -137,14 +137,14 @@ export const polesProduits: PoleProduits[] = [
   {
     id: "entrepreneuriat",
     titre: "Entrepreneuriat",
-    accroche: "Notre accompagnement en trois phases : structurer, créer, développer",
+    accroche: "Notre accompagnement en trois modules : structurer, créer, développer",
     couleur: "#00a795",
     icone: "Rocket",
-    badge: "3 phases",
+    badge: "3 modules",
     groupes: [
       {
         titre: "PROJECT",
-        etape: "Phase 1",
+        etape: "Module 1",
         verbe: "Structurer",
         finalite: "Concevoir et structurer le projet",
         illustration: {
@@ -165,7 +165,7 @@ export const polesProduits: PoleProduits[] = [
       },
       {
         titre: "START",
-        etape: "Phase 2",
+        etape: "Module 2",
         verbe: "Créer",
         finalite: "Création, lancement et démarrage de l'activité",
         illustration: {
@@ -269,7 +269,7 @@ export const polesProduits: PoleProduits[] = [
       },
       {
         titre: "GROW",
-        etape: "Phase 3",
+        etape: "Module 3",
         verbe: "Développer",
         finalite: "Consolider et développer l'activité",
         illustration: {
@@ -277,7 +277,7 @@ export const polesProduits: PoleProduits[] = [
           alt: "Tableau de bord affichant la progression de l'activité",
         },
         description: [
-          "GROW est une phase d'accompagnement opérationnel et stratégique, au cours de laquelle le cabinet ne se limite plus au conseil : il accompagne concrètement l'entrepreneur dans la mise en œuvre de sa stratégie de développement.",
+          "GROW est un module d'accompagnement opérationnel et stratégique, au cours de laquelle le cabinet ne se limite plus au conseil : il accompagne concrètement l'entrepreneur dans la mise en œuvre de sa stratégie de développement.",
         ],
         produits: [],
         sections: [

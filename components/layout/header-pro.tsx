@@ -40,7 +40,12 @@ const navigation = [
   {
     name: "À propos",
     href: "/a-propos",
-    icon: "Users"
+    icon: "Users",
+    submenu: [
+      { name: "Notre mission", href: "/a-propos#mission" },
+      { name: "Nos valeurs", href: "/a-propos#valeurs" },
+      { name: "Notre organigramme", href: "/a-propos#organigramme" },
+    ]
   },
   {
     name: "Blog",

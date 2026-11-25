@@ -82,7 +82,7 @@ function ProgrammePhases({ pole }: { pole: PoleProduits }) {
 
   return (
     <div>
-      <div role="tablist" aria-label="Phases de l'accompagnement" className="relative grid grid-cols-3 gap-2 sm:gap-3">
+      <div role="tablist" aria-label="Modules de l'accompagnement" className="relative grid grid-cols-3 gap-2 sm:gap-3">
         {/* Fil reliant les étapes, derrière les onglets. */}
         <span aria-hidden="true" className="absolute inset-x-[16%] top-1/2 hidden h-px bg-odillon-teal/20 sm:block" />
         {phases.map((phase, i) => {
@@ -181,7 +181,7 @@ function ProgrammePhases({ pole }: { pole: PoleProduits }) {
           {phase.livrables && (
             <>
               <h4 className="mb-4 mt-10 text-[11px] font-bold uppercase tracking-widest text-odillon-dark/70">
-                Livrables · à l&apos;issue de cette phase, le promoteur dispose de
+                Livrables · à l&apos;issue de ce module, le promoteur dispose de
               </h4>
               <ol className="grid gap-3 sm:grid-cols-2">
                 {phase.livrables.map((livrable, l) => (
